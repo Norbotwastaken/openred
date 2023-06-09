@@ -10,7 +10,9 @@ import Erik
 
 class Model: ObservableObject {
     @Published var posts: [Post] = []
+    @Published var communities: [Community] = []
     @Published var title: String
+    
     var document: Document?
     
     init() {
@@ -31,6 +33,8 @@ class Model: ObservableObject {
     func updateDocument(doc: Document) {
         self.title = doc.title!
         
+        updateCommunitiesList(doc: doc)
+        
         var i = 0
         for element in doc.querySelectorAll("#siteTable div.thing .entry") {
             let title = element.querySelector(".top-matter p.title a.title")?.text
@@ -47,6 +51,15 @@ class Model: ObservableObject {
                               liveTimestamp: liveTimeStamp,
                               linkToThread: linkToThread ?? "no link available (Ad)"))
             i += 1
+        }
+    }
+    
+    func updateCommunitiesList(doc: Document) {
+        for element in doc.querySelectorAll(".sr-list #sr-bar li a") {
+            let communityLink = element["href"]
+            if let communityName = element.text {
+                communities.append(Community(communityName, link: communityLink ?? "no link"))
+            }
         }
     }
 }

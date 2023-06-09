@@ -9,42 +9,39 @@ import SwiftUI
 
 struct PostsView: View {
     @EnvironmentObject var model: Model
-    
-    @State var presentSideMenu = false
+    @Binding var communitiesSidebarVisible: Bool
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-//                if !self.presentSideMenu {
-                    List {
-                        ForEach(model.posts) { post in
-                            PostView(post: post)
+        ZStack {
+            NavigationStack {
+                List {
+                    ForEach(model.posts) { post in
+                        PostView(post: post)
+                    }
+                }
+                .listStyle(PlainListStyle())
+                .navigationTitle(model.title)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            // Perform an action
+                            print("Add Item Tapped")
+                        } label: {
+                            Image(systemName: "ellipsis")
                         }
                     }
-                    .navigationTitle(model.title)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
-                                // Perform an action
-                                print("Add Item Tapped")
-                            } label: {
-                                Image(systemName: "ellipsis")
-                            }
-                        }
-                        
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button {
-                                presentSideMenu.toggle()
-                                print("Left button tapped")
-                            } label: {
-                                Image(systemName: "chevron.left")
-                                Text("Subreddits")
-                            }
+                    
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            communitiesSidebarVisible.toggle()
+                            print("Left button tapped")
+                        } label: {
+                            Image(systemName: "chevron.left")
+                            Text("Subreddits")
                         }
                     }
-//                }
-                SideMenu(isShowing: $presentSideMenu)
+                }
             }
         }
     }
@@ -64,8 +61,8 @@ struct PostView: View {
     }
 }
 
-struct PostView_Previews: PreviewProvider {
-    static var previews: some View {
-        PostsView()
-    }
-}
+//struct PostView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PostsView()
+//    }
+//}

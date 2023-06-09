@@ -13,8 +13,8 @@
 		AE4A96342A2FBBE300BA96CF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96332A2FBBE300BA96CF /* Model.swift */; };
 		AE4A96362A2FCCC100BA96CF /* WebHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96352A2FCCC100BA96CF /* WebHandler.swift */; };
 		AE4A96522A3359D900BA96CF /* SlidingTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96512A3359D800BA96CF /* SlidingTabView.swift */; };
-		AE4A96542A335B9500BA96CF /* PostsAndCommunitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96532A335B9500BA96CF /* PostsAndCommunitiesView.swift */; };
 		AE4A96562A337B4000BA96CF /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96552A337B4000BA96CF /* SidebarView.swift */; };
+		AE4A96592A33A27100BA96CF /* Community.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96582A33A27100BA96CF /* Community.swift */; };
 		AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C32A2CCB3300889B3E /* openredApp.swift */; };
 		AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C52A2CCB3300889B3E /* ContentView.swift */; };
 		AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE89D4C72A2CCB3600889B3E /* Assets.xcassets */; };
@@ -50,8 +50,8 @@
 		AE4A96332A2FBBE300BA96CF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		AE4A96352A2FCCC100BA96CF /* WebHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebHandler.swift; sourceTree = "<group>"; };
 		AE4A96512A3359D800BA96CF /* SlidingTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingTabView.swift; sourceTree = "<group>"; };
-		AE4A96532A335B9500BA96CF /* PostsAndCommunitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsAndCommunitiesView.swift; sourceTree = "<group>"; };
 		AE4A96552A337B4000BA96CF /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		AE4A96582A33A27100BA96CF /* Community.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Community.swift; sourceTree = "<group>"; };
 		AE89D4C02A2CCB3300889B3E /* openred.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openred.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4C32A2CCB3300889B3E /* openredApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredApp.swift; sourceTree = "<group>"; };
 		AE89D4C52A2CCB3300889B3E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -112,7 +112,6 @@
 			children = (
 				AE4A962E2A2F96E400BA96CF /* PostsView.swift */,
 				AE4A96302A2F974C00BA96CF /* Post.swift */,
-				AE4A96532A335B9500BA96CF /* PostsAndCommunitiesView.swift */,
 			);
 			path = Posts;
 			sourceTree = "<group>";
@@ -124,6 +123,14 @@
 				AE4A96352A2FCCC100BA96CF /* WebHandler.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		AE4A96572A33A25500BA96CF /* Communities */ = {
+			isa = PBXGroup;
+			children = (
+				AE4A96582A33A27100BA96CF /* Community.swift */,
+			);
+			path = Communities;
 			sourceTree = "<group>";
 		};
 		AE89D4B72A2CCB3300889B3E = {
@@ -151,6 +158,7 @@
 		AE89D4C22A2CCB3300889B3E /* openred */ = {
 			isa = PBXGroup;
 			children = (
+				AE4A96572A33A25500BA96CF /* Communities */,
 				AE4A962D2A2F96A100BA96CF /* Posts */,
 				AE89D4C32A2CCB3300889B3E /* openredApp.swift */,
 				AE4A96322A2FBBD000BA96CF /* Model */,
@@ -365,8 +373,8 @@
 				AE4A96342A2FBBE300BA96CF /* Model.swift in Sources */,
 				AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */,
 				AE4A96312A2F974C00BA96CF /* Post.swift in Sources */,
+				AE4A96592A33A27100BA96CF /* Community.swift in Sources */,
 				AE4A96522A3359D900BA96CF /* SlidingTabView.swift in Sources */,
-				AE4A96542A335B9500BA96CF /* PostsAndCommunitiesView.swift in Sources */,
 				AE4A96562A337B4000BA96CF /* SidebarView.swift in Sources */,
 				AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */,
 				AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */,

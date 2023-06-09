@@ -14,10 +14,74 @@
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
             landmarkName = "updateDocument(doc:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "17C6F537-A521-49A9-B883-3479F116CE63 - b45977413a5669fd"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "openred.Model.updateDocument(doc: Erik.Document) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "35"
+                  endingLineNumber = "35"
+                  offsetFromSymbolStart = "424">
+               </Location>
+               <Location
+                  uuid = "17C6F537-A521-49A9-B883-3479F116CE63 - b45977413a566961"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "openred.Model.updateDocument(doc: Erik.Document) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "39"
+                  endingLineNumber = "39"
+                  offsetFromSymbolStart = "492">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D2CC2925-B088-48AB-8B18-849B9AA19CF3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Model/Model.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "updateCommunitiesList(doc:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "14BD5B35-FC25-47A1-86BA-0B3FEAC07BE4"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/SidebarView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

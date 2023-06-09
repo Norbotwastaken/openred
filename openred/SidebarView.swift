@@ -9,22 +9,41 @@ import Foundation
 import SwiftUI
 
 struct MenuContent: View {
+    @EnvironmentObject var model: Model
+    
     var body: some View {
-        List {
-            Text("My Profile").onTapGesture {
-                print("My Profile")
+        HStack {
+            ZStack {
+                VStack(alignment: .leading, spacing: 0) {
+                    List {
+                        ForEach(model.communities) { community in
+                            CommunityRow(community: community)
+                        }
+                    }.scrollContentBackground(.visible)
+                    .listStyle(PlainListStyle())
+//                    .frame(height: 140)
+//                    .padding(.bottom, 30)
+//                    Spacer()
+                }
+                .padding(.top, 30)
+                .frame(width: 300)
+                .background(
+                    .background
+                )
             }
-            Text("Posts").onTapGesture {
-                print("Posts")
-            }
-            Text("Logout").onTapGesture {
-                print("Logout")
-            }
-        }
+            Spacer()
+        }.background(.clear)
     }
 }
 
-struct SideMenu: View {
+struct CommunityRow: View {
+    var community: Community
+    var body: some View {
+        Text(community.name)
+    }
+}
+
+struct CommunitiesSidebar: View {
     @Binding var isShowing: Bool
     
     var edgeTransition: AnyTransition = .move(edge: .leading)
@@ -32,7 +51,7 @@ struct SideMenu: View {
         ZStack(alignment: .bottom) {
             if (isShowing) {
                 Color.black
-                    .opacity(0.3)
+                    .opacity(0.4)
                     .ignoresSafeArea()
                     .onTapGesture {
                         isShowing.toggle()
