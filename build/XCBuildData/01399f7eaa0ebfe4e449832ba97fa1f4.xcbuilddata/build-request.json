@@ -1,0 +1,49 @@
+{
+  "buildCommand" : {
+    "command" : "prepareForIndexing",
+    "enableIndexBuildArena" : false,
+    "targets" : null
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e9815d51253a14a525a47ac3dddbf2fcd09"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e980ebf4b92207bb4de276b97785d633d9e"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e980384e53b78bdb715ba3b134b7d363fb6"
+    }
+  ],
+  "containerPath" : "/Users/norbert/Documents/openred/Pods/Pods.xcodeproj",
+  "continueBuildingAfterErrors" : true,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "",
+      "buildProductsPath" : "",
+      "derivedDataPath" : "/Users/norbert/Library/Developer/Xcode/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/norbert/Library/Developer/Xcode/DerivedData/Pods-btzwzmhwtgbgmogfnlpxenpicbcu/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/norbert/Library/Developer/Xcode/DerivedData/Pods-btzwzmhwtgbgmogfnlpxenpicbcu/Index.noindex/PrecompiledHeaders",
+      "pchPath" : ""
+    },
+    "configurationName" : "Release",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ENABLE_PREVIEWS" : "NO"
+        }
+      }
+    }
+  },
+  "qos" : "default",
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : true,
+  "useImplicitDependencies" : false,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : false
+}

@@ -1,0 +1,23 @@
+PODS:
+  - Erik (5.0.0):
+    - Erik/Core (= 5.0.0)
+    - Kanna
+  - Erik/Core (5.0.0):
+    - Kanna
+  - Kanna (5.2.7)
+
+DEPENDENCIES:
+  - Erik
+
+SPEC REPOS:
+  trunk:
+    - Erik
+    - Kanna
+
+SPEC CHECKSUMS:
+  Erik: 660e6bc7fe68a0c17e0f50142ae2d8168426c22e
+  Kanna: 01cfbddc127f5ff0963692f285fcbc8a9d62d234
+
+PODFILE CHECKSUM: dc7f5bf66b27738f0f30e9fc97dfff7d17d06fac
+
+COCOAPODS: 1.12.1

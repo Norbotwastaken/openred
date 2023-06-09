@@ -1,0 +1,843 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		16730980E7B9AFCC3BD447CE561937F0 /* Kanna.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FC4CD0F2DF1BE25FBDC641456087B1 /* Kanna.swift */; };
+		1F587ECC9997FFF8762FF63AC74163AB /* Erik.swift in Sources */ = {isa = PBXBuildFile; fileRef = E534954D355399BD017E12A2D50CADD6 /* Erik.swift */; };
+		220A28CAB1385D93AD0012CBC016E874 /* libxmlHTMLNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5597566DC3C8E4C040A5DEB81DBC3 /* libxmlHTMLNode.swift */; };
+		276ED66A2AED9F5EF50BDFDE45CB78C9 /* CSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54C0487B1905F63568A90AE4738DEC39 /* CSS.swift */; };
+		3D72AA1BF0B57A56D7007247EA0CD124 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		469E62A75215AB2DA971F62C59D9998A /* LayoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257796AAB649D0CBF8D820B9DEB17EC2 /* LayoutEngine.swift */; };
+		6B1FAF0FB0E0CC873F61B93C21543024 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		718CE181724A599F6BB3B7BDE54C8B4B /* Kanna-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7418280B4569021063BF10F2E349AB19 /* Kanna-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80EBA348D59B359E276C776B1AA360DB /* libxmlHTMLDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD73BD591FA0E0CA59BCB62D6880CE5 /* libxmlHTMLDocument.swift */; };
+		8B7396F1C06AFBE0FF012804ADF24C8B /* Erik-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 29EB6FA50AA2FDE10D07925E237A3507 /* Erik-dummy.m */; };
+		941A99286DBABB77AB74C0CE4F44A9A8 /* Pods-openred-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A72EAFA0F97B80CD30DB0295A11DB5FD /* Pods-openred-dummy.m */; };
+		AEB86CAA3F0F45464FBE7F11CA05FB30 /* Kanna-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B60E52609E32D9E9EF6FDAF6338FB1 /* Kanna-dummy.m */; };
+		B40B2293274495BFB4F6216E55EF381B /* libxmlParserOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26453E913E2EDAB25777CBF2E80EDE1 /* libxmlParserOption.swift */; };
+		CF4BD668EF6A768B93F6912F003A8D6E /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4C5F58E72C83DD79BD0AC1A6DC2439 /* Document.swift */; };
+		DB1141D315F83AE82B5EFD3DA1E240DD /* Pods-openred-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DCC25A45E1482BAC293D952C3F6369F /* Pods-openred-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DDBCB6F71A38BACC0A4D19D01B05E4EB /* Deprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD63517E96556F5FECE78B06D743E10 /* Deprecated.swift */; };
+		EAC0F7B147640E583BD4C421C3527054 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		F33DFD58EFF0BC7AC874934E390140E6 /* Kanna.h in Headers */ = {isa = PBXBuildFile; fileRef = F035BA4E171068E8F0DF736E396922CB /* Kanna.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FC41F9AB27B82B006045EB4DE2FDF21F /* Erik-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 10277CFFB41BBE58CC27948449EF097F /* Erik-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2AB572646B980E517CADD1824A7619C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 93AC747EDE1EE56F89BBF405C1D67027;
+			remoteInfo = Kanna;
+		};
+		BD4AC95AF6F1F0F062B8F6F188190E3B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7BAE74AAE7EBCA9913483051C2FC03C7;
+			remoteInfo = Erik;
+		};
+		EBB81D62B0668DC79BE29AD0CAE06FB0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 93AC747EDE1EE56F89BBF405C1D67027;
+			remoteInfo = Kanna;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0237D0220A623EBAEBEAFC79CF567C59 /* Pods-openred.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-openred.release.xcconfig"; sourceTree = "<group>"; };
+		10277CFFB41BBE58CC27948449EF097F /* Erik-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-umbrella.h"; sourceTree = "<group>"; };
+		13E5597566DC3C8E4C040A5DEB81DBC3 /* libxmlHTMLNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLNode.swift; path = Sources/Kanna/libxmlHTMLNode.swift; sourceTree = "<group>"; };
+		1ED0089718A439068F8C0E263B3AA2B3 /* Pods-openred.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-openred.modulemap"; sourceTree = "<group>"; };
+		2470C5E6B7270B222E4AE35A47FFDD4B /* Pods-openred-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-openred-acknowledgements.plist"; sourceTree = "<group>"; };
+		257796AAB649D0CBF8D820B9DEB17EC2 /* LayoutEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutEngine.swift; path = Sources/LayoutEngine.swift; sourceTree = "<group>"; };
+		2889AFF71708636F634138C1EF4435C7 /* Kanna.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.debug.xcconfig; sourceTree = "<group>"; };
+		29EB6FA50AA2FDE10D07925E237A3507 /* Erik-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Erik-dummy.m"; sourceTree = "<group>"; };
+		3DCC25A45E1482BAC293D952C3F6369F /* Pods-openred-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-openred-umbrella.h"; sourceTree = "<group>"; };
+		3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Kanna.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		47B471AA801AC995FC810EF18AC230A3 /* Kanna.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Kanna.modulemap; sourceTree = "<group>"; };
+		510D86E1DBBD442925926CBAF9765096 /* Pods-openred-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-openred-Info.plist"; sourceTree = "<group>"; };
+		51F410FC10C4309BBC9CFD20EE2AC821 /* Pods-openred-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-openred-frameworks.sh"; sourceTree = "<group>"; };
+		54C0487B1905F63568A90AE4738DEC39 /* CSS.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CSS.swift; path = Sources/Kanna/CSS.swift; sourceTree = "<group>"; };
+		5935ACCA8A98A39DA47C370C0358CD0B /* Erik-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-prefix.pch"; sourceTree = "<group>"; };
+		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		7418280B4569021063BF10F2E349AB19 /* Kanna-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-umbrella.h"; sourceTree = "<group>"; };
+		7D8704EB5321322118D4E5C433BA5B90 /* Kanna-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-prefix.pch"; sourceTree = "<group>"; };
+		827064B69C11E8EFEFF052CA1D420C56 /* Pods-openred */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-openred"; path = Pods_openred.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A72EAFA0F97B80CD30DB0295A11DB5FD /* Pods-openred-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-openred-dummy.m"; sourceTree = "<group>"; };
+		B259FCB0741E702E42711EC956E8D2A8 /* Erik.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.debug.xcconfig; sourceTree = "<group>"; };
+		B4FC4CD0F2DF1BE25FBDC641456087B1 /* Kanna.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Kanna.swift; path = Sources/Kanna/Kanna.swift; sourceTree = "<group>"; };
+		B92D60F03DBA61EDCAF429071492AA5F /* Kanna-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Kanna-Info.plist"; sourceTree = "<group>"; };
+		C0DCCE80F5E890F7D0E197570673789D /* Erik.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.release.xcconfig; sourceTree = "<group>"; };
+		C26453E913E2EDAB25777CBF2E80EDE1 /* libxmlParserOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlParserOption.swift; path = Sources/Kanna/libxmlParserOption.swift; sourceTree = "<group>"; };
+		CB61052A8F03CF01F9E0C73F4BADD2EF /* Erik.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Erik.modulemap; sourceTree = "<group>"; };
+		CC4C5F58E72C83DD79BD0AC1A6DC2439 /* Document.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Document.swift; path = Sources/Document.swift; sourceTree = "<group>"; };
+		DD983AEAA1CEDB2096751BD9C8EA6947 /* Kanna.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.release.xcconfig; sourceTree = "<group>"; };
+		E3266783EDD12503A1C7080C2AB5CB8D /* Pods-openred.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-openred.debug.xcconfig"; sourceTree = "<group>"; };
+		E534954D355399BD017E12A2D50CADD6 /* Erik.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Erik.swift; path = Sources/Erik.swift; sourceTree = "<group>"; };
+		ECD63517E96556F5FECE78B06D743E10 /* Deprecated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deprecated.swift; path = Sources/Kanna/Deprecated.swift; sourceTree = "<group>"; };
+		EEB76A1D01BB152588992538CF9F8970 /* Pods-openred-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-openred-acknowledgements.markdown"; sourceTree = "<group>"; };
+		F035BA4E171068E8F0DF736E396922CB /* Kanna.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Kanna.h; path = Sources/Kanna/Kanna.h; sourceTree = "<group>"; };
+		F580961F4D88FA4167AFD186E0BEA447 /* Erik.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Erik.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F96C27F5E6AEA57135F7122C2F138693 /* Erik-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Erik-Info.plist"; sourceTree = "<group>"; };
+		F9B60E52609E32D9E9EF6FDAF6338FB1 /* Kanna-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Kanna-dummy.m"; sourceTree = "<group>"; };
+		FCD73BD591FA0E0CA59BCB62D6880CE5 /* libxmlHTMLDocument.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLDocument.swift; path = Sources/Kanna/libxmlHTMLDocument.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		860BDA3BEE73B06B7FE956EF513BFD16 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B1FAF0FB0E0CC873F61B93C21543024 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		896EFBADC80D0F157708352F74ED83C6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D72AA1BF0B57A56D7007247EA0CD124 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CB24A6D0FB444A7DB47287D1FA45171 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAC0F7B147640E583BD4C421C3527054 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1D55BCFA36E2748AC77015715BCCD4AD /* Pods-openred */ = {
+			isa = PBXGroup;
+			children = (
+				1ED0089718A439068F8C0E263B3AA2B3 /* Pods-openred.modulemap */,
+				EEB76A1D01BB152588992538CF9F8970 /* Pods-openred-acknowledgements.markdown */,
+				2470C5E6B7270B222E4AE35A47FFDD4B /* Pods-openred-acknowledgements.plist */,
+				A72EAFA0F97B80CD30DB0295A11DB5FD /* Pods-openred-dummy.m */,
+				51F410FC10C4309BBC9CFD20EE2AC821 /* Pods-openred-frameworks.sh */,
+				510D86E1DBBD442925926CBAF9765096 /* Pods-openred-Info.plist */,
+				3DCC25A45E1482BAC293D952C3F6369F /* Pods-openred-umbrella.h */,
+				E3266783EDD12503A1C7080C2AB5CB8D /* Pods-openred.debug.xcconfig */,
+				0237D0220A623EBAEBEAFC79CF567C59 /* Pods-openred.release.xcconfig */,
+			);
+			name = "Pods-openred";
+			path = "Target Support Files/Pods-openred";
+			sourceTree = "<group>";
+		};
+		1F9847FB1E07C542BCB4640B9DDF5D5E /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				CB61052A8F03CF01F9E0C73F4BADD2EF /* Erik.modulemap */,
+				29EB6FA50AA2FDE10D07925E237A3507 /* Erik-dummy.m */,
+				F96C27F5E6AEA57135F7122C2F138693 /* Erik-Info.plist */,
+				5935ACCA8A98A39DA47C370C0358CD0B /* Erik-prefix.pch */,
+				10277CFFB41BBE58CC27948449EF097F /* Erik-umbrella.h */,
+				B259FCB0741E702E42711EC956E8D2A8 /* Erik.debug.xcconfig */,
+				C0DCCE80F5E890F7D0E197570673789D /* Erik.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/Erik";
+			sourceTree = "<group>";
+		};
+		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		7231CE141A707F0BE67633B753839132 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				1D55BCFA36E2748AC77015715BCCD4AD /* Pods-openred */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		73E6437148458C2E1CDF59975ED36058 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				73F6F2D1821D16B4CC66A5D45BE41E64 /* Erik */,
+				7EAB0AD8135A9C3850CE9337F79BF91E /* Kanna */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		73F6F2D1821D16B4CC66A5D45BE41E64 /* Erik */ = {
+			isa = PBXGroup;
+			children = (
+				D7F4319BB3F4838593BE0D6707A3E96B /* Core */,
+				1F9847FB1E07C542BCB4640B9DDF5D5E /* Support Files */,
+			);
+			path = Erik;
+			sourceTree = "<group>";
+		};
+		7EAB0AD8135A9C3850CE9337F79BF91E /* Kanna */ = {
+			isa = PBXGroup;
+			children = (
+				54C0487B1905F63568A90AE4738DEC39 /* CSS.swift */,
+				ECD63517E96556F5FECE78B06D743E10 /* Deprecated.swift */,
+				F035BA4E171068E8F0DF736E396922CB /* Kanna.h */,
+				B4FC4CD0F2DF1BE25FBDC641456087B1 /* Kanna.swift */,
+				FCD73BD591FA0E0CA59BCB62D6880CE5 /* libxmlHTMLDocument.swift */,
+				13E5597566DC3C8E4C040A5DEB81DBC3 /* libxmlHTMLNode.swift */,
+				C26453E913E2EDAB25777CBF2E80EDE1 /* libxmlParserOption.swift */,
+				8172BBB76BC734C3AB6E722AD84ED7DB /* Support Files */,
+			);
+			path = Kanna;
+			sourceTree = "<group>";
+		};
+		8172BBB76BC734C3AB6E722AD84ED7DB /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				47B471AA801AC995FC810EF18AC230A3 /* Kanna.modulemap */,
+				F9B60E52609E32D9E9EF6FDAF6338FB1 /* Kanna-dummy.m */,
+				B92D60F03DBA61EDCAF429071492AA5F /* Kanna-Info.plist */,
+				7D8704EB5321322118D4E5C433BA5B90 /* Kanna-prefix.pch */,
+				7418280B4569021063BF10F2E349AB19 /* Kanna-umbrella.h */,
+				2889AFF71708636F634138C1EF4435C7 /* Kanna.debug.xcconfig */,
+				DD983AEAA1CEDB2096751BD9C8EA6947 /* Kanna.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/Kanna";
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				73E6437148458C2E1CDF59975ED36058 /* Pods */,
+				E5103736E4F298E7E0442ACF42A3E864 /* Products */,
+				7231CE141A707F0BE67633B753839132 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				578452D2E740E91742655AC8F1636D1F /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D7F4319BB3F4838593BE0D6707A3E96B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				CC4C5F58E72C83DD79BD0AC1A6DC2439 /* Document.swift */,
+				E534954D355399BD017E12A2D50CADD6 /* Erik.swift */,
+				257796AAB649D0CBF8D820B9DEB17EC2 /* LayoutEngine.swift */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		E5103736E4F298E7E0442ACF42A3E864 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F580961F4D88FA4167AFD186E0BEA447 /* Erik.framework */,
+				3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */,
+				827064B69C11E8EFEFF052CA1D420C56 /* Pods-openred */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		11C872E39AA6FB53905F272A8A0E1805 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC41F9AB27B82B006045EB4DE2FDF21F /* Erik-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63C13535CE48C1EC4F1D20D700126BC8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F33DFD58EFF0BC7AC874934E390140E6 /* Kanna.h in Headers */,
+				718CE181724A599F6BB3B7BDE54C8B4B /* Kanna-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		642600252E35A38696AF604BBD9FC6CB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB1141D315F83AE82B5EFD3DA1E240DD /* Pods-openred-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		7BAE74AAE7EBCA9913483051C2FC03C7 /* Erik */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9AB9367164202832DB95EBDE0E65DF2D /* Build configuration list for PBXNativeTarget "Erik" */;
+			buildPhases = (
+				11C872E39AA6FB53905F272A8A0E1805 /* Headers */,
+				676682FAE8B6BBD04F14BD54193FA503 /* Sources */,
+				896EFBADC80D0F157708352F74ED83C6 /* Frameworks */,
+				0F8F4A890F802D9E949AA2558A526407 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A23D44D8C7C3CCB8C6B6F7CBBB567E1B /* PBXTargetDependency */,
+			);
+			name = Erik;
+			productName = Erik;
+			productReference = F580961F4D88FA4167AFD186E0BEA447 /* Erik.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78C1C89AE32C98839F0FD52C09FFB06C /* Build configuration list for PBXNativeTarget "Kanna" */;
+			buildPhases = (
+				63C13535CE48C1EC4F1D20D700126BC8 /* Headers */,
+				C012244345598E2A671473545DAC48CC /* Sources */,
+				860BDA3BEE73B06B7FE956EF513BFD16 /* Frameworks */,
+				17711F5040629051C48EEA77040B98A0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Kanna;
+			productName = Kanna;
+			productReference = 3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E437548A541DC76FEE2D9DE310A1F088 /* Pods-openred */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0BB3AB01EF3921B60A8858426A7BAA95 /* Build configuration list for PBXNativeTarget "Pods-openred" */;
+			buildPhases = (
+				642600252E35A38696AF604BBD9FC6CB /* Headers */,
+				5D8EA39E66A410D18302C779282EC6C7 /* Sources */,
+				8CB24A6D0FB444A7DB47287D1FA45171 /* Frameworks */,
+				CA7DF1637FD82804035132048156F1B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				69291FB08726F0BED5DFD08E87D6C068 /* PBXTargetDependency */,
+				23DB9D73C15A2480AFFE00B61C8A71E7 /* PBXTargetDependency */,
+			);
+			name = "Pods-openred";
+			productName = Pods_openred;
+			productReference = 827064B69C11E8EFEFF052CA1D420C56 /* Pods-openred */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1300;
+				LastUpgradeCheck = 1300;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = E5103736E4F298E7E0442ACF42A3E864 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7BAE74AAE7EBCA9913483051C2FC03C7 /* Erik */,
+				93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */,
+				E437548A541DC76FEE2D9DE310A1F088 /* Pods-openred */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0F8F4A890F802D9E949AA2558A526407 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		17711F5040629051C48EEA77040B98A0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA7DF1637FD82804035132048156F1B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D8EA39E66A410D18302C779282EC6C7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				941A99286DBABB77AB74C0CE4F44A9A8 /* Pods-openred-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		676682FAE8B6BBD04F14BD54193FA503 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF4BD668EF6A768B93F6912F003A8D6E /* Document.swift in Sources */,
+				1F587ECC9997FFF8762FF63AC74163AB /* Erik.swift in Sources */,
+				8B7396F1C06AFBE0FF012804ADF24C8B /* Erik-dummy.m in Sources */,
+				469E62A75215AB2DA971F62C59D9998A /* LayoutEngine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C012244345598E2A671473545DAC48CC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				276ED66A2AED9F5EF50BDFDE45CB78C9 /* CSS.swift in Sources */,
+				DDBCB6F71A38BACC0A4D19D01B05E4EB /* Deprecated.swift in Sources */,
+				16730980E7B9AFCC3BD447CE561937F0 /* Kanna.swift in Sources */,
+				AEB86CAA3F0F45464FBE7F11CA05FB30 /* Kanna-dummy.m in Sources */,
+				80EBA348D59B359E276C776B1AA360DB /* libxmlHTMLDocument.swift in Sources */,
+				220A28CAB1385D93AD0012CBC016E874 /* libxmlHTMLNode.swift in Sources */,
+				B40B2293274495BFB4F6216E55EF381B /* libxmlParserOption.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		23DB9D73C15A2480AFFE00B61C8A71E7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Kanna;
+			target = 93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */;
+			targetProxy = 2AB572646B980E517CADD1824A7619C9 /* PBXContainerItemProxy */;
+		};
+		69291FB08726F0BED5DFD08E87D6C068 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Erik;
+			target = 7BAE74AAE7EBCA9913483051C2FC03C7 /* Erik */;
+			targetProxy = BD4AC95AF6F1F0F062B8F6F188190E3B /* PBXContainerItemProxy */;
+		};
+		A23D44D8C7C3CCB8C6B6F7CBBB567E1B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Kanna;
+			target = 93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */;
+			targetProxy = EBB81D62B0668DC79BE29AD0CAE06FB0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		071729392D6A04CF8F3D00DC2D4073BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E3266783EDD12503A1C7080C2AB5CB8D /* Pods-openred.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-openred/Pods-openred-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-openred/Pods-openred.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		53EBE4336C69EEBE3FC58ABD1CBDFBC4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B259FCB0741E702E42711EC956E8D2A8 /* Erik.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Erik/Erik-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Erik/Erik-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/Erik/Erik.modulemap";
+				PRODUCT_MODULE_NAME = Erik;
+				PRODUCT_NAME = Erik;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		7C3FBC45C4966EFE20583918767EFBE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		7FD5747214365A5ACADBD4EF870B0582 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C0DCCE80F5E890F7D0E197570673789D /* Erik.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Erik/Erik-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Erik/Erik-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/Erik/Erik.modulemap";
+				PRODUCT_MODULE_NAME = Erik;
+				PRODUCT_NAME = Erik;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		8C1ADE827AFDB84C83EC8706B8059ABA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2889AFF71708636F634138C1EF4435C7 /* Kanna.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Kanna/Kanna-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Kanna/Kanna-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/Kanna/Kanna.modulemap";
+				PRODUCT_MODULE_NAME = Kanna;
+				PRODUCT_NAME = Kanna;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		8F67243AC19D83198AC2263E8EEC97CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD983AEAA1CEDB2096751BD9C8EA6947 /* Kanna.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Kanna/Kanna-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Kanna/Kanna-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/Kanna/Kanna.modulemap";
+				PRODUCT_MODULE_NAME = Kanna;
+				PRODUCT_NAME = Kanna;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		F86BA24E6AACB619B21311EEC3FF45AD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0237D0220A623EBAEBEAFC79CF567C59 /* Pods-openred.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-openred/Pods-openred-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-openred/Pods-openred.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		FF0A36149038A192FFD678E1D4A40D3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0BB3AB01EF3921B60A8858426A7BAA95 /* Build configuration list for PBXNativeTarget "Pods-openred" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				071729392D6A04CF8F3D00DC2D4073BC /* Debug */,
+				F86BA24E6AACB619B21311EEC3FF45AD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C3FBC45C4966EFE20583918767EFBE2 /* Debug */,
+				FF0A36149038A192FFD678E1D4A40D3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78C1C89AE32C98839F0FD52C09FFB06C /* Build configuration list for PBXNativeTarget "Kanna" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C1ADE827AFDB84C83EC8706B8059ABA /* Debug */,
+				8F67243AC19D83198AC2263E8EEC97CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9AB9367164202832DB95EBDE0E65DF2D /* Build configuration list for PBXNativeTarget "Erik" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53EBE4336C69EEBE3FC58ABD1CBDFBC4 /* Debug */,
+				7FD5747214365A5ACADBD4EF870B0582 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

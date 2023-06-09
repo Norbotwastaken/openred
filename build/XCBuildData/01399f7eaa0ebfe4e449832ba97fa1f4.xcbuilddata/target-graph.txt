@@ -1,0 +1,7 @@
+Target dependency graph (3 targets)
+Kanna in Pods, no dependencies
+Erik in Pods, depends on:
+Kanna in Pods (explicit)
+Pods-openred in Pods, depends on:
+Erik in Pods (explicit)
+Kanna in Pods (explicit)
