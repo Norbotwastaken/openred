@@ -19,7 +19,7 @@ struct ContentView: View {
                     }
                 Text("Inbox")
                     .tabItem {
-                        Label("Inbox", systemImage: "message")
+                        Label("Inbox", systemImage: "envelope")
                     }
                 Text("Search")
                     .tabItem {

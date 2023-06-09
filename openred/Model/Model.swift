@@ -11,18 +11,28 @@ import Erik
 class Model: ObservableObject {
     @Published var posts: [Post] = []
     @Published var communities: [Community] = []
+    @Published var mainPageCommunities: [Community] = []
+    @Published var userFunctionCommunities: [Community] = []
     @Published var title: String
+    
+    let redditBaseURL: String = "https://old.reddit.com"
     
     var document: Document?
     
     init() {
-        self.title = "the default title"
+        self.title = ""
         self.document = nil
         browse()
+        
+        self.mainPageCommunities.append(Community("Home", link: redditBaseURL, iconName: "house.fill"))
+        self.mainPageCommunities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular", iconName: "chart.line.uptrend.xyaxis"))
+        self.mainPageCommunities.append(Community("All Posts", link: redditBaseURL + "/r/all", iconName: "a.circle.fill"))
+        self.userFunctionCommunities.append(Community("Saved", link: redditBaseURL + "/saved", iconName: "heart.text.square"))
+        self.userFunctionCommunities.append(Community("Moderator Posts", link: redditBaseURL + "/mod", iconName: "shield"))
     }
     
     func browse() {
-        Erik.visit(url: URL(string: "https://old.reddit.com/r/all")! ) { object, error in
+        Erik.visit(url: URL(string: redditBaseURL + "/r/all")! ) { object, error in
             if let doc = object {
                 self.document = doc
                 self.updateDocument(doc: doc)
@@ -55,11 +65,15 @@ class Model: ObservableObject {
     }
     
     func updateCommunitiesList(doc: Document) {
+        var unsortedCommunities: [Community] = []
         for element in doc.querySelectorAll(".sr-list #sr-bar li a") {
             let communityLink = element["href"]
             if let communityName = element.text {
-                communities.append(Community(communityName, link: communityLink ?? "no link"))
+                unsortedCommunities
+                    .append(Community(communityName, link: communityLink ?? "no link", iconName: nil))
             }
         }
+        self.communities = unsortedCommunities
+            .sorted { $0.name.lowercased() < $1.name.lowercased() }
     }
 }

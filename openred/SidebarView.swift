@@ -11,13 +11,26 @@ import SwiftUI
 struct MenuContent: View {
     @EnvironmentObject var model: Model
     
+    init() {
+        UIScrollView.appearance().bounces = false
+    }
+    
     var body: some View {
         HStack {
             ZStack {
                 VStack(alignment: .leading, spacing: 0) {
                     List {
-                        ForEach(model.communities) { community in
+                        ForEach(model.mainPageCommunities) { community in
                             CommunityRow(community: community)
+                        }
+                        // TODO: tie this to logged in user
+                        ForEach(model.userFunctionCommunities) { community in
+                            CommunityRow(community: community)
+                        }
+                        Section(header: Text("Subreddits")) {
+                            ForEach(model.communities) { community in
+                                CommunityRow(community: community)
+                            }
                         }
                     }.scrollContentBackground(.visible)
                     .listStyle(PlainListStyle())
@@ -25,7 +38,8 @@ struct MenuContent: View {
 //                    .padding(.bottom, 30)
 //                    Spacer()
                 }
-                .padding(.top, 30)
+                .padding(.top, 45)
+                .padding(.bottom, 20)
                 .frame(width: 300)
                 .background(
                     .background
@@ -39,7 +53,12 @@ struct MenuContent: View {
 struct CommunityRow: View {
     var community: Community
     var body: some View {
-        Text(community.name)
+        HStack {
+            if community.iconName != nil {
+                Image(systemName: community.iconName!)
+            }
+            Text(community.name)
+        }
     }
 }
 

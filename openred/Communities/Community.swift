@@ -12,10 +12,12 @@ struct Community: Identifiable, Codable {
     
     var name: String
     var link: String
+    var iconName: String?
     
-    init(_ name:String, link:String){
+    init(_ name:String, link:String, iconName:String?){
         self.id = name
         self.name = name
         self.link = link
+        self.iconName = iconName
     }
 }
