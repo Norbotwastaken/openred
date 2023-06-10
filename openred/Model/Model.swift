@@ -37,7 +37,7 @@ class Model: ObservableObject {
     }
     
     func loadCommunity(communityLink: String) {
-        self.posts = [] // needed to prompt scroll reset to top
+        self.posts = [] // prompt scroll reset to top
         Erik.visit(url: URL(string: communityLink)! ) { object, error in
             if let doc = object {
                 self.updatePosts(doc: doc)
@@ -50,7 +50,7 @@ class Model: ObservableObject {
         self.posts = []
         
         var i = 0
-        for element in doc.querySelectorAll("#siteTable div.thing .entry") {
+        for element in doc.querySelectorAll("#siteTable div.thing:not(.promoted) .entry") {
             let title = element.querySelector(".top-matter p.title a.title")?.text
             let community = element.querySelector(".top-matter .tagline .subreddit")?.text
             let commentCount = element.querySelector(".top-matter .buttons .comments")?.text
@@ -83,7 +83,8 @@ class Model: ObservableObject {
     
     func setAdditionalCommunities() {
         self.mainPageCommunities.append(Community("Home", link: redditBaseURL, iconName: "house.fill"))
-        self.mainPageCommunities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular", iconName: "chart.line.uptrend.xyaxis"))
+        self.mainPageCommunities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular",
+                                                  iconName: "chart.line.uptrend.xyaxis.circle.fill"))
         self.mainPageCommunities.append(Community("All Posts", link: redditBaseURL + "/r/all", iconName: "a.circle.fill"))
         self.userFunctionCommunities.append(Community("Saved", link: redditBaseURL + "/saved", iconName: "heart.text.square"))
         self.userFunctionCommunities.append(Community("Moderator Posts", link: redditBaseURL + "/mod", iconName: "shield"))

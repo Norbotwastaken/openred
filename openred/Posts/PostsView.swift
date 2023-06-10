@@ -24,15 +24,6 @@ struct PostsView: View {
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            // Perform an action
-                            print("Add Item Tapped")
-                        } label: {
-                            Image(systemName: "ellipsis")
-                        }
-                    }
-                    
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {
                             communitiesSidebarVisible.toggle()
@@ -42,11 +33,51 @@ struct PostsView: View {
                             Text("Subreddits")
                         }
                     }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        HStack {
+                            Menu {
+                                Button(Label("Hot", systemImage: "flame"), action: doNothing)
+                                Button(Label("Top", systemImage: "arrow.up.to.line.compact")) {
+                                    Button("Hour", action: doNothing)
+                                    Button("Day", action: doNothing)
+                                    Button("Week", action: doNothing)
+                                    Button("Month", action: doNothing)
+                                    Button("Year", action: doNothing)
+                                    Button("All Time", action: doNothing)
+                                }
+                                Button(Label("New", systemImage: "clock.badge"), action: doNothing)
+                                Button(Label("Rising", systemImage: "chart.line.uptrend.xyaxis"), action: doNothing)
+                                Menu(Label("Controversial", systemImage: "arrow.right.and.line.vertical.and.arrow.left")) {
+                                    Button("Hour", action: doNothing)
+                                    Button("Day", action: doNothing)
+                                    Button("Week", action: doNothing)
+                                    Button("Month", action: doNothing)
+                                    Button("Year", action: doNothing)
+                                    Button("All Time", action: doNothing)
+                                }
+                            } label: {
+                                Label("Sort by", systemImage: "arrow.up.arrow.down")
+                            }
+//                            Button {
+//                                // Perform an action
+//                                print("Add Item Tapped")
+//                            } label: {
+//                                Image(systemName: "arrow.up.arrow.down")
+//                            }
+                            Button {
+                                // Perform an action
+                                print("Add Item Tapped")
+                            } label: {
+                                Image(systemName: "ellipsis")
+                            }
+                        }
+                    }
                 }
                 .toolbarBackground(.visible, for: .navigationBar)
             }
         }
     }
+    func doNothing() {}
 }
 
 struct PostView: View {
