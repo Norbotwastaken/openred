@@ -14,22 +14,20 @@ class Model: ObservableObject {
     @Published var mainPageCommunities: [Community] = []
     @Published var userFunctionCommunities: [Community] = []
     @Published var title: String
+    @Published var selectedCommunityLink: String
     
     let redditBaseURL: String = "https://old.reddit.com"
     
-//    var document: Document?
-    
     init() {
         self.title = ""
-//        self.document = nil
-        load()
+        self.selectedCommunityLink = redditBaseURL + "/r/all"
+        load(initialURL: selectedCommunityLink)
     }
     
-    func load() {
+    func load(initialURL: String) {
         setAdditionalCommunities()
-        Erik.visit(url: URL(string: redditBaseURL + "/r/all")! ) { object, error in
+        Erik.visit(url: URL(string: initialURL)! ) { object, error in
             if let doc = object {
-//                self.document = doc
                 self.updatePosts(doc: doc)
                 self.updateCommunitiesList(doc: doc)
             }
@@ -37,6 +35,10 @@ class Model: ObservableObject {
     }
     
     func loadCommunity(communityLink: String) {
+        self.selectedCommunityLink = communityLink
+        if selectedCommunityLink.hasSuffix("/") {
+            selectedCommunityLink = String(selectedCommunityLink.dropLast())
+        }
         self.posts = [] // prompt scroll reset to top
         Erik.visit(url: URL(string: communityLink)! ) { object, error in
             if let doc = object {
@@ -45,7 +47,16 @@ class Model: ObservableObject {
         }
     }
     
-    func updatePosts(doc: Document) {
+    func refreshWithSortModifier(sortModifier: String) {
+        self.posts = [] // prompt scroll reset to top
+        Erik.visit(url: URL(string: self.selectedCommunityLink + sortModifier)! ) { object, error in
+            if let doc = object {
+                self.updatePosts(doc: doc)
+            }
+        }
+    }
+    
+    private func updatePosts(doc: Document) {
         self.title = doc.title! // TODO: maybe use sub name as title instead
         self.posts = []
         
@@ -68,7 +79,7 @@ class Model: ObservableObject {
         }
     }
     
-    func updateCommunitiesList(doc: Document) {
+    private func updateCommunitiesList(doc: Document) {
         var unsortedCommunities: [Community] = []
         for element in doc.querySelectorAll(".sr-list #sr-bar li a") {
             let communityLink = element["href"]
