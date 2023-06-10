@@ -17,33 +17,37 @@ class Model: ObservableObject {
     
     let redditBaseURL: String = "https://old.reddit.com"
     
-    var document: Document?
+//    var document: Document?
     
     init() {
         self.title = ""
-        self.document = nil
-        browse()
-        
-        self.mainPageCommunities.append(Community("Home", link: redditBaseURL, iconName: "house.fill"))
-        self.mainPageCommunities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular", iconName: "chart.line.uptrend.xyaxis"))
-        self.mainPageCommunities.append(Community("All Posts", link: redditBaseURL + "/r/all", iconName: "a.circle.fill"))
-        self.userFunctionCommunities.append(Community("Saved", link: redditBaseURL + "/saved", iconName: "heart.text.square"))
-        self.userFunctionCommunities.append(Community("Moderator Posts", link: redditBaseURL + "/mod", iconName: "shield"))
+//        self.document = nil
+        load()
     }
     
-    func browse() {
+    func load() {
+        setAdditionalCommunities()
         Erik.visit(url: URL(string: redditBaseURL + "/r/all")! ) { object, error in
             if let doc = object {
-                self.document = doc
-                self.updateDocument(doc: doc)
+//                self.document = doc
+                self.updatePosts(doc: doc)
+                self.updateCommunitiesList(doc: doc)
             }
         }
     }
     
-    func updateDocument(doc: Document) {
-        self.title = doc.title!
-        
-        updateCommunitiesList(doc: doc)
+    func loadCommunity(communityLink: String) {
+        self.posts = [] // needed to prompt scroll reset to top
+        Erik.visit(url: URL(string: communityLink)! ) { object, error in
+            if let doc = object {
+                self.updatePosts(doc: doc)
+            }
+        }
+    }
+    
+    func updatePosts(doc: Document) {
+        self.title = doc.title! // TODO: maybe use sub name as title instead
+        self.posts = []
         
         var i = 0
         for element in doc.querySelectorAll("#siteTable div.thing .entry") {
@@ -75,5 +79,13 @@ class Model: ObservableObject {
         }
         self.communities = unsortedCommunities
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
+    }
+    
+    func setAdditionalCommunities() {
+        self.mainPageCommunities.append(Community("Home", link: redditBaseURL, iconName: "house.fill"))
+        self.mainPageCommunities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular", iconName: "chart.line.uptrend.xyaxis"))
+        self.mainPageCommunities.append(Community("All Posts", link: redditBaseURL + "/r/all", iconName: "a.circle.fill"))
+        self.userFunctionCommunities.append(Community("Saved", link: redditBaseURL + "/saved", iconName: "heart.text.square"))
+        self.userFunctionCommunities.append(Community("Moderator Posts", link: redditBaseURL + "/mod", iconName: "shield"))
     }
 }

@@ -19,6 +19,7 @@ struct PostsView: View {
                         PostView(post: post)
                     }
                 }
+//                .background(Color(UIColor.systemGray5))
                 .listStyle(PlainListStyle())
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
@@ -42,6 +43,7 @@ struct PostsView: View {
                         }
                     }
                 }
+                .toolbarBackground(.visible, for: .navigationBar)
             }
         }
     }
