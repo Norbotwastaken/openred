@@ -36,34 +36,38 @@ struct PostsView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         HStack {
                             Menu {
-                                Button(Label("Hot", systemImage: "flame"), action: doNothing)
-                                Button(Label("Top", systemImage: "arrow.up.to.line.compact")) {
-                                    Button("Hour", action: doNothing)
-                                    Button("Day", action: doNothing)
-                                    Button("Week", action: doNothing)
-                                    Button("Month", action: doNothing)
-                                    Button("Year", action: doNothing)
-                                    Button("All Time", action: doNothing)
+                                Button(action: doNothing) {
+                                    Label("Hot", systemImage: "flame")
                                 }
-                                Button(Label("New", systemImage: "clock.badge"), action: doNothing)
-                                Button(Label("Rising", systemImage: "chart.line.uptrend.xyaxis"), action: doNothing)
-                                Menu(Label("Controversial", systemImage: "arrow.right.and.line.vertical.and.arrow.left")) {
+                                Menu {
                                     Button("Hour", action: doNothing)
                                     Button("Day", action: doNothing)
                                     Button("Week", action: doNothing)
                                     Button("Month", action: doNothing)
                                     Button("Year", action: doNothing)
                                     Button("All Time", action: doNothing)
+                                } label: {
+                                    Label("Top", systemImage: "arrow.up.to.line.compact")
+                                }
+                                Button(action: doNothing) {
+                                    Label("New", systemImage: "clock.badge")
+                                }
+                                Button(action: doNothing) {
+                                    Label("Rising", systemImage: "chart.line.uptrend.xyaxis")
+                                }
+                                Menu {
+                                    Button("Hour", action: doNothing)
+                                    Button("Day", action: doNothing)
+                                    Button("Week", action: doNothing)
+                                    Button("Month", action: doNothing)
+                                    Button("Year", action: doNothing)
+                                    Button("All Time", action: doNothing)
+                                } label: {
+                                    Label("Controversial", systemImage: "arrow.right.and.line.vertical.and.arrow.left")
                                 }
                             } label: {
                                 Label("Sort by", systemImage: "arrow.up.arrow.down")
                             }
-//                            Button {
-//                                // Perform an action
-//                                print("Add Item Tapped")
-//                            } label: {
-//                                Image(systemName: "arrow.up.arrow.down")
-//                            }
                             Button {
                                 // Perform an action
                                 print("Add Item Tapped")
