@@ -28,6 +28,7 @@ class Model: ObservableObject {
         setAdditionalCommunities()
         Erik.visit(url: URL(string: initialURL)! ) { object, error in
             if let doc = object {
+                self.updateTitle(doc: doc)
                 self.updatePosts(doc: doc)
                 self.updateCommunitiesList(doc: doc)
             }
@@ -42,6 +43,7 @@ class Model: ObservableObject {
         self.posts = [] // prompt scroll reset to top
         Erik.visit(url: URL(string: communityLink)! ) { object, error in
             if let doc = object {
+                self.updateTitle(doc: doc)
                 self.updatePosts(doc: doc)
             }
         }
@@ -56,8 +58,12 @@ class Model: ObservableObject {
         }
     }
     
+    private func updateTitle(doc: Document) {
+        let newTitle = doc.querySelector(".pagename.redditname a")?.text ?? title
+        self.title = newTitle.prefix(1).capitalized + String(newTitle.dropFirst())
+    }
+    
     private func updatePosts(doc: Document) {
-        self.title = doc.title! // TODO: maybe use sub name as title instead
         self.posts = []
         
         var i = 0
