@@ -17,13 +17,14 @@ struct PostsView: View {
                 List {
                     ForEach(model.posts) { post in
                         PostView(post: post)
+                            .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                            .listRowSeparator(.hidden)
                     }
                 }
 //                .background(Color(UIColor.systemGray5))
                 .listStyle(PlainListStyle())
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
-                .listRowSeparator(.hidden)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {
@@ -58,10 +59,20 @@ struct PostView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Spacer().background(Color(UIColor.systemGray5)).frame(minHeight: 2)
-            Text(post.title).font(.headline)
-            // content
-            Spacer().frame(minHeight: 200)
+            Text(post.title)
+                .font(.headline)
+                .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
+                .fixedSize(horizontal: false, vertical: false)
+            ZStack {
+                AsyncImage(url: URL(string: "https://i.imgur.com/cLUedH2.jpeg")) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    ProgressView()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: 300)
             HStack {
                 VStack {
                     if let community = post.community {
@@ -102,6 +113,10 @@ struct PostView: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .frame(maxWidth: .infinity)
+            .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
+            Rectangle()
+                .fill(Color(UIColor.systemGray5).shadow(.inner(radius: 2, y: 1)).opacity(0.5))
+                .frame(maxWidth: .infinity, maxHeight: 5)
         }
     }
 }

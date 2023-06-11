@@ -104,6 +104,10 @@ class Model: ObservableObject {
             let score = element["data-score"]
             // data-is-gallery="true" Tag for galleries
             
+            if let media = element.querySelector(".entry .expando") {
+                
+            }
+            
             // Transform '3 hours ago' into '3h'
             if let postAgeSections = submittedAge?.components(separatedBy: " ") {
                 submittedAge = postAgeSections[0] + postAgeSections[1].prefix(1)
