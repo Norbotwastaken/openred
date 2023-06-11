@@ -7,17 +7,24 @@
 
 import SwiftUI
 import AVKit
+import ExytePopupView
 
 struct PostsView: View {
     @EnvironmentObject var model: Model
     @Binding var communitiesSidebarVisible: Bool
+    @State var showing = false
+    
+    @State var player = AVPlayer()
+    
+    var videoLink: String = "https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8"
+    // https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8?a=1689099504%2COTc0YzQyZmRhZDhmZThlZDViYjc1MWFkYTBmZTEyOTgzYmMxN2IwZWNhZGMyOTliYTk2NjVjZWFmY2NkMmU5NA%3D%3D&v=1&f=sd
     
     var body: some View {
         ZStack {
             NavigationStack {
                 List {
                     ForEach(model.posts) { post in
-                        PostView(post: post)
+                        PostView(showing: $showing, post: post)
                             .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                             .listRowSeparator(.hidden)
                     }
@@ -49,6 +56,22 @@ struct PostsView: View {
                     }
                 }
                 .toolbarBackground(.visible, for: .navigationBar)
+                .popup(isPresented: $showing) {
+                    VideoPlayerView(videoURL: URL(string: videoLink)!)
+                        .onAppear() {
+//                            player = AVPlayer(url: URL(string: videoLink)!)
+//                            player.play()
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    Rectangle()
+//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                        .foregroundColor(Color.cyan)
+                    } customize: {
+                        $0.type(.floater(verticalPadding: 0, horizontalPadding: 0, useSafeAreaInset: false))
+                            .closeOnTap(false).backgroundColor(Color.black).position(.top)
+                            .appearFrom(.top).animation(.easeIn(duration: 0))
+                            .isOpaque(true)
+                    }
             }
         }
     }
@@ -56,8 +79,8 @@ struct PostsView: View {
 
 struct PostView: View {
     @EnvironmentObject var model: Model
-//    @State var player = AVPlayer(url: URL(string: "https://i.imgur.com/A0uSYLF.mp4")!)
-    @State private var showingPopover = false
+//    @State var avPlayer = AVPlayer(url: URL(string: "https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8?a=1689099504%2COTc0YzQyZmRhZDhmZThlZDViYjc1MWFkYTBmZTEyOTgzYmMxN2IwZWNhZGMyOTliYTk2NjVjZWFmY2NkMmU5NA%3D%3D&v=1&f=sd")!)
+    @Binding var showing: Bool
     var post: Post
     
     var body: some View {
@@ -75,22 +98,23 @@ struct PostView: View {
 //                    ProgressView()
 //                }
                 
-                AsyncImage(url: URL(string: "https://external-preview.redd.it/OHN1NDFwOWhqYzViMROWQp8u0aNhb9RRct3G8JqqU1tAu90RWyV40ipGUCP-.png?width=140&height=140&crop=140:140,smart&format=jpg&v=enabled&lthumb=true&s=0061202d36bc9e581fee91ccf8a9d432bfaaf521")) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(maxHeight: 140)
-                } placeholder: {
-                    ProgressView()
-                }
-                .onTapGesture {
-                    showingPopover = true
-                }
-                .popover(isPresented: $showingPopover) {
-                    Text("Your content here")
-                        .font(.headline)
-                        .padding()
-                }
+                
+                    Rectangle()
+                        .frame(height: 140)
+                    AsyncImage(url: URL(string: "https://external-preview.redd.it/OHN1NDFwOWhqYzViMROWQp8u0aNhb9RRct3G8JqqU1tAu90RWyV40ipGUCP-.png?width=140&height=140&crop=140:140,smart&format=jpg&v=enabled&lthumb=true&s=0061202d36bc9e581fee91ccf8a9d432bfaaf521")) { image in
+                        image
+                        //                        .resizable()
+                        //                        .scaledToFill()
+                            .frame(maxWidth: .infinity, maxHeight: 140)
+                    } placeholder: {
+                        ProgressView()
+                    }
+//                    .onTapGesture {
+//                        showing = true
+//                    }
+//                    .popover(isPresented: $showing) {
+//                        Rectangle().frame(height: 140)
+//                    }
                 
 //                AnimatedGifView(url: Binding(get: { URL(string: "https://i.imgur.com/EM7f96Q.gif")! }, set: { _ in }))
                 // https://i.imgur.com/EM7f96Q.gifv
@@ -101,7 +125,20 @@ struct PostView: View {
 //                    .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                    .scaledToFill()
             }
-            .frame(maxWidth: .infinity, maxHeight: 800)
+            .onTapGesture {
+                showing = true
+            }
+//            .popup(isPresented: $showing) {
+//                VideoPlayer(player: avPlayer)
+//                Rectangle()
+//                    .frame(width: 300, height: 500)
+//                    .foregroundColor(Color.cyan)
+//                } customize: {
+//                    $0.type(.floater(verticalPadding: 10, horizontalPadding: 10, useSafeAreaInset: true))
+//                        .autohideIn(10).closeOnTap(false).backgroundColor(Color.gray).position(.top)
+//                        .appearFrom(.top)
+//                }
+            .frame(maxWidth: .infinity, maxHeight: 500)
             HStack {
                 VStack {
                     if let community = post.community {
@@ -214,6 +251,18 @@ struct SortMenu: View {
     func sortCommunity(sortModifier: String) {
         model.refreshWithSortModifier(sortModifier: sortModifier)
     }
+}
+
+struct VideoPlayerView: UIViewControllerRepresentable {
+    var videoURL: URL
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let player = AVPlayer(url: videoURL)
+        let playerController = AVPlayerViewController()
+        playerController.player = player
+        player.play()
+        return playerController
+    }
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {}
 }
 
 //struct PostView_Previews: PreviewProvider {

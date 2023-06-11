@@ -11,7 +11,7 @@ import AVKit
 
 struct ContentView: View {
     @State var communitiesSidebarVisible = false
-    @State var player = AVPlayer(url: URL(string: "https://i.imgur.com/A0uSYLF.mp4")!)
+//    @State var player = AVPlayer(url: URL(string: "https://i.imgur.com/A0uSYLF.mp4")!)
     
     var body: some View {
         ZStack{
@@ -20,8 +20,8 @@ struct ContentView: View {
                     .tabItem {
                         Label("Feed", systemImage: "newspaper")
                     }
-//                Text("Inbox")
-                VideoPlayer(player: player)
+                Text("Inbox")
+//                VideoPlayer(player: player)
                     .tabItem {
                         Label("Inbox", systemImage: "envelope")
                     }
@@ -53,13 +53,13 @@ struct ContentView: View {
 //    }
 //}
 
-extension AVPlayerViewController {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        self.showsPlaybackControls = true
-        self.videoGravity = .resizeAspect
-    }
-}
+//extension AVPlayerViewController {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//        self.showsPlaybackControls = true
+//        self.videoGravity = .resizeAspect
+//    }
+//}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

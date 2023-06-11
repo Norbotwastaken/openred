@@ -7,60 +7,75 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1119BB99FE65FEEA8D08332195F21172 /* SwiftyGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 976FED88C6557072F92BCE3119615AE3 /* SwiftyGif.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		12C043525A25252B692AB7089BD72D51 /* NSImageView+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCE42935BF00FDA93B60BC6F9906AA7 /* NSImageView+SwiftyGif.swift */; };
-		1AF56CBC202584057B79228B4B1D1BBD /* Pods-openred-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DCC25A45E1482BAC293D952C3F6369F /* Pods-openred-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1119BB99FE65FEEA8D08332195F21172 /* SwiftyGif.h in Headers */ = {isa = PBXBuildFile; fileRef = FC77B32D883E94E013C8488539972C16 /* SwiftyGif.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		11BDE0960E61401D76260630C6E43387 /* Kanna-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 58151AA068667747D57FD62B35D6A3F5 /* Kanna-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		12C043525A25252B692AB7089BD72D51 /* NSImageView+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23F7C2C2071AF7E59D053A490C95FA8 /* NSImageView+SwiftyGif.swift */; };
 		1C4037F996AFFB10E6563988C4E0C29D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		1E0F83CE320F1651CB12A8AB1CBD19D9 /* SwiftyGifManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAEFEE77B085B7E0B61F82BE423D503 /* SwiftyGifManager.swift */; };
-		1F587ECC9997FFF8762FF63AC74163AB /* Erik.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE8109C6B65793101D3613A78D4A5E9 /* Erik.swift */; };
-		286267B5F2BC88C11E489E5FDB363061 /* Kanna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4C747E165B21F859E4BFFBBDD42D /* Kanna.swift */; };
-		395619563F8B7FA2DA5CE962410A8E87 /* Pods-openred-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A72EAFA0F97B80CD30DB0295A11DB5FD /* Pods-openred-dummy.m */; };
-		3CEF40B7F96DE99A36D18690173508C1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		1D4B7EB9E1B6B97C36894D44193BEC1D /* Pods-openred-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DCC25A45E1482BAC293D952C3F6369F /* Pods-openred-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1E0F83CE320F1651CB12A8AB1CBD19D9 /* SwiftyGifManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A1DEF4F814700CA9811CF33ACA2293 /* SwiftyGifManager.swift */; };
+		1F587ECC9997FFF8762FF63AC74163AB /* Erik.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A59B41B605D44E02EA9BD169EA5275 /* Erik.swift */; };
+		2B6837D11681839C09568A6850C112CF /* CSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D46B3E1264ABB1F3AB4BBC19FAA62E /* CSS.swift */; };
+		314B1BA1EE89F6558BA1F3B65913F5C1 /* libxmlHTMLNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223B22ED5C7122AD80DD9FF2DCEE6781 /* libxmlHTMLNode.swift */; };
+		3531A1BAA860ED8B4EF199748655B139 /* PopupView.h in Headers */ = {isa = PBXBuildFile; fileRef = EF9919365DA50F70D183EB908ED58BA4 /* PopupView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3BE3A09F3894BDB05648AF1F9CE77545 /* Pods-openred-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A72EAFA0F97B80CD30DB0295A11DB5FD /* Pods-openred-dummy.m */; };
 		3D72AA1BF0B57A56D7007247EA0CD124 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		463A32B315490CD330D06A2430A7491C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		469E62A75215AB2DA971F62C59D9998A /* LayoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50266F85FB49866C966405D2B365341F /* LayoutEngine.swift */; };
-		58161A35C7DFB7B810A38E9AC4A90FAA /* libxmlHTMLDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE551304B290DC75BCFB009CC25B3F9D /* libxmlHTMLDocument.swift */; };
-		8A66DA13F49FDF9AC6E90A3F0E7DBCE2 /* ObjcAssociatedWeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534438221F42DD0CCA36879BCBEB8D27 /* ObjcAssociatedWeakObject.swift */; };
-		8B7396F1C06AFBE0FF012804ADF24C8B /* Erik-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C04E284BCB0E1B883A16F23E46D2BC /* Erik-dummy.m */; };
-		90F23D39B736A13F55C4B2796E9EA7A8 /* SwiftyGif-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = DF90B5031513D79CEAEC111B85D7664E /* SwiftyGif-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		91D1588721C4583DE122A8BF69366C7A /* CSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C1C4C5699AE808C2461411557B8768 /* CSS.swift */; };
-		9601C606511CFAD318FF531DC6B1433C /* Kanna-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A9FDFF01EB67CFB97D81834E337A55A /* Kanna-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C36EC8D0B7AFD87DAB894BC154C19A6A /* Kanna-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 80187E3EDA0E2A0BA47534D3DBD83FA1 /* Kanna-dummy.m */; };
-		C4D182E050EC7F72AD47E9C54ABD62FD /* Kanna.h in Headers */ = {isa = PBXBuildFile; fileRef = B0A13990FAE81FC7F82802477B56CA79 /* Kanna.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CF4BD668EF6A768B93F6912F003A8D6E /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98DA30591B1825A02FBFD243FD3643F /* Document.swift */; };
-		D34E39CEB1FDD7AC45E4FBB408016703 /* UIImage+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EE699BDA71FF9647242EA5D81F4F51 /* UIImage+SwiftyGif.swift */; };
-		D79D730E27B3CA4F5250FC579B577BE2 /* libxmlHTMLNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FDC1309CFB07F02510843A420BDB26 /* libxmlHTMLNode.swift */; };
-		E0BD10140EF6EB02E9238595F78DA5DB /* SwiftyGif-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 409B2DC26FC31F145D6E33326A52D199 /* SwiftyGif-dummy.m */; };
-		EC2456C6011E7720EF0B61C36AB5B774 /* NSImage+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2733C03260D4E6D1DDCCA9BFF1D1C6 /* NSImage+SwiftyGif.swift */; };
-		F20A47430E61CD01F6AF49F05064159E /* Deprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AE6F636673957DA6B5322F48F66382 /* Deprecated.swift */; };
-		F63EB3BFE99EE1487A02FAA2EB7BCB4B /* libxmlParserOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2CEB25F392FF88CA356B67B973585A /* libxmlParserOption.swift */; };
-		FC41F9AB27B82B006045EB4DE2FDF21F /* Erik-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3647194546DA935BF01821874E25D956 /* Erik-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FD42DF521EA338F958833869A844E603 /* UIImageView+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF2C36843EA3288CC9C8953653CC337 /* UIImageView+SwiftyGif.swift */; };
+		41602EF63F87457D4BFD732F06FA8461 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EDE9501FAFCB4A9FC24B9910406E69C /* PopupView.swift */; };
+		469E62A75215AB2DA971F62C59D9998A /* LayoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E7FF3065A4544A3D0EB883A45BFDFD /* LayoutEngine.swift */; };
+		5D909A8EE0405F237563032F7BD08C6D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009611235178C14C489CD288AA2405E6 /* Utils.swift */; };
+		6A67530CD7C57E816A5F1F8B84335914 /* Kanna.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E498DEF13949EE909D9877D6A43CA4 /* Kanna.swift */; };
+		6C489C52B5B505F01FE20ABCD618F3E7 /* libxmlParserOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ADFB013CF408A1605DB407C80B7D99 /* libxmlParserOption.swift */; };
+		6EEAA6EFDCC9EFF3B1DA3F6F46BB3223 /* Kanna-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 97ADA461FBD57A3482350D79559845BC /* Kanna-dummy.m */; };
+		797EB78F4021C5F5B32FD489CECD71C1 /* Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E93D2FB0105AF4BD95F72544C7DED64 /* Modifiers.swift */; };
+		7C626C5AFA77C7F6E9DD482274B79D8D /* Deprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19892C7D34DEE4C4880683F669ACACA1 /* Deprecated.swift */; };
+		7D072BEC44B34F452B080E6F6C147F4B /* Kanna.h in Headers */ = {isa = PBXBuildFile; fileRef = 33C9114A7CB9EC0455277FC6DE24E4BA /* Kanna.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8A66DA13F49FDF9AC6E90A3F0E7DBCE2 /* ObjcAssociatedWeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E24A6C549A7CA0571457795A1F312B /* ObjcAssociatedWeakObject.swift */; };
+		8B7396F1C06AFBE0FF012804ADF24C8B /* Erik-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C545DA26E834C724769E1231D6C7840 /* Erik-dummy.m */; };
+		90F23D39B736A13F55C4B2796E9EA7A8 /* SwiftyGif-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 301287E0475D96C4FB3589633D1F32AA /* SwiftyGif-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		970DE61AEAA96347D786F9628AE14FF6 /* FullscreenPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF780014A364159F4056C928AA5312E2 /* FullscreenPopup.swift */; };
+		A7B0ED9733E45A64EB183EAC7397F14C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		ADFB8349ED4EA353EA1721D44D563702 /* libxmlHTMLDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8983731B72C1D966728D041D2B8F71E /* libxmlHTMLDocument.swift */; };
+		AFBF7D80664E01CEA0EA33FE6B2C507E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		C0CA075E8DDFDB2FE60A75A432B6338F /* ExytePopupView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADC0E773E4CC7F7FFAEBE3BCB4E5F25 /* ExytePopupView-dummy.m */; };
+		CB411E3DA6F8FB2821AADEE75770EEA8 /* ExytePopupView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = CA11DBEC3EEF2E5BE07EDEF42E7BE874 /* ExytePopupView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CF4BD668EF6A768B93F6912F003A8D6E /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CCEE760EB38F8262F028231832D3FB /* Document.swift */; };
+		D34E39CEB1FDD7AC45E4FBB408016703 /* UIImage+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F20413AF5046C10BD2776A399BBF70 /* UIImage+SwiftyGif.swift */; };
+		D9908D7B550CF222D91002C073EB6F39 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		E0BD10140EF6EB02E9238595F78DA5DB /* SwiftyGif-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FE47674E55CBCDD617E534FDE323C016 /* SwiftyGif-dummy.m */; };
+		EC2456C6011E7720EF0B61C36AB5B774 /* NSImage+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C82F3BC577DF07EE2987DB606861B8 /* NSImage+SwiftyGif.swift */; };
+		FC41F9AB27B82B006045EB4DE2FDF21F /* Erik-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 87469A5C6305FC7077862CBA4643906B /* Erik-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FD42DF521EA338F958833869A844E603 /* UIImageView+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D36F9D2C1CFC7C78926D486B3E3114 /* UIImageView+SwiftyGif.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2F3D2CD619E150D97B432817160DDD6F /* PBXContainerItemProxy */ = {
+		375022B83C1E4E67A22B7EF24F49D7E6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 93AC747EDE1EE56F89BBF405C1D67027;
 			remoteInfo = Kanna;
 		};
-		332EEB9BAADCAF7928F914F197659360 /* PBXContainerItemProxy */ = {
+		670D15D2706D859D48B6F0D3B3B08147 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E3BF7971BE024EA2CBC58C6A22E7F7CD;
+			remoteInfo = ExytePopupView;
+		};
+		82231BDE99EAB388A19B724678504992 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 93AC747EDE1EE56F89BBF405C1D67027;
+			remoteInfo = Kanna;
+		};
+		875B01D54715B256DF4A56BF9195E6AD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 15AEBAFA43912F898FC2E1A73025C946;
 			remoteInfo = SwiftyGif;
 		};
-		6A83C883447BB47814DFFA8712C64B46 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 93AC747EDE1EE56F89BBF405C1D67027;
-			remoteInfo = Kanna;
-		};
-		846AB11EFE62BC7670E237BABC0F30F4 /* PBXContainerItemProxy */ = {
+		C95B524B418C19E05B74390A9A00FB48 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
@@ -70,67 +85,104 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		009611235178C14C489CD288AA2405E6 /* Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Utils.swift; path = Source/Utils.swift; sourceTree = "<group>"; };
 		0237D0220A623EBAEBEAFC79CF567C59 /* Pods-openred.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-openred.release.xcconfig"; sourceTree = "<group>"; };
-		096B4C747E165B21F859E4BFFBBDD42D /* Kanna.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Kanna.swift; path = Sources/Kanna/Kanna.swift; sourceTree = "<group>"; };
-		0DE8DAF14FB262F5ABCF10475B8E9D8D /* Kanna.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Kanna.modulemap; sourceTree = "<group>"; };
-		1261CB1E09C649A0651C7E46F5A3FADA /* Erik.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.release.xcconfig; sourceTree = "<group>"; };
-		1A9FDFF01EB67CFB97D81834E337A55A /* Kanna-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-umbrella.h"; sourceTree = "<group>"; };
+		03D25C87909EC2C3DA5610CAFE9B319B /* SwiftyGif.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftyGif.release.xcconfig; sourceTree = "<group>"; };
+		0C545DA26E834C724769E1231D6C7840 /* Erik-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Erik-dummy.m"; sourceTree = "<group>"; };
+		0E93D2FB0105AF4BD95F72544C7DED64 /* Modifiers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Modifiers.swift; path = Source/Modifiers.swift; sourceTree = "<group>"; };
+		16ADFB013CF408A1605DB407C80B7D99 /* libxmlParserOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlParserOption.swift; path = Sources/Kanna/libxmlParserOption.swift; sourceTree = "<group>"; };
+		19892C7D34DEE4C4880683F669ACACA1 /* Deprecated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deprecated.swift; path = Sources/Kanna/Deprecated.swift; sourceTree = "<group>"; };
 		1ED0089718A439068F8C0E263B3AA2B3 /* Pods-openred.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-openred.modulemap"; sourceTree = "<group>"; };
-		1ED5860E4C74107223002C7AD433C682 /* SwiftyGif.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftyGif.debug.xcconfig; sourceTree = "<group>"; };
+		1F8A5C1FBA020CCE48B0195AA59037A4 /* ExytePopupView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ExytePopupView.release.xcconfig; sourceTree = "<group>"; };
+		223B22ED5C7122AD80DD9FF2DCEE6781 /* libxmlHTMLNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLNode.swift; path = Sources/Kanna/libxmlHTMLNode.swift; sourceTree = "<group>"; };
 		2470C5E6B7270B222E4AE35A47FFDD4B /* Pods-openred-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-openred-acknowledgements.plist"; sourceTree = "<group>"; };
-		2B035C8C4A508CAAE3B20200A59B7A82 /* Erik.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.debug.xcconfig; sourceTree = "<group>"; };
-		3647194546DA935BF01821874E25D956 /* Erik-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-umbrella.h"; sourceTree = "<group>"; };
-		374C27C392FC8083329C7ACAD6C5A305 /* SwiftyGif-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftyGif-prefix.pch"; sourceTree = "<group>"; };
-		38C04E284BCB0E1B883A16F23E46D2BC /* Erik-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Erik-dummy.m"; sourceTree = "<group>"; };
-		3B2733C03260D4E6D1DDCCA9BFF1D1C6 /* NSImage+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSImage+SwiftyGif.swift"; path = "SwiftyGif/NSImage+SwiftyGif.swift"; sourceTree = "<group>"; };
+		26D36F9D2C1CFC7C78926D486B3E3114 /* UIImageView+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImageView+SwiftyGif.swift"; path = "SwiftyGif/UIImageView+SwiftyGif.swift"; sourceTree = "<group>"; };
+		286716F35BD4A90DA12EED8F62F43CBC /* Kanna-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Kanna-Info.plist"; sourceTree = "<group>"; };
+		29D46B3E1264ABB1F3AB4BBC19FAA62E /* CSS.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CSS.swift; path = Sources/Kanna/CSS.swift; sourceTree = "<group>"; };
+		2B94876CD573B2954A1B83B1A66610FF /* ExytePopupView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ExytePopupView-prefix.pch"; sourceTree = "<group>"; };
+		301287E0475D96C4FB3589633D1F32AA /* SwiftyGif-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftyGif-umbrella.h"; sourceTree = "<group>"; };
+		33C9114A7CB9EC0455277FC6DE24E4BA /* Kanna.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Kanna.h; path = Sources/Kanna/Kanna.h; sourceTree = "<group>"; };
+		34422BDB0D53CACE7E95F7F4EBED3B0A /* Erik.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Erik.modulemap; sourceTree = "<group>"; };
+		39C82F3BC577DF07EE2987DB606861B8 /* NSImage+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSImage+SwiftyGif.swift"; path = "SwiftyGif/NSImage+SwiftyGif.swift"; sourceTree = "<group>"; };
 		3DCC25A45E1482BAC293D952C3F6369F /* Pods-openred-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-openred-umbrella.h"; sourceTree = "<group>"; };
 		3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Kanna.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3FEA1067BF7FD8BBDAF05D5E0171EFC3 /* Kanna.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.release.xcconfig; sourceTree = "<group>"; };
-		409B2DC26FC31F145D6E33326A52D199 /* SwiftyGif-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftyGif-dummy.m"; sourceTree = "<group>"; };
-		50266F85FB49866C966405D2B365341F /* LayoutEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutEngine.swift; path = Sources/LayoutEngine.swift; sourceTree = "<group>"; };
+		3FBAF9F943403EB2111BC74CF0565885 /* Kanna.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.release.xcconfig; sourceTree = "<group>"; };
+		46DD59DE759324C7920A8447CD4B0D72 /* ExytePopupView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ExytePopupView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4ADC0E773E4CC7F7FFAEBE3BCB4E5F25 /* ExytePopupView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ExytePopupView-dummy.m"; sourceTree = "<group>"; };
 		510D86E1DBBD442925926CBAF9765096 /* Pods-openred-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-openred-Info.plist"; sourceTree = "<group>"; };
 		51F410FC10C4309BBC9CFD20EE2AC821 /* Pods-openred-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-openred-frameworks.sh"; sourceTree = "<group>"; };
-		534438221F42DD0CCA36879BCBEB8D27 /* ObjcAssociatedWeakObject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObjcAssociatedWeakObject.swift; path = SwiftyGif/ObjcAssociatedWeakObject.swift; sourceTree = "<group>"; };
-		5BAEFEE77B085B7E0B61F82BE423D503 /* SwiftyGifManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SwiftyGifManager.swift; path = SwiftyGif/SwiftyGifManager.swift; sourceTree = "<group>"; };
-		64AE6F636673957DA6B5322F48F66382 /* Deprecated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deprecated.swift; path = Sources/Kanna/Deprecated.swift; sourceTree = "<group>"; };
+		550778DEDA5AEBC86C906D1AC19835E7 /* Erik-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Erik-Info.plist"; sourceTree = "<group>"; };
+		58151AA068667747D57FD62B35D6A3F5 /* Kanna-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-umbrella.h"; sourceTree = "<group>"; };
+		5EA2D31FFEB648C8D9BD823F92501CAA /* Kanna-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-prefix.pch"; sourceTree = "<group>"; };
+		5EDE9501FAFCB4A9FC24B9910406E69C /* PopupView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PopupView.swift; path = Source/PopupView.swift; sourceTree = "<group>"; };
+		62EB261F4FBDE523BC224B50F4338469 /* SwiftyGif.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SwiftyGif.modulemap; sourceTree = "<group>"; };
+		65A1DEF4F814700CA9811CF33ACA2293 /* SwiftyGifManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SwiftyGifManager.swift; path = SwiftyGif/SwiftyGifManager.swift; sourceTree = "<group>"; };
+		65C27ED24D81C8EC276E1459EA4A977A /* SwiftyGif-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SwiftyGif-Info.plist"; sourceTree = "<group>"; };
+		72F20413AF5046C10BD2776A399BBF70 /* UIImage+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImage+SwiftyGif.swift"; path = "SwiftyGif/UIImage+SwiftyGif.swift"; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		7317703ED55AD47563070A7005FCB80B /* ExytePopupView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = ExytePopupView.modulemap; sourceTree = "<group>"; };
+		7548EC66E873BCC419732465C51711E3 /* ExytePopupView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ExytePopupView.debug.xcconfig; sourceTree = "<group>"; };
+		76C76795BEE996233B18896CFDCF40CB /* Kanna.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.debug.xcconfig; sourceTree = "<group>"; };
 		7AD67EFB9A7864151301DC2890207AA2 /* SwiftyGif.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyGif.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		80187E3EDA0E2A0BA47534D3DBD83FA1 /* Kanna-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Kanna-dummy.m"; sourceTree = "<group>"; };
 		827064B69C11E8EFEFF052CA1D420C56 /* Pods_openred.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_openred.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		82FDC1309CFB07F02510843A420BDB26 /* libxmlHTMLNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLNode.swift; path = Sources/Kanna/libxmlHTMLNode.swift; sourceTree = "<group>"; };
-		85C3DBBCE23007861142D49984367461 /* SwiftyGif-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SwiftyGif-Info.plist"; sourceTree = "<group>"; };
-		89E36A743FEB922E3B71685D893A5C4A /* Kanna.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.debug.xcconfig; sourceTree = "<group>"; };
-		976FED88C6557072F92BCE3119615AE3 /* SwiftyGif.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SwiftyGif.h; path = SwiftyGif/SwiftyGif.h; sourceTree = "<group>"; };
-		9CCE42935BF00FDA93B60BC6F9906AA7 /* NSImageView+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSImageView+SwiftyGif.swift"; path = "SwiftyGif/NSImageView+SwiftyGif.swift"; sourceTree = "<group>"; };
-		9D5562091288DE40FCF7013581C48BCC /* Kanna-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Kanna-Info.plist"; sourceTree = "<group>"; };
+		87469A5C6305FC7077862CBA4643906B /* Erik-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-umbrella.h"; sourceTree = "<group>"; };
+		93BB069E14385F2C2A43208655D8FDF0 /* Erik-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-prefix.pch"; sourceTree = "<group>"; };
+		97ADA461FBD57A3482350D79559845BC /* Kanna-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Kanna-dummy.m"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9EF2C36843EA3288CC9C8953653CC337 /* UIImageView+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImageView+SwiftyGif.swift"; path = "SwiftyGif/UIImageView+SwiftyGif.swift"; sourceTree = "<group>"; };
 		A72EAFA0F97B80CD30DB0295A11DB5FD /* Pods-openred-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-openred-dummy.m"; sourceTree = "<group>"; };
-		AE551304B290DC75BCFB009CC25B3F9D /* libxmlHTMLDocument.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLDocument.swift; path = Sources/Kanna/libxmlHTMLDocument.swift; sourceTree = "<group>"; };
-		B0A13990FAE81FC7F82802477B56CA79 /* Kanna.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Kanna.h; path = Sources/Kanna/Kanna.h; sourceTree = "<group>"; };
-		B56E3D6994D909B77293078480E386F5 /* Kanna-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-prefix.pch"; sourceTree = "<group>"; };
-		BDE8109C6B65793101D3613A78D4A5E9 /* Erik.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Erik.swift; path = Sources/Erik.swift; sourceTree = "<group>"; };
-		C0C1C4C5699AE808C2461411557B8768 /* CSS.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CSS.swift; path = Sources/Kanna/CSS.swift; sourceTree = "<group>"; };
-		C0CCF35D9EF3A02B5479CB7DDFD6092A /* Erik.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Erik.modulemap; sourceTree = "<group>"; };
-		C8EE699BDA71FF9647242EA5D81F4F51 /* UIImage+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImage+SwiftyGif.swift"; path = "SwiftyGif/UIImage+SwiftyGif.swift"; sourceTree = "<group>"; };
-		D5A57192B3ACB1D9CEAC93781B27FF07 /* Erik-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-prefix.pch"; sourceTree = "<group>"; };
-		DF90B5031513D79CEAEC111B85D7664E /* SwiftyGif-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftyGif-umbrella.h"; sourceTree = "<group>"; };
+		B23F7C2C2071AF7E59D053A490C95FA8 /* NSImageView+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSImageView+SwiftyGif.swift"; path = "SwiftyGif/NSImageView+SwiftyGif.swift"; sourceTree = "<group>"; };
+		B9978981BCD62A074AC99D41204A989D /* Erik.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.debug.xcconfig; sourceTree = "<group>"; };
+		BA47D025FEA24A9D669CCED27FB59237 /* SwiftyGif-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftyGif-prefix.pch"; sourceTree = "<group>"; };
+		BB6EE30D54BCA874864B4901EEE986F7 /* Kanna.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Kanna.modulemap; sourceTree = "<group>"; };
+		BF780014A364159F4056C928AA5312E2 /* FullscreenPopup.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FullscreenPopup.swift; path = Source/FullscreenPopup.swift; sourceTree = "<group>"; };
+		BF9603E9F4C6CF138910E7CF9547D19D /* Erik.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.release.xcconfig; sourceTree = "<group>"; };
+		C2E7FF3065A4544A3D0EB883A45BFDFD /* LayoutEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutEngine.swift; path = Sources/LayoutEngine.swift; sourceTree = "<group>"; };
+		C78D82BFDEC46744062187E3D060CBD9 /* ExytePopupView-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ExytePopupView-Info.plist"; sourceTree = "<group>"; };
+		C8E498DEF13949EE909D9877D6A43CA4 /* Kanna.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Kanna.swift; path = Sources/Kanna/Kanna.swift; sourceTree = "<group>"; };
+		CA11DBEC3EEF2E5BE07EDEF42E7BE874 /* ExytePopupView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ExytePopupView-umbrella.h"; sourceTree = "<group>"; };
+		DB8F00D0F6A0C6C6BEC6FB758E627ACB /* SwiftyGif.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftyGif.debug.xcconfig; sourceTree = "<group>"; };
 		E3266783EDD12503A1C7080C2AB5CB8D /* Pods-openred.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-openred.debug.xcconfig"; sourceTree = "<group>"; };
-		EBF786A1B8A11372824F4C290BAB8B1B /* SwiftyGif.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SwiftyGif.modulemap; sourceTree = "<group>"; };
+		E8983731B72C1D966728D041D2B8F71E /* libxmlHTMLDocument.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLDocument.swift; path = Sources/Kanna/libxmlHTMLDocument.swift; sourceTree = "<group>"; };
+		E8E24A6C549A7CA0571457795A1F312B /* ObjcAssociatedWeakObject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObjcAssociatedWeakObject.swift; path = SwiftyGif/ObjcAssociatedWeakObject.swift; sourceTree = "<group>"; };
 		EEB76A1D01BB152588992538CF9F8970 /* Pods-openred-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-openred-acknowledgements.markdown"; sourceTree = "<group>"; };
-		EF5C5663A9316DFE5CD296021C886855 /* Erik-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Erik-Info.plist"; sourceTree = "<group>"; };
-		F41307679BAA70CC7C8960F30A754EBF /* SwiftyGif.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftyGif.release.xcconfig; sourceTree = "<group>"; };
+		EF9919365DA50F70D183EB908ED58BA4 /* PopupView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PopupView.h; path = Source/PopupView.h; sourceTree = "<group>"; };
 		F580961F4D88FA4167AFD186E0BEA447 /* Erik.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Erik.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F98DA30591B1825A02FBFD243FD3643F /* Document.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Document.swift; path = Sources/Document.swift; sourceTree = "<group>"; };
-		FC2CEB25F392FF88CA356B67B973585A /* libxmlParserOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlParserOption.swift; path = Sources/Kanna/libxmlParserOption.swift; sourceTree = "<group>"; };
+		F5CCEE760EB38F8262F028231832D3FB /* Document.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Document.swift; path = Sources/Document.swift; sourceTree = "<group>"; };
+		F7A59B41B605D44E02EA9BD169EA5275 /* Erik.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Erik.swift; path = Sources/Erik.swift; sourceTree = "<group>"; };
+		FC77B32D883E94E013C8488539972C16 /* SwiftyGif.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SwiftyGif.h; path = SwiftyGif/SwiftyGif.h; sourceTree = "<group>"; };
+		FE47674E55CBCDD617E534FDE323C016 /* SwiftyGif-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftyGif-dummy.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		14B6EB94AE01BAB0B6391991F4178BDC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A7B0ED9733E45A64EB183EAC7397F14C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6C79C57C7DEF56F48A02FB55DBF6988F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AFBF7D80664E01CEA0EA33FE6B2C507E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70CF7E848BD9796896BEC3AC6CAE5A64 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1C4037F996AFFB10E6563988C4E0C29D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7EF125CDDCB1E6C55704B7661DCF5ECD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9908D7B550CF222D91002C073EB6F39 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,34 +194,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AD96C222B9FEC02ABE2561275ABB6E83 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3CEF40B7F96DE99A36D18690173508C1 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DFFFF9CF49E441BBF7678A2887CB025F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				463A32B315490CD330D06A2430A7491C /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0786668FAC6DE814541AAD0883C0AC4D /* Erik */ = {
-			isa = PBXGroup;
-			children = (
-				9630030069875053E614156F2C4BB299 /* Core */,
-				DD39BD813539EBA695E39D4B215C03B0 /* Support Files */,
-			);
-			path = Erik;
-			sourceTree = "<group>";
-		};
 		1D55BCFA36E2748AC77015715BCCD4AD /* Pods-openred */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,30 +214,59 @@
 			path = "Target Support Files/Pods-openred";
 			sourceTree = "<group>";
 		};
-		4B82293EB1C6AFE93F7260B7E6700261 /* SwiftyGif */ = {
+		2CF511D706EB28E5A3E14204455956BC /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				3B2733C03260D4E6D1DDCCA9BFF1D1C6 /* NSImage+SwiftyGif.swift */,
-				9CCE42935BF00FDA93B60BC6F9906AA7 /* NSImageView+SwiftyGif.swift */,
-				534438221F42DD0CCA36879BCBEB8D27 /* ObjcAssociatedWeakObject.swift */,
-				976FED88C6557072F92BCE3119615AE3 /* SwiftyGif.h */,
-				5BAEFEE77B085B7E0B61F82BE423D503 /* SwiftyGifManager.swift */,
-				C8EE699BDA71FF9647242EA5D81F4F51 /* UIImage+SwiftyGif.swift */,
-				9EF2C36843EA3288CC9C8953653CC337 /* UIImageView+SwiftyGif.swift */,
-				CE216E167E2845A08C15763A89404DFC /* Support Files */,
+				F5CCEE760EB38F8262F028231832D3FB /* Document.swift */,
+				F7A59B41B605D44E02EA9BD169EA5275 /* Erik.swift */,
+				C2E7FF3065A4544A3D0EB883A45BFDFD /* LayoutEngine.swift */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		2D850849E2DBAFAF59CD564946957C0E /* SwiftyGif */ = {
+			isa = PBXGroup;
+			children = (
+				39C82F3BC577DF07EE2987DB606861B8 /* NSImage+SwiftyGif.swift */,
+				B23F7C2C2071AF7E59D053A490C95FA8 /* NSImageView+SwiftyGif.swift */,
+				E8E24A6C549A7CA0571457795A1F312B /* ObjcAssociatedWeakObject.swift */,
+				FC77B32D883E94E013C8488539972C16 /* SwiftyGif.h */,
+				65A1DEF4F814700CA9811CF33ACA2293 /* SwiftyGifManager.swift */,
+				72F20413AF5046C10BD2776A399BBF70 /* UIImage+SwiftyGif.swift */,
+				26D36F9D2C1CFC7C78926D486B3E3114 /* UIImageView+SwiftyGif.swift */,
+				7AE4899B319D533A2C3F31A77E5DFFE7 /* Support Files */,
 			);
 			path = SwiftyGif;
 			sourceTree = "<group>";
 		};
-		4BDF6133C44C9B660DFCFED596F58D22 /* Products */ = {
+		2E1B41B01FB7037528E5C04C8EC7EC92 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				F580961F4D88FA4167AFD186E0BEA447 /* Erik.framework */,
-				3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */,
-				827064B69C11E8EFEFF052CA1D420C56 /* Pods_openred.framework */,
-				7AD67EFB9A7864151301DC2890207AA2 /* SwiftyGif.framework */,
+				BB6EE30D54BCA874864B4901EEE986F7 /* Kanna.modulemap */,
+				97ADA461FBD57A3482350D79559845BC /* Kanna-dummy.m */,
+				286716F35BD4A90DA12EED8F62F43CBC /* Kanna-Info.plist */,
+				5EA2D31FFEB648C8D9BD823F92501CAA /* Kanna-prefix.pch */,
+				58151AA068667747D57FD62B35D6A3F5 /* Kanna-umbrella.h */,
+				76C76795BEE996233B18896CFDCF40CB /* Kanna.debug.xcconfig */,
+				3FBAF9F943403EB2111BC74CF0565885 /* Kanna.release.xcconfig */,
 			);
-			name = Products;
+			name = "Support Files";
+			path = "../Target Support Files/Kanna";
+			sourceTree = "<group>";
+		};
+		3F2C34894F0E83163183933F071D2787 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				7317703ED55AD47563070A7005FCB80B /* ExytePopupView.modulemap */,
+				4ADC0E773E4CC7F7FFAEBE3BCB4E5F25 /* ExytePopupView-dummy.m */,
+				C78D82BFDEC46744062187E3D060CBD9 /* ExytePopupView-Info.plist */,
+				2B94876CD573B2954A1B83B1A66610FF /* ExytePopupView-prefix.pch */,
+				CA11DBEC3EEF2E5BE07EDEF42E7BE874 /* ExytePopupView-umbrella.h */,
+				7548EC66E873BCC419732465C51711E3 /* ExytePopupView.debug.xcconfig */,
+				1F8A5C1FBA020CCE48B0195AA59037A4 /* ExytePopupView.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/ExytePopupView";
 			sourceTree = "<group>";
 		};
 		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
@@ -221,6 +277,34 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
+		5CEB4D3D2C1A9086D9BF046EAF35296D /* ExytePopupView */ = {
+			isa = PBXGroup;
+			children = (
+				BF780014A364159F4056C928AA5312E2 /* FullscreenPopup.swift */,
+				0E93D2FB0105AF4BD95F72544C7DED64 /* Modifiers.swift */,
+				EF9919365DA50F70D183EB908ED58BA4 /* PopupView.h */,
+				5EDE9501FAFCB4A9FC24B9910406E69C /* PopupView.swift */,
+				009611235178C14C489CD288AA2405E6 /* Utils.swift */,
+				3F2C34894F0E83163183933F071D2787 /* Support Files */,
+			);
+			path = ExytePopupView;
+			sourceTree = "<group>";
+		};
+		5E87BA7B515350F54CD7197F0FE9F298 /* Kanna */ = {
+			isa = PBXGroup;
+			children = (
+				29D46B3E1264ABB1F3AB4BBC19FAA62E /* CSS.swift */,
+				19892C7D34DEE4C4880683F669ACACA1 /* Deprecated.swift */,
+				33C9114A7CB9EC0455277FC6DE24E4BA /* Kanna.h */,
+				C8E498DEF13949EE909D9877D6A43CA4 /* Kanna.swift */,
+				E8983731B72C1D966728D041D2B8F71E /* libxmlHTMLDocument.swift */,
+				223B22ED5C7122AD80DD9FF2DCEE6781 /* libxmlHTMLNode.swift */,
+				16ADFB013CF408A1605DB407C80B7D99 /* libxmlParserOption.swift */,
+				2E1B41B01FB7037528E5C04C8EC7EC92 /* Support Files */,
+			);
+			path = Kanna;
+			sourceTree = "<group>";
+		};
 		7231CE141A707F0BE67633B753839132 /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -229,54 +313,66 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		8DAE97B4F9D52CFD3E45FCCBDE79BCA5 /* Kanna */ = {
+		79A63E2036551F0CBBCBDBA34AC1C280 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C0C1C4C5699AE808C2461411557B8768 /* CSS.swift */,
-				64AE6F636673957DA6B5322F48F66382 /* Deprecated.swift */,
-				B0A13990FAE81FC7F82802477B56CA79 /* Kanna.h */,
-				096B4C747E165B21F859E4BFFBBDD42D /* Kanna.swift */,
-				AE551304B290DC75BCFB009CC25B3F9D /* libxmlHTMLDocument.swift */,
-				82FDC1309CFB07F02510843A420BDB26 /* libxmlHTMLNode.swift */,
-				FC2CEB25F392FF88CA356B67B973585A /* libxmlParserOption.swift */,
-				EC95566A7694840CBBE2AAB4A2DE59BA /* Support Files */,
+				F580961F4D88FA4167AFD186E0BEA447 /* Erik.framework */,
+				46DD59DE759324C7920A8447CD4B0D72 /* ExytePopupView.framework */,
+				3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */,
+				827064B69C11E8EFEFF052CA1D420C56 /* Pods_openred.framework */,
+				7AD67EFB9A7864151301DC2890207AA2 /* SwiftyGif.framework */,
 			);
-			path = Kanna;
+			name = Products;
 			sourceTree = "<group>";
 		};
-		9630030069875053E614156F2C4BB299 /* Core */ = {
+		7AE4899B319D533A2C3F31A77E5DFFE7 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				F98DA30591B1825A02FBFD243FD3643F /* Document.swift */,
-				BDE8109C6B65793101D3613A78D4A5E9 /* Erik.swift */,
-				50266F85FB49866C966405D2B365341F /* LayoutEngine.swift */,
+				62EB261F4FBDE523BC224B50F4338469 /* SwiftyGif.modulemap */,
+				FE47674E55CBCDD617E534FDE323C016 /* SwiftyGif-dummy.m */,
+				65C27ED24D81C8EC276E1459EA4A977A /* SwiftyGif-Info.plist */,
+				BA47D025FEA24A9D669CCED27FB59237 /* SwiftyGif-prefix.pch */,
+				301287E0475D96C4FB3589633D1F32AA /* SwiftyGif-umbrella.h */,
+				DB8F00D0F6A0C6C6BEC6FB758E627ACB /* SwiftyGif.debug.xcconfig */,
+				03D25C87909EC2C3DA5610CAFE9B319B /* SwiftyGif.release.xcconfig */,
 			);
-			name = Core;
+			name = "Support Files";
+			path = "../Target Support Files/SwiftyGif";
 			sourceTree = "<group>";
 		};
-		AF20B99840B80FEA2EAB3FC5583BCED6 /* Pods */ = {
+		87AE808B21C304208F3D8DB513A9D0F0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0786668FAC6DE814541AAD0883C0AC4D /* Erik */,
-				8DAE97B4F9D52CFD3E45FCCBDE79BCA5 /* Kanna */,
-				4B82293EB1C6AFE93F7260B7E6700261 /* SwiftyGif */,
+				B15C448B5004F3BCB4D016666691EFC9 /* Erik */,
+				5CEB4D3D2C1A9086D9BF046EAF35296D /* ExytePopupView */,
+				5E87BA7B515350F54CD7197F0FE9F298 /* Kanna */,
+				2D850849E2DBAFAF59CD564946957C0E /* SwiftyGif */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		CE216E167E2845A08C15763A89404DFC /* Support Files */ = {
+		91B751C225CFC71FDB974984F5FD0D7D /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				EBF786A1B8A11372824F4C290BAB8B1B /* SwiftyGif.modulemap */,
-				409B2DC26FC31F145D6E33326A52D199 /* SwiftyGif-dummy.m */,
-				85C3DBBCE23007861142D49984367461 /* SwiftyGif-Info.plist */,
-				374C27C392FC8083329C7ACAD6C5A305 /* SwiftyGif-prefix.pch */,
-				DF90B5031513D79CEAEC111B85D7664E /* SwiftyGif-umbrella.h */,
-				1ED5860E4C74107223002C7AD433C682 /* SwiftyGif.debug.xcconfig */,
-				F41307679BAA70CC7C8960F30A754EBF /* SwiftyGif.release.xcconfig */,
+				34422BDB0D53CACE7E95F7F4EBED3B0A /* Erik.modulemap */,
+				0C545DA26E834C724769E1231D6C7840 /* Erik-dummy.m */,
+				550778DEDA5AEBC86C906D1AC19835E7 /* Erik-Info.plist */,
+				93BB069E14385F2C2A43208655D8FDF0 /* Erik-prefix.pch */,
+				87469A5C6305FC7077862CBA4643906B /* Erik-umbrella.h */,
+				B9978981BCD62A074AC99D41204A989D /* Erik.debug.xcconfig */,
+				BF9603E9F4C6CF138910E7CF9547D19D /* Erik.release.xcconfig */,
 			);
 			name = "Support Files";
-			path = "../Target Support Files/SwiftyGif";
+			path = "../Target Support Files/Erik";
+			sourceTree = "<group>";
+		};
+		B15C448B5004F3BCB4D016666691EFC9 /* Erik */ = {
+			isa = PBXGroup;
+			children = (
+				2CF511D706EB28E5A3E14204455956BC /* Core */,
+				91B751C225CFC71FDB974984F5FD0D7D /* Support Files */,
+			);
+			path = Erik;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
@@ -284,8 +380,8 @@
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
-				AF20B99840B80FEA2EAB3FC5583BCED6 /* Pods */,
-				4BDF6133C44C9B660DFCFED596F58D22 /* Products */,
+				87AE808B21C304208F3D8DB513A9D0F0 /* Pods */,
+				79A63E2036551F0CBBCBDBA34AC1C280 /* Products */,
 				7231CE141A707F0BE67633B753839132 /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
@@ -296,36 +392,6 @@
 				578452D2E740E91742655AC8F1636D1F /* iOS */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		DD39BD813539EBA695E39D4B215C03B0 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				C0CCF35D9EF3A02B5479CB7DDFD6092A /* Erik.modulemap */,
-				38C04E284BCB0E1B883A16F23E46D2BC /* Erik-dummy.m */,
-				EF5C5663A9316DFE5CD296021C886855 /* Erik-Info.plist */,
-				D5A57192B3ACB1D9CEAC93781B27FF07 /* Erik-prefix.pch */,
-				3647194546DA935BF01821874E25D956 /* Erik-umbrella.h */,
-				2B035C8C4A508CAAE3B20200A59B7A82 /* Erik.debug.xcconfig */,
-				1261CB1E09C649A0651C7E46F5A3FADA /* Erik.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/Erik";
-			sourceTree = "<group>";
-		};
-		EC95566A7694840CBBE2AAB4A2DE59BA /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				0DE8DAF14FB262F5ABCF10475B8E9D8D /* Kanna.modulemap */,
-				80187E3EDA0E2A0BA47534D3DBD83FA1 /* Kanna-dummy.m */,
-				9D5562091288DE40FCF7013581C48BCC /* Kanna-Info.plist */,
-				B56E3D6994D909B77293078480E386F5 /* Kanna-prefix.pch */,
-				1A9FDFF01EB67CFB97D81834E337A55A /* Kanna-umbrella.h */,
-				89E36A743FEB922E3B71685D893A5C4A /* Kanna.debug.xcconfig */,
-				3FEA1067BF7FD8BBDAF05D5E0171EFC3 /* Kanna.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/Kanna";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -339,20 +405,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		864DC5132168610A07901EEE6ED5D13E /* Headers */ = {
+		3E59A5F72F4F5DF6A0E970A53DFC739D /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4D182E050EC7F72AD47E9C54ABD62FD /* Kanna.h in Headers */,
-				9601C606511CFAD318FF531DC6B1433C /* Kanna-umbrella.h in Headers */,
+				CB411E3DA6F8FB2821AADEE75770EEA8 /* ExytePopupView-umbrella.h in Headers */,
+				3531A1BAA860ED8B4EF199748655B139 /* PopupView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9277A21A669FA644FC20033468A6302E /* Headers */ = {
+		CBDDB2673B83281042A828B43FD5163D /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AF56CBC202584057B79228B4B1D1BBD /* Pods-openred-umbrella.h in Headers */,
+				7D072BEC44B34F452B080E6F6C147F4B /* Kanna.h in Headers */,
+				11BDE0960E61401D76260630C6E43387 /* Kanna-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EB432FE51795361A717E37E653E44B73 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D4B7EB9E1B6B97C36894D44193BEC1D /* Pods-openred-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,7 +473,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				DC385DD1E633E6AA17C6E86FD7DE60B4 /* PBXTargetDependency */,
+				4B1A85A4FF8F6260383F8887E2E813E1 /* PBXTargetDependency */,
 			);
 			name = Erik;
 			productName = Erik;
@@ -407,12 +482,12 @@
 		};
 		93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A9558629923B06C43C507ED7F603794E /* Build configuration list for PBXNativeTarget "Kanna" */;
+			buildConfigurationList = 62B082279DF47C15C0B8AD3200634DB9 /* Build configuration list for PBXNativeTarget "Kanna" */;
 			buildPhases = (
-				864DC5132168610A07901EEE6ED5D13E /* Headers */,
-				156B833852A29E8BBE9F28733BD2957E /* Sources */,
-				AD96C222B9FEC02ABE2561275ABB6E83 /* Frameworks */,
-				CFD164CEF3994B90783116C3E281FE5C /* Resources */,
+				CBDDB2673B83281042A828B43FD5163D /* Headers */,
+				238CD96199BF1D85C88D2604EEE5EE4D /* Sources */,
+				7EF125CDDCB1E6C55704B7661DCF5ECD /* Frameworks */,
+				DDA790B180F8C0D395B2B450C89AA4BA /* Resources */,
 			);
 			buildRules = (
 			);
@@ -423,21 +498,40 @@
 			productReference = 3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		E437548A541DC76FEE2D9DE310A1F088 /* Pods-openred */ = {
+		E3BF7971BE024EA2CBC58C6A22E7F7CD /* ExytePopupView */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 191CD8E36161909C9CFD3F43948541D1 /* Build configuration list for PBXNativeTarget "Pods-openred" */;
+			buildConfigurationList = 58C83296CEB95300D081372BEBCD99FA /* Build configuration list for PBXNativeTarget "ExytePopupView" */;
 			buildPhases = (
-				9277A21A669FA644FC20033468A6302E /* Headers */,
-				13B2EE14EB0AC6E34CF525F3EDA23EF1 /* Sources */,
-				DFFFF9CF49E441BBF7678A2887CB025F /* Frameworks */,
-				9E98AE2AF64A1871FDDD82CB269289DF /* Resources */,
+				3E59A5F72F4F5DF6A0E970A53DFC739D /* Headers */,
+				91B1427256FC8FE18D62599E8217A09C /* Sources */,
+				14B6EB94AE01BAB0B6391991F4178BDC /* Frameworks */,
+				0F3BE01B51749011013ACDB7D00D820B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				F328BE7EA20169DB9D0BE3ED6CAD8CCF /* PBXTargetDependency */,
-				3E8C79CB7AEBBB5B90C0EE699D5794E3 /* PBXTargetDependency */,
-				1AEE83DDE02C00263BAA2DF58E3A6EE1 /* PBXTargetDependency */,
+			);
+			name = ExytePopupView;
+			productName = ExytePopupView;
+			productReference = 46DD59DE759324C7920A8447CD4B0D72 /* ExytePopupView.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E437548A541DC76FEE2D9DE310A1F088 /* Pods-openred */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EE5F0190FEB5D37ED56E55D5AB7C3468 /* Build configuration list for PBXNativeTarget "Pods-openred" */;
+			buildPhases = (
+				EB432FE51795361A717E37E653E44B73 /* Headers */,
+				421ACF39BC67B42EE31D3940F58855AD /* Sources */,
+				6C79C57C7DEF56F48A02FB55DBF6988F /* Frameworks */,
+				B8CE45029471436202CF9EFDD9A9EA16 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CAF72A31205E42BF6D3D56F4CD7F60F7 /* PBXTargetDependency */,
+				102347976584BA2F3BBC64626585AF1A /* PBXTargetDependency */,
+				429C131288A854FA3711D6189DCFA512 /* PBXTargetDependency */,
+				AC2750A6D3AC6027F995D4361868AC4D /* PBXTargetDependency */,
 			);
 			name = "Pods-openred";
 			productName = Pods_openred;
@@ -462,11 +556,12 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = 4BDF6133C44C9B660DFCFED596F58D22 /* Products */;
+			productRefGroup = 79A63E2036551F0CBBCBDBA34AC1C280 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				7BAE74AAE7EBCA9913483051C2FC03C7 /* Erik */,
+				E3BF7971BE024EA2CBC58C6A22E7F7CD /* ExytePopupView */,
 				93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */,
 				E437548A541DC76FEE2D9DE310A1F088 /* Pods-openred */,
 				15AEBAFA43912F898FC2E1A73025C946 /* SwiftyGif */,
@@ -475,6 +570,13 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0F3BE01B51749011013ACDB7D00D820B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0F8F4A890F802D9E949AA2558A526407 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -482,14 +584,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9E98AE2AF64A1871FDDD82CB269289DF /* Resources */ = {
+		B8CE45029471436202CF9EFDD9A9EA16 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CFD164CEF3994B90783116C3E281FE5C /* Resources */ = {
+		DDA790B180F8C0D395B2B450C89AA4BA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -506,25 +608,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		13B2EE14EB0AC6E34CF525F3EDA23EF1 /* Sources */ = {
+		238CD96199BF1D85C88D2604EEE5EE4D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				395619563F8B7FA2DA5CE962410A8E87 /* Pods-openred-dummy.m in Sources */,
+				2B6837D11681839C09568A6850C112CF /* CSS.swift in Sources */,
+				7C626C5AFA77C7F6E9DD482274B79D8D /* Deprecated.swift in Sources */,
+				6A67530CD7C57E816A5F1F8B84335914 /* Kanna.swift in Sources */,
+				6EEAA6EFDCC9EFF3B1DA3F6F46BB3223 /* Kanna-dummy.m in Sources */,
+				ADFB8349ED4EA353EA1721D44D563702 /* libxmlHTMLDocument.swift in Sources */,
+				314B1BA1EE89F6558BA1F3B65913F5C1 /* libxmlHTMLNode.swift in Sources */,
+				6C489C52B5B505F01FE20ABCD618F3E7 /* libxmlParserOption.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		156B833852A29E8BBE9F28733BD2957E /* Sources */ = {
+		421ACF39BC67B42EE31D3940F58855AD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91D1588721C4583DE122A8BF69366C7A /* CSS.swift in Sources */,
-				F20A47430E61CD01F6AF49F05064159E /* Deprecated.swift in Sources */,
-				286267B5F2BC88C11E489E5FDB363061 /* Kanna.swift in Sources */,
-				C36EC8D0B7AFD87DAB894BC154C19A6A /* Kanna-dummy.m in Sources */,
-				58161A35C7DFB7B810A38E9AC4A90FAA /* libxmlHTMLDocument.swift in Sources */,
-				D79D730E27B3CA4F5250FC579B577BE2 /* libxmlHTMLNode.swift in Sources */,
-				F63EB3BFE99EE1487A02FAA2EB7BCB4B /* libxmlParserOption.swift in Sources */,
+				3BE3A09F3894BDB05648AF1F9CE77545 /* Pods-openred-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,6 +638,18 @@
 				1F587ECC9997FFF8762FF63AC74163AB /* Erik.swift in Sources */,
 				8B7396F1C06AFBE0FF012804ADF24C8B /* Erik-dummy.m in Sources */,
 				469E62A75215AB2DA971F62C59D9998A /* LayoutEngine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B1427256FC8FE18D62599E8217A09C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0CA075E8DDFDB2FE60A75A432B6338F /* ExytePopupView-dummy.m in Sources */,
+				970DE61AEAA96347D786F9628AE14FF6 /* FullscreenPopup.swift in Sources */,
+				797EB78F4021C5F5B32FD489CECD71C1 /* Modifiers.swift in Sources */,
+				41602EF63F87457D4BFD732F06FA8461 /* PopupView.swift in Sources */,
+				5D909A8EE0405F237563032F7BD08C6D /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,36 +670,78 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1AEE83DDE02C00263BAA2DF58E3A6EE1 /* PBXTargetDependency */ = {
+		102347976584BA2F3BBC64626585AF1A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ExytePopupView;
+			target = E3BF7971BE024EA2CBC58C6A22E7F7CD /* ExytePopupView */;
+			targetProxy = 670D15D2706D859D48B6F0D3B3B08147 /* PBXContainerItemProxy */;
+		};
+		429C131288A854FA3711D6189DCFA512 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Kanna;
+			target = 93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */;
+			targetProxy = 375022B83C1E4E67A22B7EF24F49D7E6 /* PBXContainerItemProxy */;
+		};
+		4B1A85A4FF8F6260383F8887E2E813E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Kanna;
+			target = 93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */;
+			targetProxy = 82231BDE99EAB388A19B724678504992 /* PBXContainerItemProxy */;
+		};
+		AC2750A6D3AC6027F995D4361868AC4D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = SwiftyGif;
 			target = 15AEBAFA43912F898FC2E1A73025C946 /* SwiftyGif */;
-			targetProxy = 332EEB9BAADCAF7928F914F197659360 /* PBXContainerItemProxy */;
+			targetProxy = 875B01D54715B256DF4A56BF9195E6AD /* PBXContainerItemProxy */;
 		};
-		3E8C79CB7AEBBB5B90C0EE699D5794E3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Kanna;
-			target = 93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */;
-			targetProxy = 2F3D2CD619E150D97B432817160DDD6F /* PBXContainerItemProxy */;
-		};
-		DC385DD1E633E6AA17C6E86FD7DE60B4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Kanna;
-			target = 93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */;
-			targetProxy = 6A83C883447BB47814DFFA8712C64B46 /* PBXContainerItemProxy */;
-		};
-		F328BE7EA20169DB9D0BE3ED6CAD8CCF /* PBXTargetDependency */ = {
+		CAF72A31205E42BF6D3D56F4CD7F60F7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Erik;
 			target = 7BAE74AAE7EBCA9913483051C2FC03C7 /* Erik */;
-			targetProxy = 846AB11EFE62BC7670E237BABC0F30F4 /* PBXContainerItemProxy */;
+			targetProxy = C95B524B418C19E05B74390A9A00FB48 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		002254FA9C94609A547E87A23F2A1D1D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F8A5C1FBA020CCE48B0195AA59037A4 /* ExytePopupView.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/ExytePopupView/ExytePopupView-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/ExytePopupView/ExytePopupView-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/ExytePopupView/ExytePopupView.modulemap";
+				PRODUCT_MODULE_NAME = ExytePopupView;
+				PRODUCT_NAME = ExytePopupView;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		1AC7B915D20758332722DE0E1F05A3B0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F41307679BAA70CC7C8960F30A754EBF /* SwiftyGif.release.xcconfig */;
+			baseConfigurationReference = 03D25C87909EC2C3DA5610CAFE9B319B /* SwiftyGif.release.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -618,9 +774,46 @@
 			};
 			name = Release;
 		};
+		4A1749F01756ADA20559B31C7FFBF8FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E3266783EDD12503A1C7080C2AB5CB8D /* Pods-openred.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-openred/Pods-openred-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-openred/Pods-openred.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		53EBE4336C69EEBE3FC58ABD1CBDFBC4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B035C8C4A508CAAE3B20200A59B7A82 /* Erik.debug.xcconfig */;
+			baseConfigurationReference = B9978981BCD62A074AC99D41204A989D /* Erik.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -653,12 +846,10 @@
 			};
 			name = Debug;
 		};
-		61A3FE0DF346F8F10FDD901DA6710F8C /* Release */ = {
+		62F785E79DC9D5E0FE71C213D8385D91 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0237D0220A623EBAEBEAFC79CF567C59 /* Pods-openred.release.xcconfig */;
+			baseConfigurationReference = 76C76795BEE996233B18896CFDCF40CB /* Kanna.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -667,33 +858,31 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-openred/Pods-openred-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/Kanna/Kanna-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Kanna/Kanna-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-openred/Pods-openred.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				MODULEMAP_FILE = "Target Support Files/Kanna/Kanna.modulemap";
+				PRODUCT_MODULE_NAME = Kanna;
+				PRODUCT_NAME = Kanna;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
-		771459DA0A4738CCB78B7298F51717D2 /* Release */ = {
+		7B6736BB0DBF986F27E263421E69F95E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3FEA1067BF7FD8BBDAF05D5E0171EFC3 /* Kanna.release.xcconfig */;
+			baseConfigurationReference = 3FBAF9F943403EB2111BC74CF0565885 /* Kanna.release.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -794,7 +983,7 @@
 		};
 		7FD5747214365A5ACADBD4EF870B0582 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1261CB1E09C649A0651C7E46F5A3FADA /* Erik.release.xcconfig */;
+			baseConfigurationReference = BF9603E9F4C6CF138910E7CF9547D19D /* Erik.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -828,10 +1017,11 @@
 			};
 			name = Release;
 		};
-		B041BE4CB1180BC444658055207ED16D /* Debug */ = {
+		8D1232713DE5D871C66FD089219AA6E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89E36A743FEB922E3B71685D893A5C4A /* Kanna.debug.xcconfig */;
+			baseConfigurationReference = 7548EC66E873BCC419732465C51711E3 /* ExytePopupView.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -840,8 +1030,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/Kanna/Kanna-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Kanna/Kanna-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/ExytePopupView/ExytePopupView-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/ExytePopupView/ExytePopupView-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -849,9 +1039,9 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MODULEMAP_FILE = "Target Support Files/Kanna/Kanna.modulemap";
-				PRODUCT_MODULE_NAME = Kanna;
-				PRODUCT_NAME = Kanna;
+				MODULEMAP_FILE = "Target Support Files/ExytePopupView/ExytePopupView.modulemap";
+				PRODUCT_MODULE_NAME = ExytePopupView;
+				PRODUCT_NAME = ExytePopupView;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
@@ -864,7 +1054,7 @@
 		};
 		C328EB6A9839E4AA5F9202344E3D8D7F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1ED5860E4C74107223002C7AD433C682 /* SwiftyGif.debug.xcconfig */;
+			baseConfigurationReference = DB8F00D0F6A0C6C6BEC6FB758E627ACB /* SwiftyGif.debug.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -896,9 +1086,9 @@
 			};
 			name = Debug;
 		};
-		D78F873D01E1F70D5925066C0A322BE1 /* Debug */ = {
+		D7FD322217C767DA945F3D18BFBE13CC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E3266783EDD12503A1C7080C2AB5CB8D /* Pods-openred.debug.xcconfig */;
+			baseConfigurationReference = 0237D0220A623EBAEBEAFC79CF567C59 /* Pods-openred.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -912,7 +1102,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "Target Support Files/Pods-openred/Pods-openred-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -928,10 +1118,11 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
 		};
 		FF0A36149038A192FFD678E1D4A40D3B /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -998,20 +1189,29 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		191CD8E36161909C9CFD3F43948541D1 /* Build configuration list for PBXNativeTarget "Pods-openred" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D78F873D01E1F70D5925066C0A322BE1 /* Debug */,
-				61A3FE0DF346F8F10FDD901DA6710F8C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7C3FBC45C4966EFE20583918767EFBE2 /* Debug */,
 				FF0A36149038A192FFD678E1D4A40D3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		58C83296CEB95300D081372BEBCD99FA /* Build configuration list for PBXNativeTarget "ExytePopupView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D1232713DE5D871C66FD089219AA6E6 /* Debug */,
+				002254FA9C94609A547E87A23F2A1D1D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		62B082279DF47C15C0B8AD3200634DB9 /* Build configuration list for PBXNativeTarget "Kanna" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				62F785E79DC9D5E0FE71C213D8385D91 /* Debug */,
+				7B6736BB0DBF986F27E263421E69F95E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1025,20 +1225,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A9558629923B06C43C507ED7F603794E /* Build configuration list for PBXNativeTarget "Kanna" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B041BE4CB1180BC444658055207ED16D /* Debug */,
-				771459DA0A4738CCB78B7298F51717D2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		C867C5A40F81096D616EDC7F38540A72 /* Build configuration list for PBXNativeTarget "SwiftyGif" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C328EB6A9839E4AA5F9202344E3D8D7F /* Debug */,
 				1AC7B915D20758332722DE0E1F05A3B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EE5F0190FEB5D37ED56E55D5AB7C3468 /* Build configuration list for PBXNativeTarget "Pods-openred" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A1749F01756ADA20559B31C7FFBF8FE /* Debug */,
+				D7FD322217C767DA945F3D18BFBE13CC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
