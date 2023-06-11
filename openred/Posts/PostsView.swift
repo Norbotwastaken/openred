@@ -23,6 +23,7 @@ struct PostsView: View {
                 .listStyle(PlainListStyle())
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
+                .listRowSeparator(.hidden)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {
@@ -49,19 +50,76 @@ struct PostsView: View {
             }
         }
     }
-    func doNothing() {}
 }
 
 struct PostView: View {
+    @EnvironmentObject var model: Model
     var post: Post
     
     var body: some View {
         VStack(alignment: .leading) {
+            Spacer().background(Color(UIColor.systemGray5)).frame(minHeight: 2)
             Text(post.title).font(.headline)
-            
-            Text(post.community).foregroundStyle(.secondary).lineLimit(1)
-            Text(post.userName)
-            Text(post.commentCount)
+            // content
+            Spacer().frame(minHeight: 200)
+            HStack {
+                VStack {
+                    if let community = post.community {
+                            Text(community)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .onTapGesture {
+                                    model.loadCommunity(communityCode: community)
+                                }
+                    }
+                    HStack {
+                        HStack {
+                            Image(systemName: "arrow.up").font(.system(size: 15))
+                            Text(formatScore(score: post.score)).font(.system(size: 15))
+                        }
+                        HStack {
+                            Image(systemName: "text.bubble").font(.system(size: 15))
+                            Text(formatScore(score: post.commentCount)).font(.system(size: 15))
+                        }
+                        HStack {
+                            Image(systemName: "clock").font(.system(size: 15))
+                            Text(post.submittedAge).font(.system(size: 15))
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
+                }
+                .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
+                HStack {
+                    // TODO: Add menu
+                    Button(action: {}) {
+                        Label("", systemImage: "arrow.up")
+                    }.foregroundColor(Color(UIColor.systemGray))
+                    Button(action: {}) {
+                        Label("", systemImage: "arrow.down")
+                    }.foregroundColor(Color(UIColor.systemGray))
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+}
+
+extension PostView {
+    func formatScore(score: String) -> String {
+        if var number = Int(score) {
+            if number >= 1000 {
+                number = number / 100
+                var displayScore = String(number)
+                displayScore.insert(".", at: displayScore.index(before: displayScore.endIndex))
+                displayScore = displayScore + "K"
+                return displayScore
+            } else {
+                return score
+            }
+        } else {
+            return score
         }
     }
 }
@@ -75,7 +133,7 @@ struct SortMenu: View {
     var body: some View {
         Menu {
             Button(action: {sortCommunity(sortModifier: "")}) {
-                Label("Hot", systemImage: "flame")
+                Label("Hot", systemImage: ViewModelAttributes.sortModifierIcons["hot"]!)
             }
             Menu {
                 Button("Hour", action: { sortCommunity(sortModifier: topURLBase + "hour" )})
@@ -85,13 +143,13 @@ struct SortMenu: View {
                 Button("Year", action: { sortCommunity(sortModifier: topURLBase + "year" )})
                 Button("All Time", action: { sortCommunity(sortModifier: topURLBase + "all" )})
             } label: {
-                Label("Top", systemImage: "arrow.up.to.line.compact")
+                Label("Top", systemImage: ViewModelAttributes.sortModifierIcons["top"]!)
             }
-            Button(action: {sortCommunity(sortModifier: "/new")}) {
-                Label("New", systemImage: "clock.badge")
+            Button(action: {sortCommunity(sortModifier: "/new" )}) {
+                Label("New", systemImage: ViewModelAttributes.sortModifierIcons["new"]!)
             }
-            Button(action: {sortCommunity(sortModifier: "/rising")}) {
-                Label("Rising", systemImage: "chart.line.uptrend.xyaxis")
+            Button(action: {sortCommunity(sortModifier: "/rising" )}) {
+                Label("Rising", systemImage: ViewModelAttributes.sortModifierIcons["rising"]!)
             }
             Menu {
                 Button("Hour", action: { sortCommunity(sortModifier: controversialURLBase + "hour" )})
@@ -101,10 +159,10 @@ struct SortMenu: View {
                 Button("Year", action: { sortCommunity(sortModifier: controversialURLBase + "year" )})
                 Button("All Time", action: { sortCommunity(sortModifier: controversialURLBase + "all" )})
             } label: {
-                Label("Controversial", systemImage: "arrow.right.and.line.vertical.and.arrow.left")
+                Label("Controversial", systemImage: ViewModelAttributes.sortModifierIcons["controversial"]!)
             }
         } label: {
-            Label("Sort by", systemImage: "arrow.up.arrow.down")
+            Label("Sort by", systemImage: model.selectedSortingIcon)
         }
     }
     

@@ -68,7 +68,7 @@ struct CommunityRow: View {
     
     var body: some View {
         Button(action: {
-            model.loadCommunity(communityLink: community.link)
+            model.loadCommunity(community: community)
             communitiesSidebarVisible.toggle()
         }) {
             HStack {

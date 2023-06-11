@@ -10,20 +10,22 @@ import Foundation
 struct Post: Identifiable, Codable {
     var id: String
     var title: String
-    var community: String
+    var community: String?
     var commentCount: String
     var userName: String
-    var liveTimestamp: String
+    var submittedAge: String
     var linkToThread: String
+    var score: String
     
-    init(_ id:String, title:String, community:String, commentCount:String,
-         userName:String, liveTimestamp:String, linkToThread:String){
-        self.id = id
+    init(_ linkToThread: String, title: String, community: String?, commentCount: String,
+         userName: String, submittedAge: String, score: String) {
+        self.id = linkToThread
         self.title = title
         self.community = community
         self.commentCount = commentCount
         self.userName = userName
-        self.liveTimestamp = liveTimestamp
+        self.submittedAge = submittedAge
         self.linkToThread = linkToThread
+        self.score = score
     }
 }
