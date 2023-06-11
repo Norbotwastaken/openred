@@ -7,98 +7,130 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		16730980E7B9AFCC3BD447CE561937F0 /* Kanna.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FC4CD0F2DF1BE25FBDC641456087B1 /* Kanna.swift */; };
-		1F587ECC9997FFF8762FF63AC74163AB /* Erik.swift in Sources */ = {isa = PBXBuildFile; fileRef = E534954D355399BD017E12A2D50CADD6 /* Erik.swift */; };
-		220A28CAB1385D93AD0012CBC016E874 /* libxmlHTMLNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5597566DC3C8E4C040A5DEB81DBC3 /* libxmlHTMLNode.swift */; };
-		276ED66A2AED9F5EF50BDFDE45CB78C9 /* CSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54C0487B1905F63568A90AE4738DEC39 /* CSS.swift */; };
+		1119BB99FE65FEEA8D08332195F21172 /* SwiftyGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 976FED88C6557072F92BCE3119615AE3 /* SwiftyGif.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		12C043525A25252B692AB7089BD72D51 /* NSImageView+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCE42935BF00FDA93B60BC6F9906AA7 /* NSImageView+SwiftyGif.swift */; };
+		1AF56CBC202584057B79228B4B1D1BBD /* Pods-openred-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DCC25A45E1482BAC293D952C3F6369F /* Pods-openred-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1C4037F996AFFB10E6563988C4E0C29D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		1E0F83CE320F1651CB12A8AB1CBD19D9 /* SwiftyGifManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAEFEE77B085B7E0B61F82BE423D503 /* SwiftyGifManager.swift */; };
+		1F587ECC9997FFF8762FF63AC74163AB /* Erik.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE8109C6B65793101D3613A78D4A5E9 /* Erik.swift */; };
+		286267B5F2BC88C11E489E5FDB363061 /* Kanna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4C747E165B21F859E4BFFBBDD42D /* Kanna.swift */; };
+		395619563F8B7FA2DA5CE962410A8E87 /* Pods-openred-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A72EAFA0F97B80CD30DB0295A11DB5FD /* Pods-openred-dummy.m */; };
+		3CEF40B7F96DE99A36D18690173508C1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		3D72AA1BF0B57A56D7007247EA0CD124 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		469E62A75215AB2DA971F62C59D9998A /* LayoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257796AAB649D0CBF8D820B9DEB17EC2 /* LayoutEngine.swift */; };
-		6B1FAF0FB0E0CC873F61B93C21543024 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		718CE181724A599F6BB3B7BDE54C8B4B /* Kanna-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7418280B4569021063BF10F2E349AB19 /* Kanna-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		80EBA348D59B359E276C776B1AA360DB /* libxmlHTMLDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD73BD591FA0E0CA59BCB62D6880CE5 /* libxmlHTMLDocument.swift */; };
-		8B7396F1C06AFBE0FF012804ADF24C8B /* Erik-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 29EB6FA50AA2FDE10D07925E237A3507 /* Erik-dummy.m */; };
-		941A99286DBABB77AB74C0CE4F44A9A8 /* Pods-openred-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A72EAFA0F97B80CD30DB0295A11DB5FD /* Pods-openred-dummy.m */; };
-		AEB86CAA3F0F45464FBE7F11CA05FB30 /* Kanna-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B60E52609E32D9E9EF6FDAF6338FB1 /* Kanna-dummy.m */; };
-		B40B2293274495BFB4F6216E55EF381B /* libxmlParserOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26453E913E2EDAB25777CBF2E80EDE1 /* libxmlParserOption.swift */; };
-		CF4BD668EF6A768B93F6912F003A8D6E /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4C5F58E72C83DD79BD0AC1A6DC2439 /* Document.swift */; };
-		DB1141D315F83AE82B5EFD3DA1E240DD /* Pods-openred-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DCC25A45E1482BAC293D952C3F6369F /* Pods-openred-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DDBCB6F71A38BACC0A4D19D01B05E4EB /* Deprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD63517E96556F5FECE78B06D743E10 /* Deprecated.swift */; };
-		EAC0F7B147640E583BD4C421C3527054 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		F33DFD58EFF0BC7AC874934E390140E6 /* Kanna.h in Headers */ = {isa = PBXBuildFile; fileRef = F035BA4E171068E8F0DF736E396922CB /* Kanna.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FC41F9AB27B82B006045EB4DE2FDF21F /* Erik-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 10277CFFB41BBE58CC27948449EF097F /* Erik-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		463A32B315490CD330D06A2430A7491C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		469E62A75215AB2DA971F62C59D9998A /* LayoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50266F85FB49866C966405D2B365341F /* LayoutEngine.swift */; };
+		58161A35C7DFB7B810A38E9AC4A90FAA /* libxmlHTMLDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE551304B290DC75BCFB009CC25B3F9D /* libxmlHTMLDocument.swift */; };
+		8A66DA13F49FDF9AC6E90A3F0E7DBCE2 /* ObjcAssociatedWeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534438221F42DD0CCA36879BCBEB8D27 /* ObjcAssociatedWeakObject.swift */; };
+		8B7396F1C06AFBE0FF012804ADF24C8B /* Erik-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C04E284BCB0E1B883A16F23E46D2BC /* Erik-dummy.m */; };
+		90F23D39B736A13F55C4B2796E9EA7A8 /* SwiftyGif-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = DF90B5031513D79CEAEC111B85D7664E /* SwiftyGif-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		91D1588721C4583DE122A8BF69366C7A /* CSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C1C4C5699AE808C2461411557B8768 /* CSS.swift */; };
+		9601C606511CFAD318FF531DC6B1433C /* Kanna-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A9FDFF01EB67CFB97D81834E337A55A /* Kanna-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C36EC8D0B7AFD87DAB894BC154C19A6A /* Kanna-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 80187E3EDA0E2A0BA47534D3DBD83FA1 /* Kanna-dummy.m */; };
+		C4D182E050EC7F72AD47E9C54ABD62FD /* Kanna.h in Headers */ = {isa = PBXBuildFile; fileRef = B0A13990FAE81FC7F82802477B56CA79 /* Kanna.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CF4BD668EF6A768B93F6912F003A8D6E /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98DA30591B1825A02FBFD243FD3643F /* Document.swift */; };
+		D34E39CEB1FDD7AC45E4FBB408016703 /* UIImage+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EE699BDA71FF9647242EA5D81F4F51 /* UIImage+SwiftyGif.swift */; };
+		D79D730E27B3CA4F5250FC579B577BE2 /* libxmlHTMLNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FDC1309CFB07F02510843A420BDB26 /* libxmlHTMLNode.swift */; };
+		E0BD10140EF6EB02E9238595F78DA5DB /* SwiftyGif-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 409B2DC26FC31F145D6E33326A52D199 /* SwiftyGif-dummy.m */; };
+		EC2456C6011E7720EF0B61C36AB5B774 /* NSImage+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2733C03260D4E6D1DDCCA9BFF1D1C6 /* NSImage+SwiftyGif.swift */; };
+		F20A47430E61CD01F6AF49F05064159E /* Deprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AE6F636673957DA6B5322F48F66382 /* Deprecated.swift */; };
+		F63EB3BFE99EE1487A02FAA2EB7BCB4B /* libxmlParserOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2CEB25F392FF88CA356B67B973585A /* libxmlParserOption.swift */; };
+		FC41F9AB27B82B006045EB4DE2FDF21F /* Erik-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3647194546DA935BF01821874E25D956 /* Erik-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FD42DF521EA338F958833869A844E603 /* UIImageView+SwiftyGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF2C36843EA3288CC9C8953653CC337 /* UIImageView+SwiftyGif.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2AB572646B980E517CADD1824A7619C9 /* PBXContainerItemProxy */ = {
+		2F3D2CD619E150D97B432817160DDD6F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 93AC747EDE1EE56F89BBF405C1D67027;
 			remoteInfo = Kanna;
 		};
-		BD4AC95AF6F1F0F062B8F6F188190E3B /* PBXContainerItemProxy */ = {
+		332EEB9BAADCAF7928F914F197659360 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 15AEBAFA43912F898FC2E1A73025C946;
+			remoteInfo = SwiftyGif;
+		};
+		6A83C883447BB47814DFFA8712C64B46 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 93AC747EDE1EE56F89BBF405C1D67027;
+			remoteInfo = Kanna;
+		};
+		846AB11EFE62BC7670E237BABC0F30F4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 7BAE74AAE7EBCA9913483051C2FC03C7;
 			remoteInfo = Erik;
 		};
-		EBB81D62B0668DC79BE29AD0CAE06FB0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 93AC747EDE1EE56F89BBF405C1D67027;
-			remoteInfo = Kanna;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0237D0220A623EBAEBEAFC79CF567C59 /* Pods-openred.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-openred.release.xcconfig"; sourceTree = "<group>"; };
-		10277CFFB41BBE58CC27948449EF097F /* Erik-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-umbrella.h"; sourceTree = "<group>"; };
-		13E5597566DC3C8E4C040A5DEB81DBC3 /* libxmlHTMLNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLNode.swift; path = Sources/Kanna/libxmlHTMLNode.swift; sourceTree = "<group>"; };
+		096B4C747E165B21F859E4BFFBBDD42D /* Kanna.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Kanna.swift; path = Sources/Kanna/Kanna.swift; sourceTree = "<group>"; };
+		0DE8DAF14FB262F5ABCF10475B8E9D8D /* Kanna.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Kanna.modulemap; sourceTree = "<group>"; };
+		1261CB1E09C649A0651C7E46F5A3FADA /* Erik.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.release.xcconfig; sourceTree = "<group>"; };
+		1A9FDFF01EB67CFB97D81834E337A55A /* Kanna-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-umbrella.h"; sourceTree = "<group>"; };
 		1ED0089718A439068F8C0E263B3AA2B3 /* Pods-openred.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-openred.modulemap"; sourceTree = "<group>"; };
+		1ED5860E4C74107223002C7AD433C682 /* SwiftyGif.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftyGif.debug.xcconfig; sourceTree = "<group>"; };
 		2470C5E6B7270B222E4AE35A47FFDD4B /* Pods-openred-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-openred-acknowledgements.plist"; sourceTree = "<group>"; };
-		257796AAB649D0CBF8D820B9DEB17EC2 /* LayoutEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutEngine.swift; path = Sources/LayoutEngine.swift; sourceTree = "<group>"; };
-		2889AFF71708636F634138C1EF4435C7 /* Kanna.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.debug.xcconfig; sourceTree = "<group>"; };
-		29EB6FA50AA2FDE10D07925E237A3507 /* Erik-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Erik-dummy.m"; sourceTree = "<group>"; };
+		2B035C8C4A508CAAE3B20200A59B7A82 /* Erik.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.debug.xcconfig; sourceTree = "<group>"; };
+		3647194546DA935BF01821874E25D956 /* Erik-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-umbrella.h"; sourceTree = "<group>"; };
+		374C27C392FC8083329C7ACAD6C5A305 /* SwiftyGif-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftyGif-prefix.pch"; sourceTree = "<group>"; };
+		38C04E284BCB0E1B883A16F23E46D2BC /* Erik-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Erik-dummy.m"; sourceTree = "<group>"; };
+		3B2733C03260D4E6D1DDCCA9BFF1D1C6 /* NSImage+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSImage+SwiftyGif.swift"; path = "SwiftyGif/NSImage+SwiftyGif.swift"; sourceTree = "<group>"; };
 		3DCC25A45E1482BAC293D952C3F6369F /* Pods-openred-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-openred-umbrella.h"; sourceTree = "<group>"; };
 		3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Kanna.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		47B471AA801AC995FC810EF18AC230A3 /* Kanna.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Kanna.modulemap; sourceTree = "<group>"; };
+		3FEA1067BF7FD8BBDAF05D5E0171EFC3 /* Kanna.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.release.xcconfig; sourceTree = "<group>"; };
+		409B2DC26FC31F145D6E33326A52D199 /* SwiftyGif-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftyGif-dummy.m"; sourceTree = "<group>"; };
+		50266F85FB49866C966405D2B365341F /* LayoutEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutEngine.swift; path = Sources/LayoutEngine.swift; sourceTree = "<group>"; };
 		510D86E1DBBD442925926CBAF9765096 /* Pods-openred-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-openred-Info.plist"; sourceTree = "<group>"; };
 		51F410FC10C4309BBC9CFD20EE2AC821 /* Pods-openred-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-openred-frameworks.sh"; sourceTree = "<group>"; };
-		54C0487B1905F63568A90AE4738DEC39 /* CSS.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CSS.swift; path = Sources/Kanna/CSS.swift; sourceTree = "<group>"; };
-		5935ACCA8A98A39DA47C370C0358CD0B /* Erik-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-prefix.pch"; sourceTree = "<group>"; };
+		534438221F42DD0CCA36879BCBEB8D27 /* ObjcAssociatedWeakObject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObjcAssociatedWeakObject.swift; path = SwiftyGif/ObjcAssociatedWeakObject.swift; sourceTree = "<group>"; };
+		5BAEFEE77B085B7E0B61F82BE423D503 /* SwiftyGifManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SwiftyGifManager.swift; path = SwiftyGif/SwiftyGifManager.swift; sourceTree = "<group>"; };
+		64AE6F636673957DA6B5322F48F66382 /* Deprecated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deprecated.swift; path = Sources/Kanna/Deprecated.swift; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		7418280B4569021063BF10F2E349AB19 /* Kanna-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-umbrella.h"; sourceTree = "<group>"; };
-		7D8704EB5321322118D4E5C433BA5B90 /* Kanna-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-prefix.pch"; sourceTree = "<group>"; };
-		827064B69C11E8EFEFF052CA1D420C56 /* Pods-openred */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-openred"; path = Pods_openred.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AD67EFB9A7864151301DC2890207AA2 /* SwiftyGif.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyGif.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		80187E3EDA0E2A0BA47534D3DBD83FA1 /* Kanna-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Kanna-dummy.m"; sourceTree = "<group>"; };
+		827064B69C11E8EFEFF052CA1D420C56 /* Pods_openred.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_openred.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		82FDC1309CFB07F02510843A420BDB26 /* libxmlHTMLNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLNode.swift; path = Sources/Kanna/libxmlHTMLNode.swift; sourceTree = "<group>"; };
+		85C3DBBCE23007861142D49984367461 /* SwiftyGif-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SwiftyGif-Info.plist"; sourceTree = "<group>"; };
+		89E36A743FEB922E3B71685D893A5C4A /* Kanna.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.debug.xcconfig; sourceTree = "<group>"; };
+		976FED88C6557072F92BCE3119615AE3 /* SwiftyGif.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SwiftyGif.h; path = SwiftyGif/SwiftyGif.h; sourceTree = "<group>"; };
+		9CCE42935BF00FDA93B60BC6F9906AA7 /* NSImageView+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSImageView+SwiftyGif.swift"; path = "SwiftyGif/NSImageView+SwiftyGif.swift"; sourceTree = "<group>"; };
+		9D5562091288DE40FCF7013581C48BCC /* Kanna-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Kanna-Info.plist"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9EF2C36843EA3288CC9C8953653CC337 /* UIImageView+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImageView+SwiftyGif.swift"; path = "SwiftyGif/UIImageView+SwiftyGif.swift"; sourceTree = "<group>"; };
 		A72EAFA0F97B80CD30DB0295A11DB5FD /* Pods-openred-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-openred-dummy.m"; sourceTree = "<group>"; };
-		B259FCB0741E702E42711EC956E8D2A8 /* Erik.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.debug.xcconfig; sourceTree = "<group>"; };
-		B4FC4CD0F2DF1BE25FBDC641456087B1 /* Kanna.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Kanna.swift; path = Sources/Kanna/Kanna.swift; sourceTree = "<group>"; };
-		B92D60F03DBA61EDCAF429071492AA5F /* Kanna-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Kanna-Info.plist"; sourceTree = "<group>"; };
-		C0DCCE80F5E890F7D0E197570673789D /* Erik.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Erik.release.xcconfig; sourceTree = "<group>"; };
-		C26453E913E2EDAB25777CBF2E80EDE1 /* libxmlParserOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlParserOption.swift; path = Sources/Kanna/libxmlParserOption.swift; sourceTree = "<group>"; };
-		CB61052A8F03CF01F9E0C73F4BADD2EF /* Erik.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Erik.modulemap; sourceTree = "<group>"; };
-		CC4C5F58E72C83DD79BD0AC1A6DC2439 /* Document.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Document.swift; path = Sources/Document.swift; sourceTree = "<group>"; };
-		DD983AEAA1CEDB2096751BD9C8EA6947 /* Kanna.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Kanna.release.xcconfig; sourceTree = "<group>"; };
+		AE551304B290DC75BCFB009CC25B3F9D /* libxmlHTMLDocument.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLDocument.swift; path = Sources/Kanna/libxmlHTMLDocument.swift; sourceTree = "<group>"; };
+		B0A13990FAE81FC7F82802477B56CA79 /* Kanna.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Kanna.h; path = Sources/Kanna/Kanna.h; sourceTree = "<group>"; };
+		B56E3D6994D909B77293078480E386F5 /* Kanna-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanna-prefix.pch"; sourceTree = "<group>"; };
+		BDE8109C6B65793101D3613A78D4A5E9 /* Erik.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Erik.swift; path = Sources/Erik.swift; sourceTree = "<group>"; };
+		C0C1C4C5699AE808C2461411557B8768 /* CSS.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CSS.swift; path = Sources/Kanna/CSS.swift; sourceTree = "<group>"; };
+		C0CCF35D9EF3A02B5479CB7DDFD6092A /* Erik.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Erik.modulemap; sourceTree = "<group>"; };
+		C8EE699BDA71FF9647242EA5D81F4F51 /* UIImage+SwiftyGif.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImage+SwiftyGif.swift"; path = "SwiftyGif/UIImage+SwiftyGif.swift"; sourceTree = "<group>"; };
+		D5A57192B3ACB1D9CEAC93781B27FF07 /* Erik-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Erik-prefix.pch"; sourceTree = "<group>"; };
+		DF90B5031513D79CEAEC111B85D7664E /* SwiftyGif-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftyGif-umbrella.h"; sourceTree = "<group>"; };
 		E3266783EDD12503A1C7080C2AB5CB8D /* Pods-openred.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-openred.debug.xcconfig"; sourceTree = "<group>"; };
-		E534954D355399BD017E12A2D50CADD6 /* Erik.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Erik.swift; path = Sources/Erik.swift; sourceTree = "<group>"; };
-		ECD63517E96556F5FECE78B06D743E10 /* Deprecated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deprecated.swift; path = Sources/Kanna/Deprecated.swift; sourceTree = "<group>"; };
+		EBF786A1B8A11372824F4C290BAB8B1B /* SwiftyGif.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SwiftyGif.modulemap; sourceTree = "<group>"; };
 		EEB76A1D01BB152588992538CF9F8970 /* Pods-openred-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-openred-acknowledgements.markdown"; sourceTree = "<group>"; };
-		F035BA4E171068E8F0DF736E396922CB /* Kanna.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Kanna.h; path = Sources/Kanna/Kanna.h; sourceTree = "<group>"; };
+		EF5C5663A9316DFE5CD296021C886855 /* Erik-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Erik-Info.plist"; sourceTree = "<group>"; };
+		F41307679BAA70CC7C8960F30A754EBF /* SwiftyGif.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftyGif.release.xcconfig; sourceTree = "<group>"; };
 		F580961F4D88FA4167AFD186E0BEA447 /* Erik.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Erik.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F96C27F5E6AEA57135F7122C2F138693 /* Erik-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Erik-Info.plist"; sourceTree = "<group>"; };
-		F9B60E52609E32D9E9EF6FDAF6338FB1 /* Kanna-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Kanna-dummy.m"; sourceTree = "<group>"; };
-		FCD73BD591FA0E0CA59BCB62D6880CE5 /* libxmlHTMLDocument.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlHTMLDocument.swift; path = Sources/Kanna/libxmlHTMLDocument.swift; sourceTree = "<group>"; };
+		F98DA30591B1825A02FBFD243FD3643F /* Document.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Document.swift; path = Sources/Document.swift; sourceTree = "<group>"; };
+		FC2CEB25F392FF88CA356B67B973585A /* libxmlParserOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = libxmlParserOption.swift; path = Sources/Kanna/libxmlParserOption.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		860BDA3BEE73B06B7FE956EF513BFD16 /* Frameworks */ = {
+		70CF7E848BD9796896BEC3AC6CAE5A64 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B1FAF0FB0E0CC873F61B93C21543024 /* Foundation.framework in Frameworks */,
+				1C4037F996AFFB10E6563988C4E0C29D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,17 +142,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8CB24A6D0FB444A7DB47287D1FA45171 /* Frameworks */ = {
+		AD96C222B9FEC02ABE2561275ABB6E83 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EAC0F7B147640E583BD4C421C3527054 /* Foundation.framework in Frameworks */,
+				3CEF40B7F96DE99A36D18690173508C1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFFFF9CF49E441BBF7678A2887CB025F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				463A32B315490CD330D06A2430A7491C /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0786668FAC6DE814541AAD0883C0AC4D /* Erik */ = {
+			isa = PBXGroup;
+			children = (
+				9630030069875053E614156F2C4BB299 /* Core */,
+				DD39BD813539EBA695E39D4B215C03B0 /* Support Files */,
+			);
+			path = Erik;
+			sourceTree = "<group>";
+		};
 		1D55BCFA36E2748AC77015715BCCD4AD /* Pods-openred */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,19 +187,30 @@
 			path = "Target Support Files/Pods-openred";
 			sourceTree = "<group>";
 		};
-		1F9847FB1E07C542BCB4640B9DDF5D5E /* Support Files */ = {
+		4B82293EB1C6AFE93F7260B7E6700261 /* SwiftyGif */ = {
 			isa = PBXGroup;
 			children = (
-				CB61052A8F03CF01F9E0C73F4BADD2EF /* Erik.modulemap */,
-				29EB6FA50AA2FDE10D07925E237A3507 /* Erik-dummy.m */,
-				F96C27F5E6AEA57135F7122C2F138693 /* Erik-Info.plist */,
-				5935ACCA8A98A39DA47C370C0358CD0B /* Erik-prefix.pch */,
-				10277CFFB41BBE58CC27948449EF097F /* Erik-umbrella.h */,
-				B259FCB0741E702E42711EC956E8D2A8 /* Erik.debug.xcconfig */,
-				C0DCCE80F5E890F7D0E197570673789D /* Erik.release.xcconfig */,
+				3B2733C03260D4E6D1DDCCA9BFF1D1C6 /* NSImage+SwiftyGif.swift */,
+				9CCE42935BF00FDA93B60BC6F9906AA7 /* NSImageView+SwiftyGif.swift */,
+				534438221F42DD0CCA36879BCBEB8D27 /* ObjcAssociatedWeakObject.swift */,
+				976FED88C6557072F92BCE3119615AE3 /* SwiftyGif.h */,
+				5BAEFEE77B085B7E0B61F82BE423D503 /* SwiftyGifManager.swift */,
+				C8EE699BDA71FF9647242EA5D81F4F51 /* UIImage+SwiftyGif.swift */,
+				9EF2C36843EA3288CC9C8953653CC337 /* UIImageView+SwiftyGif.swift */,
+				CE216E167E2845A08C15763A89404DFC /* Support Files */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/Erik";
+			path = SwiftyGif;
+			sourceTree = "<group>";
+		};
+		4BDF6133C44C9B660DFCFED596F58D22 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F580961F4D88FA4167AFD186E0BEA447 /* Erik.framework */,
+				3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */,
+				827064B69C11E8EFEFF052CA1D420C56 /* Pods_openred.framework */,
+				7AD67EFB9A7864151301DC2890207AA2 /* SwiftyGif.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
@@ -169,52 +229,54 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		73E6437148458C2E1CDF59975ED36058 /* Pods */ = {
+		8DAE97B4F9D52CFD3E45FCCBDE79BCA5 /* Kanna */ = {
 			isa = PBXGroup;
 			children = (
-				73F6F2D1821D16B4CC66A5D45BE41E64 /* Erik */,
-				7EAB0AD8135A9C3850CE9337F79BF91E /* Kanna */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		73F6F2D1821D16B4CC66A5D45BE41E64 /* Erik */ = {
-			isa = PBXGroup;
-			children = (
-				D7F4319BB3F4838593BE0D6707A3E96B /* Core */,
-				1F9847FB1E07C542BCB4640B9DDF5D5E /* Support Files */,
-			);
-			path = Erik;
-			sourceTree = "<group>";
-		};
-		7EAB0AD8135A9C3850CE9337F79BF91E /* Kanna */ = {
-			isa = PBXGroup;
-			children = (
-				54C0487B1905F63568A90AE4738DEC39 /* CSS.swift */,
-				ECD63517E96556F5FECE78B06D743E10 /* Deprecated.swift */,
-				F035BA4E171068E8F0DF736E396922CB /* Kanna.h */,
-				B4FC4CD0F2DF1BE25FBDC641456087B1 /* Kanna.swift */,
-				FCD73BD591FA0E0CA59BCB62D6880CE5 /* libxmlHTMLDocument.swift */,
-				13E5597566DC3C8E4C040A5DEB81DBC3 /* libxmlHTMLNode.swift */,
-				C26453E913E2EDAB25777CBF2E80EDE1 /* libxmlParserOption.swift */,
-				8172BBB76BC734C3AB6E722AD84ED7DB /* Support Files */,
+				C0C1C4C5699AE808C2461411557B8768 /* CSS.swift */,
+				64AE6F636673957DA6B5322F48F66382 /* Deprecated.swift */,
+				B0A13990FAE81FC7F82802477B56CA79 /* Kanna.h */,
+				096B4C747E165B21F859E4BFFBBDD42D /* Kanna.swift */,
+				AE551304B290DC75BCFB009CC25B3F9D /* libxmlHTMLDocument.swift */,
+				82FDC1309CFB07F02510843A420BDB26 /* libxmlHTMLNode.swift */,
+				FC2CEB25F392FF88CA356B67B973585A /* libxmlParserOption.swift */,
+				EC95566A7694840CBBE2AAB4A2DE59BA /* Support Files */,
 			);
 			path = Kanna;
 			sourceTree = "<group>";
 		};
-		8172BBB76BC734C3AB6E722AD84ED7DB /* Support Files */ = {
+		9630030069875053E614156F2C4BB299 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				47B471AA801AC995FC810EF18AC230A3 /* Kanna.modulemap */,
-				F9B60E52609E32D9E9EF6FDAF6338FB1 /* Kanna-dummy.m */,
-				B92D60F03DBA61EDCAF429071492AA5F /* Kanna-Info.plist */,
-				7D8704EB5321322118D4E5C433BA5B90 /* Kanna-prefix.pch */,
-				7418280B4569021063BF10F2E349AB19 /* Kanna-umbrella.h */,
-				2889AFF71708636F634138C1EF4435C7 /* Kanna.debug.xcconfig */,
-				DD983AEAA1CEDB2096751BD9C8EA6947 /* Kanna.release.xcconfig */,
+				F98DA30591B1825A02FBFD243FD3643F /* Document.swift */,
+				BDE8109C6B65793101D3613A78D4A5E9 /* Erik.swift */,
+				50266F85FB49866C966405D2B365341F /* LayoutEngine.swift */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		AF20B99840B80FEA2EAB3FC5583BCED6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0786668FAC6DE814541AAD0883C0AC4D /* Erik */,
+				8DAE97B4F9D52CFD3E45FCCBDE79BCA5 /* Kanna */,
+				4B82293EB1C6AFE93F7260B7E6700261 /* SwiftyGif */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		CE216E167E2845A08C15763A89404DFC /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				EBF786A1B8A11372824F4C290BAB8B1B /* SwiftyGif.modulemap */,
+				409B2DC26FC31F145D6E33326A52D199 /* SwiftyGif-dummy.m */,
+				85C3DBBCE23007861142D49984367461 /* SwiftyGif-Info.plist */,
+				374C27C392FC8083329C7ACAD6C5A305 /* SwiftyGif-prefix.pch */,
+				DF90B5031513D79CEAEC111B85D7664E /* SwiftyGif-umbrella.h */,
+				1ED5860E4C74107223002C7AD433C682 /* SwiftyGif.debug.xcconfig */,
+				F41307679BAA70CC7C8960F30A754EBF /* SwiftyGif.release.xcconfig */,
 			);
 			name = "Support Files";
-			path = "../Target Support Files/Kanna";
+			path = "../Target Support Files/SwiftyGif";
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
@@ -222,8 +284,8 @@
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
-				73E6437148458C2E1CDF59975ED36058 /* Pods */,
-				E5103736E4F298E7E0442ACF42A3E864 /* Products */,
+				AF20B99840B80FEA2EAB3FC5583BCED6 /* Pods */,
+				4BDF6133C44C9B660DFCFED596F58D22 /* Products */,
 				7231CE141A707F0BE67633B753839132 /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
@@ -236,24 +298,34 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		D7F4319BB3F4838593BE0D6707A3E96B /* Core */ = {
+		DD39BD813539EBA695E39D4B215C03B0 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				CC4C5F58E72C83DD79BD0AC1A6DC2439 /* Document.swift */,
-				E534954D355399BD017E12A2D50CADD6 /* Erik.swift */,
-				257796AAB649D0CBF8D820B9DEB17EC2 /* LayoutEngine.swift */,
+				C0CCF35D9EF3A02B5479CB7DDFD6092A /* Erik.modulemap */,
+				38C04E284BCB0E1B883A16F23E46D2BC /* Erik-dummy.m */,
+				EF5C5663A9316DFE5CD296021C886855 /* Erik-Info.plist */,
+				D5A57192B3ACB1D9CEAC93781B27FF07 /* Erik-prefix.pch */,
+				3647194546DA935BF01821874E25D956 /* Erik-umbrella.h */,
+				2B035C8C4A508CAAE3B20200A59B7A82 /* Erik.debug.xcconfig */,
+				1261CB1E09C649A0651C7E46F5A3FADA /* Erik.release.xcconfig */,
 			);
-			name = Core;
+			name = "Support Files";
+			path = "../Target Support Files/Erik";
 			sourceTree = "<group>";
 		};
-		E5103736E4F298E7E0442ACF42A3E864 /* Products */ = {
+		EC95566A7694840CBBE2AAB4A2DE59BA /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				F580961F4D88FA4167AFD186E0BEA447 /* Erik.framework */,
-				3EA922F9B70178D64EE578C60F4DD23B /* Kanna.framework */,
-				827064B69C11E8EFEFF052CA1D420C56 /* Pods-openred */,
+				0DE8DAF14FB262F5ABCF10475B8E9D8D /* Kanna.modulemap */,
+				80187E3EDA0E2A0BA47534D3DBD83FA1 /* Kanna-dummy.m */,
+				9D5562091288DE40FCF7013581C48BCC /* Kanna-Info.plist */,
+				B56E3D6994D909B77293078480E386F5 /* Kanna-prefix.pch */,
+				1A9FDFF01EB67CFB97D81834E337A55A /* Kanna-umbrella.h */,
+				89E36A743FEB922E3B71685D893A5C4A /* Kanna.debug.xcconfig */,
+				3FEA1067BF7FD8BBDAF05D5E0171EFC3 /* Kanna.release.xcconfig */,
 			);
-			name = Products;
+			name = "Support Files";
+			path = "../Target Support Files/Kanna";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,26 +339,53 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		63C13535CE48C1EC4F1D20D700126BC8 /* Headers */ = {
+		864DC5132168610A07901EEE6ED5D13E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F33DFD58EFF0BC7AC874934E390140E6 /* Kanna.h in Headers */,
-				718CE181724A599F6BB3B7BDE54C8B4B /* Kanna-umbrella.h in Headers */,
+				C4D182E050EC7F72AD47E9C54ABD62FD /* Kanna.h in Headers */,
+				9601C606511CFAD318FF531DC6B1433C /* Kanna-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		642600252E35A38696AF604BBD9FC6CB /* Headers */ = {
+		9277A21A669FA644FC20033468A6302E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB1141D315F83AE82B5EFD3DA1E240DD /* Pods-openred-umbrella.h in Headers */,
+				1AF56CBC202584057B79228B4B1D1BBD /* Pods-openred-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F6250923615FD738FBB9701899B04543 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1119BB99FE65FEEA8D08332195F21172 /* SwiftyGif.h in Headers */,
+				90F23D39B736A13F55C4B2796E9EA7A8 /* SwiftyGif-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		15AEBAFA43912F898FC2E1A73025C946 /* SwiftyGif */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C867C5A40F81096D616EDC7F38540A72 /* Build configuration list for PBXNativeTarget "SwiftyGif" */;
+			buildPhases = (
+				F6250923615FD738FBB9701899B04543 /* Headers */,
+				ED0AE9A395D326A6C08DFB5657455BFA /* Sources */,
+				70CF7E848BD9796896BEC3AC6CAE5A64 /* Frameworks */,
+				F76858BC3579218524AE8B626C810CB2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwiftyGif;
+			productName = SwiftyGif;
+			productReference = 7AD67EFB9A7864151301DC2890207AA2 /* SwiftyGif.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		7BAE74AAE7EBCA9913483051C2FC03C7 /* Erik */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9AB9367164202832DB95EBDE0E65DF2D /* Build configuration list for PBXNativeTarget "Erik" */;
@@ -299,7 +398,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				A23D44D8C7C3CCB8C6B6F7CBBB567E1B /* PBXTargetDependency */,
+				DC385DD1E633E6AA17C6E86FD7DE60B4 /* PBXTargetDependency */,
 			);
 			name = Erik;
 			productName = Erik;
@@ -308,12 +407,12 @@
 		};
 		93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 78C1C89AE32C98839F0FD52C09FFB06C /* Build configuration list for PBXNativeTarget "Kanna" */;
+			buildConfigurationList = A9558629923B06C43C507ED7F603794E /* Build configuration list for PBXNativeTarget "Kanna" */;
 			buildPhases = (
-				63C13535CE48C1EC4F1D20D700126BC8 /* Headers */,
-				C012244345598E2A671473545DAC48CC /* Sources */,
-				860BDA3BEE73B06B7FE956EF513BFD16 /* Frameworks */,
-				17711F5040629051C48EEA77040B98A0 /* Resources */,
+				864DC5132168610A07901EEE6ED5D13E /* Headers */,
+				156B833852A29E8BBE9F28733BD2957E /* Sources */,
+				AD96C222B9FEC02ABE2561275ABB6E83 /* Frameworks */,
+				CFD164CEF3994B90783116C3E281FE5C /* Resources */,
 			);
 			buildRules = (
 			);
@@ -326,22 +425,23 @@
 		};
 		E437548A541DC76FEE2D9DE310A1F088 /* Pods-openred */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0BB3AB01EF3921B60A8858426A7BAA95 /* Build configuration list for PBXNativeTarget "Pods-openred" */;
+			buildConfigurationList = 191CD8E36161909C9CFD3F43948541D1 /* Build configuration list for PBXNativeTarget "Pods-openred" */;
 			buildPhases = (
-				642600252E35A38696AF604BBD9FC6CB /* Headers */,
-				5D8EA39E66A410D18302C779282EC6C7 /* Sources */,
-				8CB24A6D0FB444A7DB47287D1FA45171 /* Frameworks */,
-				CA7DF1637FD82804035132048156F1B6 /* Resources */,
+				9277A21A669FA644FC20033468A6302E /* Headers */,
+				13B2EE14EB0AC6E34CF525F3EDA23EF1 /* Sources */,
+				DFFFF9CF49E441BBF7678A2887CB025F /* Frameworks */,
+				9E98AE2AF64A1871FDDD82CB269289DF /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				69291FB08726F0BED5DFD08E87D6C068 /* PBXTargetDependency */,
-				23DB9D73C15A2480AFFE00B61C8A71E7 /* PBXTargetDependency */,
+				F328BE7EA20169DB9D0BE3ED6CAD8CCF /* PBXTargetDependency */,
+				3E8C79CB7AEBBB5B90C0EE699D5794E3 /* PBXTargetDependency */,
+				1AEE83DDE02C00263BAA2DF58E3A6EE1 /* PBXTargetDependency */,
 			);
 			name = "Pods-openred";
 			productName = Pods_openred;
-			productReference = 827064B69C11E8EFEFF052CA1D420C56 /* Pods-openred */;
+			productReference = 827064B69C11E8EFEFF052CA1D420C56 /* Pods_openred.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -362,13 +462,14 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = E5103736E4F298E7E0442ACF42A3E864 /* Products */;
+			productRefGroup = 4BDF6133C44C9B660DFCFED596F58D22 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				7BAE74AAE7EBCA9913483051C2FC03C7 /* Erik */,
 				93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */,
 				E437548A541DC76FEE2D9DE310A1F088 /* Pods-openred */,
+				15AEBAFA43912F898FC2E1A73025C946 /* SwiftyGif */,
 			);
 		};
 /* End PBXProject section */
@@ -381,14 +482,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		17711F5040629051C48EEA77040B98A0 /* Resources */ = {
+		9E98AE2AF64A1871FDDD82CB269289DF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CA7DF1637FD82804035132048156F1B6 /* Resources */ = {
+		CFD164CEF3994B90783116C3E281FE5C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F76858BC3579218524AE8B626C810CB2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -398,11 +506,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		5D8EA39E66A410D18302C779282EC6C7 /* Sources */ = {
+		13B2EE14EB0AC6E34CF525F3EDA23EF1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				941A99286DBABB77AB74C0CE4F44A9A8 /* Pods-openred-dummy.m in Sources */,
+				395619563F8B7FA2DA5CE962410A8E87 /* Pods-openred-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		156B833852A29E8BBE9F28733BD2957E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91D1588721C4583DE122A8BF69366C7A /* CSS.swift in Sources */,
+				F20A47430E61CD01F6AF49F05064159E /* Deprecated.swift in Sources */,
+				286267B5F2BC88C11E489E5FDB363061 /* Kanna.swift in Sources */,
+				C36EC8D0B7AFD87DAB894BC154C19A6A /* Kanna-dummy.m in Sources */,
+				58161A35C7DFB7B810A38E9AC4A90FAA /* libxmlHTMLDocument.swift in Sources */,
+				D79D730E27B3CA4F5250FC579B577BE2 /* libxmlHTMLNode.swift in Sources */,
+				F63EB3BFE99EE1487A02FAA2EB7BCB4B /* libxmlParserOption.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,47 +539,123 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C012244345598E2A671473545DAC48CC /* Sources */ = {
+		ED0AE9A395D326A6C08DFB5657455BFA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				276ED66A2AED9F5EF50BDFDE45CB78C9 /* CSS.swift in Sources */,
-				DDBCB6F71A38BACC0A4D19D01B05E4EB /* Deprecated.swift in Sources */,
-				16730980E7B9AFCC3BD447CE561937F0 /* Kanna.swift in Sources */,
-				AEB86CAA3F0F45464FBE7F11CA05FB30 /* Kanna-dummy.m in Sources */,
-				80EBA348D59B359E276C776B1AA360DB /* libxmlHTMLDocument.swift in Sources */,
-				220A28CAB1385D93AD0012CBC016E874 /* libxmlHTMLNode.swift in Sources */,
-				B40B2293274495BFB4F6216E55EF381B /* libxmlParserOption.swift in Sources */,
+				EC2456C6011E7720EF0B61C36AB5B774 /* NSImage+SwiftyGif.swift in Sources */,
+				12C043525A25252B692AB7089BD72D51 /* NSImageView+SwiftyGif.swift in Sources */,
+				8A66DA13F49FDF9AC6E90A3F0E7DBCE2 /* ObjcAssociatedWeakObject.swift in Sources */,
+				E0BD10140EF6EB02E9238595F78DA5DB /* SwiftyGif-dummy.m in Sources */,
+				1E0F83CE320F1651CB12A8AB1CBD19D9 /* SwiftyGifManager.swift in Sources */,
+				D34E39CEB1FDD7AC45E4FBB408016703 /* UIImage+SwiftyGif.swift in Sources */,
+				FD42DF521EA338F958833869A844E603 /* UIImageView+SwiftyGif.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		23DB9D73C15A2480AFFE00B61C8A71E7 /* PBXTargetDependency */ = {
+		1AEE83DDE02C00263BAA2DF58E3A6EE1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SwiftyGif;
+			target = 15AEBAFA43912F898FC2E1A73025C946 /* SwiftyGif */;
+			targetProxy = 332EEB9BAADCAF7928F914F197659360 /* PBXContainerItemProxy */;
+		};
+		3E8C79CB7AEBBB5B90C0EE699D5794E3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Kanna;
 			target = 93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */;
-			targetProxy = 2AB572646B980E517CADD1824A7619C9 /* PBXContainerItemProxy */;
+			targetProxy = 2F3D2CD619E150D97B432817160DDD6F /* PBXContainerItemProxy */;
 		};
-		69291FB08726F0BED5DFD08E87D6C068 /* PBXTargetDependency */ = {
+		DC385DD1E633E6AA17C6E86FD7DE60B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Kanna;
+			target = 93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */;
+			targetProxy = 6A83C883447BB47814DFFA8712C64B46 /* PBXContainerItemProxy */;
+		};
+		F328BE7EA20169DB9D0BE3ED6CAD8CCF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Erik;
 			target = 7BAE74AAE7EBCA9913483051C2FC03C7 /* Erik */;
-			targetProxy = BD4AC95AF6F1F0F062B8F6F188190E3B /* PBXContainerItemProxy */;
-		};
-		A23D44D8C7C3CCB8C6B6F7CBBB567E1B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Kanna;
-			target = 93AC747EDE1EE56F89BBF405C1D67027 /* Kanna */;
-			targetProxy = EBB81D62B0668DC79BE29AD0CAE06FB0 /* PBXContainerItemProxy */;
+			targetProxy = 846AB11EFE62BC7670E237BABC0F30F4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		071729392D6A04CF8F3D00DC2D4073BC /* Debug */ = {
+		1AC7B915D20758332722DE0E1F05A3B0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E3266783EDD12503A1C7080C2AB5CB8D /* Pods-openred.debug.xcconfig */;
+			baseConfigurationReference = F41307679BAA70CC7C8960F30A754EBF /* SwiftyGif.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/SwiftyGif/SwiftyGif-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/SwiftyGif/SwiftyGif-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/SwiftyGif/SwiftyGif.modulemap";
+				PRODUCT_MODULE_NAME = SwiftyGif;
+				PRODUCT_NAME = SwiftyGif;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		53EBE4336C69EEBE3FC58ABD1CBDFBC4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B035C8C4A508CAAE3B20200A59B7A82 /* Erik.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Erik/Erik-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Erik/Erik-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/Erik/Erik.modulemap";
+				PRODUCT_MODULE_NAME = Erik;
+				PRODUCT_NAME = Erik;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		61A3FE0DF346F8F10FDD901DA6710F8C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0237D0220A623EBAEBEAFC79CF567C59 /* Pods-openred.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -487,16 +685,16 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
 		};
-		53EBE4336C69EEBE3FC58ABD1CBDFBC4 /* Debug */ = {
+		771459DA0A4738CCB78B7298F51717D2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B259FCB0741E702E42711EC956E8D2A8 /* Erik.debug.xcconfig */;
+			baseConfigurationReference = 3FEA1067BF7FD8BBDAF05D5E0171EFC3 /* Kanna.release.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -505,27 +703,28 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/Erik/Erik-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Erik/Erik-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/Kanna/Kanna-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Kanna/Kanna-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MODULEMAP_FILE = "Target Support Files/Erik/Erik.modulemap";
-				PRODUCT_MODULE_NAME = Erik;
-				PRODUCT_NAME = Erik;
+				MODULEMAP_FILE = "Target Support Files/Kanna/Kanna.modulemap";
+				PRODUCT_MODULE_NAME = Kanna;
+				PRODUCT_NAME = Kanna;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
 		};
 		7C3FBC45C4966EFE20583918767EFBE2 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -595,7 +794,7 @@
 		};
 		7FD5747214365A5ACADBD4EF870B0582 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0DCCE80F5E890F7D0E197570673789D /* Erik.release.xcconfig */;
+			baseConfigurationReference = 1261CB1E09C649A0651C7E46F5A3FADA /* Erik.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -609,7 +808,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Erik/Erik-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Erik/Erik-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -629,9 +828,9 @@
 			};
 			name = Release;
 		};
-		8C1ADE827AFDB84C83EC8706B8059ABA /* Debug */ = {
+		B041BE4CB1180BC444658055207ED16D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2889AFF71708636F634138C1EF4435C7 /* Kanna.debug.xcconfig */;
+			baseConfigurationReference = 89E36A743FEB922E3B71685D893A5C4A /* Kanna.debug.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -644,7 +843,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Kanna/Kanna-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Kanna/Kanna-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -663,9 +862,9 @@
 			};
 			name = Debug;
 		};
-		8F67243AC19D83198AC2263E8EEC97CD /* Release */ = {
+		C328EB6A9839E4AA5F9202344E3D8D7F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD983AEAA1CEDB2096751BD9C8EA6947 /* Kanna.release.xcconfig */;
+			baseConfigurationReference = 1ED5860E4C74107223002C7AD433C682 /* SwiftyGif.debug.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -675,32 +874,31 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/Kanna/Kanna-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Kanna/Kanna-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/SwiftyGif/SwiftyGif-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/SwiftyGif/SwiftyGif-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MODULEMAP_FILE = "Target Support Files/Kanna/Kanna.modulemap";
-				PRODUCT_MODULE_NAME = Kanna;
-				PRODUCT_NAME = Kanna;
+				MODULEMAP_FILE = "Target Support Files/SwiftyGif/SwiftyGif.modulemap";
+				PRODUCT_MODULE_NAME = SwiftyGif;
+				PRODUCT_NAME = SwiftyGif;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
-		F86BA24E6AACB619B21311EEC3FF45AD /* Release */ = {
+		D78F873D01E1F70D5925066C0A322BE1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0237D0220A623EBAEBEAFC79CF567C59 /* Pods-openred.release.xcconfig */;
+			baseConfigurationReference = E3266783EDD12503A1C7080C2AB5CB8D /* Pods-openred.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -730,11 +928,10 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
 		FF0A36149038A192FFD678E1D4A40D3B /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -801,11 +998,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0BB3AB01EF3921B60A8858426A7BAA95 /* Build configuration list for PBXNativeTarget "Pods-openred" */ = {
+		191CD8E36161909C9CFD3F43948541D1 /* Build configuration list for PBXNativeTarget "Pods-openred" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				071729392D6A04CF8F3D00DC2D4073BC /* Debug */,
-				F86BA24E6AACB619B21311EEC3FF45AD /* Release */,
+				D78F873D01E1F70D5925066C0A322BE1 /* Debug */,
+				61A3FE0DF346F8F10FDD901DA6710F8C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -819,20 +1016,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		78C1C89AE32C98839F0FD52C09FFB06C /* Build configuration list for PBXNativeTarget "Kanna" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8C1ADE827AFDB84C83EC8706B8059ABA /* Debug */,
-				8F67243AC19D83198AC2263E8EEC97CD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		9AB9367164202832DB95EBDE0E65DF2D /* Build configuration list for PBXNativeTarget "Erik" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				53EBE4336C69EEBE3FC58ABD1CBDFBC4 /* Debug */,
 				7FD5747214365A5ACADBD4EF870B0582 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9558629923B06C43C507ED7F603794E /* Build configuration list for PBXNativeTarget "Kanna" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B041BE4CB1180BC444658055207ED16D /* Debug */,
+				771459DA0A4738CCB78B7298F51717D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C867C5A40F81096D616EDC7F38540A72 /* Build configuration list for PBXNativeTarget "SwiftyGif" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C328EB6A9839E4AA5F9202344E3D8D7F /* Debug */,
+				1AC7B915D20758332722DE0E1F05A3B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
