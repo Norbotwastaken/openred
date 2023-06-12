@@ -29,3 +29,10 @@ struct Post: Identifiable, Codable {
         self.score = score
     }
 }
+
+enum ContentType {
+    case text
+    case image
+    case video
+    case link
+}

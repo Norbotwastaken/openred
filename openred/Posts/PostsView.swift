@@ -13,19 +13,16 @@ struct PostsView: View {
     @EnvironmentObject var model: Model
     @Binding var communitiesSidebarVisible: Bool
     @State var mediaPopupShowing = false
+    @State var mediaPopupImage: Image?
     
     @State var player = AVPlayer()
-    
-    var videoLink: String = "https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8"
-//    var videoLink: String = "https://i.imgur.com/a41akKA.mp4"
-    // https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8?a=1689099504%2COTc0YzQyZmRhZDhmZThlZDViYjc1MWFkYTBmZTEyOTgzYmMxN2IwZWNhZGMyOTliYTk2NjVjZWFmY2NkMmU5NA%3D%3D&v=1&f=sd
     
     var body: some View {
         ZStack {
             NavigationStack {
                 List {
                     ForEach(model.posts) { post in
-                        PostRow(mediaPopupShowing: $mediaPopupShowing, post: post)
+                        PostRow(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage, post: post)
                             .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                             .listRowSeparator(.hidden)
                     }
@@ -58,25 +55,7 @@ struct PostsView: View {
                 }
                 .toolbarBackground(.visible, for: .navigationBar)
                 .popup(isPresented: $mediaPopupShowing) {
-                    ZStack {
-                        VideoPlayer(player: player)
-                            .onAppear() {
-                                player = AVPlayer(url: URL(string: videoLink)!)
-                                player.isMuted = true
-                                player.play()
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        Image(systemName: "xmark")
-                            .font(.system(size: 30))
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                            .foregroundColor(Color.white)
-                            .opacity(0.6)
-                            .padding(EdgeInsets(top: 8, leading: 22, bottom: 0, trailing: 0))
-                            .onTapGesture {
-                                mediaPopupShowing = false
-                                player.pause()
-                            }
-                    }
+                        MediaPopupContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage, player: $player)
                     } customize: {
                         $0.type(.floater(verticalPadding: 20, horizontalPadding: 0, useSafeAreaInset: false))
                             .position(.top)
@@ -91,9 +70,65 @@ struct PostsView: View {
     }
 }
 
+struct MediaPopupContent: View {
+    @Binding var mediaPopupShowing: Bool
+    @Binding var mediaPopupImage: Image?
+    @Binding var player: AVPlayer
+    @State var toolbarVisible = false
+    
+    var mediaType: ContentType = .image
+    var videoLink: String = "https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8"
+//    var videoLink: String = "https://i.imgur.com/a41akKA.mp4"
+    
+    var body: some View {
+        ZStack {
+            if (mediaType == ContentType.video) {
+                VideoPlayer(player: player)
+                    .onAppear() {
+                        player = AVPlayer(url: URL(string: videoLink)!)
+                        player.isMuted = true
+                        player.play()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if (mediaType == ContentType.image) {
+                ZoomableScrollView {
+                    mediaPopupImage!
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
+            ZStack {
+                Rectangle()
+                    .fill(Color.black)
+                    .opacity(0.8)
+                    .frame(maxWidth: .infinity, maxHeight: 60, alignment: .top)
+                Image(systemName: "xmark")
+                    .font(.system(size: 30))
+                //                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .foregroundColor(Color.white)
+                    .opacity(0.6)
+                    .padding(EdgeInsets(top: 8, leading: 22, bottom: 0, trailing: 0))
+                    .onTapGesture {
+                        mediaPopupShowing = false
+                        player.pause()
+                    }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .opacity(toolbarVisible ? 1 : 0)
+            
+        }
+        .onTapGesture {
+            toolbarVisible.toggle()
+        }
+    }
+}
+
 struct PostRow: View {
     @EnvironmentObject var model: Model
     @Binding var mediaPopupShowing: Bool
+    @Binding var mediaPopupImage: Image?
     var post: Post
     
     var body: some View {
@@ -103,44 +138,63 @@ struct PostRow: View {
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
                 .fixedSize(horizontal: false, vertical: false)
             
-            ZStack {
-                Rectangle()
-                    .fill(Color(UIColor.systemGray5))
-                    .frame(maxWidth: .infinity, maxHeight: 650)
-                AsyncImage(url: URL(string: "https://i.redd.it/erqky2za2i5b1.jpg")) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity, maxHeight: 650)
-                } placeholder: {
-                    ProgressView()
-                }
-            }
-//            VIDEO CONTENT:
-//            AsyncImage(url: URL(string: "https://external-preview.redd.it/OHN1NDFwOWhqYzViMROWQp8u0aNhb9RRct3G8JqqU1tAu90RWyV40ipGUCP-.png?width=140&height=140&crop=140:140,smart&format=jpg&v=enabled&lthumb=true&s=0061202d36bc9e581fee91ccf8a9d432bfaaf521")) { image in
-//                ZStack {
-//                    image.resizable()
-//                        .frame(maxWidth: .infinity, maxHeight: 140)
-//                        .blur(radius: 10, opaque: true)
-//                    image.frame(maxWidth: .infinity, maxHeight: 140)
-//                    Image(systemName: "play.fill")
-//                        .font(.system(size: 45))
-//                        .opacity(0.4)
-//                        .foregroundColor(Color.white)
-//                }
-//            } placeholder: {
-//                ProgressView()
-//            }
-//            .onTapGesture {
-//                mediaPopupShowing = true
-//            }
-            .frame(maxWidth: .infinity, maxHeight: 650)
+            PostRowContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage, post: post)
+                .frame(maxWidth: .infinity, maxHeight: 650)
             PostRowFooter(post: post)
             Rectangle()
                 .fill(Color(UIColor.systemGray5)
                     .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
                 .frame(maxWidth: .infinity, maxHeight: 5)
         }
+    }
+}
+
+struct PostRowContent: View {
+    @EnvironmentObject var model: Model
+    @Binding var mediaPopupShowing: Bool
+    @Binding var mediaPopupImage: Image?
+    var post: Post
+    
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(Color(UIColor.systemGray5))
+                .frame(maxWidth: .infinity, maxHeight: 650)
+            AsyncImage(url: URL(string: "https://i.redd.it/erqky2za2i5b1.jpg")) { image in
+                
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: 650)
+                    .onTapGesture {
+                        mediaPopupImage = image
+                        mediaPopupShowing = true
+                    }
+            } placeholder: {
+                ProgressView()
+            }
+        }
+//        .onTapGesture {
+//            mediaPopupShowing = true
+//        }
+//            VIDEO CONTENT:
+//        AsyncImage(url: URL(string: "https://external-preview.redd.it/OHN1NDFwOWhqYzViMROWQp8u0aNhb9RRct3G8JqqU1tAu90RWyV40ipGUCP-.png?width=140&height=140&crop=140:140,smart&format=jpg&v=enabled&lthumb=true&s=0061202d36bc9e581fee91ccf8a9d432bfaaf521")) { image in
+//            ZStack {
+//                image.resizable()
+//                    .frame(maxWidth: .infinity, maxHeight: 140)
+//                    .blur(radius: 10, opaque: true)
+//                image.frame(maxWidth: .infinity, maxHeight: 140)
+//                Image(systemName: "play.fill")
+//                    .font(.system(size: 45))
+//                    .opacity(0.4)
+//                    .foregroundColor(Color.white)
+//            }
+//        } placeholder: {
+//            ProgressView()
+//        }
+//        .onTapGesture {
+//            mediaPopupShowing = true
+//        }
     }
 }
 
@@ -256,6 +310,56 @@ struct SortMenu: View {
     func sortCommunity(sortModifier: String) {
         model.refreshWithSortModifier(sortModifier: sortModifier)
     }
+}
+
+struct ZoomableScrollView<Content: View>: UIViewRepresentable {
+  private var content: Content
+
+  init(@ViewBuilder content: () -> Content) {
+    self.content = content()
+  }
+
+  func makeUIView(context: Context) -> UIScrollView {
+    // set up the UIScrollView
+    let scrollView = UIScrollView()
+    scrollView.delegate = context.coordinator  // for viewForZooming(in:)
+    scrollView.maximumZoomScale = 20
+    scrollView.minimumZoomScale = 1
+    scrollView.bouncesZoom = true
+
+    // create a UIHostingController to hold our SwiftUI content
+    let hostedView = context.coordinator.hostingController.view!
+    hostedView.translatesAutoresizingMaskIntoConstraints = true
+    hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    hostedView.frame = scrollView.bounds
+    scrollView.addSubview(hostedView)
+
+    return scrollView
+  }
+
+  func makeCoordinator() -> Coordinator {
+    return Coordinator(hostingController: UIHostingController(rootView: self.content))
+  }
+
+  func updateUIView(_ uiView: UIScrollView, context: Context) {
+    // update the hosting controller's SwiftUI content
+    context.coordinator.hostingController.rootView = self.content
+    assert(context.coordinator.hostingController.view.superview == uiView)
+  }
+
+  // MARK: - Coordinator
+
+  class Coordinator: NSObject, UIScrollViewDelegate {
+    var hostingController: UIHostingController<Content>
+
+    init(hostingController: UIHostingController<Content>) {
+      self.hostingController = hostingController
+    }
+
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+      return hostingController.view
+    }
+  }
 }
 
 //struct PostView_Previews: PreviewProvider {
