@@ -14,8 +14,8 @@
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
             landmarkName = "updatePosts(doc:)"
             landmarkType = "7">
             <Locations>
@@ -49,6 +49,21 @@
                   endingLineNumber = "39"
                   offsetFromSymbolStart = "492">
                </Location>
+               <Location
+                  uuid = "17C6F537-A521-49A9-B883-3479F116CE63 - 121e69f26de14064"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "openred.Model.updatePosts(doc: Erik.Document) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "99"
+                  endingLineNumber = "99"
+                  offsetFromSymbolStart = "232">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -62,8 +77,8 @@
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
             landmarkName = "updateCommunitiesList(doc:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -94,8 +109,8 @@
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "refreshWithSortModifier(sortModifier:)"
             landmarkType = "7">
             <Locations>
@@ -157,13 +172,13 @@
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
+            startingLineNumber = "121"
+            endingLineNumber = "121"
             landmarkName = "updatePosts(doc:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de141d1"
+                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de14655"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -173,12 +188,12 @@
                   urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "112"
-                  endingLineNumber = "112"
-                  offsetFromSymbolStart = "1912">
+                  startingLineNumber = "116"
+                  endingLineNumber = "116"
+                  offsetFromSymbolStart = "1928">
                </Location>
                <Location
-                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de141d1"
+                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de14655"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -188,12 +203,12 @@
                   urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "112"
-                  endingLineNumber = "112"
-                  offsetFromSymbolStart = "2005">
+                  startingLineNumber = "116"
+                  endingLineNumber = "116"
+                  offsetFromSymbolStart = "2000">
                </Location>
                <Location
-                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de141d1"
+                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de1470e"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -203,12 +218,12 @@
                   urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "112"
-                  endingLineNumber = "112"
-                  offsetFromSymbolStart = "2001">
+                  startingLineNumber = "121"
+                  endingLineNumber = "121"
+                  offsetFromSymbolStart = "1928">
                </Location>
                <Location
-                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de141d1"
+                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de1470e"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -218,9 +233,9 @@
                   urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "112"
-                  endingLineNumber = "112"
-                  offsetFromSymbolStart = "2094">
+                  startingLineNumber = "121"
+                  endingLineNumber = "121"
+                  offsetFromSymbolStart = "2000">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -235,8 +250,8 @@
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "116"
-            endingLineNumber = "116"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
             landmarkName = "updatePosts(doc:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -251,8 +266,8 @@
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "updatePosts(doc:)"
             landmarkType = "7">
             <Locations>

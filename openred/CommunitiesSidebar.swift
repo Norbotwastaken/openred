@@ -1,5 +1,5 @@
 //
-//  SidebarView.swift
+//  CommunitiesSidebar.swift
 //  openred
 //
 //  Created by Norbert Antal on 6/9/23.

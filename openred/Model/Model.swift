@@ -19,6 +19,7 @@ class Model: ObservableObject {
     @Published var selectedSorting: String
     @Published var selectedSortingIcon: String
     
+    let browser = Erik()
     let redditBaseURL: String = "https://old.reddit.com"
     
     init() {
@@ -31,7 +32,7 @@ class Model: ObservableObject {
     
     func load(initialURL: String) {
         setAdditionalCommunities()
-        Erik.visit(url: URL(string: initialURL)! ) { object, error in
+        browser.visit(url: URL(string: initialURL)! ) { object, error in
             if let doc = object {
                 self.updateTitle(doc: doc, defaultTitle: "")
                 self.updatePosts(doc: doc)
@@ -48,7 +49,7 @@ class Model: ObservableObject {
             selectedCommunityLink = String(selectedCommunityLink.dropLast())
         }
         self.posts = [] // prompt scroll reset to top
-        Erik.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
+        browser.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
             if let doc = object {
                 self.updateTitle(doc: doc, defaultTitle: community.name)
                 self.updatePosts(doc: doc)
@@ -65,7 +66,7 @@ class Model: ObservableObject {
 //            selectedCommunityLink = String(selectedCommunityLink.dropLast())
 //        }
         self.posts = [] // prompt scroll reset to top
-        Erik.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
+        browser.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
             if let doc = object {
                 self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
                 self.updatePosts(doc: doc)
@@ -74,10 +75,15 @@ class Model: ObservableObject {
     }
     
     func refreshWithSortModifier(sortModifier: String) {
-        self.selectedSorting = sortModifier.components(separatedBy: "/")[1]
+        let sortModifierComponents = sortModifier.components(separatedBy: "/")
+        if (sortModifierComponents.count > 1) {
+            self.selectedSorting = sortModifier.components(separatedBy: "/")[1]
+        } else {
+            self.selectedSorting = sortModifier
+        }
         self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[selectedSorting]!
         self.posts = [] // prompt scroll reset to top
-        Erik.visit(url: URL(string: self.selectedCommunityLink + sortModifier)! ) { object, error in
+        browser.visit(url: URL(string: self.selectedCommunityLink + sortModifier)! ) { object, error in
             if let doc = object {
                 self.updatePosts(doc: doc)
             }
