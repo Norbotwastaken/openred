@@ -7,6 +7,7 @@
 
 import Foundation
 import Erik
+import Kanna
 
 class Model: ObservableObject {
     @Published var posts: [Post] = []
@@ -102,11 +103,32 @@ class Model: ObservableObject {
             var submittedAge = element.querySelector(".entry .tagline .live-timestamp")?.text
             let linkToThread = element["data-permalink"]
             let score = element["data-score"]
-            // data-is-gallery="true" Tag for galleries
-            
-            if let media = element.querySelector(".entry .expando") {
-                
+            var contentType: ContentType = .link
+            var mediaLink: String?
+            var thumbnailLink = element.querySelector(".thumbnail img")?["src"]
+            if thumbnailLink != nil {
+                thumbnailLink = "https:" + thumbnailLink!
             }
+            // data-is-gallery="true" Tag for galleries
+            // TODO: handle crossposts
+            
+            if let mediaElement = element.querySelector(".entry .expando") {
+                let mediaContainerString = mediaElement["data-cachedhtml"]
+                if (mediaContainerString != nil && mediaContainerString!.contains("data-hls-url")) {
+                    contentType = .video
+                    mediaLink = mediaContainerString!.components(separatedBy: "data-hls-url=\"")[1]
+                        .components(separatedBy: "\"")[0]
+//                    if thumbnailLink!.hasPrefix("//") {
+//                        thumbnailLink = String(thumbnailLink!.dropFirst(2))
+//                    }
+                } else if (mediaContainerString != nil && mediaContainerString!.contains("<a href")) {
+                    contentType = .image
+                    mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
+                        .components(separatedBy: "\"")[0]
+                } else {
+                    contentType = .text
+                }
+            } // else it is an external link
             
             // Transform '3 hours ago' into '3h'
             if let postAgeSections = submittedAge?.components(separatedBy: " ") {
@@ -118,7 +140,10 @@ class Model: ObservableObject {
                               commentCount: commentCount ?? "0",
                               userName: userName ?? "",
                               submittedAge: submittedAge ?? "",
-                              score: score ?? "0"))
+                              score: score ?? "0",
+                              contentType: contentType,
+                              mediaLink: mediaLink,
+                              thumbnailLink: thumbnailLink))
         }
     }
     

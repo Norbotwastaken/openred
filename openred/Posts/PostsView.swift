@@ -1,5 +1,5 @@
 //
-//  ListView.swift
+//  PostsView.swift
 //  openred
 //
 //  Created by Norbert Antal on 6/6/23.
@@ -13,7 +13,9 @@ struct PostsView: View {
     @EnvironmentObject var model: Model
     @Binding var communitiesSidebarVisible: Bool
     @State var mediaPopupShowing = false
+    @State var popupContentType: ContentType = .link
     @State var mediaPopupImage: Image?
+    @State var videoLink: String?
     
     @State var player = AVPlayer()
     
@@ -22,7 +24,8 @@ struct PostsView: View {
             NavigationStack {
                 List {
                     ForEach(model.posts) { post in
-                        PostRow(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage, post: post)
+                        PostRow(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
+                                popupContentType: $popupContentType, videoLink: $videoLink, post: post)
                             .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                             .listRowSeparator(.hidden)
                     }
@@ -55,7 +58,8 @@ struct PostsView: View {
                 }
                 .toolbarBackground(.visible, for: .navigationBar)
                 .popup(isPresented: $mediaPopupShowing) {
-                        MediaPopupContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage, player: $player)
+                    MediaPopupContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
+                                      videoLink: $videoLink, contentType: $popupContentType, player: $player)
                     } customize: {
                         $0.type(.floater(verticalPadding: 20, horizontalPadding: 0, useSafeAreaInset: false))
                             .position(.top)
@@ -73,51 +77,91 @@ struct PostsView: View {
 struct MediaPopupContent: View {
     @Binding var mediaPopupShowing: Bool
     @Binding var mediaPopupImage: Image?
+    @Binding var videoLink: String?
+    @Binding var contentType: ContentType
     @Binding var player: AVPlayer
     @State var toolbarVisible = false
     
-    var mediaType: ContentType = .image
-    var videoLink: String = "https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8"
+//    var videoLink: String = "https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8"
 //    var videoLink: String = "https://i.imgur.com/a41akKA.mp4"
     
     var body: some View {
         ZStack {
-            if (mediaType == ContentType.video) {
+            if (contentType == ContentType.video) {
                 VideoPlayer(player: player)
                     .onAppear() {
-                        player = AVPlayer(url: URL(string: videoLink)!)
+                        // TODO: missing link
+                        player = AVPlayer(url: URL(string: videoLink ?? "")!)
                         player.isMuted = true
                         player.play()
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if (mediaType == ContentType.image) {
-                ZoomableScrollView {
-                    mediaPopupImage!
-                        .resizable()
-                        .scaledToFit()
+                if toolbarVisible {
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.black)
+                            .opacity(0.8)
+                            .frame(maxWidth: .infinity, maxHeight: 45, alignment: .top)
+                        Image(systemName: "xmark")
+                            .font(.system(size: 30))
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .foregroundColor(Color.white)
+                            .opacity(0.6)
+                            .padding(EdgeInsets(top: 6, leading: 22, bottom: 0, trailing: 0))
+                            .onTapGesture {
+                                mediaPopupShowing = false
+                                player.pause()
+                            }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+//                    ZStack {
+//                        Rectangle()
+//                            .fill(Color.black)
+//                            .opacity(0.8)
+//                            .frame(maxWidth: .infinity, maxHeight: 50, alignment: .bottom)
+//                    }
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                }
+            } else if (contentType == ContentType.image) {
+                ZStack {
+                    Rectangle()
+                        .fill(Color.black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    ZoomableScrollView {
+                        mediaPopupImage!
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                if toolbarVisible {
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.black)
+                            .opacity(0.8)
+                            .frame(maxWidth: .infinity, maxHeight: 45, alignment: .top)
+                        Image(systemName: "xmark")
+                            .font(.system(size: 30))
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .foregroundColor(Color.white)
+                            .opacity(0.6)
+                            .padding(EdgeInsets(top: 6, leading: 22, bottom: 0, trailing: 0))
+                            .onTapGesture {
+                                mediaPopupShowing = false
+                                player.pause()
+                            }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.black)
+                            .opacity(0.8)
+                            .frame(maxWidth: .infinity, maxHeight: 50, alignment: .bottom)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
                 }
             }
-            ZStack {
-                Rectangle()
-                    .fill(Color.black)
-                    .opacity(0.8)
-                    .frame(maxWidth: .infinity, maxHeight: 60, alignment: .top)
-                Image(systemName: "xmark")
-                    .font(.system(size: 30))
-                //                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
-                    .foregroundColor(Color.white)
-                    .opacity(0.6)
-                    .padding(EdgeInsets(top: 8, leading: 22, bottom: 0, trailing: 0))
-                    .onTapGesture {
-                        mediaPopupShowing = false
-                        player.pause()
-                    }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .opacity(toolbarVisible ? 1 : 0)
-            
         }
         .onTapGesture {
             toolbarVisible.toggle()
@@ -129,6 +173,8 @@ struct PostRow: View {
     @EnvironmentObject var model: Model
     @Binding var mediaPopupShowing: Bool
     @Binding var mediaPopupImage: Image?
+    @Binding var popupContentType: ContentType
+    @Binding var videoLink: String?
     var post: Post
     
     var body: some View {
@@ -138,7 +184,8 @@ struct PostRow: View {
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
                 .fixedSize(horizontal: false, vertical: false)
             
-            PostRowContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage, post: post)
+            PostRowContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
+                           popupContentType: $popupContentType, videoLink: $videoLink, post: post)
                 .frame(maxWidth: .infinity, maxHeight: 650)
             PostRowFooter(post: post)
             Rectangle()
@@ -153,48 +200,54 @@ struct PostRowContent: View {
     @EnvironmentObject var model: Model
     @Binding var mediaPopupShowing: Bool
     @Binding var mediaPopupImage: Image?
+    @Binding var popupContentType: ContentType
+    @Binding var videoLink: String?
     var post: Post
     
     var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(Color(UIColor.systemGray5))
-                .frame(maxWidth: .infinity, maxHeight: 650)
-            AsyncImage(url: URL(string: "https://i.redd.it/erqky2za2i5b1.jpg")) { image in
-                
-                image
-                    .resizable()
-                    .scaledToFit()
+        if post.contentType == .image {
+            ZStack {
+                Rectangle()
+                    .fill(Color(UIColor.systemGray5))
                     .frame(maxWidth: .infinity, maxHeight: 650)
-                    .onTapGesture {
-                        mediaPopupImage = image
-                        mediaPopupShowing = true
-                    }
+                AsyncImage(url: URL(string: post.mediaLink ?? "")) { image in
+                    // TODO: handle missing mediaLink with placeholder image
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: 650)
+                        .onTapGesture {
+                            mediaPopupImage = image
+                            popupContentType = post.contentType
+                            mediaPopupShowing = true
+                        }
+                } placeholder: {
+                    ProgressView()
+                }
+            }
+        }
+//            VIDEO CONTENT:
+        else if post.contentType == .video {
+            AsyncImage(url: URL(string: post.thumbnailLink ?? "")) { image in
+                ZStack {
+                    image.resizable()
+                        .frame(maxWidth: .infinity, maxHeight: 140)
+                        .blur(radius: 10, opaque: true)
+                    image.frame(maxWidth: .infinity, maxHeight: 140)
+                    Image(systemName: "play.fill")
+                        .font(.system(size: 45))
+                        .opacity(0.4)
+                        .foregroundColor(Color.white)
+                }
             } placeholder: {
                 ProgressView()
             }
+            .onTapGesture {
+                videoLink = post.mediaLink!
+                popupContentType = post.contentType
+                mediaPopupShowing = true
+            }
         }
-//        .onTapGesture {
-//            mediaPopupShowing = true
-//        }
-//            VIDEO CONTENT:
-//        AsyncImage(url: URL(string: "https://external-preview.redd.it/OHN1NDFwOWhqYzViMROWQp8u0aNhb9RRct3G8JqqU1tAu90RWyV40ipGUCP-.png?width=140&height=140&crop=140:140,smart&format=jpg&v=enabled&lthumb=true&s=0061202d36bc9e581fee91ccf8a9d432bfaaf521")) { image in
-//            ZStack {
-//                image.resizable()
-//                    .frame(maxWidth: .infinity, maxHeight: 140)
-//                    .blur(radius: 10, opaque: true)
-//                image.frame(maxWidth: .infinity, maxHeight: 140)
-//                Image(systemName: "play.fill")
-//                    .font(.system(size: 45))
-//                    .opacity(0.4)
-//                    .foregroundColor(Color.white)
-//            }
-//        } placeholder: {
-//            ProgressView()
-//        }
-//        .onTapGesture {
-//            mediaPopupShowing = true
-//        }
     }
 }
 

@@ -16,9 +16,13 @@ struct Post: Identifiable, Codable {
     var submittedAge: String
     var linkToThread: String
     var score: String
+    var contentType: ContentType
+    var mediaLink: String?
+    var thumbnailLink: String?
     
     init(_ linkToThread: String, title: String, community: String?, commentCount: String,
-         userName: String, submittedAge: String, score: String) {
+         userName: String, submittedAge: String, score: String, contentType: ContentType,
+         mediaLink: String?, thumbnailLink: String?) {
         self.id = linkToThread
         self.title = title
         self.community = community
@@ -27,10 +31,13 @@ struct Post: Identifiable, Codable {
         self.submittedAge = submittedAge
         self.linkToThread = linkToThread
         self.score = score
+        self.contentType = contentType
+        self.mediaLink = mediaLink
+        self.thumbnailLink = thumbnailLink
     }
 }
 
-enum ContentType {
+enum ContentType: Codable {
     case text
     case image
     case video
