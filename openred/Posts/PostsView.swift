@@ -12,11 +12,12 @@ import ExytePopupView
 struct PostsView: View {
     @EnvironmentObject var model: Model
     @Binding var communitiesSidebarVisible: Bool
-    @State var showing = false
+    @State var mediaPopupShowing = false
     
     @State var player = AVPlayer()
     
     var videoLink: String = "https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8"
+//    var videoLink: String = "https://i.imgur.com/a41akKA.mp4"
     // https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8?a=1689099504%2COTc0YzQyZmRhZDhmZThlZDViYjc1MWFkYTBmZTEyOTgzYmMxN2IwZWNhZGMyOTliYTk2NjVjZWFmY2NkMmU5NA%3D%3D&v=1&f=sd
     
     var body: some View {
@@ -24,7 +25,7 @@ struct PostsView: View {
             NavigationStack {
                 List {
                     ForEach(model.posts) { post in
-                        PostView(showing: $showing, post: post)
+                        PostRow(mediaPopupShowing: $mediaPopupShowing, post: post)
                             .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                             .listRowSeparator(.hidden)
                     }
@@ -56,31 +57,43 @@ struct PostsView: View {
                     }
                 }
                 .toolbarBackground(.visible, for: .navigationBar)
-                .popup(isPresented: $showing) {
-                    VideoPlayerView(videoURL: URL(string: videoLink)!)
-                        .onAppear() {
-//                            player = AVPlayer(url: URL(string: videoLink)!)
-//                            player.play()
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                    Rectangle()
-//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                        .foregroundColor(Color.cyan)
+                .popup(isPresented: $mediaPopupShowing) {
+                    ZStack {
+                        VideoPlayer(player: player)
+                            .onAppear() {
+                                player = AVPlayer(url: URL(string: videoLink)!)
+                                player.isMuted = true
+                                player.play()
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        Image(systemName: "xmark")
+                            .font(.system(size: 30))
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                            .foregroundColor(Color.white)
+                            .opacity(0.6)
+                            .padding(EdgeInsets(top: 8, leading: 22, bottom: 0, trailing: 0))
+                            .onTapGesture {
+                                mediaPopupShowing = false
+                                player.pause()
+                            }
+                    }
                     } customize: {
-                        $0.type(.floater(verticalPadding: 0, horizontalPadding: 0, useSafeAreaInset: false))
-                            .closeOnTap(false).backgroundColor(Color.black).position(.top)
+                        $0.type(.floater(verticalPadding: 20, horizontalPadding: 0, useSafeAreaInset: false))
+                            .position(.top)
+                            .closeOnTap(false)
+                            .backgroundColor(Color.black)
                             .appearFrom(.top).animation(.easeIn(duration: 0))
                             .isOpaque(true)
+                            .dismissCallback({ player.pause() })
                     }
             }
         }
     }
 }
 
-struct PostView: View {
+struct PostRow: View {
     @EnvironmentObject var model: Model
-//    @State var avPlayer = AVPlayer(url: URL(string: "https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8?a=1689099504%2COTc0YzQyZmRhZDhmZThlZDViYjc1MWFkYTBmZTEyOTgzYmMxN2IwZWNhZGMyOTliYTk2NjVjZWFmY2NkMmU5NA%3D%3D&v=1&f=sd")!)
-    @Binding var showing: Bool
+    @Binding var mediaPopupShowing: Bool
     var post: Post
     
     var body: some View {
@@ -89,106 +102,98 @@ struct PostView: View {
                 .font(.headline)
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
                 .fixedSize(horizontal: false, vertical: false)
+            
             ZStack {
-//                AsyncImage(url: URL(string: "https://i.imgur.com/cLUedH2.jpeg")) { image in
-//                    image
-//                        .resizable()
-//                        .scaledToFill()
-//                } placeholder: {
-//                    ProgressView()
-//                }
-                
-                
-                    Rectangle()
-                        .frame(height: 140)
-                    AsyncImage(url: URL(string: "https://external-preview.redd.it/OHN1NDFwOWhqYzViMROWQp8u0aNhb9RRct3G8JqqU1tAu90RWyV40ipGUCP-.png?width=140&height=140&crop=140:140,smart&format=jpg&v=enabled&lthumb=true&s=0061202d36bc9e581fee91ccf8a9d432bfaaf521")) { image in
-                        image
-                        //                        .resizable()
-                        //                        .scaledToFill()
-                            .frame(maxWidth: .infinity, maxHeight: 140)
-                    } placeholder: {
-                        ProgressView()
-                    }
-//                    .onTapGesture {
-//                        showing = true
-//                    }
-//                    .popover(isPresented: $showing) {
-//                        Rectangle().frame(height: 140)
-//                    }
-                
-//                AnimatedGifView(url: Binding(get: { URL(string: "https://i.imgur.com/EM7f96Q.gif")! }, set: { _ in }))
-                // https://i.imgur.com/EM7f96Q.gifv
-                // https://i.imgur.com/a41akKA.mp4
-                
-//                VideoPlayer(player: AVPlayer(url: URL(string: "https://i.imgur.com/A0uSYLF.mp4")!))
-//                    .aspectRatio(contentMode: .fill)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                    .scaledToFill()
-            }
-            .onTapGesture {
-                showing = true
-            }
-//            .popup(isPresented: $showing) {
-//                VideoPlayer(player: avPlayer)
-//                Rectangle()
-//                    .frame(width: 300, height: 500)
-//                    .foregroundColor(Color.cyan)
-//                } customize: {
-//                    $0.type(.floater(verticalPadding: 10, horizontalPadding: 10, useSafeAreaInset: true))
-//                        .autohideIn(10).closeOnTap(false).backgroundColor(Color.gray).position(.top)
-//                        .appearFrom(.top)
-//                }
-            .frame(maxWidth: .infinity, maxHeight: 500)
-            HStack {
-                VStack {
-                    if let community = post.community {
-                            Text(community)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .onTapGesture {
-                                    model.loadCommunity(communityCode: community)
-                                }
-                    }
-                    HStack {
-                        HStack {
-                            Image(systemName: "arrow.up").font(.system(size: 15))
-                            Text(formatScore(score: post.score)).font(.system(size: 15))
-                        }
-                        HStack {
-                            Image(systemName: "text.bubble").font(.system(size: 15))
-                            Text(formatScore(score: post.commentCount)).font(.system(size: 15))
-                        }
-                        HStack {
-                            Image(systemName: "clock").font(.system(size: 15))
-                            Text(post.submittedAge).font(.system(size: 15))
-                        }
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
+                Rectangle()
+                    .fill(Color(UIColor.systemGray5))
+                    .frame(maxWidth: .infinity, maxHeight: 650)
+                AsyncImage(url: URL(string: "https://i.redd.it/erqky2za2i5b1.jpg")) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: 650)
+                } placeholder: {
+                    ProgressView()
                 }
-                .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
-                HStack {
-                    // TODO: Add menu
-                    Button(action: {}) {
-                        Label("", systemImage: "arrow.up")
-                    }.foregroundColor(Color(UIColor.systemGray))
-                    Button(action: {}) {
-                        Label("", systemImage: "arrow.down")
-                    }.foregroundColor(Color(UIColor.systemGray))
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .frame(maxWidth: .infinity)
-            .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
+//            VIDEO CONTENT:
+//            AsyncImage(url: URL(string: "https://external-preview.redd.it/OHN1NDFwOWhqYzViMROWQp8u0aNhb9RRct3G8JqqU1tAu90RWyV40ipGUCP-.png?width=140&height=140&crop=140:140,smart&format=jpg&v=enabled&lthumb=true&s=0061202d36bc9e581fee91ccf8a9d432bfaaf521")) { image in
+//                ZStack {
+//                    image.resizable()
+//                        .frame(maxWidth: .infinity, maxHeight: 140)
+//                        .blur(radius: 10, opaque: true)
+//                    image.frame(maxWidth: .infinity, maxHeight: 140)
+//                    Image(systemName: "play.fill")
+//                        .font(.system(size: 45))
+//                        .opacity(0.4)
+//                        .foregroundColor(Color.white)
+//                }
+//            } placeholder: {
+//                ProgressView()
+//            }
+//            .onTapGesture {
+//                mediaPopupShowing = true
+//            }
+            .frame(maxWidth: .infinity, maxHeight: 650)
+            PostRowFooter(post: post)
             Rectangle()
-                .fill(Color(UIColor.systemGray5).shadow(.inner(radius: 2, y: 1)).opacity(0.5))
+                .fill(Color(UIColor.systemGray5)
+                    .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
                 .frame(maxWidth: .infinity, maxHeight: 5)
         }
-//        .frame(maxHeight: .infinity)
     }
 }
 
-extension PostView {
+struct PostRowFooter: View {
+    @EnvironmentObject var model: Model
+    var post: Post
+    
+    var body: some View {
+        HStack {
+            VStack {
+                if let community = post.community {
+                    Text(community)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture {
+                            model.loadCommunity(communityCode: community)
+                        }
+                }
+                HStack {
+                    HStack {
+                        Image(systemName: "arrow.up").font(.system(size: 15))
+                        Text(formatScore(score: post.score)).font(.system(size: 15))
+                    }
+                    HStack {
+                        Image(systemName: "text.bubble").font(.system(size: 15))
+                        Text(formatScore(score: post.commentCount)).font(.system(size: 15))
+                    }
+                    HStack {
+                        Image(systemName: "clock").font(.system(size: 15))
+                        Text(post.submittedAge).font(.system(size: 15))
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
+            }
+            .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
+            HStack {
+                // TODO: Add menu
+                Button(action: {}) {
+                    Label("", systemImage: "arrow.up")
+                }.foregroundColor(Color(UIColor.systemGray))
+                Button(action: {}) {
+                    Label("", systemImage: "arrow.down")
+                }.foregroundColor(Color(UIColor.systemGray))
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
+    }
+}
+
+extension PostRowFooter {
     func formatScore(score: String) -> String {
         if var number = Int(score) {
             if number >= 1000 {
@@ -251,18 +256,6 @@ struct SortMenu: View {
     func sortCommunity(sortModifier: String) {
         model.refreshWithSortModifier(sortModifier: sortModifier)
     }
-}
-
-struct VideoPlayerView: UIViewControllerRepresentable {
-    var videoURL: URL
-    func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let player = AVPlayer(url: videoURL)
-        let playerController = AVPlayerViewController()
-        playerController.player = player
-        player.play()
-        return playerController
-    }
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {}
 }
 
 //struct PostView_Previews: PreviewProvider {
