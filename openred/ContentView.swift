@@ -27,7 +27,7 @@ struct ContentView: View {
                     .tabItem {
                         Label("Feed", systemImage: "newspaper")
                     }
-                Text("Inbox")
+                InboxView()
                     .tabItem {
                         Label("Inbox", systemImage: "envelope")
                     }
@@ -78,14 +78,12 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
   }
 
   func makeUIView(context: Context) -> UIScrollView {
-    // set up the UIScrollView
     let scrollView = UIScrollView()
     scrollView.delegate = context.coordinator  // for viewForZooming(in:)
     scrollView.maximumZoomScale = 20
     scrollView.minimumZoomScale = 1
     scrollView.bouncesZoom = true
 
-    // create a UIHostingController to hold our SwiftUI content
     let hostedView = context.coordinator.hostingController.view!
     hostedView.translatesAutoresizingMaskIntoConstraints = true
     hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -141,6 +139,15 @@ extension View {
     func saveSize(in size: Binding<CGSize>) -> some View {
         modifier(SizeCalculator(size: size))
     }
+}
+
+struct VisualEffect: UIViewRepresentable {
+    @State var style : UIBlurEffect.Style // 1
+    func makeUIView(context: Context) -> UIVisualEffectView {
+        return UIVisualEffectView(effect: UIBlurEffect(style: style)) // 2
+    }
+    func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
+    } // 3
 }
 
 //struct AnimatedGifView: UIViewRepresentable {

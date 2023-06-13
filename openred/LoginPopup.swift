@@ -9,8 +9,11 @@ import Foundation
 import SwiftUI
 
 struct LoginPopup: View {
+    @EnvironmentObject var model: Model
     @State private var username: String = ""
     @State private var password: String = ""
+    @State private var waitingLoginResponse: Bool = false
+    @State private var failedAttemptIndicatorShowing: Bool = false
     @Binding var loginPopupShowing: Bool
     @FocusState private var isFieldFocused: Bool
     
@@ -21,6 +24,26 @@ struct LoginPopup: View {
                 .opacity(0.75)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             ZStack {
+//                if waitingLoginResponse {
+//                    ZStack {
+//                        Rectangle()
+//                            .fill(Color.white)
+//                            .opacity(0.6)
+//                            .cornerRadius(15)
+//                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                        ProgressView()
+//                            .onAppear(perform: {
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+//                                    if model.loginAttempt == .successful {
+//                                        loginPopupShowing = false
+//                                    } else if model.loginAttempt == .failed {
+//                                        failedAttemptIndicatorShowing = true
+//                                        waitingLoginResponse = false
+//                                    }
+//                                }
+//                            })
+//                    }
+//                }
                 Rectangle()
                     .fill(Color(UIColor.systemGray6))
                     .cornerRadius(15)
@@ -38,40 +61,63 @@ struct LoginPopup: View {
                     }
                 VStack {
                     Text("Log in to reddit")
-                        .font(.system(size: 36) .bold())
+                        .font(.system(size: 34) .bold())
                         .opacity(0.9)
-                        .padding(EdgeInsets(top: 50, leading: 30, bottom: 0, trailing: 30))
+                        .padding(EdgeInsets(top: 55, leading: 30, bottom: 0, trailing: 30))
                         .frame(alignment: .top)
-                    TextField("Username", text: $username)
-                        .focused($isFieldFocused)
-                        .textFieldStyle(.roundedBorder)
-                        .foregroundColor(.white)
-                        .frame(alignment: .top)
-                        .padding(EdgeInsets(top: 15, leading: 45, bottom: 0, trailing: 45))
-                        .onTapGesture {} // override other onTap
-                    SecureField("Password", text: $password)
-                        .focused($isFieldFocused)
-                        .textFieldStyle(.roundedBorder)
-                        .foregroundColor(.white)
-                        .frame(alignment: .top)
-                        .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
-                        .onTapGesture {} // override other onTap
+//                    Form {
+                        TextField("Username", text: $username)
+                            .textFieldStyle(.roundedBorder)
+                            .focused($isFieldFocused)
+                            .textFieldStyle(.roundedBorder)
+//                            .foregroundColor(.white)
+                            .preferredColorScheme(.dark)
+                            .colorInvert()
+                            .border(failedAttemptIndicatorShowing ? Color.red : Color.black)
+                            .frame(alignment: .top)
+                            .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
+                            .onTapGesture {} // override other onTap
+                            .onSubmit {
+                                submitForm()
+                            }
+                        SecureField("Password", text: $password)
+                            .textFieldStyle(.roundedBorder)
+                            .focused($isFieldFocused)
+                            .textFieldStyle(.roundedBorder)
+                            .preferredColorScheme(.dark)
+                            .colorInvert()
+                            .border(failedAttemptIndicatorShowing ? Color.red : Color.black)
+                            .frame(alignment: .top)
+                            .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
+                            .onTapGesture {} // override other onTap
+//                    }
+                    .onSubmit {
+                        submitForm()
+                    }
                     Button( action: {
-                        loginPopupShowing = false
+                        submitForm()
                     }) {
                         ZStack {
                             Rectangle()
                                 .fill(Color(UIColor.systemBlue))
                                 .cornerRadius(10)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            Text("Log In")
-                                .font(.system(size: 18) .bold())
+                            if waitingLoginResponse {
+                                ProgressView()
+                            } else {
+                                Text("Log In")
+                                    .font(.system(size: 18) .bold())
+                            }
                         }
-                        
                     }
+                    .disabled(waitingLoginResponse)
                     .foregroundColor(.white)
                     .frame(width: 150, height: 40, alignment: .top)
                     .padding(EdgeInsets(top: 20, leading: 45, bottom: 0, trailing: 45))
+                    Button("Cancel") {
+                        loginPopupShowing = false
+                    }
+                    .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 
@@ -79,9 +125,22 @@ struct LoginPopup: View {
             .onTapGesture {
                 isFieldFocused = false
             }
-            .frame(width: 340, height: 400)
+            .frame(width: 340, height: 360)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
+    }
+    private func submitForm() {
+        guard username.isEmpty == false && password.isEmpty == false else { return }
+        waitingLoginResponse = true
+        model.login(username: username, password: password)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            if model.loginAttempt == .successful {
+                loginPopupShowing = false
+            } else if model.loginAttempt == .failed {
+                failedAttemptIndicatorShowing = true
+                waitingLoginResponse = false
+            }
+        }
     }
 }

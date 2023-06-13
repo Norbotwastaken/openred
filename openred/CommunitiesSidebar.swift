@@ -22,12 +22,17 @@ struct CommunitiesSidebarContent: View {
     var body: some View {
         HStack {
             ZStack {
+                Rectangle()
+                    .fill(Color(UIColor.systemGray6))
+                    .frame(width: 300)
+                    .opacity(0.5)
+                    .background(.ultraThinMaterial)
+                    .background(VisualEffect(style: .systemUltraThinMaterial).opacity(0.8))
                 VStack(alignment: .leading, spacing: 0) {
                     Spacer()
                         .frame(width: 300, height: 30, alignment: .top)
-                        .background(Color(UIColor.systemGray6))
+                        .background(Color.clear)
                     List {
-                        // TODO: top section for user field
                         Section() {
                             UserSection(communitiesSidebarVisible: $communitiesSidebarVisible, loginPopupShowing: $loginPopupShowing)
                         }
@@ -36,10 +41,11 @@ struct CommunitiesSidebarContent: View {
                                 CommunityRow(communitiesSidebarVisible: $communitiesSidebarVisible,
                                              community: community)
                             }
-                            // TODO: tie this to logged in user
-                            ForEach(model.userFunctionCommunities) { community in
-                                CommunityRow(communitiesSidebarVisible: $communitiesSidebarVisible,
-                                             community: community)
+                            if model.userName != nil {
+                                ForEach(model.userFunctionCommunities) { community in
+                                    CommunityRow(communitiesSidebarVisible: $communitiesSidebarVisible,
+                                                 community: community)
+                                }
                             }
                         }
                         Section(header: HStack {
@@ -59,7 +65,7 @@ struct CommunitiesSidebarContent: View {
                 .padding(.top, 30)
                 .padding(.bottom, 20)
                 .frame(width: 300)
-                .background(Color(UIColor.systemGray6))
+                .background(Color.clear)
             }
             Spacer()
         }.background(.clear)
@@ -82,7 +88,8 @@ struct CommunityRow: View {
                 }
                 Text(community.name)
             }
-        }.listRowBackground(Color(UIColor.systemGray6))
+        }
+        .listRowBackground(Color.clear)
     }
 }
 
@@ -119,14 +126,26 @@ struct UserSection: View {
     @Binding var loginPopupShowing: Bool
     
     var body: some View {
-        Button(action: {
-            loginPopupShowing.toggle()
-//            communitiesSidebarVisible.toggle()
-        }) {
-            HStack {
-                Image(systemName: "rectangle.portrait.and.arrow.forward")
-                Text("Log in")
+        if model.userName != nil {
+            Button(action: {
+                
+            }) {
+                HStack {
+                    Image(systemName: "person.crop.circle")
+                    Text(model.userName!)
+                }
             }
-        }.listRowBackground(Color(UIColor.systemGray6))
+            .listRowBackground(Color.clear)
+        } else {
+            Button(action: {
+                loginPopupShowing.toggle()
+            }) {
+                HStack {
+                    Image(systemName: "rectangle.portrait.and.arrow.forward")
+                    Text("Log in")
+                }
+            }
+            .listRowBackground(Color.clear)
+        }
     }
 }

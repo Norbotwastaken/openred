@@ -7,62 +7,47 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "17C6F537-A521-49A9-B883-3479F116CE63"
+            uuid = "95FCD6E7-8A27-4261-8889-F2DBB39CAD4B"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
-            landmarkName = "updatePosts(doc:)"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
+            landmarkName = "saveCookies()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "17C6F537-A521-49A9-B883-3479F116CE63 - b45977413a5669fd"
+                  uuid = "95FCD6E7-8A27-4261-8889-F2DBB39CAD4B - 8cf308c192ba8824"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.updateDocument(doc: Erik.Document) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Array&lt;__C.NSHTTPCookie&gt;) -&gt; () in openred.Model.loadCookies() -&gt; ()"
                   moduleName = "openred"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "35"
-                  endingLineNumber = "35"
-                  offsetFromSymbolStart = "424">
+                  startingLineNumber = "225"
+                  endingLineNumber = "225"
+                  offsetFromSymbolStart = "12">
                </Location>
                <Location
-                  uuid = "17C6F537-A521-49A9-B883-3479F116CE63 - b45977413a566961"
+                  uuid = "95FCD6E7-8A27-4261-8889-F2DBB39CAD4B - 8cf308c192ba8824"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.updateDocument(doc: Erik.Document) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Array&lt;__C.NSHTTPCookie&gt;) -&gt; () in openred.Model.loadCookies() -&gt; ()"
                   moduleName = "openred"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "39"
-                  endingLineNumber = "39"
-                  offsetFromSymbolStart = "492">
-               </Location>
-               <Location
-                  uuid = "17C6F537-A521-49A9-B883-3479F116CE63 - 121e69f26de14064"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.updatePosts(doc: Erik.Document) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "99"
-                  endingLineNumber = "99"
-                  offsetFromSymbolStart = "232">
+                  startingLineNumber = "225"
+                  endingLineNumber = "225"
+                  offsetFromSymbolStart = "48">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -70,238 +55,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D2CC2925-B088-48AB-8B18-849B9AA19CF3"
+            uuid = "83D8C7D7-FF41-4B4C-84F7-3DA5C508FB35"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "updateCommunitiesList(doc:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "14BD5B35-FC25-47A1-86BA-0B3FEAC07BE4"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "openred/SidebarView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "1B4CFD30-1750-4E56-A68B-65059F44440B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "openred/Model/Model.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
-            landmarkName = "refreshWithSortModifier(sortModifier:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "1B4CFD30-1750-4E56-A68B-65059F44440B - bdd86f2d1686269b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.Model.refreshWithSortModifier(sortModifier: Swift.String) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "56"
-                  endingLineNumber = "56"
-                  offsetFromSymbolStart = "153">
-               </Location>
-               <Location
-                  uuid = "1B4CFD30-1750-4E56-A68B-65059F44440B - be8e9d4c61a83e84"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.refreshWithSortModifier(sortModifier: Swift.String) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "56"
-                  endingLineNumber = "56"
-                  offsetFromSymbolStart = "317">
-               </Location>
-               <Location
-                  uuid = "1B4CFD30-1750-4E56-A68B-65059F44440B - be8e9d4c61a83e84"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.refreshWithSortModifier(sortModifier: Swift.String) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "56"
-                  endingLineNumber = "56"
-                  offsetFromSymbolStart = "318">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "openred/Model/Model.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
-            landmarkName = "updatePosts(doc:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de14655"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.updatePosts(doc: Erik.Document) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "116"
-                  endingLineNumber = "116"
-                  offsetFromSymbolStart = "1928">
-               </Location>
-               <Location
-                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de14655"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.updatePosts(doc: Erik.Document) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "116"
-                  endingLineNumber = "116"
-                  offsetFromSymbolStart = "2000">
-               </Location>
-               <Location
-                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de1470e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.updatePosts(doc: Erik.Document) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121"
-                  offsetFromSymbolStart = "1928">
-               </Location>
-               <Location
-                  uuid = "607F7AF3-A9D7-40A1-842A-25857C43BA64 - 121e69f26de1470e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.updatePosts(doc: Erik.Document) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121"
-                  offsetFromSymbolStart = "2000">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "71DA33BD-DFD1-436D-9A32-FE7D9B0DA814"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "openred/Model/Model.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
-            landmarkName = "updatePosts(doc:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "830B5781-7329-4D73-AF7C-C2FC1DCDE5DD"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "openred/Model/Model.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
-            landmarkName = "updatePosts(doc:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "830B5781-7329-4D73-AF7C-C2FC1DCDE5DD - 121e69f26de14674"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.updatePosts(doc: Erik.Document) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "115"
-                  endingLineNumber = "115"
-                  offsetFromSymbolStart = "2698">
-               </Location>
-               <Location
-                  uuid = "830B5781-7329-4D73-AF7C-C2FC1DCDE5DD - 121e69f26de14674"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "openred.Model.updatePosts(doc: Erik.Document) -&gt; ()"
-                  moduleName = "openred"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "115"
-                  endingLineNumber = "115"
-                  offsetFromSymbolStart = "2609">
-               </Location>
-            </Locations>
+            startingLineNumber = "225"
+            endingLineNumber = "225"
+            landmarkName = "Model"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -19,26 +19,60 @@ class Model: ObservableObject {
     @Published var selectedCommunityLink: String
     @Published var selectedSorting: String
     @Published var selectedSortingIcon: String
+    @Published var userName: String?
+    @Published var loginAttempt: LoginAttempt = .undecided
     
     let defaults = UserDefaults.standard
     let webView = WKWebView()
-    let browser: Erik
+    var browser: Erik = Erik()
+    var document: Document? = nil
     let redditBaseURL: String = "https://old.reddit.com"
     
     init() {
-//        loadCookies()
-        self.browser = Erik(webView: self.webView)
+//        self.browser = Erik(webView: self.webView)
         self.title = ""
         self.selectedCommunityLink = redditBaseURL + "/r/all"
         self.selectedSorting = ""
         self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[""]!
+//        loadCookies()
+        self.browser = Erik(webView: self.webView)
         load(initialURL: selectedCommunityLink)
+    }
+    
+    func login(username: String, password: String) {
+        if let form = document!.querySelector("#login_login-main") as? Form {
+            if let usernameInput = form.querySelector("input[name=\"user\"]") {
+                usernameInput["value"] = username
+            }
+            if let passwordInput = form.querySelector("input[name=\"passwd\"]") {
+                passwordInput["value"] = password
+            }
+            document?.querySelector("#login_login-main .btn")?.click() { object, error in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    self.browser.currentContent { (obj, err) -> Void in
+                        if let document = obj {
+                            if document.querySelector("#login_login-main .error") != nil {
+                                // failed login attempt
+                                self.loginAttempt = .failed
+                            } else {
+                                self.loginAttempt = .successful
+                                self.document = document
+                                self.userName = username
+                                self.saveCookies()
+                                self.updateCommunitiesList(doc: document)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func load(initialURL: String) {
         setAdditionalCommunities()
         browser.visit(url: URL(string: initialURL)! ) { object, error in
             if let doc = object {
+                self.document = doc
                 self.updateTitle(doc: doc, defaultTitle: "")
                 self.updatePosts(doc: doc)
                 self.updateCommunitiesList(doc: doc)
@@ -56,6 +90,7 @@ class Model: ObservableObject {
         self.posts = [] // prompt scroll reset to top
         browser.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
             if let doc = object {
+                self.document = doc
                 self.updateTitle(doc: doc, defaultTitle: community.name)
                 self.updatePosts(doc: doc)
             }
@@ -73,6 +108,7 @@ class Model: ObservableObject {
         self.posts = [] // prompt scroll reset to top
         browser.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
             if let doc = object {
+                self.document = doc
                 self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
                 self.updatePosts(doc: doc)
             }
@@ -90,6 +126,7 @@ class Model: ObservableObject {
         self.posts = [] // prompt scroll reset to top
         browser.visit(url: URL(string: self.selectedCommunityLink + sortModifier)! ) { object, error in
             if let doc = object {
+                self.document = doc
                 self.updatePosts(doc: doc)
             }
         }
@@ -160,7 +197,7 @@ class Model: ObservableObject {
     
     private func updateCommunitiesList(doc: Document) {
         var unsortedCommunities: [Community] = []
-        for element in doc.querySelectorAll(".sr-list #sr-bar li a") {
+        for element in doc.querySelectorAll(".sr-list .flat-list.sr-bar:nth-of-type(n+2) li a") {
             let communityLink = element["href"]
             if let communityName = element.text {
                 unsortedCommunities.append(Community(communityName,link: communityLink ?? "no link",
@@ -171,7 +208,7 @@ class Model: ObservableObject {
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
     }
     
-    func setAdditionalCommunities() {
+    private func setAdditionalCommunities() {
         self.mainPageCommunities.append(Community("Home", link: redditBaseURL,
                                                   iconName: "house.fill", isMultiCommunity: true))
         self.mainPageCommunities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular",
@@ -184,11 +221,31 @@ class Model: ObservableObject {
                                                       iconName: "shield", isMultiCommunity: true))
     }
     
-    func loadCookies() {
-        self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookie in
-            
+    private func saveCookies() {
+        self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+            cookies.forEach { cookie in
+                cookie.archive()
+            }
+//            if let encoded = try? JSONEncoder().encode(cookies) {
+//                self.defaults.set(cookies, forKey: "cookies")
+//            }
+//            self.defaults.set(cookies, forKey: "cookies")
         }
     }
+//
+    private func loadCookies() {
+        HTTPCookie.loadCookie(using: <#T##Data?#>)
+//        let savedCookies = defaults.object(forKey: "cookies") as? [HTTPCookie] ?? [HTTPCookie]()
+//        for cookie in savedCookies {
+//            webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+//        }
+    }
+}
+
+enum LoginAttempt: Codable {
+    case undecided
+    case successful
+    case failed
 }
 
 struct ViewModelAttributes {
@@ -200,4 +257,39 @@ struct ViewModelAttributes {
         "rising" : "chart.line.uptrend.xyaxis",
         "controversial" : "arrow.right.and.line.vertical.and.arrow.left"
     ]
+}
+
+extension HTTPCookie {
+
+    fileprivate func save(cookieProperties: [HTTPCookiePropertyKey : Any]) -> Data {
+        do {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: cookieProperties, requiringSecureCoding: false)
+            return data
+        } catch {
+            
+        }
+        return Data()
+    }
+
+    static fileprivate func loadCookieProperties(from data: Data) -> [HTTPCookiePropertyKey : Any]? {
+        let unarchivedDictionary = NSKeyedUnarchiver.unarchiveObject(with: data)
+        return unarchivedDictionary as? [HTTPCookiePropertyKey : Any]
+    }
+
+    static func loadCookie(using data: Data?) -> HTTPCookie? {
+        guard let data = data,
+            let properties = loadCookieProperties(from: data) else {
+                return nil
+        }
+        return HTTPCookie(properties: properties)
+
+    }
+
+    func archive() -> Data? {
+        guard let properties = self.properties else {
+            return nil
+        }
+        return save(cookieProperties: properties)
+    }
+
 }
