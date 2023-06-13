@@ -11,11 +11,19 @@ import AVKit
 
 struct ContentView: View {
     @State var communitiesSidebarVisible = false
+    @State var mediaPopupShowing = false
+    @State var loginPopupShowing = false
+    @State var popupContentType: ContentType = .link
+    @State var mediaPopupImage: Image?
+    @State var videoLink: String?
+    @State var player = AVPlayer()
     
     var body: some View {
         ZStack{
             TabView {
-                PostsView(communitiesSidebarVisible: $communitiesSidebarVisible)
+                PostsView(communitiesSidebarVisible: $communitiesSidebarVisible,
+                          mediaPopupShowing: $mediaPopupShowing, popupContentType: $popupContentType,
+                          mediaPopupImage: $mediaPopupImage, videoLink: $videoLink, player: $player)
                     .tabItem {
                         Label("Feed", systemImage: "newspaper")
                     }
@@ -32,8 +40,33 @@ struct ContentView: View {
                         Label("Settings", systemImage: "gear")
                     }
             }
-            CommunitiesSidebar(isShowing: $communitiesSidebarVisible)
+            CommunitiesSidebar(isShowing: $communitiesSidebarVisible, loginPopupShowing: $loginPopupShowing)
+            if mediaPopupShowing {
+                MediaPopupContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
+                                  videoLink: $videoLink, contentType: $popupContentType, player: $player)
+                .ignoresSafeArea()
+                .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
+                    .onEnded { value in
+                        print(value.translation)
+                        switch(value.translation.width, value.translation.height) {
+//                        case (...0, -30...30): print("left swipe")
+//                        case (0..., -30...30): print("right swipe")
+                        case (-100...100, ...0): dismissPopup() // up swipe
+                        case (-100...100, 0...): dismissPopup() // down swipe
+                        default: print("no clue")
+                        }
+                    }
+                )
+            }
+            if loginPopupShowing {
+                LoginPopup(loginPopupShowing: $loginPopupShowing)
+            }
         }
+    }
+    
+    private func dismissPopup() {
+        player.pause()
+        mediaPopupShowing = false
     }
 }
 
@@ -124,13 +157,13 @@ extension View {
 //    }
 //}
 
-extension AVPlayerViewController {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        self.showsPlaybackControls = true
-        self.videoGravity = .resizeAspect
-    }
-}
+//extension AVPlayerViewController {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//        self.showsPlaybackControls = true
+//        self.videoGravity = .resizeAspect
+//    }
+//}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

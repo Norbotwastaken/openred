@@ -11,11 +11,12 @@
 		AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A962E2A2F96E400BA96CF /* PostsView.swift */; };
 		AE4A96312A2F974C00BA96CF /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96302A2F974C00BA96CF /* Post.swift */; };
 		AE4A96342A2FBBE300BA96CF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96332A2FBBE300BA96CF /* Model.swift */; };
-		AE4A96522A3359D900BA96CF /* SlidingTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96512A3359D800BA96CF /* SlidingTabView.swift */; };
 		AE4A96562A337B4000BA96CF /* CommunitiesSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96552A337B4000BA96CF /* CommunitiesSidebar.swift */; };
 		AE4A96592A33A27100BA96CF /* Community.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96582A33A27100BA96CF /* Community.swift */; };
 		AE4A965F2A37829700BA96CF /* MediaPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A965E2A37829700BA96CF /* MediaPopup.swift */; };
 		AE4A96612A37832800BA96CF /* PostRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96602A37832800BA96CF /* PostRow.swift */; };
+		AE4A96662A37BDE100BA96CF /* VideoPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = AE4A96652A37BDE100BA96CF /* VideoPlayer */; };
+		AE4A966A2A387ECB00BA96CF /* LoginPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96692A387ECB00BA96CF /* LoginPopup.swift */; };
 		AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C32A2CCB3300889B3E /* openredApp.swift */; };
 		AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C52A2CCB3300889B3E /* ContentView.swift */; };
 		AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE89D4C72A2CCB3600889B3E /* Assets.xcassets */; };
@@ -49,11 +50,11 @@
 		AE4A962E2A2F96E400BA96CF /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
 		AE4A96302A2F974C00BA96CF /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		AE4A96332A2FBBE300BA96CF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		AE4A96512A3359D800BA96CF /* SlidingTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingTabView.swift; sourceTree = "<group>"; };
 		AE4A96552A337B4000BA96CF /* CommunitiesSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunitiesSidebar.swift; sourceTree = "<group>"; };
 		AE4A96582A33A27100BA96CF /* Community.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Community.swift; sourceTree = "<group>"; };
 		AE4A965E2A37829700BA96CF /* MediaPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPopup.swift; sourceTree = "<group>"; };
 		AE4A96602A37832800BA96CF /* PostRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostRow.swift; sourceTree = "<group>"; };
+		AE4A96692A387ECB00BA96CF /* LoginPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPopup.swift; sourceTree = "<group>"; };
 		AE89D4C02A2CCB3300889B3E /* openred.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openred.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4C32A2CCB3300889B3E /* openredApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredApp.swift; sourceTree = "<group>"; };
 		AE89D4C52A2CCB3300889B3E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +73,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D287CB7879D0BE7B9C2EAC0 /* Pods_openred.framework in Frameworks */,
+				AE4A96662A37BDE100BA96CF /* VideoPlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,8 +170,8 @@
 				AE89D4C52A2CCB3300889B3E /* ContentView.swift */,
 				AE89D4C72A2CCB3600889B3E /* Assets.xcassets */,
 				AE89D4C92A2CCB3600889B3E /* Preview Content */,
-				AE4A96512A3359D800BA96CF /* SlidingTabView.swift */,
 				AE4A96552A337B4000BA96CF /* CommunitiesSidebar.swift */,
+				AE4A96692A387ECB00BA96CF /* LoginPopup.swift */,
 			);
 			path = openred;
 			sourceTree = "<group>";
@@ -217,6 +219,9 @@
 			dependencies = (
 			);
 			name = openred;
+			packageProductDependencies = (
+				AE4A96652A37BDE100BA96CF /* VideoPlayer */,
+			);
 			productName = openred;
 			productReference = AE89D4C02A2CCB3300889B3E /* openred.app */;
 			productType = "com.apple.product-type.application";
@@ -289,6 +294,9 @@
 				Base,
 			);
 			mainGroup = AE89D4B72A2CCB3300889B3E;
+			packageReferences = (
+				AE4A96642A37BDE100BA96CF /* XCRemoteSwiftPackageReference "VideoPlayer" */,
+			);
 			productRefGroup = AE89D4C12A2CCB3300889B3E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -379,7 +387,7 @@
 				AE4A96312A2F974C00BA96CF /* Post.swift in Sources */,
 				AE4A965F2A37829700BA96CF /* MediaPopup.swift in Sources */,
 				AE4A96592A33A27100BA96CF /* Community.swift in Sources */,
-				AE4A96522A3359D900BA96CF /* SlidingTabView.swift in Sources */,
+				AE4A966A2A387ECB00BA96CF /* LoginPopup.swift in Sources */,
 				AE4A96562A337B4000BA96CF /* CommunitiesSidebar.swift in Sources */,
 				AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */,
 				AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */,
@@ -707,6 +715,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AE4A96642A37BDE100BA96CF /* XCRemoteSwiftPackageReference "VideoPlayer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/wxxsw/VideoPlayer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AE4A96652A37BDE100BA96CF /* VideoPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AE4A96642A37BDE100BA96CF /* XCRemoteSwiftPackageReference "VideoPlayer" */;
+			productName = VideoPlayer;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AE89D4B82A2CCB3300889B3E /* Project object */;
 }

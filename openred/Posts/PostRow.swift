@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 import AVKit
-import ExytePopupView
 
 struct PostRow: View {
     @EnvironmentObject var model: Model

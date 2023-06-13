@@ -11,10 +11,12 @@ import SwiftUI
 struct CommunitiesSidebarContent: View {
     @EnvironmentObject var model: Model
     @Binding var communitiesSidebarVisible: Bool
+    @Binding var loginPopupShowing: Bool
     
-    init(communitiesSidebarVisible: Binding<Bool>) {
+    init(communitiesSidebarVisible: Binding<Bool>, loginPopupShowing: Binding<Bool>) {
         UIScrollView.appearance().bounces = false
         self._communitiesSidebarVisible = communitiesSidebarVisible
+        self._loginPopupShowing = loginPopupShowing
     }
     
     var body: some View {
@@ -26,6 +28,9 @@ struct CommunitiesSidebarContent: View {
                         .background(Color(UIColor.systemGray6))
                     List {
                         // TODO: top section for user field
+                        Section() {
+                            UserSection(communitiesSidebarVisible: $communitiesSidebarVisible, loginPopupShowing: $loginPopupShowing)
+                        }
                         Section() {
                             ForEach(model.mainPageCommunities) { community in
                                 CommunityRow(communitiesSidebarVisible: $communitiesSidebarVisible,
@@ -83,6 +88,7 @@ struct CommunityRow: View {
 
 struct CommunitiesSidebar: View {
     @Binding var isShowing: Bool
+    @Binding var loginPopupShowing: Bool
     
     var edgeTransition: AnyTransition = .move(edge: .leading)
     var body: some View {
@@ -94,7 +100,7 @@ struct CommunitiesSidebar: View {
                     .onTapGesture {
                         isShowing.toggle()
                     }
-                CommunitiesSidebarContent(communitiesSidebarVisible: $isShowing)
+                CommunitiesSidebarContent(communitiesSidebarVisible: $isShowing, loginPopupShowing: $loginPopupShowing)
                     .transition(edgeTransition)
                     .background(
                         Color.clear
@@ -104,5 +110,23 @@ struct CommunitiesSidebar: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .ignoresSafeArea()
         .animation(.easeInOut, value: isShowing)
+    }
+}
+
+struct UserSection: View {
+    @EnvironmentObject var model: Model
+    @Binding var communitiesSidebarVisible: Bool
+    @Binding var loginPopupShowing: Bool
+    
+    var body: some View {
+        Button(action: {
+            loginPopupShowing.toggle()
+//            communitiesSidebarVisible.toggle()
+        }) {
+            HStack {
+                Image(systemName: "rectangle.portrait.and.arrow.forward")
+                Text("Log in")
+            }
+        }.listRowBackground(Color(UIColor.systemGray6))
     }
 }

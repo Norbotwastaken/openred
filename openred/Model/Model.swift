@@ -8,6 +8,7 @@
 import Foundation
 import Erik
 import Kanna
+import WebKit
 
 class Model: ObservableObject {
     @Published var posts: [Post] = []
@@ -19,10 +20,14 @@ class Model: ObservableObject {
     @Published var selectedSorting: String
     @Published var selectedSortingIcon: String
     
-    let browser = Erik()
+    let defaults = UserDefaults.standard
+    let webView = WKWebView()
+    let browser: Erik
     let redditBaseURL: String = "https://old.reddit.com"
     
     init() {
+//        loadCookies()
+        self.browser = Erik(webView: self.webView)
         self.title = ""
         self.selectedCommunityLink = redditBaseURL + "/r/all"
         self.selectedSorting = ""
@@ -177,6 +182,12 @@ class Model: ObservableObject {
                                                       iconName: "heart.text.square", isMultiCommunity: true))
         self.userFunctionCommunities.append(Community("Moderator Posts", link: redditBaseURL + "/mod",
                                                       iconName: "shield", isMultiCommunity: true))
+    }
+    
+    func loadCookies() {
+        self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookie in
+            
+        }
     }
 }
 

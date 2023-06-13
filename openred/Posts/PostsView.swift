@@ -12,12 +12,11 @@ import ExytePopupView
 struct PostsView: View {
     @EnvironmentObject var model: Model
     @Binding var communitiesSidebarVisible: Bool
-    @State var mediaPopupShowing = false
-    @State var popupContentType: ContentType = .link
-    @State var mediaPopupImage: Image?
-    @State var videoLink: String?
-    
-    @State var player = AVPlayer()
+    @Binding var mediaPopupShowing: Bool
+    @Binding var popupContentType: ContentType
+    @Binding var mediaPopupImage: Image?
+    @Binding var videoLink: String?
+    @Binding var player: AVPlayer
     
     var body: some View {
         ZStack {
@@ -70,28 +69,29 @@ struct PostsView: View {
 //                            .dismissCallback({ player.pause() })
 //                    }
             }
-            if mediaPopupShowing {
-                MediaPopupContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
-                                  videoLink: $videoLink, contentType: $popupContentType, player: $player)
-                .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
-                    .onEnded { value in
-                        print(value.translation)
-                        switch(value.translation.width, value.translation.height) {
-                        case (...0, -30...30): print("left swipe")
-                        case (0..., -30...30): print("right swipe")
-                        case (-100...100, ...0): dismissPopup() // up swipe
-                        case (-100...100, 0...): dismissPopup() // down swipe
-                        default: print("no clue")
-                        }
-                    }
-                )
-            }
+//            if mediaPopupShowing {
+//                MediaPopupContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
+//                                  videoLink: $videoLink, contentType: $popupContentType, player: $player)
+//                .ignoresSafeArea()
+//                .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
+//                    .onEnded { value in
+//                        print(value.translation)
+//                        switch(value.translation.width, value.translation.height) {
+//                        case (...0, -30...30): print("left swipe")
+//                        case (0..., -30...30): print("right swipe")
+//                        case (-100...100, ...0): dismissPopup() // up swipe
+//                        case (-100...100, 0...): dismissPopup() // down swipe
+//                        default: print("no clue")
+//                        }
+//                    }
+//                )
+//            }
         }
     }
-    private func dismissPopup() {
-        player.pause()
-        mediaPopupShowing = false
-    }
+//    private func dismissPopup() {
+//        player.pause()
+//        mediaPopupShowing = false
+//    }
 }
 
 struct SortMenu: View {
