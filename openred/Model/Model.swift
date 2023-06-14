@@ -177,9 +177,13 @@ class Model: ObservableObject {
 //                        thumbnailLink = String(thumbnailLink!.dropFirst(2))
 //                    }
                 } else if (mediaContainerString != nil && mediaContainerString!.contains("type=\"video/mp4\"")) {
-                    contentType = .gif // gif, but presentation is the same for gif and video types
+                    contentType = .gif
                     mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
                         .components(separatedBy: "\"")[0]
+                    if mediaLink!.contains("imgur.com") && mediaLink!.contains(".gifv") {
+                        contentType = .video // gif from imgur, but is a video file
+                        mediaLink = String(mediaLink!.dropLast(4)) + "mp4"
+                    }
                 } else if (mediaContainerString != nil && mediaContainerString!.contains("<a href")) {
                     contentType = .image
                     mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
@@ -187,7 +191,14 @@ class Model: ObservableObject {
                 } else {
                     contentType = .text
                 }
-            } // else it is an external link
+            } else if let thumbnail = element.querySelector(".thumbnail") {
+                if thumbnail["href"] != nil &&
+                    thumbnail["href"]!.contains("imgur.com") && thumbnail["href"]!.contains(".gifv") {
+                    contentType = .video // gif from imgur, but is a video file
+                    mediaLink = String(thumbnail["href"]!.dropLast(4)) + "mp4"
+                }
+            }
+            // else it is an external link
             
             // Transform '3 hours ago' into '3h'
             if let postAgeSections = submittedAge?.components(separatedBy: " ") {

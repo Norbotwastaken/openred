@@ -42,7 +42,8 @@ struct PostRowContent: View {
     @Binding var mediaPopupImage: Image?
     @Binding var popupContentType: ContentType
     @Binding var videoLink: String?
-    @State var gifData: Data? = nil
+//    @State var gifData: Data? = nil
+    @State var startLoadingGif: Bool = false
     @State var imageContainerSize: CGSize = CGSize(width: 1, height: 400)
     var post: Post
     
@@ -111,31 +112,44 @@ struct PostRowContent: View {
             }
         } else if post.contentType == .gif {
             ZStack {
-                
-                if let data = gifData {
-                    GIFImage(data: data) // load from data
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    ZStack {
-                        Rectangle()
-                            .fill(Color(UIColor.systemGray5))
-                            .frame(height: imageContainerSize.height)
-                            .scaledToFill()
-                        ProgressView()
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .onAppear(perform: loadGifData)
+                ZStack {
+                    Rectangle()
+                        .fill(Color(UIColor.systemGray5))
+                        .opacity(0)
+                        .frame(height: imageContainerSize.height)
+                        .scaledToFill()
+                    ProgressView()
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear(perform: { startLoadingGif = true })
+                if startLoadingGif {
+                    GIFView(url: URL(string: post.mediaLink ?? "")!)
+                        .frame(maxWidth: .infinity, maxHeight: 650)
+                }
+//                if let data = gifData {
+//                    GIFImage(data: data) // load from data
+//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                } else {
+//                    ZStack {
+//                        Rectangle()
+//                            .fill(Color(UIColor.systemGray5))
+//                            .frame(height: imageContainerSize.height)
+//                            .scaledToFill()
+//                        ProgressView()
+//                    }
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    .onAppear(perform: loadGifData)
+//                }
             }
         }
     }
     
-    private func loadGifData() {
-        let task = URLSession.shared.dataTask(with: URL(string: post.mediaLink ?? "")!) { data, response, error in
-            gifData = data
-        }
-        task.resume()
-    }
+//    private func loadGifData() {
+//        let task = URLSession.shared.dataTask(with: URL(string: post.mediaLink ?? "")!) { data, response, error in
+//            gifData = data
+//        }
+//        task.resume()
+//    }
 }
 
 struct PostRowFooter: View {

@@ -7,11 +7,10 @@
 
 import SwiftUI
 import AVKit
-import ExytePopupView
 
 struct PostsView: View {
     @EnvironmentObject var model: Model
-    @Binding var communitiesSidebarVisible: Bool
+    @Binding var sidebarOffset: CGSize
     @Binding var mediaPopupShowing: Bool
     @Binding var popupContentType: ContentType
     @Binding var mediaPopupImage: Image?
@@ -29,14 +28,13 @@ struct PostsView: View {
                             .listRowSeparator(.hidden)
                     }
                 }
-//                .background(Color(UIColor.systemGray5))
                 .listStyle(PlainListStyle())
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {
-                            communitiesSidebarVisible.toggle()
+                            sidebarOffset.width = -1
                             print("Left button tapped")
                         } label: {
                             Image(systemName: "chevron.left")
@@ -56,42 +54,9 @@ struct PostsView: View {
                     }
                 }
                 .toolbarBackground(.visible, for: .navigationBar)
-//                .popup(isPresented: $mediaPopupShowing) {
-//                    MediaPopupContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
-//                                      videoLink: $videoLink, contentType: $popupContentType, player: $player)
-//                    } customize: {
-//                        $0.type(.floater(verticalPadding: 20, horizontalPadding: 0, useSafeAreaInset: false))
-//                            .position(.top)
-//                            .closeOnTap(false)
-//                            .backgroundColor(Color.black)
-//                            .appearFrom(.top).animation(.easeIn(duration: 0))
-//                            .isOpaque(true)
-//                            .dismissCallback({ player.pause() })
-//                    }
             }
-//            if mediaPopupShowing {
-//                MediaPopupContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
-//                                  videoLink: $videoLink, contentType: $popupContentType, player: $player)
-//                .ignoresSafeArea()
-//                .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
-//                    .onEnded { value in
-//                        print(value.translation)
-//                        switch(value.translation.width, value.translation.height) {
-//                        case (...0, -30...30): print("left swipe")
-//                        case (0..., -30...30): print("right swipe")
-//                        case (-100...100, ...0): dismissPopup() // up swipe
-//                        case (-100...100, 0...): dismissPopup() // down swipe
-//                        default: print("no clue")
-//                        }
-//                    }
-//                )
-//            }
         }
     }
-//    private func dismissPopup() {
-//        player.pause()
-//        mediaPopupShowing = false
-//    }
 }
 
 struct SortMenu: View {

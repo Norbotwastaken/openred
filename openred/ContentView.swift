@@ -22,7 +22,7 @@ struct ContentView: View {
         ZStack {
             TabView {
                 ZStack {
-                    PostsView(communitiesSidebarVisible: $communitiesSidebarVisible,
+                    PostsView(sidebarOffset: $sidebarOffset,
                               mediaPopupShowing: $mediaPopupShowing, popupContentType: $popupContentType,
                               mediaPopupImage: $mediaPopupImage, videoLink: $videoLink, player: $player)
                     .disabled(sidebarOffset.width > -300)

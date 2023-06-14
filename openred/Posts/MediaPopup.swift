@@ -24,9 +24,6 @@ struct MediaPopupContent: View {
     @State private var stateText: String = ""
     @State private var totalDuration: Double = 0
     
-//    var videoLink: String = "https://v.redd.it/8twxap1nxc5b1/HLSPlaylist.m3u8"
-//    var videoLink: String = "https://i.imgur.com/a41akKA.mp4"
-    
     var body: some View {
         ZStack {
             if (contentType == ContentType.video) {
@@ -34,13 +31,14 @@ struct MediaPopupContent: View {
                     Rectangle()
                         .fill(Color.black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    ProgressView()
                     VideoPlayer(url: URL(string: videoLink ?? "")!, play: $play, time: $time)
                         .contentMode(.scaleAspectFit)
                         .autoReplay(autoReplay)
                         .mute(mute)
-                        .onBufferChanged { progress in print("onBufferChanged \(progress)") }
-                        .onPlayToEndTime { print("onPlayToEndTime") }
-                        .onReplay { print("onReplay") }
+//                        .onBufferChanged { progress in print("onBufferChanged \(progress)") }
+//                        .onPlayToEndTime { print("onPlayToEndTime") }
+//                        .onReplay { print("onReplay") }
                         .onStateChanged { state in
                             switch state {
                             case .loading:
@@ -129,7 +127,7 @@ struct MediaPopupContent: View {
                             .frame(width: 340, height: 80)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 130, trailing: 0))
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 80, trailing: 0))
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -180,7 +178,6 @@ struct MediaPopupContent: View {
                             .padding(EdgeInsets(top: 30, leading: 22, bottom: 0, trailing: 0))
                             .onTapGesture {
                                 mediaPopupShowing = false
-//                                player.pause()
                             }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
