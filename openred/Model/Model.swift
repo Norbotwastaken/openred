@@ -170,69 +170,106 @@ class Model: ObservableObject {
         }
         
         for element in doc.querySelectorAll("#siteTable div.thing:not(.promoted)") {
-            let title = element.querySelector(".entry .top-matter p.title a.title")?.text
-            let community = element.querySelector(".entry .top-matter .tagline .subreddit")?.text // r/something
-            let commentCount = element["data-comments-count"]
-            let userName = element.querySelector(".entry .top-matter .tagline .author")?.text
-            var submittedAge = element.querySelector(".entry .tagline .live-timestamp")?.text
-            let linkToThread = element["data-permalink"]
-            let score = element["data-score"]
-            var contentType: ContentType = .link
-            var mediaLink: String?
-            var thumbnailLink = element.querySelector(".thumbnail img")?["src"]
-            if thumbnailLink != nil {
-                thumbnailLink = "https:" + thumbnailLink!
+            if (element["data-is-gallery"] == "true") {
+                element.querySelector(".expando-button")?.click()
             }
-            // data-is-gallery="true" Tag for galleries
-            // TODO: handle crossposts
-            
-            if let mediaElement = element.querySelector(".entry .expando") {
-                let mediaContainerString = mediaElement["data-cachedhtml"]
-                if (mediaContainerString != nil && mediaContainerString!.contains("data-hls-url")) {
-                    contentType = .video
-                    mediaLink = mediaContainerString!.components(separatedBy: "data-hls-url=\"")[1]
-                        .components(separatedBy: "\"")[0]
-//                    if thumbnailLink!.hasPrefix("//") {
-//                        thumbnailLink = String(thumbnailLink!.dropFirst(2))
-//                    }
-                } else if (mediaContainerString != nil && mediaContainerString!.contains("type=\"video/mp4\"")) {
-                    contentType = .gif
-                    mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
-                        .components(separatedBy: "\"")[0]
-                    if mediaLink!.contains("imgur.com") && mediaLink!.contains(".gifv") {
-                        contentType = .video // gif from imgur, but is a video file
-                        mediaLink = String(mediaLink!.dropLast(4)) + "mp4"
+            if (element["data-domain"] != nil && element["data-domain"]!.starts(with: "self.")) {
+                // regular text (or self) post
+                element.querySelector(".expando-button")?.click()
+            }
+            // TODO: crossposts
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.browser.currentContent { (obj, err) -> Void in
+                if let document = obj {
+                    for element in doc.querySelectorAll("#siteTable div.thing:not(.promoted)") {
+                        let title = element.querySelector(".entry .top-matter p.title a.title")?.text
+                        let community = element.querySelector(".entry .top-matter .tagline .subreddit")?.text // r/something
+                        let commentCount = element["data-comments-count"]
+                        let userName = element.querySelector(".entry .top-matter .tagline .author")?.text
+                        var submittedAge = element.querySelector(".entry .tagline .live-timestamp")?.text
+                        let linkToThread = element["data-permalink"]
+                        let score = element["data-score"]
+                        var contentType: ContentType = .link
+                        var mediaLink: String?
+                        var textContentHTML: String?
+                        var galleryLinks: [String] = []
+                        var thumbnailLink = element.querySelector(".thumbnail img")?["src"]
+                        if thumbnailLink != nil {
+                            thumbnailLink = "https:" + thumbnailLink!
+                        }
+                        
+                        if let mediaElement = element.querySelector(".entry .expando") {
+                            let mediaContainerString = mediaElement["data-cachedhtml"]
+                            if (mediaContainerString != nil && mediaContainerString!.contains("data-hls-url")) {
+                                contentType = .video
+                                mediaLink = mediaContainerString!.components(separatedBy: "data-hls-url=\"")[1]
+                                    .components(separatedBy: "\"")[0]
+                            } else if (mediaContainerString != nil && mediaContainerString!.contains("type=\"video/mp4\"")) {
+                                contentType = .gif
+                                mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
+                                    .components(separatedBy: "\"")[0]
+                                if mediaLink!.contains("imgur.com") && mediaLink!.contains(".gifv") {
+                                    // gif from imgur, but it is an .mp4 video file
+                                    contentType = .video
+                                    mediaLink = String(mediaLink!.dropLast(4)) + "mp4"
+                                }
+                            } else if (mediaContainerString != nil && mediaContainerString!.contains("<a href")) {
+                                contentType = .image
+                                mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
+                                    .components(separatedBy: "\"")[0]
+                            } else if element["data-is-gallery"] == "true" {
+                                contentType = .gallery
+                                for galleryElement in mediaElement.querySelectorAll(".gallery-preview .media-preview-content a") {
+                                    galleryLinks.append(galleryElement["href"] ?? "")
+                                }
+                                textContentHTML = mediaElement.querySelectorAll(".usertext-body .md").innerHTML
+                            } else if (element["data-domain"] != nil && element["data-domain"]!.starts(with: "self.")) {
+                                contentType = .text
+                                textContentHTML = mediaElement.querySelectorAll(".usertext-body .md").innerHTML
+                                
+                            }
+                        } else if let thumbnail = element.querySelector(".thumbnail") {
+                            if thumbnail["href"] != nil &&
+                                thumbnail["href"]!.contains("imgur.com") && thumbnail["href"]!.contains(".gifv") {
+                                contentType = .video // gif from imgur, but is a video file
+                                mediaLink = String(thumbnail["href"]!.dropLast(4)) + "mp4"
+                            }
+            //                else if thumbnail["href"] != nil && thumbnail["href"]!.contains("reddit.com/gallery") {
+            //                    contentType = .gallery
+            //                    element.querySelector(".expando-button")?.click() { object, error in
+            //                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            //                            self.browser.currentContent { (obj, err) -> Void in
+            //                                if let document = obj {
+            //
+            //                                }
+            //                            }
+            //                        }
+            //                    }
+            //                }
+                        }
+                        // else it is an external link
+                        
+                        // Transform '3 hours ago' into '3h'
+                        if let postAgeSections = submittedAge?.components(separatedBy: " ") {
+                            submittedAge = postAgeSections[0] + postAgeSections[1].prefix(1)
+                        }
+                        
+                        self.posts.append(Post(linkToThread!, title: title ?? "no title for this post",
+                                          community: community,
+                                          commentCount: commentCount ?? "0",
+                                          userName: userName ?? "",
+                                          submittedAge: submittedAge ?? "",
+                                          score: score ?? "0",
+                                          contentType: contentType,
+                                          mediaLink: mediaLink,
+                                          thumbnailLink: thumbnailLink,
+                                          galleryLinks: galleryLinks,
+                                          textContent: textContentHTML))
                     }
-                } else if (mediaContainerString != nil && mediaContainerString!.contains("<a href")) {
-                    contentType = .image
-                    mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
-                        .components(separatedBy: "\"")[0]
-                } else {
-                    contentType = .text
-                }
-            } else if let thumbnail = element.querySelector(".thumbnail") {
-                if thumbnail["href"] != nil &&
-                    thumbnail["href"]!.contains("imgur.com") && thumbnail["href"]!.contains(".gifv") {
-                    contentType = .video // gif from imgur, but is a video file
-                    mediaLink = String(thumbnail["href"]!.dropLast(4)) + "mp4"
                 }
             }
-            // else it is an external link
-            
-            // Transform '3 hours ago' into '3h'
-            if let postAgeSections = submittedAge?.components(separatedBy: " ") {
-                submittedAge = postAgeSections[0] + postAgeSections[1].prefix(1)
-            }
-            
-            posts.append(Post(linkToThread!, title: title ?? "no title for this post",
-                              community: community,
-                              commentCount: commentCount ?? "0",
-                              userName: userName ?? "",
-                              submittedAge: submittedAge ?? "",
-                              score: score ?? "0",
-                              contentType: contentType,
-                              mediaLink: mediaLink,
-                              thumbnailLink: thumbnailLink))
         }
     }
     

@@ -46,21 +46,25 @@ struct ContentView: View {
             .gesture(
                 DragGesture()
                     .onChanged { gesture in
-                        if gesture.startLocation.x < 20 {
-                            sidebarOffset.width = min(sidebarOffset.width + (gesture.translation.width / 20), 0)
+                        if sidebarOffset.width == -300 {
+                            if gesture.startLocation.x < 20 {
+                                sidebarOffset.width = min(sidebarOffset.width + (gesture.translation.width / 20), 0)
+                            }
+                        } else {
+                            sidebarOffset.width = min(sidebarOffset.width + (gesture.translation.width / 35), 0)
                         }
                     }
                     .onEnded { gesture in
                         if gesture.startLocation.x < 20 {
-                            if abs(sidebarOffset.width) > -100 {
+//                            if sidebarOffset.width < -200 {
+//                                sidebarOffset.width = -300
+//                            } else {
                                 sidebarOffset.width = -1
-                            } else {
-                                sidebarOffset.width = -300
-                            }
+//                            }
                         }
                     }
             )
-            if sidebarOffset.width > -300 {
+            if sidebarOffset.width > -200 {
                 Rectangle()
                     .fill(.black)
                     .opacity(0.2)

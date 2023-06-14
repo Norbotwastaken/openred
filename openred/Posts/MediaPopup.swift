@@ -61,10 +61,13 @@ struct MediaPopupContent: View {
                     if toolbarVisible {
                         ZStack {
                             Rectangle()
-                                .fill(Color.black)
-                                .opacity(0.75)
+                                .fill(Color(UIColor.systemGray6))
+                                .opacity(0.2)
+                                .background(.ultraThinMaterial)
+                                .background(VisualEffect(style: .systemUltraThinMaterial).opacity(0.6))
                                 .cornerRadius(8)
                                 .frame(width: 340, height: 80)
+                            
                             HStack {
                                 Button() {
                                     self.autoReplay.toggle()
