@@ -4,28 +4,24 @@ PODS:
     - Kanna
   - Erik/Core (5.0.0):
     - Kanna
-  - ExytePopupView (2.5.0)
+  - FLAnimatedImage (1.0.17)
   - Kanna (5.2.7)
-  - SwiftyGif (5.4.4)
 
 DEPENDENCIES:
   - Erik
-  - ExytePopupView
-  - SwiftyGif
+  - FLAnimatedImage (~> 1.0)
 
 SPEC REPOS:
   trunk:
     - Erik
-    - ExytePopupView
+    - FLAnimatedImage
     - Kanna
-    - SwiftyGif
 
 SPEC CHECKSUMS:
   Erik: 660e6bc7fe68a0c17e0f50142ae2d8168426c22e
-  ExytePopupView: bca5e5b559318e49fa30431082e0c0dfafb54198
+  FLAnimatedImage: bbf914596368867157cc71b38a8ec834b3eeb32b
   Kanna: 01cfbddc127f5ff0963692f285fcbc8a9d62d234
-  SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
 
-PODFILE CHECKSUM: 9a0cccaba72f65716fe61a4d367767519504730d
+PODFILE CHECKSUM: fe7408a76946fbea67b4379a4a6866e0fd211d3f
 
 COCOAPODS: 1.12.1

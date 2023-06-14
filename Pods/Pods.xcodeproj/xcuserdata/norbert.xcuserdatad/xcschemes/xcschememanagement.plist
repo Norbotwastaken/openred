@@ -7,27 +7,22 @@
 		<key>Erik.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
-		<key>ExytePopupView.xcscheme</key>
+		<key>FLAnimatedImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>Kanna.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>Pods-openred.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-		</dict>
-		<key>SwiftyGif.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<true/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>

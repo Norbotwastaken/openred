@@ -41,5 +41,6 @@ enum ContentType: Codable {
     case text
     case image
     case video
+    case gif
     case link
 }

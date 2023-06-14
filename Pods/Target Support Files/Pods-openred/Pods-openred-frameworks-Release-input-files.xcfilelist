@@ -1,5 +1,4 @@
 ${PODS_ROOT}/Target Support Files/Pods-openred/Pods-openred-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/Erik/Erik.framework
-${BUILT_PRODUCTS_DIR}/ExytePopupView/ExytePopupView.framework
+${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework
 ${BUILT_PRODUCTS_DIR}/Kanna/Kanna.framework
-${BUILT_PRODUCTS_DIR}/SwiftyGif/SwiftyGif.framework

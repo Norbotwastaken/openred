@@ -18,6 +18,7 @@
 		AE4A96662A37BDE100BA96CF /* VideoPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = AE4A96652A37BDE100BA96CF /* VideoPlayer */; };
 		AE4A966A2A387ECB00BA96CF /* LoginPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96692A387ECB00BA96CF /* LoginPopup.swift */; };
 		AE4A966C2A38F1B400BA96CF /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A966B2A38F1B400BA96CF /* InboxView.swift */; };
+		AE4A966F2A39DEF400BA96CF /* SwiftUIGIF in Frameworks */ = {isa = PBXBuildFile; productRef = AE4A966E2A39DEF400BA96CF /* SwiftUIGIF */; };
 		AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C32A2CCB3300889B3E /* openredApp.swift */; };
 		AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C52A2CCB3300889B3E /* ContentView.swift */; };
 		AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE89D4C72A2CCB3600889B3E /* Assets.xcassets */; };
@@ -75,6 +76,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D287CB7879D0BE7B9C2EAC0 /* Pods_openred.framework in Frameworks */,
+				AE4A966F2A39DEF400BA96CF /* SwiftUIGIF in Frameworks */,
 				AE4A96662A37BDE100BA96CF /* VideoPlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -224,6 +226,7 @@
 			name = openred;
 			packageProductDependencies = (
 				AE4A96652A37BDE100BA96CF /* VideoPlayer */,
+				AE4A966E2A39DEF400BA96CF /* SwiftUIGIF */,
 			);
 			productName = openred;
 			productReference = AE89D4C02A2CCB3300889B3E /* openred.app */;
@@ -299,6 +302,7 @@
 			mainGroup = AE89D4B72A2CCB3300889B3E;
 			packageReferences = (
 				AE4A96642A37BDE100BA96CF /* XCRemoteSwiftPackageReference "VideoPlayer" */,
+				AE4A966D2A39DEF400BA96CF /* XCRemoteSwiftPackageReference "swiftui-gif" */,
 			);
 			productRefGroup = AE89D4C12A2CCB3300889B3E /* Products */;
 			projectDirPath = "";
@@ -729,6 +733,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		AE4A966D2A39DEF400BA96CF /* XCRemoteSwiftPackageReference "swiftui-gif" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/globulus/swiftui-gif";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -736,6 +748,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AE4A96642A37BDE100BA96CF /* XCRemoteSwiftPackageReference "VideoPlayer" */;
 			productName = VideoPlayer;
+		};
+		AE4A966E2A39DEF400BA96CF /* SwiftUIGIF */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AE4A966D2A39DEF400BA96CF /* XCRemoteSwiftPackageReference "swiftui-gif" */;
+			productName = SwiftUIGIF;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -34,7 +34,7 @@ class Model: ObservableObject {
         self.selectedCommunityLink = redditBaseURL + "/r/all"
         self.selectedSorting = ""
         self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[""]!
-//        loadCookies()
+        restoreCookies()
         self.browser = Erik(webView: self.webView)
         load(initialURL: selectedCommunityLink)
     }
@@ -58,7 +58,7 @@ class Model: ObservableObject {
                                 self.loginAttempt = .successful
                                 self.document = document
                                 self.userName = username
-                                self.saveCookies()
+                                self.storeCookies()
                                 self.updateCommunitiesList(doc: document)
                             }
                         }
@@ -76,6 +76,7 @@ class Model: ObservableObject {
                 self.updateTitle(doc: doc, defaultTitle: "")
                 self.updatePosts(doc: doc)
                 self.updateCommunitiesList(doc: doc)
+                self.loadUsername(doc: doc)
             }
         }
     }
@@ -140,6 +141,12 @@ class Model: ObservableObject {
         }
     }
     
+    private func loadUsername(doc: Document) {
+        if let userIndicatorElement = doc.querySelector("#header .logout")?.text {
+            self.userName = doc.querySelector("#header .user a")!.text
+        }
+    }
+    
     private func updatePosts(doc: Document) {
         self.posts = []
         
@@ -169,6 +176,10 @@ class Model: ObservableObject {
 //                    if thumbnailLink!.hasPrefix("//") {
 //                        thumbnailLink = String(thumbnailLink!.dropFirst(2))
 //                    }
+                } else if (mediaContainerString != nil && mediaContainerString!.contains("type=\"video/mp4\"")) {
+                    contentType = .gif // gif, but presentation is the same for gif and video types
+                    mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
+                        .components(separatedBy: "\"")[0]
                 } else if (mediaContainerString != nil && mediaContainerString!.contains("<a href")) {
                     contentType = .image
                     mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
@@ -221,24 +232,29 @@ class Model: ObservableObject {
                                                       iconName: "shield", isMultiCommunity: true))
     }
     
-    private func saveCookies() {
-        self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-            cookies.forEach { cookie in
-                cookie.archive()
+    func storeCookies() {
+        let userDefaults = UserDefaults.standard
+        var cookieDict = [String : AnyObject]()
+        
+        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+            for cookie in cookies {
+                cookieDict[cookie.name] = cookie.properties as AnyObject?
             }
-//            if let encoded = try? JSONEncoder().encode(cookies) {
-//                self.defaults.set(cookies, forKey: "cookies")
-//            }
-//            self.defaults.set(cookies, forKey: "cookies")
+            userDefaults.set(cookieDict, forKey: "cookies")
         }
     }
-//
-    private func loadCookies() {
-        HTTPCookie.loadCookie(using: <#T##Data?#>)
-//        let savedCookies = defaults.object(forKey: "cookies") as? [HTTPCookie] ?? [HTTPCookie]()
-//        for cookie in savedCookies {
-//            webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
-//        }
+    
+    func restoreCookies() {
+        let userDefaults = UserDefaults.standard
+
+        if let cookieDictionary = userDefaults.dictionary(forKey: "cookies") {
+
+            for (_, cookieProperties) in cookieDictionary {
+                if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
+                    webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+                }
+            }
+        }
     }
 }
 
@@ -257,39 +273,4 @@ struct ViewModelAttributes {
         "rising" : "chart.line.uptrend.xyaxis",
         "controversial" : "arrow.right.and.line.vertical.and.arrow.left"
     ]
-}
-
-extension HTTPCookie {
-
-    fileprivate func save(cookieProperties: [HTTPCookiePropertyKey : Any]) -> Data {
-        do {
-            let data = try NSKeyedArchiver.archivedData(withRootObject: cookieProperties, requiringSecureCoding: false)
-            return data
-        } catch {
-            
-        }
-        return Data()
-    }
-
-    static fileprivate func loadCookieProperties(from data: Data) -> [HTTPCookiePropertyKey : Any]? {
-        let unarchivedDictionary = NSKeyedUnarchiver.unarchiveObject(with: data)
-        return unarchivedDictionary as? [HTTPCookiePropertyKey : Any]
-    }
-
-    static func loadCookie(using data: Data?) -> HTTPCookie? {
-        guard let data = data,
-            let properties = loadCookieProperties(from: data) else {
-                return nil
-        }
-        return HTTPCookie(properties: properties)
-
-    }
-
-    func archive() -> Data? {
-        guard let properties = self.properties else {
-            return nil
-        }
-        return save(cookieProperties: properties)
-    }
-
 }

@@ -1,7 +1,6 @@
 target 'openred' do
   use_frameworks!
   pod 'Erik'
-  pod 'SwiftyGif'
-  pod 'ExytePopupView'
+  pod 'FLAnimatedImage', '~> 1.0'
 end
   

@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "swiftui-gif",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/globulus/swiftui-gif",
+      "state" : {
+        "revision" : "89af6b7e04b0dc0bf97a721d27fc87c4db8e3829",
+        "version" : "1.0.1"
+      }
+    },
+    {
       "identity" : "videoplayer",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/wxxsw/VideoPlayer",

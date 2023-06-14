@@ -10,12 +10,12 @@ import SwiftUI
 
 struct CommunitiesSidebarContent: View {
     @EnvironmentObject var model: Model
-    @Binding var communitiesSidebarVisible: Bool
+    @Binding var sidebarOffset: CGSize
     @Binding var loginPopupShowing: Bool
     
-    init(communitiesSidebarVisible: Binding<Bool>, loginPopupShowing: Binding<Bool>) {
+    init(sidebarOffset: Binding<CGSize>, loginPopupShowing: Binding<Bool>) {
         UIScrollView.appearance().bounces = false
-        self._communitiesSidebarVisible = communitiesSidebarVisible
+        self._sidebarOffset = sidebarOffset
         self._loginPopupShowing = loginPopupShowing
     }
     
@@ -34,16 +34,16 @@ struct CommunitiesSidebarContent: View {
                         .background(Color.clear)
                     List {
                         Section() {
-                            UserSection(communitiesSidebarVisible: $communitiesSidebarVisible, loginPopupShowing: $loginPopupShowing)
+                            UserSection(sidebarOffset: $sidebarOffset, loginPopupShowing: $loginPopupShowing)
                         }
                         Section() {
                             ForEach(model.mainPageCommunities) { community in
-                                CommunityRow(communitiesSidebarVisible: $communitiesSidebarVisible,
+                                CommunityRow(sidebarOffset: $sidebarOffset,
                                              community: community)
                             }
                             if model.userName != nil {
                                 ForEach(model.userFunctionCommunities) { community in
-                                    CommunityRow(communitiesSidebarVisible: $communitiesSidebarVisible,
+                                    CommunityRow(sidebarOffset: $sidebarOffset,
                                                  community: community)
                                 }
                             }
@@ -53,7 +53,7 @@ struct CommunitiesSidebarContent: View {
                             Text("Edit").frame(maxWidth: .infinity, alignment: .trailing)}
                         ) {
                             ForEach(model.communities) { community in
-                                CommunityRow(communitiesSidebarVisible: $communitiesSidebarVisible,
+                                CommunityRow(sidebarOffset: $sidebarOffset,
                                              community: community)
                             }
                         }
@@ -68,19 +68,42 @@ struct CommunitiesSidebarContent: View {
                 .background(Color.clear)
             }
             Spacer()
-        }.background(.clear)
+        }
+        .background(.clear)
+        .gesture(
+            DragGesture()
+                .onChanged { gesture in
+                    if gesture.translation.width < 0 && gesture.translation.width < gesture.translation.height {
+                        // Left swipe
+                        sidebarOffset.width = sidebarOffset.width + (gesture.translation.width / 20)
+                    }
+                    if gesture.translation.width > 0 && gesture.translation.width > gesture.translation.height {
+                        // Right swipe
+                        sidebarOffset.width = min(sidebarOffset.width + (gesture.translation.width / 20), 0)
+                    }
+                }
+                .onEnded { value in
+                    if sidebarOffset.width < -100 {
+                        // auto close fully
+                        sidebarOffset.width = -300
+                    } else {
+                        // cancel close
+                        sidebarOffset.width = -1
+                    }
+                }
+        )
     }
 }
 
 struct CommunityRow: View {
     @EnvironmentObject var model: Model
-    @Binding var communitiesSidebarVisible: Bool
+    @Binding var sidebarOffset: CGSize
     var community: Community
     
     var body: some View {
         Button(action: {
             model.loadCommunity(community: community)
-            communitiesSidebarVisible.toggle()
+            sidebarOffset.width = -300
         }) {
             HStack {
                 if community.iconName != nil {
@@ -93,36 +116,9 @@ struct CommunityRow: View {
     }
 }
 
-struct CommunitiesSidebar: View {
-    @Binding var isShowing: Bool
-    @Binding var loginPopupShowing: Bool
-    
-    var edgeTransition: AnyTransition = .move(edge: .leading)
-    var body: some View {
-        ZStack(alignment: .bottom) {
-            if (isShowing) {
-                Color.black
-                    .opacity(0.4)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        isShowing.toggle()
-                    }
-                CommunitiesSidebarContent(communitiesSidebarVisible: $isShowing, loginPopupShowing: $loginPopupShowing)
-                    .transition(edgeTransition)
-                    .background(
-                        Color.clear
-                    )
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-        .ignoresSafeArea()
-        .animation(.easeInOut, value: isShowing)
-    }
-}
-
 struct UserSection: View {
     @EnvironmentObject var model: Model
-    @Binding var communitiesSidebarVisible: Bool
+    @Binding var sidebarOffset: CGSize
     @Binding var loginPopupShowing: Bool
     
     var body: some View {
