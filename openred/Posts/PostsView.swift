@@ -21,11 +21,18 @@ struct PostsView: View {
         ZStack {
             NavigationStack {
                 List {
-                    ForEach(model.posts) { post in
+                    
+                    ForEach(model.posts.indices, id: \.self) { i in
                         PostRow(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
-                                popupContentType: $popupContentType, videoLink: $videoLink, post: post)
-                            .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                            .listRowSeparator(.hidden)
+                                popupContentType: $popupContentType, videoLink: $videoLink, post: model.posts[i])
+                        .onAppear(perform: {
+                            if (i == model.posts.count - 4) {
+                                model.loadNextPagePosts()
+                            }
+                        })
+                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                        .listRowSeparator(.hidden)
+                        
                     }
                 }
                 .listStyle(PlainListStyle())

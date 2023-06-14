@@ -20,6 +20,7 @@ class Model: ObservableObject {
     @Published var selectedSorting: String
     @Published var selectedSortingIcon: String
     @Published var userName: String?
+    @Published var linkToNextPage: String?
     @Published var loginAttempt: LoginAttempt = .undecided
     
     let defaults = UserDefaults.standard
@@ -133,11 +134,27 @@ class Model: ObservableObject {
         }
     }
     
+    func loadNextPagePosts() {
+        if self.linkToNextPage != nil {
+            browser.visit(url: URL(string: self.linkToNextPage!)!, completionHandler: { object, error in
+                if let doc = object {
+                    self.updatePosts(doc: doc, appendToExisting: true)
+                    self.updateTitle(doc: doc, defaultTitle: "")
+                }
+            })
+        }
+    }
+    
     private func updateTitle(doc: Document, defaultTitle: String) {
         if let newTitle = doc.querySelector(".pagename.redditname a")?.text {
             self.title = newTitle.prefix(1).capitalized + String(newTitle.dropFirst())
         } else {
             self.title = defaultTitle
+        }
+        if let linkToNextPageElement = doc.querySelector(".nav-buttons .next-button a") {
+            self.linkToNextPage = linkToNextPageElement["href"] ?? ""
+        } else {
+            self.linkToNextPage = ""
         }
     }
     
@@ -147,8 +164,10 @@ class Model: ObservableObject {
         }
     }
     
-    private func updatePosts(doc: Document) {
-        self.posts = []
+    private func updatePosts(doc: Document, appendToExisting: Bool = false) {
+        if !appendToExisting {
+            self.posts = []
+        }
         
         for element in doc.querySelectorAll("#siteTable div.thing:not(.promoted)") {
             let title = element.querySelector(".entry .top-matter p.title a.title")?.text
