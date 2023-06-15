@@ -12,7 +12,7 @@ import SwiftUIGIF
 
 struct PostRow: View {
     @EnvironmentObject var model: Model
-    @Binding var popupViewModel: PopupViewModel
+    @EnvironmentObject var popupViewModel: PopupViewModel
     var post: Post
     
     var body: some View {
@@ -21,7 +21,7 @@ struct PostRow: View {
                 .font(.headline)
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
                 .fixedSize(horizontal: false, vertical: false)
-            PostRowContent(popupViewModel: $popupViewModel, post: post)
+            PostRowContent(post: post)
                 .frame(maxWidth: .infinity, maxHeight: 650)
             PostRowFooter(post: post)
             Rectangle()
@@ -34,7 +34,7 @@ struct PostRow: View {
 
 struct PostRowContent: View {
     @EnvironmentObject var model: Model
-    @Binding var popupViewModel: PopupViewModel
+    @EnvironmentObject var popupViewModel: PopupViewModel
     @State var startLoadingGif: Bool = false
     @State var imageContainerSize: CGSize = CGSize(width: 1, height: 400)
     var post: Post
@@ -46,7 +46,6 @@ struct PostRowContent: View {
                     .fill(Color(UIColor.systemGray5))
                     .frame(maxWidth: .infinity, maxHeight: 650)
                 AsyncImage(url: URL(string: post.mediaLink ?? "")) { image in
-                    // TODO: handle missing mediaLink with placeholder image
                     image
                         .resizable()
                         .scaledToFit()
@@ -130,8 +129,9 @@ struct PostRowContent: View {
                         .scaledToFit()
                         .frame(maxWidth: .infinity, maxHeight: 650)
                         .onTapGesture {
-//                            mediaPopupImage = image
+                            popupViewModel.mediaPopupImage = image
                             popupViewModel.contentType = post.contentType
+                            popupViewModel.mediaPopupGalleryImageLinks = post.gallery!.items.map({ $0.fullLink })
                             popupViewModel.mediaPopupShowing = true
                         }
                         .saveSize(in: $imageContainerSize)

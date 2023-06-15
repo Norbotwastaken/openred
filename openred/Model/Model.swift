@@ -271,7 +271,7 @@ class Model: ObservableObject {
                                     let galleryTextHTML = doc.at_css(".usertext .md")?.innerHTML
                                     gallery = Gallery(textHTML: galleryTextHTML, items: galleryItems)
                                 }
-                                textContentHTML = mediaElement.querySelector(".usertext-body .md")?.innerHTML
+//                                textContentHTML = mediaElement.querySelector(".usertext-body .md")?.innerHTML
                             }
 //                            else if (element["data-domain"] != nil && element["data-domain"]!.starts(with: "self.")) {
 //                                contentType = .text

@@ -17,7 +17,7 @@ struct MediaPopupContent: View {
 //    @Binding var videoLink: String?
 //    @Binding var contentType: ContentType
 //    @Binding var player: AVPlayer
-    @Binding var popupViewModel: PopupViewModel
+    @EnvironmentObject var popupViewModel: PopupViewModel
     @State var toolbarVisible = false
     @State private var play: Bool = true
     @State private var time: CMTime = .zero
@@ -199,26 +199,26 @@ struct MediaPopupContent: View {
                     Rectangle()
                         .fill(Color.black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    HStack {
-                        ZoomableScrollView {
-                            popupViewModel.mediaPopupImage!
-                                .resizable()
-                                .scaledToFit()
-                                .preferredColorScheme(.dark)
+                    TabView {
+                        ForEach(popupViewModel.mediaPopupGalleryImageLinks, id: \.self) { link in
+                             //3
+                            AsyncImage(url: URL(string: link)) { image in
+//                                image.image
+//                                    .resizable()
+//                                    .scaledToFit()
+//                                    .frame(maxWidth: .infinity, maxHeight: 650)
+                                ZoomableScrollView {
+                                    image.image?
+                                        .resizable()
+                                        .scaledToFit()
+                                        .preferredColorScheme(.dark)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                }
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        ForEach(popupViewModel.mediaPopupGalleryImages.indices, id: \.self) { i in
-                            ZoomableScrollView {
-                                popupViewModel.mediaPopupGalleryImages[i]
-                                    .resizable()
-                                    .scaledToFit()
-                                    .preferredColorScheme(.dark)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
                     }
+                    .tabViewStyle(PageTabViewStyle())
                 }
                 if toolbarVisible {
                     ZStack {

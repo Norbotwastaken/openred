@@ -10,7 +10,7 @@ import AVKit
 
 struct PostsView: View {
     @EnvironmentObject var model: Model
-    @Binding var popupViewModel: PopupViewModel
+    @EnvironmentObject var popupViewModel: PopupViewModel
     @Binding var sidebarOffset: CGSize
 //    @Binding var mediaPopupShowing: Bool
 //    @Binding var popupContentType: ContentType
@@ -24,7 +24,7 @@ struct PostsView: View {
             NavigationStack {
                 List {
                     ForEach(model.posts.indices, id: \.self) { i in
-                        PostRow(popupViewModel: $popupViewModel, post: model.posts[i])
+                        PostRow(post: model.posts[i])
                         .onAppear(perform: {
                             if (i == model.posts.count - 6) {
                                 model.loadNextPagePosts()

@@ -9,16 +9,16 @@ import SwiftUI
 import AVKit
 
 struct ContentView: View {
+    @EnvironmentObject var popupViewModel: PopupViewModel
     @State var communitiesSidebarVisible = true
     @State var loginPopupShowing = false
-    @State var popupViewModel = PopupViewModel()
     @State private var sidebarOffset = CGSize(width: -300, height: 0)
     
     var body: some View {
         ZStack {
             TabView {
                 ZStack {
-                    PostsView(popupViewModel: $popupViewModel, sidebarOffset: $sidebarOffset)
+                    PostsView(sidebarOffset: $sidebarOffset)
                     .disabled(sidebarOffset.width > -300)
                 }
                     .tabItem {
@@ -95,7 +95,7 @@ struct ContentView: View {
                 .offset(x: sidebarOffset.width, y: 0)
             
             if popupViewModel.mediaPopupShowing {
-                MediaPopupContent(popupViewModel: $popupViewModel)
+                MediaPopupContent()
                 .ignoresSafeArea()
                 .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
                     .onEnded { value in
