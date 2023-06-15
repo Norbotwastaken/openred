@@ -10,21 +10,15 @@ import AVKit
 
 struct ContentView: View {
     @State var communitiesSidebarVisible = true
-    @State var mediaPopupShowing = false
     @State var loginPopupShowing = false
-    @State var popupContentType: ContentType = .link
-    @State var mediaPopupImage: Image?
-    @State var videoLink: String?
-    @State var player = AVPlayer()
+    @State var popupViewModel = PopupViewModel()
     @State private var sidebarOffset = CGSize(width: -300, height: 0)
     
     var body: some View {
         ZStack {
             TabView {
                 ZStack {
-                    PostsView(sidebarOffset: $sidebarOffset,
-                              mediaPopupShowing: $mediaPopupShowing, popupContentType: $popupContentType,
-                              mediaPopupImage: $mediaPopupImage, videoLink: $videoLink, player: $player)
+                    PostsView(popupViewModel: $popupViewModel, sidebarOffset: $sidebarOffset)
                     .disabled(sidebarOffset.width > -300)
                 }
                     .tabItem {
@@ -100,9 +94,8 @@ struct ContentView: View {
                 .ignoresSafeArea()
                 .offset(x: sidebarOffset.width, y: 0)
             
-            if mediaPopupShowing {
-                MediaPopupContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
-                                  videoLink: $videoLink, contentType: $popupContentType, player: $player)
+            if popupViewModel.mediaPopupShowing {
+                MediaPopupContent(popupViewModel: $popupViewModel)
                 .ignoresSafeArea()
                 .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
                     .onEnded { value in
@@ -123,8 +116,8 @@ struct ContentView: View {
     }
     
     private func dismissPopup() {
-        player.pause()
-        mediaPopupShowing = false
+        popupViewModel.player.pause()
+        popupViewModel.mediaPopupShowing = false
     }
 }
 

@@ -10,20 +10,21 @@ import AVKit
 
 struct PostsView: View {
     @EnvironmentObject var model: Model
+    @Binding var popupViewModel: PopupViewModel
     @Binding var sidebarOffset: CGSize
-    @Binding var mediaPopupShowing: Bool
-    @Binding var popupContentType: ContentType
-    @Binding var mediaPopupImage: Image?
-    @Binding var videoLink: String?
-    @Binding var player: AVPlayer
+//    @Binding var mediaPopupShowing: Bool
+//    @Binding var popupContentType: ContentType
+//    @Binding var mediaPopupImage: Image?
+//    @Binding var mediaPopupGalleryImages: [Image]
+//    @Binding var videoLink: String?
+//    @Binding var player: AVPlayer
     
     var body: some View {
         ZStack {
             NavigationStack {
                 List {
                     ForEach(model.posts.indices, id: \.self) { i in
-                        PostRow(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
-                                popupContentType: $popupContentType, videoLink: $videoLink, post: model.posts[i])
+                        PostRow(popupViewModel: $popupViewModel, post: model.posts[i])
                         .onAppear(perform: {
                             if (i == model.posts.count - 6) {
                                 model.loadNextPagePosts()

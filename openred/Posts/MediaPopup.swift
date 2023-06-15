@@ -11,11 +11,13 @@ import AVFoundation
 import VideoPlayer
 
 struct MediaPopupContent: View {
-    @Binding var mediaPopupShowing: Bool
-    @Binding var mediaPopupImage: Image?
-    @Binding var videoLink: String?
-    @Binding var contentType: ContentType
-    @Binding var player: AVPlayer
+//    @Binding var mediaPopupShowing: Bool
+//    @Binding var mediaPopupImage: Image?
+//    @Binding var mediaPopupGalleryImages: [Image]
+//    @Binding var videoLink: String?
+//    @Binding var contentType: ContentType
+//    @Binding var player: AVPlayer
+    @Binding var popupViewModel: PopupViewModel
     @State var toolbarVisible = false
     @State private var play: Bool = true
     @State private var time: CMTime = .zero
@@ -26,13 +28,13 @@ struct MediaPopupContent: View {
     
     var body: some View {
         ZStack {
-            if (contentType == ContentType.video) {
+            if (popupViewModel.contentType == ContentType.video) {
                 ZStack {
                     Rectangle()
                         .fill(Color.black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     ProgressView()
-                    VideoPlayer(url: URL(string: videoLink ?? "")!, play: $play, time: $time)
+                    VideoPlayer(url: URL(string: popupViewModel.videoLink ?? "")!, play: $play, time: $time)
                         .contentMode(.scaleAspectFit)
                         .autoReplay(autoReplay)
                         .mute(mute)
@@ -147,19 +149,19 @@ struct MediaPopupContent: View {
                             .opacity(0.6)
                             .padding(EdgeInsets(top: 30, leading: 22, bottom: 0, trailing: 0))
                             .onTapGesture {
-                                mediaPopupShowing = false
-                                player.pause()
+                                popupViewModel.mediaPopupShowing = false
+                                popupViewModel.player.pause()
                             }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
-            } else if (contentType == ContentType.image) {
+            } else if (popupViewModel.contentType == ContentType.image) {
                 ZStack {
                     Rectangle()
                         .fill(Color.black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     ZoomableScrollView {
-                        mediaPopupImage!
+                        popupViewModel.mediaPopupImage!
                             .resizable()
                             .scaledToFit()
                             .preferredColorScheme(.dark)
@@ -180,7 +182,58 @@ struct MediaPopupContent: View {
                             .opacity(0.6)
                             .padding(EdgeInsets(top: 30, leading: 22, bottom: 0, trailing: 0))
                             .onTapGesture {
-                                mediaPopupShowing = false
+                                popupViewModel.mediaPopupShowing = false
+                            }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.black)
+                            .opacity(0.8)
+                            .frame(maxWidth: .infinity, maxHeight: 50, alignment: .bottom)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                }
+            } else if (popupViewModel.contentType == ContentType.gallery) {
+                ZStack {
+                    Rectangle()
+                        .fill(Color.black)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    HStack {
+                        ZoomableScrollView {
+                            popupViewModel.mediaPopupImage!
+                                .resizable()
+                                .scaledToFit()
+                                .preferredColorScheme(.dark)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        ForEach(popupViewModel.mediaPopupGalleryImages.indices, id: \.self) { i in
+                            ZoomableScrollView {
+                                popupViewModel.mediaPopupGalleryImages[i]
+                                    .resizable()
+                                    .scaledToFit()
+                                    .preferredColorScheme(.dark)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        }
+                    }
+                }
+                if toolbarVisible {
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.black)
+                            .opacity(0.8)
+                            .frame(maxWidth: .infinity, maxHeight: 65, alignment: .top)
+                        Image(systemName: "xmark")
+                            .font(.system(size: 30))
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .foregroundColor(Color.white)
+                            .opacity(0.6)
+                            .padding(EdgeInsets(top: 30, leading: 22, bottom: 0, trailing: 0))
+                            .onTapGesture {
+                                popupViewModel.mediaPopupShowing = false
                             }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -202,7 +255,7 @@ struct MediaPopupContent: View {
     }
     
     func getTimeRemainingString() -> String {
-        var timeLeft = time.seconds.distance(to: totalDuration)
+        let timeLeft = time.seconds.distance(to: totalDuration)
         let m = Int(timeLeft / 60)
         let s = Int(timeLeft.truncatingRemainder(dividingBy: 60))
         return String(format: "-%d:%02d", arguments: [m, s])

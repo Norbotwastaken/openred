@@ -12,10 +12,7 @@ import SwiftUIGIF
 
 struct PostRow: View {
     @EnvironmentObject var model: Model
-    @Binding var mediaPopupShowing: Bool
-    @Binding var mediaPopupImage: Image?
-    @Binding var popupContentType: ContentType
-    @Binding var videoLink: String?
+    @Binding var popupViewModel: PopupViewModel
     var post: Post
     
     var body: some View {
@@ -24,8 +21,7 @@ struct PostRow: View {
                 .font(.headline)
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
                 .fixedSize(horizontal: false, vertical: false)
-            PostRowContent(mediaPopupShowing: $mediaPopupShowing, mediaPopupImage: $mediaPopupImage,
-                           popupContentType: $popupContentType, videoLink: $videoLink, post: post)
+            PostRowContent(popupViewModel: $popupViewModel, post: post)
                 .frame(maxWidth: .infinity, maxHeight: 650)
             PostRowFooter(post: post)
             Rectangle()
@@ -38,11 +34,7 @@ struct PostRow: View {
 
 struct PostRowContent: View {
     @EnvironmentObject var model: Model
-    @Binding var mediaPopupShowing: Bool
-    @Binding var mediaPopupImage: Image?
-    @Binding var popupContentType: ContentType
-    @Binding var videoLink: String?
-//    @State var gifData: Data? = nil
+    @Binding var popupViewModel: PopupViewModel
     @State var startLoadingGif: Bool = false
     @State var imageContainerSize: CGSize = CGSize(width: 1, height: 400)
     var post: Post
@@ -60,9 +52,9 @@ struct PostRowContent: View {
                         .scaledToFit()
                         .frame(maxWidth: .infinity, maxHeight: 650)
                         .onTapGesture {
-                            mediaPopupImage = image
-                            popupContentType = post.contentType
-                            mediaPopupShowing = true
+                            popupViewModel.mediaPopupImage = image
+                            popupViewModel.contentType = post.contentType
+                            popupViewModel.mediaPopupShowing = true
                         }
                         .saveSize(in: $imageContainerSize)
                 } placeholder: {
@@ -106,9 +98,9 @@ struct PostRowContent: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .onTapGesture {
-                videoLink = post.mediaLink!
-                popupContentType = post.contentType
-                mediaPopupShowing = true
+                popupViewModel.videoLink = post.mediaLink!
+                popupViewModel.contentType = post.contentType
+                popupViewModel.mediaPopupShowing = true
             }
         } else if post.contentType == .gif {
             ZStack {
@@ -126,30 +118,39 @@ struct PostRowContent: View {
                     GIFView(url: URL(string: post.mediaLink ?? "")!)
                         .frame(maxWidth: .infinity, maxHeight: 650)
                 }
-//                if let data = gifData {
-//                    GIFImage(data: data) // load from data
-//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                } else {
-//                    ZStack {
-//                        Rectangle()
-//                            .fill(Color(UIColor.systemGray5))
-//                            .frame(height: imageContainerSize.height)
-//                            .scaledToFill()
-//                        ProgressView()
-//                    }
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                    .onAppear(perform: loadGifData)
-//                }
+            }
+        } else if post.contentType == .gallery {
+            ZStack {
+                Rectangle()
+                    .fill(Color(UIColor.systemGray5))
+                    .frame(maxWidth: .infinity, maxHeight: 650)
+                AsyncImage(url: URL(string: post.gallery!.items[0].previewLink)) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: 650)
+                        .onTapGesture {
+//                            mediaPopupImage = image
+                            popupViewModel.contentType = post.contentType
+                            popupViewModel.mediaPopupShowing = true
+                        }
+                        .saveSize(in: $imageContainerSize)
+                } placeholder: {
+                    ZStack {
+                        Rectangle()
+                            .fill(Color(UIColor.systemGray5))
+                            .frame(height: imageContainerSize.height)
+                            .scaledToFill()
+                        Image(systemName: "photo")
+                            .font(.system(size: 30))
+                            .foregroundColor(Color.white)
+                            .opacity(0.8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
             }
         }
     }
-    
-//    private func loadGifData() {
-//        let task = URLSession.shared.dataTask(with: URL(string: post.mediaLink ?? "")!) { data, response, error in
-//            gifData = data
-//        }
-//        task.resume()
-//    }
 }
 
 struct PostRowFooter: View {

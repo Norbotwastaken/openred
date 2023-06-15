@@ -159,7 +159,7 @@ class Model: ObservableObject {
     }
     
     private func loadUsername(doc: Document) {
-        if let userIndicatorElement = doc.querySelector("#header .logout")?.text {
+        if doc.querySelector("#header .logout")?.text != nil {
             self.userName = doc.querySelector("#header .user a")!.text
         }
     }
@@ -169,21 +169,54 @@ class Model: ObservableObject {
             self.posts = []
         }
         
-        for element in doc.querySelectorAll("#siteTable div.thing:not(.promoted)") {
-            if (element["data-is-gallery"] == "true") {
-                element.querySelector(".expando-button")?.click()
-            }
-            if (element["data-domain"] != nil && element["data-domain"]!.starts(with: "self.")) {
-                // regular text (or self) post
-                element.querySelector(".expando-button")?.click()
-            }
-            // TODO: crossposts
-        }
+//        var galleryElements = doc.querySelectorAll("#siteTable div.thing[data-is-gallery=\"true\"]:not(.promoted)")
+//        for i in galleryElements.indices {
+//                galleryElements[i].querySelector(".expando-button")!.click()
+//        }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//        var textElements = doc.querySelectorAll("#siteTable div.thing[data-domain^=\"self.\"]:not(.promoted)")
+//        for i in textElements.indices {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 2 * Double(i)) {
+//                print("text element ", String(i))
+//                textElements[i].querySelector(".expando-button")!.click() { o, e in }
+//            }
+//        }
+//        var totalWaitTime = max(galleryElements.count, textElements.count) * 2
+        
+//        for element in doc.querySelectorAll("#siteTable div.thing:not(.promoted)") {
+//            if (element["data-is-gallery"] == "true") {
+//                element.querySelector(".expando-button")!.click() { o, e in
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                        self.browser.currentContent { (obj, err) -> Void in
+//                            if let document = obj {
+//                                for element in document
+//                                    .querySelectorAll("#siteTable div.thing:not(.promoted)") {
+//                                    var galleryLinks: [String] = []
+//                                    var textContentHTML: String?
+//                                    if element["data-is-gallery"]! == "true" {
+////                                        contentType = .gallery
+//                                        for galleryElement in element.querySelectorAll(".gallery-preview .media-preview-content a") {
+//                                            galleryLinks.append(galleryElement["href"] ?? "")
+//                                        }
+//                                        textContentHTML = element.querySelectorAll(".usertext-body .md").innerHTML
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            if (element["data-domain"] != nil && element["data-domain"]!.starts(with: "self.")) {
+//                // regular text (or self) post
+//                element.querySelector(".expando-button")!.click()
+//            }
+//            // TODO: crossposts
+//        }
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.browser.currentContent { (obj, err) -> Void in
                 if let document = obj {
-                    for element in doc.querySelectorAll("#siteTable div.thing:not(.promoted)") {
+                    for element in document.querySelectorAll("#siteTable div.thing:not(.promoted)") {
                         let title = element.querySelector(".entry .top-matter p.title a.title")?.text
                         let community = element.querySelector(".entry .top-matter .tagline .subreddit")?.text // r/something
                         let commentCount = element["data-comments-count"]
@@ -194,7 +227,7 @@ class Model: ObservableObject {
                         var contentType: ContentType = .link
                         var mediaLink: String?
                         var textContentHTML: String?
-                        var galleryLinks: [String] = []
+                        var gallery: Gallery?
                         var thumbnailLink = element.querySelector(".thumbnail img")?["src"]
                         if thumbnailLink != nil {
                             thumbnailLink = "https:" + thumbnailLink!
@@ -219,35 +252,38 @@ class Model: ObservableObject {
                                 contentType = .image
                                 mediaLink = mediaContainerString!.components(separatedBy: "<a href=\"")[1]
                                     .components(separatedBy: "\"")[0]
-                            } else if element["data-is-gallery"] == "true" {
-                                contentType = .gallery
-                                for galleryElement in mediaElement.querySelectorAll(".gallery-preview .media-preview-content a") {
-                                    galleryLinks.append(galleryElement["href"] ?? "")
-                                }
-                                textContentHTML = mediaElement.querySelectorAll(".usertext-body .md").innerHTML
-                            } else if (element["data-domain"] != nil && element["data-domain"]!.starts(with: "self.")) {
-                                contentType = .text
-                                textContentHTML = mediaElement.querySelectorAll(".usertext-body .md").innerHTML
-                                
                             }
+                            else if element["data-is-gallery"] == "true" {
+                                contentType = .gallery
+                                var galleryItems: [GalleryItem] = []
+                                if let doc = try? HTML(html: mediaContainerString!, encoding: .utf8) {
+                                    for galleryElement in doc.css(".gallery-preview") {
+                                        var galleryPreviewElement = galleryElement.at_css(".media-preview-content a")
+                                        var galleryItemCaption = galleryElement.at_css(".gallery-item-caption")?.text
+                                        var galleryItemFullLink = galleryPreviewElement!["href"]!
+                                            .replacingOccurrences(of: "&amp;", with: "&")
+                                        var galleryItemPreviewLink = galleryPreviewElement!.at_css("img")!["src"]!
+                                            .replacingOccurrences(of: "&amp;", with: "&")
+                                        
+                                        galleryItems.append(GalleryItem(galleryItemPreviewLink,
+                                                                        fullLink: galleryItemFullLink, caption: galleryItemCaption))
+                                    }
+                                    let galleryTextHTML = doc.at_css(".usertext .md")?.innerHTML
+                                    gallery = Gallery(textHTML: galleryTextHTML, items: galleryItems)
+                                }
+                                textContentHTML = mediaElement.querySelector(".usertext-body .md")?.innerHTML
+                            }
+//                            else if (element["data-domain"] != nil && element["data-domain"]!.starts(with: "self.")) {
+//                                contentType = .text
+//                                textContentHTML = mediaElement.querySelector(".usertext-body .md")?.innerHTML
+//
+//                            }
                         } else if let thumbnail = element.querySelector(".thumbnail") {
                             if thumbnail["href"] != nil &&
                                 thumbnail["href"]!.contains("imgur.com") && thumbnail["href"]!.contains(".gifv") {
                                 contentType = .video // gif from imgur, but is a video file
                                 mediaLink = String(thumbnail["href"]!.dropLast(4)) + "mp4"
                             }
-            //                else if thumbnail["href"] != nil && thumbnail["href"]!.contains("reddit.com/gallery") {
-            //                    contentType = .gallery
-            //                    element.querySelector(".expando-button")?.click() { object, error in
-            //                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            //                            self.browser.currentContent { (obj, err) -> Void in
-            //                                if let document = obj {
-            //
-            //                                }
-            //                            }
-            //                        }
-            //                    }
-            //                }
                         }
                         // else it is an external link
                         
@@ -256,21 +292,22 @@ class Model: ObservableObject {
                             submittedAge = postAgeSections[0] + postAgeSections[1].prefix(1)
                         }
                         
-                        self.posts.append(Post(linkToThread!, title: title ?? "no title for this post",
-                                          community: community,
-                                          commentCount: commentCount ?? "0",
-                                          userName: userName ?? "",
-                                          submittedAge: submittedAge ?? "",
-                                          score: score ?? "0",
-                                          contentType: contentType,
-                                          mediaLink: mediaLink,
-                                          thumbnailLink: thumbnailLink,
-                                          galleryLinks: galleryLinks,
-                                          textContent: textContentHTML))
+                        self.posts.append(Post(linkToThread!,
+                                            title: title ?? "no title for this post",
+                                            community: community,
+                                            commentCount: commentCount ?? "0",
+                                            userName: userName ?? "",
+                                            submittedAge: submittedAge ?? "",
+                                            score: score ?? "0",
+                                            contentType: contentType,
+                                            mediaLink: mediaLink,
+                                            thumbnailLink: thumbnailLink,
+                                            gallery: gallery,
+                                            textContent: textContentHTML))
                     }
                 }
             }
-        }
+//        }
     }
     
     private func updateCommunitiesList(doc: Document) {
