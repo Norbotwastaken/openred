@@ -10,8 +10,9 @@ import SwiftUI
 import AVKit
 
 class PopupViewModel: ObservableObject {
-    @Published var mediaPopupShowing: Bool = false
-    @Published var mediaPopupImage: Image?
+    @Published var isShowing: Bool = false
+    @Published var image: Image?
+    @Published var gallery: Gallery?
     @Published var mediaPopupGalleryImageLinks: [String] = []
     @Published var videoLink: String?
     @Published var contentType: ContentType = ContentType.link

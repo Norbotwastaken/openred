@@ -258,12 +258,17 @@ class Model: ObservableObject {
                                 var galleryItems: [GalleryItem] = []
                                 if let doc = try? HTML(html: mediaContainerString!, encoding: .utf8) {
                                     for galleryElement in doc.css(".gallery-preview") {
-                                        var galleryPreviewElement = galleryElement.at_css(".media-preview-content a")
-                                        var galleryItemCaption = galleryElement.at_css(".gallery-item-caption")?.text
+                                        let galleryPreviewElement = galleryElement.at_css(".media-preview-content a")
+                                        let galleryItemCaption = galleryElement.at_css(".gallery-item-caption")?.text
+                                        let galleryItemPreviewLink = galleryPreviewElement!.at_css("img")!["src"]!
+                                            .replacingOccurrences(of: "&amp;", with: "&")
                                         var galleryItemFullLink = galleryPreviewElement!["href"]!
-                                            .replacingOccurrences(of: "&amp;", with: "&")
-                                        var galleryItemPreviewLink = galleryPreviewElement!.at_css("img")!["src"]!
-                                            .replacingOccurrences(of: "&amp;", with: "&")
+                                        if galleryItemFullLink.contains("preview.redd.it") {
+                                            galleryItemFullLink = galleryItemFullLink.replacingOccurrences(of: "&amp;", with: "&")
+                                        } else {
+                                            // could be any outside link
+                                            galleryItemFullLink = galleryItemPreviewLink
+                                        }
                                         
                                         galleryItems.append(GalleryItem(galleryItemPreviewLink,
                                                                         fullLink: galleryItemFullLink, caption: galleryItemCaption))
@@ -271,7 +276,6 @@ class Model: ObservableObject {
                                     let galleryTextHTML = doc.at_css(".usertext .md")?.innerHTML
                                     gallery = Gallery(textHTML: galleryTextHTML, items: galleryItems)
                                 }
-//                                textContentHTML = mediaElement.querySelector(".usertext-body .md")?.innerHTML
                             }
 //                            else if (element["data-domain"] != nil && element["data-domain"]!.starts(with: "self.")) {
 //                                contentType = .text

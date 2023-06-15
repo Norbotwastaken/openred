@@ -94,7 +94,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
                 .offset(x: sidebarOffset.width, y: 0)
             
-            if popupViewModel.mediaPopupShowing {
+            if popupViewModel.isShowing {
                 MediaPopupContent()
                 .ignoresSafeArea()
                 .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
@@ -117,7 +117,7 @@ struct ContentView: View {
     
     private func dismissPopup() {
         popupViewModel.player.pause()
-        popupViewModel.mediaPopupShowing = false
+        popupViewModel.isShowing = false
     }
 }
 

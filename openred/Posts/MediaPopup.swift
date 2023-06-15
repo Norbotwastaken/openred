@@ -149,7 +149,7 @@ struct MediaPopupContent: View {
                             .opacity(0.6)
                             .padding(EdgeInsets(top: 30, leading: 22, bottom: 0, trailing: 0))
                             .onTapGesture {
-                                popupViewModel.mediaPopupShowing = false
+                                popupViewModel.isShowing = false
                                 popupViewModel.player.pause()
                             }
                     }
@@ -161,7 +161,7 @@ struct MediaPopupContent: View {
                         .fill(Color.black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     ZoomableScrollView {
-                        popupViewModel.mediaPopupImage!
+                        popupViewModel.image!
                             .resizable()
                             .scaledToFit()
                             .preferredColorScheme(.dark)
@@ -182,7 +182,7 @@ struct MediaPopupContent: View {
                             .opacity(0.6)
                             .padding(EdgeInsets(top: 30, leading: 22, bottom: 0, trailing: 0))
                             .onTapGesture {
-                                popupViewModel.mediaPopupShowing = false
+                                popupViewModel.isShowing = false
                             }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -200,21 +200,25 @@ struct MediaPopupContent: View {
                         .fill(Color.black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     TabView {
-                        ForEach(popupViewModel.mediaPopupGalleryImageLinks, id: \.self) { link in
-                             //3
-                            AsyncImage(url: URL(string: link)) { image in
-//                                image.image
-//                                    .resizable()
-//                                    .scaledToFit()
-//                                    .frame(maxWidth: .infinity, maxHeight: 650)
-                                ZoomableScrollView {
-                                    image.image?
-                                        .resizable()
-                                        .scaledToFit()
-                                        .preferredColorScheme(.dark)
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        ForEach(popupViewModel.gallery!.items) { galleryItem in
+                            ZStack {
+                                AsyncImage(url: URL(string: galleryItem.fullLink )) { image in
+                                    ZoomableScrollView {
+                                        image.image?
+                                            .resizable()
+                                            .scaledToFit()
+                                            .preferredColorScheme(.dark)
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    }
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                if toolbarVisible {
+                                    Text(galleryItem.caption ?? "")
+                                        .background(.black.opacity(0.6))
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                                        .padding(SwiftUI.EdgeInsets(top: 0, leading: 30, bottom: 100, trailing: 30))
+                                        .ignoresSafeArea()
+                                }
                             }
                         }
                     }
@@ -233,17 +237,19 @@ struct MediaPopupContent: View {
                             .opacity(0.6)
                             .padding(EdgeInsets(top: 30, leading: 22, bottom: 0, trailing: 0))
                             .onTapGesture {
-                                popupViewModel.mediaPopupShowing = false
+                                popupViewModel.isShowing = false
                             }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                    ZStack {
-                        Rectangle()
-                            .fill(Color.black)
-                            .opacity(0.8)
-                            .frame(maxWidth: .infinity, maxHeight: 50, alignment: .bottom)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+//                    ZStack {
+//                        Rectangle()
+//                            .fill(Color.black)
+//                            .opacity(0.8)
+//                            .frame(maxWidth: .infinity, maxHeight: 50, alignment: .bottom)
+//                        Text(galleryCaptions ?? "")
+//                            .background(.black.opacity(0.6))
+//                    }
+//                    .frame(maxWidth: .infinity, maxHeight: 300, alignment: .bottomLeading)
                 }
             }
         }

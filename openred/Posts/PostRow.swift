@@ -51,9 +51,9 @@ struct PostRowContent: View {
                         .scaledToFit()
                         .frame(maxWidth: .infinity, maxHeight: 650)
                         .onTapGesture {
-                            popupViewModel.mediaPopupImage = image
+                            popupViewModel.image = image
                             popupViewModel.contentType = post.contentType
-                            popupViewModel.mediaPopupShowing = true
+                            popupViewModel.isShowing = true
                         }
                         .saveSize(in: $imageContainerSize)
                 } placeholder: {
@@ -99,7 +99,7 @@ struct PostRowContent: View {
             .onTapGesture {
                 popupViewModel.videoLink = post.mediaLink!
                 popupViewModel.contentType = post.contentType
-                popupViewModel.mediaPopupShowing = true
+                popupViewModel.isShowing = true
             }
         } else if post.contentType == .gif {
             ZStack {
@@ -129,10 +129,10 @@ struct PostRowContent: View {
                         .scaledToFit()
                         .frame(maxWidth: .infinity, maxHeight: 650)
                         .onTapGesture {
-                            popupViewModel.mediaPopupImage = image
+                            popupViewModel.image = image
                             popupViewModel.contentType = post.contentType
-                            popupViewModel.mediaPopupGalleryImageLinks = post.gallery!.items.map({ $0.fullLink })
-                            popupViewModel.mediaPopupShowing = true
+                            popupViewModel.gallery = post.gallery
+                            popupViewModel.isShowing = true
                         }
                         .saveSize(in: $imageContainerSize)
                 } placeholder: {
