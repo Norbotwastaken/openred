@@ -11,12 +11,6 @@ import AVFoundation
 import VideoPlayer
 
 struct MediaPopupContent: View {
-//    @Binding var mediaPopupShowing: Bool
-//    @Binding var mediaPopupImage: Image?
-//    @Binding var mediaPopupGalleryImages: [Image]
-//    @Binding var videoLink: String?
-//    @Binding var contentType: ContentType
-//    @Binding var player: AVPlayer
     @EnvironmentObject var popupViewModel: PopupViewModel
     @State var toolbarVisible = false
     @State private var play: Bool = true
@@ -160,12 +154,13 @@ struct MediaPopupContent: View {
                     Rectangle()
                         .fill(Color.black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    ZoomableScrollView {
+                    GeometryReader { proxy in
                         popupViewModel.image!
                             .resizable()
                             .scaledToFit()
-                            .preferredColorScheme(.dark)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(width: proxy.size.width, height: proxy.size.height)
+                            .clipShape(Rectangle())
+                            .modifier(ImageModifier(contentSize: CGSize(width: proxy.size.width, height: proxy.size.height)))
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -203,18 +198,21 @@ struct MediaPopupContent: View {
                         ForEach(popupViewModel.gallery!.items) { galleryItem in
                             ZStack {
                                 AsyncImage(url: URL(string: galleryItem.fullLink )) { image in
-                                    ZoomableScrollView {
+                                    GeometryReader { proxy in
                                         image.image?
                                             .resizable()
                                             .scaledToFit()
-                                            .preferredColorScheme(.dark)
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            .frame(width: proxy.size.width, height: proxy.size.height)
+                                            .clipShape(Rectangle())
+                                            .modifier(ImageModifier(contentSize: CGSize(width: proxy.size.width, height: proxy.size.height)))
                                     }
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 }
                                 if toolbarVisible {
                                     Text(galleryItem.caption ?? "")
+                                        .padding(SwiftUI.EdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6))
                                         .background(.black.opacity(0.6))
+                                        .cornerRadius(8)
                                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
                                         .padding(SwiftUI.EdgeInsets(top: 0, leading: 30, bottom: 100, trailing: 30))
                                         .ignoresSafeArea()

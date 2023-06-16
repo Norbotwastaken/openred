@@ -12,12 +12,6 @@ struct PostsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var popupViewModel: PopupViewModel
     @Binding var sidebarOffset: CGSize
-//    @Binding var mediaPopupShowing: Bool
-//    @Binding var popupContentType: ContentType
-//    @Binding var mediaPopupImage: Image?
-//    @Binding var mediaPopupGalleryImages: [Image]
-//    @Binding var videoLink: String?
-//    @Binding var player: AVPlayer
     
     var body: some View {
         ZStack {
@@ -26,7 +20,8 @@ struct PostsView: View {
                     ForEach(model.posts.indices, id: \.self) { i in
                         PostRow(post: model.posts[i])
                         .onAppear(perform: {
-                            if (i == model.posts.count - 6) {
+                            if (model.posts[i].isActiveLoadMarker) {
+                                model.posts[i].isActiveLoadMarker = false
                                 model.loadNextPagePosts()
                             }
                         })

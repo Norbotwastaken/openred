@@ -82,7 +82,17 @@ struct PostRowContent: View {
                         .font(.system(size: 45))
                         .opacity(0.4)
                         .foregroundColor(Color.white)
+                    Text("VIDEO")
+                        .font(.system(size: 15))
+                        .fontWeight(.semibold)
+                        .opacity(0.6)
+                        .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                        .background(.red.opacity(0.5))
+                        .cornerRadius(5)
+                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 10))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } placeholder: {
                 ZStack {
                     Rectangle()
@@ -148,7 +158,40 @@ struct PostRowContent: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
+                Text("ALBUM")
+                    .font(.system(size: 15))
+                    .fontWeight(.semibold)
+                    .opacity(0.7)
+                    .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                    .background(.green.opacity(0.4))
+                    .cornerRadius(5)
+                    .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 10))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             }
+        } else if post.contentType == .crosspost {
+            let crosspost = post.crosspost!
+            ZStack {
+                Rectangle()
+                    .fill(Color(UIColor.systemGray6))
+                    .cornerRadius(10)
+                VStack {
+                    Text(crosspost.title)
+                        .font(.system(size: 15))
+                        .fontWeight(.semibold)
+                        .fixedSize(horizontal: false, vertical: false)
+                    HStack {
+                        Text(crosspost.score).font(.system(size: 15))
+                        HStack {
+                            Image(systemName: "text.bubble").font(.system(size: 15))
+                            Text(formatScore(score: crosspost.commentCount)).font(.system(size: 15))
+                        }
+                        Text(crosspost.communityName).font(.system(size: 15))
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                }
+                .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+            }
+            .padding(SwiftUI.EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
         }
     }
 }
@@ -204,20 +247,18 @@ struct PostRowFooter: View {
     }
 }
 
-extension PostRowFooter {
-    func formatScore(score: String) -> String {
-        if var number = Int(score) {
-            if number >= 1000 {
-                number = number / 100
-                var displayScore = String(number)
-                displayScore.insert(".", at: displayScore.index(before: displayScore.endIndex))
-                displayScore = displayScore + "K"
-                return displayScore
-            } else {
-                return score
-            }
+func formatScore(score: String) -> String {
+    if var number = Int(score) {
+        if number >= 1000 {
+            number = number / 100
+            var displayScore = String(number)
+            displayScore.insert(".", at: displayScore.index(before: displayScore.endIndex))
+            displayScore = displayScore + "K"
+            return displayScore
         } else {
             return score
         }
+    } else {
+        return score
     }
 }

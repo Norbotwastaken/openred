@@ -20,11 +20,13 @@ struct Post: Identifiable, Codable {
     var mediaLink: String?
     var thumbnailLink: String?
     var gallery: Gallery?
-    var textContent: String?
+    var crosspost: Crosspost?
+    var isActiveLoadMarker: Bool
     
     init(_ linkToThread: String, title: String, community: String?, commentCount: String,
          userName: String, submittedAge: String, score: String, contentType: ContentType,
-         mediaLink: String?, thumbnailLink: String?, gallery: Gallery?, textContent: String?) {
+         mediaLink: String?, thumbnailLink: String?, gallery: Gallery?, crosspost: Crosspost?,
+         isActiveLoadMarker: Bool) {
         self.id = linkToThread
         self.title = title
         self.community = community
@@ -37,7 +39,30 @@ struct Post: Identifiable, Codable {
         self.mediaLink = mediaLink
         self.thumbnailLink = thumbnailLink
         self.gallery = gallery
-        self.textContent = textContent
+        self.crosspost = crosspost
+        self.isActiveLoadMarker = isActiveLoadMarker
+    }
+}
+
+struct Crosspost: Identifiable, Codable {
+    var id: String
+    var originalPostLink: String
+    var contentType: ContentType
+    var communityName: String // without the /r/
+    var title: String
+    var score: String
+    var commentCount: String
+    var age: String
+    
+    init(_ originalPostLink: String, contentType: ContentType, communityName: String, title: String, score: String, commentCount: String, age: String) {
+        self.id = originalPostLink
+        self.originalPostLink = originalPostLink
+        self.contentType = contentType
+        self.communityName = communityName
+        self.title = title
+        self.score = score
+        self.commentCount = commentCount
+        self.age = age
     }
 }
 
@@ -48,4 +73,5 @@ enum ContentType: Codable {
     case video
     case gif
     case link
+    case crosspost
 }
