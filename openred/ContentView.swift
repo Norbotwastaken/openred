@@ -37,27 +37,23 @@ struct ContentView: View {
                         Label("Settings", systemImage: "gear")
                     }
             }
-            .gesture(
-                DragGesture()
-                    .onChanged { gesture in
-                        if sidebarOffset.width == -300 {
-                            if gesture.startLocation.x < 20 {
-                                sidebarOffset.width = min(sidebarOffset.width + (gesture.translation.width / 20), 0)
-                            }
-                        } else {
-                            sidebarOffset.width = min(sidebarOffset.width + (gesture.translation.width / 35), 0)
-                        }
-                    }
-                    .onEnded { gesture in
-                        if gesture.startLocation.x < 20 {
-//                            if sidebarOffset.width < -200 {
-//                                sidebarOffset.width = -300
-//                            } else {
-                                sidebarOffset.width = -1
+//            .gesture(
+//                DragGesture()
+//                    .onChanged { gesture in
+//                        if sidebarOffset.width == -300 {
+//                            if gesture.startLocation.x < 20 {
+//                                sidebarOffset.width = min(sidebarOffset.width + (gesture.translation.width / 20), 0)
 //                            }
-                        }
-                    }
-            )
+//                        } else {
+//                            sidebarOffset.width = min(sidebarOffset.width + (gesture.translation.width / 35), 0)
+//                        }
+//                    }
+//                    .onEnded { gesture in
+//                        if gesture.startLocation.x < 20 {
+//                            sidebarOffset.width = -1
+//                        }
+//                    }
+//            )
             if sidebarOffset.width > -200 {
                 Rectangle()
                     .fill(.black)
@@ -305,5 +301,21 @@ struct PinchToZoom: ViewModifier {
             .scaleEffect(scale, anchor: anchor)
             .animation(.spring(), value: isPinching)
             .overlay(PinchZoom(minScale: minScale, maxScale: maxScale, scale: $scale, isPinching: $isPinching))
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
+extension View {
+    func roundedCorner(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners) )
     }
 }

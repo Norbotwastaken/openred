@@ -7,16 +7,80 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A74CAA94-31D0-420C-AC3E-00E9A2F09E1E"
+            uuid = "DC0B97F2-E1D3-41D0-9687-BF60AF98D1E4"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "openred/Model/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "230"
-            endingLineNumber = "230"
-            landmarkName = "updatePosts(doc:appendToExisting:)"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
+            landmarkName = "updateCommunitiesList(doc:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F51CE964-C106-4EA1-95CF-C3EE985D9EEC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Model/Model.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "toggleUpvotePost(post:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F51CE964-C106-4EA1-95CF-C3EE985D9EEC - d22b706a7a6ca1e2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "openred.Model.toggleUpvotePost(post: openred.Post) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "F51CE964-C106-4EA1-95CF-C3EE985D9EEC - d22b706a7a6ca1e2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "openred.Model.toggleUpvotePost(post: openred.Post) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "392">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3057A3D4-6BBB-4C3F-81EE-329D4BEE5B60"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Model/Model.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "toggleUpvotePost(post:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

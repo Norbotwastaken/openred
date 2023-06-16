@@ -13,6 +13,7 @@ import WebKit
 class Model: ObservableObject {
     @Published var posts: [Post] = []
     @Published var communities: [Community] = []
+    @Published var subscribedCommunities: [Community] = []
     @Published var mainPageCommunities: [Community] = []
     @Published var userFunctionCommunities: [Community] = []
     @Published var title: String
@@ -141,6 +142,34 @@ class Model: ObservableObject {
         }
     }
     
+    func toggleUpvotePost(post: Post) {
+        var selectorModifier = post.isUpvoted ? "mod" : ""
+        if let upvoteButton = document?.querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] div.arrow.up" + selectorModifier) {
+            upvoteButton.click()
+            post.isUpvoted.toggle()
+            post.isDownvoted = false
+            browser.currentContent { (obj, err) -> Void in
+                if let document = obj {
+                    self.document = document
+                }
+            }
+        }
+    }
+    
+    func toggleDownvotePost(post: Post) {
+        var selectorModifier = post.isDownvoted ? "mod" : ""
+        if let downvoteButton = document?.querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] div.arrow.down" + selectorModifier) {
+            downvoteButton.click()
+            post.isDownvoted.toggle()
+            post.isUpvoted = false
+            browser.currentContent { (obj, err) -> Void in
+                if let document = obj {
+                    self.document = document
+                }
+            }
+        }
+    }
+    
     private func updateTitle(doc: Document, defaultTitle: String) {
         if let newTitle = doc.querySelector(".pagename.redditname a")?.text {
             self.title = newTitle.prefix(1).capitalized + String(newTitle.dropFirst())
@@ -167,125 +196,22 @@ class Model: ObservableObject {
         
         self.browser.currentContent { (obj, err) -> Void in
             if let document = obj {
-                let elements = document.querySelectorAll("#siteTable div.thing:not(.promoted)")
-                elements.indices.forEach { i in
-                    let element = elements[i]
-                    let title = element.querySelector(".entry .top-matter p.title a.title")?.text
-                    let community = element.querySelector(".entry .top-matter .tagline .subreddit")?.text // r/something
-                    let commentCount = element["data-comments-count"]
-                    let userName = element.querySelector(".entry .top-matter .tagline .author")?.text
-                    let submittedAge = self.formatPostAge(text: element.querySelector(".entry .tagline time")!.text!)
-                    let linkToThread = element["data-permalink"]
-                    let score = element["data-score"]
-                    var contentType: ContentType = .link
-                    var mediaLink: String?
-                    var gallery: Gallery?
-                    var crosspost: Crosspost?
-                    let isActiveLoadMarker = (i == elements.count - 7)
-                    var thumbnailLink = element.querySelector(".thumbnail img")?["src"]
-                    if thumbnailLink != nil {
-                        thumbnailLink = "https:" + thumbnailLink!
-                    }
-                    
-                    if let mediaElement = element.querySelector(".entry .expando") {
-                        let mediaContainerElement = mediaElement["data-cachedhtml"]
-                        if (mediaContainerElement != nil && mediaContainerElement!.contains("data-hls-url")) {
-                            contentType = .video
-                            mediaLink = mediaContainerElement!.components(separatedBy: "data-hls-url=\"")[1]
-                                .components(separatedBy: "\"")[0]
-                        } else if (mediaContainerElement != nil && mediaContainerElement!.contains("type=\"video/mp4\"")) {
-                            contentType = .gif
-                            mediaLink = mediaContainerElement!.components(separatedBy: "<a href=\"")[1]
-                                .components(separatedBy: "\"")[0]
-                            if mediaLink!.contains("imgur.com") && mediaLink!.contains(".gifv") {
-                                // gif from imgur, but it is an .mp4 video file
-                                contentType = .video
-                                mediaLink = String(mediaLink!.dropLast(4)) + "mp4"
-                            }
-                        } else if element["data-is-gallery"] == "true" {
-                            contentType = .gallery
-                            var galleryItems: [GalleryItem] = []
-                            if let doc = try? HTML(html: mediaContainerElement!, encoding: .utf8) {
-                                for galleryElement in doc.css(".gallery-preview") {
-                                    let galleryPreviewElement = galleryElement.at_css(".media-preview-content a")
-                                    var galleryItemCaption = galleryElement.at_css(".gallery-item-caption")?.text
-                                    if galleryItemCaption != nil {
-                                        // remove "Caption: " prefix
-                                        galleryItemCaption = String(galleryItemCaption!.dropFirst(10))
-                                    }
-                                    let galleryItemPreviewLink = galleryPreviewElement!.at_css("img")!["src"]!
-                                        .replacingOccurrences(of: "&amp;", with: "&")
-                                    var galleryItemFullLink = galleryPreviewElement!["href"]!
-                                    if galleryItemFullLink.contains("preview.redd.it") {
-                                        galleryItemFullLink = galleryItemFullLink.replacingOccurrences(of: "&amp;", with: "&")
-                                    } else {
-                                        // could be any outside link
-                                        galleryItemFullLink = galleryItemPreviewLink
-                                    }
-                                    
-                                    galleryItems.append(GalleryItem(galleryItemPreviewLink,
-                                                                    fullLink: galleryItemFullLink, caption: galleryItemCaption))
-                                }
-                                let galleryTextHTML = doc.at_css(".usertext .md")?.innerHTML
-                                gallery = Gallery(textHTML: galleryTextHTML, items: galleryItems)
-                            }
-                        } else if let originalPostTitle = element["data-crosspost-root-title"] {
-                            contentType = .crosspost
-                            var originalPostLink = element["data-url"]!
-                            let originalPostCommunityName = element["data-crosspost-root-subreddit"]! // without the /r/
-                            let originalPostScore = element["data-crosspost-root-score"]!
-                            let originalPostCommentCount = element["data-crosspost-root-num-comments"]!
-                            let originalPostAge = self.formatPostAge(text: element["data-crosspost-root-time"]!)
-                            if mediaContainerElement != nil, let doc = try? HTML(html: mediaContainerElement!, encoding: .utf8) {
-                                originalPostLink = doc.at_css(".crosspost-preview-header a.content-link")!["href"]!
-                                var externalLink = doc.at_css(".crosspost-preview-header a.outbound")?["href"]!
-                            }
-
-                            crosspost = Crosspost(originalPostLink, contentType: contentType,
-                                      communityName: originalPostCommunityName, title: originalPostTitle, score: originalPostScore,
-                                      commentCount: originalPostCommentCount, age: originalPostAge)
-                        } else if (mediaContainerElement != nil && mediaContainerElement!.contains("<a href")) {
-                            contentType = .image
-                            mediaLink = mediaContainerElement!.components(separatedBy: "<a href=\"")[1]
-                                .components(separatedBy: "\"")[0]
-                        } else if (element["data-domain"] != nil && element["data-domain"]!.starts(with: "self.")) {
-                            contentType = .text
-                            // can not serve additional info on text posts
-                        }
-                    } else if let thumbnail = element.querySelector(".thumbnail") {
-                        if thumbnail["href"] != nil &&
-                            thumbnail["href"]!.contains("imgur.com") && thumbnail["href"]!.contains(".gifv") {
-                            contentType = .video // gif from imgur, but is a video file
-                            mediaLink = String(thumbnail["href"]!.dropLast(4)) + "mp4"
-                        }
-                    } else {
-                        contentType = .link
-                    }
-                    
-                    self.posts.append(Post(linkToThread!,
-                                        title: title ?? "no title for this post",
-                                        community: community,
-                                        commentCount: commentCount ?? "0",
-                                        userName: userName ?? "",
-                                        submittedAge: submittedAge,
-                                        score: score ?? "0",
-                                        contentType: contentType,
-                                        mediaLink: mediaLink,
-                                        thumbnailLink: thumbnailLink,
-                                        gallery: gallery,
-                                        crosspost: crosspost,
-                                        isActiveLoadMarker: isActiveLoadMarker))
-                }
+                self.posts.append(contentsOf: RedditParser().parsePosts(document: document))
             }
         }
     }
     
     private func updateCommunitiesList(doc: Document) {
+        for element in doc.querySelectorAll("#sr-header-area .drop-choices a:not(.bottom-option)") {
+            self.subscribedCommunities.append(Community(element.text!, link: element["href"]!,
+                                                        iconName: nil, isMultiCommunity: false))
+        }
         var unsortedCommunities: [Community] = []
-        for element in doc.querySelectorAll(".sr-list .flat-list.sr-bar:nth-of-type(n+2) li a") {
-            let communityLink = element["href"]
-            if let communityName = element.text {
-                unsortedCommunities.append(Community(communityName,link: communityLink ?? "no link",
+        let communityElements = doc.querySelectorAll(".sr-list .flat-list.sr-bar:nth-of-type(n+2) li a")
+        communityElements.indices.forEach { i in
+            if i > 4 { // nth-of-type does not work here, skip manually
+                let element = communityElements[i]
+                unsortedCommunities.append(Community(element.text!, link: element["href"]!,
                                                      iconName: nil, isMultiCommunity: false))
             }
         }
@@ -320,21 +246,13 @@ class Model: ObservableObject {
     
     private func restoreCookies() {
         let userDefaults = UserDefaults.standard
-
         if let cookieDictionary = userDefaults.dictionary(forKey: "cookies") {
-
             for (_, cookieProperties) in cookieDictionary {
                 if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
                     webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
                 }
             }
         }
-    }
-    
-    // Transform '3 hours ago' into '3h'
-    private func formatPostAge(text: String) -> String {
-        let postAgeSections = text.components(separatedBy: " ")
-        return postAgeSections[0] + postAgeSections[1].prefix(1)
     }
 }
 

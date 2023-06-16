@@ -19,8 +19,8 @@ struct PostRow: View {
         VStack(alignment: .leading) {
             Text(post.title)
                 .font(.headline)
-                .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
-                .fixedSize(horizontal: false, vertical: false)
+                .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
+                .fixedSize(horizontal: false, vertical: true)
             PostRowContent(post: post)
                 .frame(maxWidth: .infinity, maxHeight: 650)
             PostRowFooter(post: post)
@@ -181,90 +181,156 @@ struct PostRowContent: View {
                     .cornerRadius(10)
                 VStack {
                     Text(crosspost.title)
-                        .font(.system(size: 15))
+                        .font(.system(size: 14))
                         .fontWeight(.semibold)
                         .fixedSize(horizontal: false, vertical: true)
                     HStack {
                         HStack(spacing: 3) {
                             Image(systemName: "arrow.triangle.branch")
-                                .font(.system(size: 15))
                                 .rotationEffect(.degrees(90))
                             Text(crosspost.communityName)
-                                .font(.system(size: 15))
                         }
                         HStack(spacing: 2) {
                             Image(systemName: "arrow.up")
-                                .font(.system(size: 15))
                             Text(crosspost.score)
-                                .font(.system(size: 15))
                         }
                         HStack(spacing: 2) {
                             Image(systemName: "text.bubble")
-                                .font(.system(size: 15))
                             Text(formatScore(score: crosspost.commentCount))
-                                .font(.system(size: 15))
                         }
                     }
+                    .font(.system(size: 14))
                     .opacity(0.8)
-                    .padding(EdgeInsets(top: 0, leading: 3, bottom: 0, trailing: 5))
+                    .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
             }
             .padding(SwiftUI.EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+        } else if post.contentType == .link {
+            ZStack {
+                Rectangle()
+                    .fill(Color(UIColor.systemGray6))
+                    .cornerRadius(10)
+                HStack {
+                    AsyncImage(url: URL(string: post.thumbnailLink ?? "")) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .roundedCorner(10, corners: [.topLeft, .bottomLeft])
+                            .frame(maxWidth: 140, maxHeight: 140, alignment: .leading)
+                            .clipped()
+                    } placeholder: {
+                        ZStack {
+                            Rectangle()
+                                .fill(Color(UIColor.systemGray5))
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .roundedCorner(10, corners: [.topLeft, .bottomLeft])
+                            Image(systemName: "safari")
+                                .font(.system(size: 30))
+                                .foregroundColor(Color.white)
+                                .opacity(0.8)
+                        }
+                        .frame(maxWidth: 90, maxHeight: 140, alignment: .leading)
+                    }
+                    VStack(spacing: 10) {
+                        Text("Open link")
+                            .font(.system(size: 16))
+                            .foregroundStyle(.secondary)
+                            .fontWeight(.semibold)
+                            .padding(SwiftUI.EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                        Text(post.externalLink!)
+                            .font(.system(size: 13))
+                            .fontWeight(.thin)
+                            .fixedSize(horizontal: false, vertical: false)
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .padding(SwiftUI.EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 140, alignment: .topLeading)
+                }
+                .frame(maxWidth: .infinity, maxHeight: 140, alignment: .leading)
+            }
+            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+            .onTapGesture {
+                UIApplication.shared.open(URL(string: post.externalLink!)!)
+            }
         }
     }
 }
 
 struct PostRowFooter: View {
     @EnvironmentObject var model: Model
-    var post: Post
+    @ObservedObject var post: Post
+//    @State var isUpvoted: Bool = post.isUpvoted
     
     var body: some View {
         HStack {
-            VStack {
-                if let community = post.community {
-                    Text(community)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .onTapGesture {
-                            model.loadCommunity(communityCode: community)
+            VStack(spacing: 8) {
+                Text(getFooterLabel(post: post))
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .onTapGesture {
+                        if post.community != nil {
+                            model.loadCommunity(communityCode: post.community!)
+                        } else {
+                            // TODO: load user page
                         }
-                } else {
-                    Spacer().frame(height: 15)
-                }
+                    }
+                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
+                
                 HStack {
                     HStack(spacing: 3) {
-                        Image(systemName: "arrow.up").font(.system(size: 15))
-                        Text(formatScore(score: post.score)).font(.system(size: 15))
+                        Image(systemName: "arrow.up")
+                        Text(formatScore(score: post.score))
                     }
                     HStack(spacing: 3) {
-                        Image(systemName: "text.bubble").font(.system(size: 15))
-                        Text(formatScore(score: post.commentCount)).font(.system(size: 15))
+                        Image(systemName: "text.bubble")
+                        Text(formatScore(score: post.commentCount))
                     }
                     HStack(spacing: 3) {
-                        Image(systemName: "clock").font(.system(size: 15))
-                        Text(post.submittedAge).font(.system(size: 15))
+                        Image(systemName: "clock")
+                        Text(post.submittedAge)
                     }
                 }
+                .foregroundStyle(.secondary)
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
                 .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
             }
+            .font(.system(size: 14))
             .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
-            HStack {
-                // TODO: Add menu
+            HStack(spacing: 12) {
                 Button(action: {}) {
-                    Label("", systemImage: "arrow.up")
-                }.foregroundColor(Color(UIColor.systemGray))
-                Button(action: {}) {
-                    Label("", systemImage: "arrow.down")
-                }.foregroundColor(Color(UIColor.systemGray))
+                    Image(systemName: "ellipsis")
+                }
+                .foregroundStyle(.secondary)
+                Button(action: { model.toggleUpvotePost(post: post) }) {
+                    Image(systemName: "arrow.up")
+                        .foregroundColor(post.isUpvoted ? .orange : .secondary)
+                }
+                .foregroundStyle(.secondary)
+                Button(action: { model.toggleDownvotePost(post: post) }) {
+                    Image(systemName: "arrow.down")
+                        .foregroundColor(post.isDownvoted ? .blue : .secondary)
+                }
+                .foregroundStyle(.secondary)
             }
+            .font(.system(size: 22))
             .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
         }
         .frame(maxWidth: .infinity)
-        .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
+        .padding(EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 10))
+    }
+    
+    private func getFooterLabel(post: Post) -> String {
+        if let community = post.community {
+            return community
+        }
+        return "u/" + post.userName
     }
 }
 

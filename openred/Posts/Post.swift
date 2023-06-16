@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Post: Identifiable, Codable {
+class Post: Identifiable, ObservableObject {
     var id: String
     var title: String
     var community: String?
@@ -19,14 +19,18 @@ struct Post: Identifiable, Codable {
     var contentType: ContentType
     var mediaLink: String?
     var thumbnailLink: String?
+    var externalLink: String?
     var gallery: Gallery?
     var crosspost: Crosspost?
     var isActiveLoadMarker: Bool
+    @Published var isUpvoted: Bool
+    @Published var isDownvoted: Bool
+    var awardLinks: [String]
     
     init(_ linkToThread: String, title: String, community: String?, commentCount: String,
          userName: String, submittedAge: String, score: String, contentType: ContentType,
-         mediaLink: String?, thumbnailLink: String?, gallery: Gallery?, crosspost: Crosspost?,
-         isActiveLoadMarker: Bool) {
+         mediaLink: String?, thumbnailLink: String?, externalLink: String?, gallery: Gallery?, crosspost: Crosspost?,
+         isActiveLoadMarker: Bool, isUpvoted: Bool, isDownvoted: Bool, awardLinks: [String]) {
         self.id = linkToThread
         self.title = title
         self.community = community
@@ -38,9 +42,17 @@ struct Post: Identifiable, Codable {
         self.contentType = contentType
         self.mediaLink = mediaLink
         self.thumbnailLink = thumbnailLink
+        self.externalLink = externalLink
         self.gallery = gallery
         self.crosspost = crosspost
         self.isActiveLoadMarker = isActiveLoadMarker
+        self.isUpvoted = isUpvoted
+        self.isDownvoted = isDownvoted
+        self.awardLinks = awardLinks
+    }
+    
+    func deactivateLoadMarker() {
+        self.isActiveLoadMarker = false
     }
 }
 

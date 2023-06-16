@@ -17,16 +17,28 @@ struct PostsView: View {
         ZStack {
             NavigationStack {
                 List {
-                    ForEach(model.posts.indices, id: \.self) { i in
-                        PostRow(post: model.posts[i])
-                        .onAppear(perform: {
-                            if (model.posts[i].isActiveLoadMarker) {
-                                model.posts[i].isActiveLoadMarker = false
-                                model.loadNextPagePosts()
+                    ForEach(model.posts) { post in
+                        PostRow(post: post)
+                            .swipeActions(edge: .leading) {
+                                Button { model.toggleUpvotePost(post: post) } label: {
+                                    Image(systemName: "arrow.up")
+                                }
+                                .tint(.orange)
                             }
-                        })
-                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                        .listRowSeparator(.hidden)
+                            .swipeActions(edge: .trailing) {
+                                Button { model.toggleDownvotePost(post: post) } label: {
+                                    Image(systemName: "arrow.down")
+                                }
+                                .tint(.blue)
+                            }
+                            .onAppear(perform: {
+                                if (post.isActiveLoadMarker) {
+                                    post.deactivateLoadMarker()
+                                    model.loadNextPagePosts()
+                                }
+                            })
+                            .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                            .listRowSeparator(.hidden)
                     }
                 }
                 .listStyle(PlainListStyle())

@@ -48,9 +48,19 @@ struct CommunitiesSidebarContent: View {
                                 }
                             }
                         }
-                        Section(header: HStack {
-                            Text("Subreddits")
-                            Text("Edit").frame(maxWidth: .infinity, alignment: .trailing)}
+                        if !model.subscribedCommunities.isEmpty {
+                            Section(header: Text("Subscriptions")) {
+                                ForEach(model.subscribedCommunities) { community in
+                                    CommunityRow(sidebarOffset: $sidebarOffset,
+                                                 community: community)
+                                }
+                            }
+                            .background(Color.clear)
+                        }
+                        Section(header:
+//                                    HStack {
+                            Text("More Subreddits")
+//                            Text("Edit").frame(maxWidth: .infinity, alignment: .trailing)}
                         ) {
                             ForEach(model.communities) { community in
                                 CommunityRow(sidebarOffset: $sidebarOffset,
