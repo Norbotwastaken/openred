@@ -156,6 +156,11 @@ struct PostRowContent: View {
                             .foregroundColor(Color.white)
                             .opacity(0.8)
                     }
+                    .onTapGesture {
+                        popupViewModel.contentType = post.contentType
+                        popupViewModel.gallery = post.gallery
+                        popupViewModel.isShowing = true
+                    }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 Text("ALBUM")
@@ -178,15 +183,30 @@ struct PostRowContent: View {
                     Text(crosspost.title)
                         .font(.system(size: 15))
                         .fontWeight(.semibold)
-                        .fixedSize(horizontal: false, vertical: false)
+                        .fixedSize(horizontal: false, vertical: true)
                     HStack {
-                        Text(crosspost.score).font(.system(size: 15))
-                        HStack {
-                            Image(systemName: "text.bubble").font(.system(size: 15))
-                            Text(formatScore(score: crosspost.commentCount)).font(.system(size: 15))
+                        HStack(spacing: 3) {
+                            Image(systemName: "arrow.triangle.branch")
+                                .font(.system(size: 15))
+                                .rotationEffect(.degrees(90))
+                            Text(crosspost.communityName)
+                                .font(.system(size: 15))
                         }
-                        Text(crosspost.communityName).font(.system(size: 15))
+                        HStack(spacing: 2) {
+                            Image(systemName: "arrow.up")
+                                .font(.system(size: 15))
+                            Text(crosspost.score)
+                                .font(.system(size: 15))
+                        }
+                        HStack(spacing: 2) {
+                            Image(systemName: "text.bubble")
+                                .font(.system(size: 15))
+                            Text(formatScore(score: crosspost.commentCount))
+                                .font(.system(size: 15))
+                        }
                     }
+                    .opacity(0.8)
+                    .padding(EdgeInsets(top: 0, leading: 3, bottom: 0, trailing: 5))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
@@ -215,19 +235,20 @@ struct PostRowFooter: View {
                     Spacer().frame(height: 15)
                 }
                 HStack {
-                    HStack {
+                    HStack(spacing: 3) {
                         Image(systemName: "arrow.up").font(.system(size: 15))
                         Text(formatScore(score: post.score)).font(.system(size: 15))
                     }
-                    HStack {
+                    HStack(spacing: 3) {
                         Image(systemName: "text.bubble").font(.system(size: 15))
                         Text(formatScore(score: post.commentCount)).font(.system(size: 15))
                     }
-                    HStack {
+                    HStack(spacing: 3) {
                         Image(systemName: "clock").font(.system(size: 15))
                         Text(post.submittedAge).font(.system(size: 15))
                     }
                 }
+                .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
                 .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
             }
             .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)

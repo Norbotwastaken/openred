@@ -167,9 +167,8 @@ class Model: ObservableObject {
         
         self.browser.currentContent { (obj, err) -> Void in
             if let document = obj {
-//                for element in document.querySelectorAll("#siteTable div.thing:not(.promoted)") {
                 let elements = document.querySelectorAll("#siteTable div.thing:not(.promoted)")
-                document.elements.indices.forEach { i in
+                elements.indices.forEach { i in
                     let element = elements[i]
                     let title = element.querySelector(".entry .top-matter p.title a.title")?.text
                     let community = element.querySelector(".entry .top-matter .tagline .subreddit")?.text // r/something
@@ -182,7 +181,7 @@ class Model: ObservableObject {
                     var mediaLink: String?
                     var gallery: Gallery?
                     var crosspost: Crosspost?
-                    var isActiveLoadMarker = (i == elements.count - 7)
+                    let isActiveLoadMarker = (i == elements.count - 7)
                     var thumbnailLink = element.querySelector(".thumbnail img")?["src"]
                     if thumbnailLink != nil {
                         thumbnailLink = "https:" + thumbnailLink!
@@ -234,7 +233,6 @@ class Model: ObservableObject {
                             contentType = .crosspost
                             var originalPostLink = element["data-url"]!
                             let originalPostCommunityName = element["data-crosspost-root-subreddit"]! // without the /r/
-                            let originalPostTitle = element["data-crosspost-root-title"]!
                             let originalPostScore = element["data-crosspost-root-score"]!
                             let originalPostCommentCount = element["data-crosspost-root-num-comments"]!
                             let originalPostAge = self.formatPostAge(text: element["data-crosspost-root-time"]!)
