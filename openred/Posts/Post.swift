@@ -10,9 +10,10 @@ import Foundation
 class Post: Identifiable, ObservableObject {
     var id: String
     var title: String
+    var flair: String?
     var community: String?
     var commentCount: String
-    var userName: String
+    var userName: String?
     var submittedAge: String
     var linkToThread: String
     var score: String
@@ -25,14 +26,16 @@ class Post: Identifiable, ObservableObject {
     var isActiveLoadMarker: Bool
     @Published var isUpvoted: Bool
     @Published var isDownvoted: Bool
-    var awardLinks: [String]
+    var awards: [Award]
+    private var totalAwardCount: Int?
     
-    init(_ linkToThread: String, title: String, community: String?, commentCount: String,
-         userName: String, submittedAge: String, score: String, contentType: ContentType,
+    init(_ linkToThread: String, title: String, flair: String?, community: String?, commentCount: String,
+         userName: String?, submittedAge: String, score: String, contentType: ContentType,
          mediaLink: String?, thumbnailLink: String?, externalLink: String?, gallery: Gallery?, crosspost: Crosspost?,
-         isActiveLoadMarker: Bool, isUpvoted: Bool, isDownvoted: Bool, awardLinks: [String]) {
+         isActiveLoadMarker: Bool, isUpvoted: Bool, isDownvoted: Bool, awards: [Award]) {
         self.id = linkToThread
         self.title = title
+        self.flair = flair
         self.community = community
         self.commentCount = commentCount
         self.userName = userName
@@ -48,11 +51,26 @@ class Post: Identifiable, ObservableObject {
         self.isActiveLoadMarker = isActiveLoadMarker
         self.isUpvoted = isUpvoted
         self.isDownvoted = isDownvoted
-        self.awardLinks = awardLinks
+        self.awards = awards
     }
     
     func deactivateLoadMarker() {
         self.isActiveLoadMarker = false
+    }
+    
+    func getTotalAwardCount() -> Int {
+        if self.totalAwardCount != nil {
+            return self.totalAwardCount!
+        }
+        self.totalAwardCount = self.awards.map({ Int($0.count)! }).reduce(0, +)
+        return self.totalAwardCount!
+    }
+    
+    func getMDFLair() -> String? {
+        if flair != nil {
+            return "<span style=\"background-color:blue\">\(flair!)</span>"
+        }
+        return nil
     }
 }
 
@@ -76,6 +94,11 @@ struct Crosspost: Identifiable, Codable {
         self.commentCount = commentCount
         self.age = age
     }
+}
+
+struct Award {
+    var link: String
+    var count: String
 }
 
 enum ContentType: Codable {

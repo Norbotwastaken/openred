@@ -17,6 +17,7 @@ struct RedditParser {
         elements.indices.forEach { i in
             let element = elements[i]
             let title = element.querySelector(".entry .top-matter p.title a.title")?.text
+            let flair = element.querySelector(".title .flairrichtext")?.text
             let community = element.querySelector(".entry .top-matter .tagline .subreddit")?.text // r/something
             let commentCount = element["data-comments-count"]
             let userName = element.querySelector(".entry .top-matter .tagline .author")?.text
@@ -35,6 +36,7 @@ struct RedditParser {
             }
             let isUpvoted = element.querySelector("div.midcol.likes") != nil
             let isDownvoted = element.querySelector("div.midcol.dislikes") != nil
+            var awards: [Award] = []
             
             if let mediaElement = element.querySelector(".entry .expando") {
                 let mediaContainerElement = mediaElement["data-cachedhtml"]
@@ -112,11 +114,16 @@ struct RedditParser {
                 externalLink = element["data-url"]
             }
             
+            for awardElement in element.querySelectorAll(".awardings-bar .awarding-link") {
+                awards.append(Award(link: awardElement.querySelector("img.awarding-icon")!["src"]!, count: awardElement["data-count"]!))
+            }
+            
             posts.append(Post(linkToThread!,
                 title: title ?? "no title for this post",
+                flair: flair,
                 community: community,
                 commentCount: commentCount ?? "0",
-                userName: userName ?? "",
+                userName: userName,
                 submittedAge: submittedAge,
                 score: score ?? "0",
                 contentType: contentType,
@@ -128,7 +135,7 @@ struct RedditParser {
                 isActiveLoadMarker: isActiveLoadMarker,
                 isUpvoted: isUpvoted,
                 isDownvoted: isDownvoted,
-                awardLinks: []))
+                awards: awards))
         }
         return posts
     }

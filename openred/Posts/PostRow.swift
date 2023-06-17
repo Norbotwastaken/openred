@@ -17,10 +17,15 @@ struct PostRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(post.title)
-                .font(.headline)
-                .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
-                .fixedSize(horizontal: false, vertical: true)
+            VStack {
+                Text(post.title)
+                    .font(.headline) +
+                Text(post.flair != nil ? "  [" + post.flair! + "]" : "")
+                    .foregroundColor(.secondary)
+                    .font(.system(size: 12))
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
             PostRowContent(post: post)
                 .frame(maxWidth: .infinity, maxHeight: 650)
             PostRowFooter(post: post)
@@ -184,6 +189,8 @@ struct PostRowContent: View {
                         .font(.system(size: 14))
                         .fontWeight(.semibold)
                         .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5))
                     HStack {
                         HStack(spacing: 3) {
                             Image(systemName: "arrow.triangle.branch")
@@ -295,6 +302,22 @@ struct PostRowFooter: View {
                         Image(systemName: "clock")
                         Text(post.submittedAge)
                     }
+                    HStack(spacing: 3) {
+                        // TODO: limit to 4
+                        ForEach(post.awards.indices) { i in
+                            if i < 3 {
+                                AsyncImage(url: URL(string: post.awards[i].link)) { image in
+                                    image.image?
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(maxWidth: 15, maxHeight: 15)
+                                }
+                            }
+                        }
+                        if post.getTotalAwardCount() > 0 {
+                            Text(String(post.getTotalAwardCount()))
+                        }
+                    }
                 }
                 .foregroundStyle(.secondary)
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
@@ -303,23 +326,29 @@ struct PostRowFooter: View {
             .font(.system(size: 14))
             .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 12) {
-                Button(action: {}) {
+//                Button(action: {}) {
                     Image(systemName: "ellipsis")
-                }
+//                }
                 .foregroundStyle(.secondary)
-                Button(action: { model.toggleUpvotePost(post: post) }) {
+//                Button(action: { model.toggleUpvotePost(post: post) }) {
                     Image(systemName: "arrow.up")
                         .foregroundColor(post.isUpvoted ? .orange : .secondary)
-                }
-                .foregroundStyle(.secondary)
-                Button(action: { model.toggleDownvotePost(post: post) }) {
+                        .onTapGesture {
+                            model.toggleUpvotePost(post: post)
+                        }
+//                }
+//                .foregroundStyle(.secondary)
+//                Button(action: { model.toggleDownvotePost(post: post) }) {
                     Image(systemName: "arrow.down")
                         .foregroundColor(post.isDownvoted ? .blue : .secondary)
-                }
-                .foregroundStyle(.secondary)
+                        .onTapGesture {
+                            model.toggleDownvotePost(post: post)
+                        }
+//                }
+//                .foregroundStyle(.secondary)
             }
             .font(.system(size: 22))
-            .frame(maxWidth: .infinity, alignment: .trailing)
+            .frame(maxWidth: 40, alignment: .trailing)
             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
         }
         .frame(maxWidth: .infinity)
@@ -330,7 +359,7 @@ struct PostRowFooter: View {
         if let community = post.community {
             return community
         }
-        return "u/" + post.userName
+        return post.userName != nil ? "u/" + post.userName! : ""
     }
 }
 
