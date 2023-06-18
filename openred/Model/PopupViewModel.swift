@@ -17,4 +17,12 @@ class PopupViewModel: ObservableObject {
     @Published var videoLink: String?
     @Published var contentType: ContentType = ContentType.link
     @Published var player: AVPlayer = AVPlayer()
+    
+    init() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback)
+        } catch(let error) {
+            print(error.localizedDescription)
+        }
+    }
 }

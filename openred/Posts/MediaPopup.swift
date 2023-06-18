@@ -208,8 +208,8 @@ struct MediaPopupContent: View {
                                     }
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 }
-                                if toolbarVisible {
-                                    Text(galleryItem.caption ?? "")
+                                if toolbarVisible && galleryItem.caption != nil {
+                                    Text(galleryItem.caption!)
                                         .padding(SwiftUI.EdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6))
                                         .background(.black.opacity(0.6))
                                         .cornerRadius(8)

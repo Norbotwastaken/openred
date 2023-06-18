@@ -8,6 +8,100 @@
 import Foundation
 import SwiftUI
 
+struct CommunitiesStack: View {
+    @EnvironmentObject var model: Model
+    @Binding var loginPopupShowing: Bool
+    @State var showPosts = false
+    @State private var searchText = ""
+    @State var itemInView = ""
+    
+    var body: some View {
+        ZStack {
+            NavigationStack() {
+                ZStack {
+                    VStack(alignment: .leading, spacing: 0) {
+//                        Spacer()
+//                            .frame(maxWidth: .infinity, maxHeight: 30, alignment: .top)
+//                            .background(.clear)
+                        List {
+                            if searchText.isEmpty {
+                                UserSection2(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts)
+                                Section() {
+                                    ForEach(model.mainPageCommunities) { community in
+                                        CommunityRow2(community: community, showPosts: $showPosts)
+                                    }
+                                }
+                                if model.userName != nil {
+                                    Section() {
+                                        ForEach(model.userFunctionCommunities) { community in
+                                            CommunityRow2(community: community, showPosts: $showPosts)
+                                        }
+                                    }
+                                }
+                            }
+                            if !model.subscribedCommunities.isEmpty {
+                                Section(header: Text("Subscriptions")) {
+                                    ForEach(filteredSubscribedCommunities) { community in
+                                        CommunityRow2(community: community, showPosts: $showPosts)
+                                    }
+                                }
+                                .background(Color.clear)
+                            }
+                            Section(header: Text("More Subreddits")) {
+                                ForEach(filteredCommunities) { community in
+                                    CommunityRow2(community: community, showPosts: $showPosts)
+                                }
+                            }
+                            .background(Color.clear)
+                        }
+                        .listStyle(PlainListStyle())
+                    }
+//                    .padding(.top, 30)
+                    ZStack {
+                        Circle()
+                            .fill(Color.blue)
+                            .frame(width: 65, height: 65, alignment: .bottomTrailing)
+                            .onTapGesture {
+                                showPosts = true
+                            }
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 30))
+                            .foregroundColor(.white)
+                    }
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 30))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .navigationDestination(isPresented: $showPosts) {
+                    PostsView(itemInView: $itemInView)
+                }
+            }
+            .searchable(text: $searchText)
+            .toolbar(.hidden, for: .navigationBar)
+        }
+    }
+    
+    var filteredSubscribedCommunities: [Community] {
+        if searchText.isEmpty {
+            return model.subscribedCommunities
+        } else {
+            return model.subscribedCommunities.filter {
+                $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+    
+    var filteredCommunities: [Community] {
+        if searchText.isEmpty {
+            return model.communities
+        } else {
+            return model.communities.filter {
+                $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+}
+
 struct CommunitiesSidebarContent: View {
     @EnvironmentObject var model: Model
     @Binding var sidebarOffset: CGSize
@@ -105,6 +199,27 @@ struct CommunitiesSidebarContent: View {
     }
 }
 
+struct CommunityRow2: View {
+    @EnvironmentObject var model: Model
+    var community: Community
+    @Binding var showPosts: Bool
+    
+    var body: some View {
+        Button(action: {
+            model.loadCommunity(community: community)
+            showPosts = true
+        }) {
+            HStack {
+                if community.iconName != nil {
+                    Image(systemName: community.iconName!)
+                }
+                Text(community.name)
+            }
+        }
+        .listRowBackground(Color.clear)
+    }
+}
+
 struct CommunityRow: View {
     @EnvironmentObject var model: Model
     @Binding var sidebarOffset: CGSize
@@ -125,6 +240,38 @@ struct CommunityRow: View {
         .listRowBackground(Color.clear)
     }
 }
+
+struct UserSection2: View {
+    @EnvironmentObject var model: Model
+    @Binding var loginPopupShowing: Bool
+    @Binding var showPosts: Bool
+    
+    var body: some View {
+        if model.userName != nil {
+            Button(action: {
+                
+            }) {
+                HStack {
+                    Image(systemName: "person.crop.circle")
+                    Text(model.userName!)
+                }
+            }
+            .listRowBackground(Color.clear)
+        } else {
+            Button(action: {
+//                loginPopupShowing.toggle()
+//                showPosts = true
+            }) {
+                HStack {
+                    Image(systemName: "rectangle.portrait.and.arrow.forward")
+                    Text("Log in")
+                }
+            }
+            .listRowBackground(Color.clear)
+        }
+    }
+}
+
 
 struct UserSection: View {
     @EnvironmentObject var model: Model
@@ -154,4 +301,10 @@ struct UserSection: View {
             .listRowBackground(Color.clear)
         }
     }
+}
+
+struct MenuItem: Identifiable {
+    var id = UUID()
+    var name: String
+    var subMenuItems: [MenuItem]?
 }

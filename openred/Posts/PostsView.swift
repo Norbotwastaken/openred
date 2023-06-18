@@ -11,11 +11,12 @@ import AVKit
 struct PostsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var popupViewModel: PopupViewModel
-    @Binding var sidebarOffset: CGSize
+    @Binding var itemInView: String
     
     var body: some View {
         ZStack {
-            NavigationStack {
+//            NavigationStack {
+            ScrollViewReader { proxy in
                 List {
                     ForEach(model.posts) { post in
                         PostRow(post: post)
@@ -32,6 +33,7 @@ struct PostsView: View {
                                 .tint(.blue)
                             }
                             .onAppear(perform: {
+                                itemInView = post.id
                                 if (post.isActiveLoadMarker) {
                                     post.deactivateLoadMarker()
                                     model.loadNextPagePosts()
@@ -45,15 +47,14 @@ struct PostsView: View {
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button {
-                            sidebarOffset.width = -1
-                            print("Left button tapped")
-                        } label: {
-                            Image(systemName: "chevron.left")
-                            Text("Subreddits")
-                        }
-                    }
+//                    ToolbarItem(placement: .navigationBarLeading) {
+//                        Button {
+//                            print("Left button tapped")
+//                        } label: {
+////                            Image(systemName: "chevron.left")
+//                            Text("Subreddits")
+//                        }
+//                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         HStack {
                             SortMenu()
@@ -66,6 +67,9 @@ struct PostsView: View {
                         }
                     }
                 }
+                .onAppear(perform: {
+                    proxy.scrollTo(itemInView)
+                })
                 .toolbarBackground(.visible, for: .navigationBar)
             }
         }
