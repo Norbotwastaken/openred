@@ -20,12 +20,9 @@ struct CommunitiesStack: View {
             NavigationStack() {
                 ZStack {
                     VStack(alignment: .leading, spacing: 0) {
-//                        Spacer()
-//                            .frame(maxWidth: .infinity, maxHeight: 30, alignment: .top)
-//                            .background(.clear)
                         List {
                             if searchText.isEmpty {
-                                UserSection2(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts)
+                                UserSection2(loginPopupShowing: $loginPopupShowing)
                                 Section() {
                                     ForEach(model.mainPageCommunities) { community in
                                         CommunityRow2(community: community, showPosts: $showPosts)
@@ -72,6 +69,8 @@ struct CommunitiesStack: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .navigationTitle("Communities")
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(isPresented: $showPosts) {
                     PostsView(itemInView: $itemInView)
                 }
@@ -244,23 +243,31 @@ struct CommunityRow: View {
 struct UserSection2: View {
     @EnvironmentObject var model: Model
     @Binding var loginPopupShowing: Bool
-    @Binding var showPosts: Bool
     
     var body: some View {
         if model.userName != nil {
-            Button(action: {
-                
-            }) {
-                HStack {
-                    Image(systemName: "person.crop.circle")
-                    Text(model.userName!)
+            Menu {
+                Button(action: {
+                    // logout action
+                }) {
+                    Label("Log out", systemImage: "rectangle.portrait.and.arrow.forward")
                 }
+            } label: {
+                Button(action: {
+                    
+                }) {
+                    HStack {
+                        Image(systemName: "person.crop.circle")
+                        Text(model.userName!)
+                    }
+                    .foregroundColor(.primary)
+                }
+                .listRowBackground(Color.clear)
             }
-            .listRowBackground(Color.clear)
+//            .foregroundColor(.primary)
         } else {
             Button(action: {
-//                loginPopupShowing.toggle()
-//                showPosts = true
+                loginPopupShowing.toggle()
             }) {
                 HStack {
                     Image(systemName: "rectangle.portrait.and.arrow.forward")
