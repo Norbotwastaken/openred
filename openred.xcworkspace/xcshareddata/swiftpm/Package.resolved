@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "richtext",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/NuPlay/RichText.git",
+      "state" : {
+        "revision" : "6e14ec7130bf82284c83c1b248954a87b72378d6",
+        "version" : "2.2.1"
+      }
+    },
+    {
       "identity" : "swiftui-gif",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/globulus/swiftui-gif",

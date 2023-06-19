@@ -11,11 +11,13 @@ import SwiftUI
 struct openredApp: App {
     @StateObject private var model = Model()
     @StateObject var popupViewModel = PopupViewModel()
+    @StateObject var commentsModel = CommentsModel()
     
     var body: some Scene {
         WindowGroup {
             ContentView().environmentObject(model)
                 .environmentObject(popupViewModel)
+                .environmentObject(commentsModel)
         }
     }
 }

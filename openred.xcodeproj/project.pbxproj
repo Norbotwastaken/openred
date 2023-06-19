@@ -23,6 +23,9 @@
 		AE4A96732A3B4B8200BA96CF /* GalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96722A3B4B8200BA96CF /* GalleryItem.swift */; };
 		AE4A96752A3B5DA500BA96CF /* PopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96742A3B5DA500BA96CF /* PopupViewModel.swift */; };
 		AE4A96772A3D112700BA96CF /* RedditParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96762A3D112700BA96CF /* RedditParser.swift */; };
+		AE4A967A2A3F4AC900BA96CF /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96792A3F4AC900BA96CF /* CommentsView.swift */; };
+		AE4A967C2A3F5F7100BA96CF /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A967B2A3F5F7100BA96CF /* Comments.swift */; };
+		AE4A967F2A405D1600BA96CF /* RichText in Frameworks */ = {isa = PBXBuildFile; productRef = AE4A967E2A405D1600BA96CF /* RichText */; };
 		AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C32A2CCB3300889B3E /* openredApp.swift */; };
 		AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C52A2CCB3300889B3E /* ContentView.swift */; };
 		AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE89D4C72A2CCB3600889B3E /* Assets.xcassets */; };
@@ -66,6 +69,8 @@
 		AE4A96722A3B4B8200BA96CF /* GalleryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItem.swift; sourceTree = "<group>"; };
 		AE4A96742A3B5DA500BA96CF /* PopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewModel.swift; sourceTree = "<group>"; };
 		AE4A96762A3D112700BA96CF /* RedditParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditParser.swift; sourceTree = "<group>"; };
+		AE4A96792A3F4AC900BA96CF /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
+		AE4A967B2A3F5F7100BA96CF /* Comments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comments.swift; sourceTree = "<group>"; };
 		AE89D4C02A2CCB3300889B3E /* openred.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openred.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4C32A2CCB3300889B3E /* openredApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredApp.swift; sourceTree = "<group>"; };
 		AE89D4C52A2CCB3300889B3E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -86,6 +91,7 @@
 				5D287CB7879D0BE7B9C2EAC0 /* Pods_openred.framework in Frameworks */,
 				AE4A966F2A39DEF400BA96CF /* SwiftUIGIF in Frameworks */,
 				AE4A96662A37BDE100BA96CF /* VideoPlayer in Frameworks */,
+				AE4A967F2A405D1600BA96CF /* RichText in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +159,15 @@
 			path = Communities;
 			sourceTree = "<group>";
 		};
+		AE4A96782A3F4AA100BA96CF /* Comments */ = {
+			isa = PBXGroup;
+			children = (
+				AE4A96792A3F4AC900BA96CF /* CommentsView.swift */,
+				AE4A967B2A3F5F7100BA96CF /* Comments.swift */,
+			);
+			path = Comments;
+			sourceTree = "<group>";
+		};
 		AE89D4B72A2CCB3300889B3E = {
 			isa = PBXGroup;
 			children = (
@@ -178,6 +193,7 @@
 		AE89D4C22A2CCB3300889B3E /* openred */ = {
 			isa = PBXGroup;
 			children = (
+				AE4A96782A3F4AA100BA96CF /* Comments */,
 				AE4A96572A33A25500BA96CF /* Communities */,
 				AE4A962D2A2F96A100BA96CF /* Posts */,
 				AE89D4C32A2CCB3300889B3E /* openredApp.swift */,
@@ -239,6 +255,7 @@
 			packageProductDependencies = (
 				AE4A96652A37BDE100BA96CF /* VideoPlayer */,
 				AE4A966E2A39DEF400BA96CF /* SwiftUIGIF */,
+				AE4A967E2A405D1600BA96CF /* RichText */,
 			);
 			productName = openred;
 			productReference = AE89D4C02A2CCB3300889B3E /* openred.app */;
@@ -315,6 +332,7 @@
 			packageReferences = (
 				AE4A96642A37BDE100BA96CF /* XCRemoteSwiftPackageReference "VideoPlayer" */,
 				AE4A966D2A39DEF400BA96CF /* XCRemoteSwiftPackageReference "swiftui-gif" */,
+				AE4A967D2A405D1600BA96CF /* XCRemoteSwiftPackageReference "RichText" */,
 			);
 			productRefGroup = AE89D4C12A2CCB3300889B3E /* Products */;
 			projectDirPath = "";
@@ -408,12 +426,14 @@
 				AE4A96312A2F974C00BA96CF /* Post.swift in Sources */,
 				AE4A965F2A37829700BA96CF /* MediaPopup.swift in Sources */,
 				AE4A96592A33A27100BA96CF /* Community.swift in Sources */,
+				AE4A967C2A3F5F7100BA96CF /* Comments.swift in Sources */,
 				AE4A96772A3D112700BA96CF /* RedditParser.swift in Sources */,
 				AE4A966A2A387ECB00BA96CF /* LoginPopup.swift in Sources */,
 				AE4A96562A337B4000BA96CF /* CommunitiesSidebar.swift in Sources */,
 				AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */,
 				AE4A966C2A38F1B400BA96CF /* InboxView.swift in Sources */,
 				AE4A96732A3B4B8200BA96CF /* GalleryItem.swift in Sources */,
+				AE4A967A2A3F4AC900BA96CF /* CommentsView.swift in Sources */,
 				AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -757,6 +777,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		AE4A967D2A405D1600BA96CF /* XCRemoteSwiftPackageReference "RichText" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/NuPlay/RichText.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -769,6 +797,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AE4A966D2A39DEF400BA96CF /* XCRemoteSwiftPackageReference "swiftui-gif" */;
 			productName = SwiftUIGIF;
+		};
+		AE4A967E2A405D1600BA96CF /* RichText */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AE4A967D2A405D1600BA96CF /* XCRemoteSwiftPackageReference "RichText" */;
+			productName = RichText;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

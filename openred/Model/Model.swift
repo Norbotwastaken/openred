@@ -35,9 +35,11 @@ class Model: ObservableObject {
         self.selectedCommunityLink = redditBaseURL + "/r/all"
         self.selectedSorting = ""
         self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[""]!
-        restoreCookies()
+        self.mainPageCommunities = setMainPageCommunities
+        self.userFunctionCommunities = setUserFunctionCommunities
+        UserSessionManager().loadLastLoggedInUser(webView: webView)
         self.browser = Erik(webView: self.webView)
-        load(initialURL: selectedCommunityLink)
+        self.load(initialURL: self.selectedCommunityLink)
     }
     
     func login(username: String, password: String) {
@@ -59,7 +61,8 @@ class Model: ObservableObject {
                                 self.loginAttempt = .successful
                                 self.document = document
                                 self.userName = username
-                                self.storeCookies()
+//                                self.storeCookies(userName: username)
+                                UserSessionManager().saveUserSession(webView: self.webView, userName: username)
                                 self.updateCommunitiesList(doc: document)
                             }
                         }
@@ -69,8 +72,17 @@ class Model: ObservableObject {
         }
     }
     
+    func logOut() {
+        defaults.removeObject(forKey: "currentUserName")
+        self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+            for cookie in cookies {
+                self.webView.configuration.websiteDataStore.httpCookieStore.delete(cookie)
+            }
+        }
+        load(initialURL: selectedCommunityLink)
+    }
+    
     func load(initialURL: String) {
-        setAdditionalCommunities()
         browser.visit(url: URL(string: initialURL)! ) { object, error in
             if let doc = object {
                 self.document = doc
@@ -95,6 +107,9 @@ class Model: ObservableObject {
                 self.document = doc
                 self.updateTitle(doc: doc, defaultTitle: community.name)
                 self.updatePosts(doc: doc)
+                
+                self.updateCommunitiesList(doc: doc)
+                self.loadUsername(doc: doc)
             }
         }
     }
@@ -110,6 +125,9 @@ class Model: ObservableObject {
                 self.document = doc
                 self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
                 self.updatePosts(doc: doc)
+                
+                self.updateCommunitiesList(doc: doc)
+                self.loadUsername(doc: doc)
             }
         }
     }
@@ -127,6 +145,9 @@ class Model: ObservableObject {
             if let doc = object {
                 self.document = doc
                 self.updatePosts(doc: doc)
+                
+                self.updateCommunitiesList(doc: doc)
+                self.loadUsername(doc: doc)
             }
         }
     }
@@ -137,13 +158,19 @@ class Model: ObservableObject {
                 if let doc = object {
                     self.updatePosts(doc: doc, appendToExisting: true)
                     self.updateTitle(doc: doc, defaultTitle: "")
+                    
+                    self.updateCommunitiesList(doc: doc)
+                    self.loadUsername(doc: doc)
                 }
             })
         }
     }
     
-    func toggleUpvotePost(post: Post) {
-        var selectorModifier = post.isUpvoted ? "mod" : ""
+    func toggleUpvotePost(post: Post) -> Bool {
+        if userName == nil {
+            return false
+        }
+        let selectorModifier = post.isUpvoted ? "mod" : ""
         if let upvoteButton = document?.querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] div.arrow.up" + selectorModifier) {
             upvoteButton.click()
             post.isUpvoted.toggle()
@@ -154,10 +181,14 @@ class Model: ObservableObject {
                 }
             }
         }
+        return true
     }
     
-    func toggleDownvotePost(post: Post) {
-        var selectorModifier = post.isDownvoted ? "mod" : ""
+    func toggleDownvotePost(post: Post) -> Bool {
+        if userName == nil {
+            return false
+        }
+        let selectorModifier = post.isDownvoted ? "mod" : ""
         if let downvoteButton = document?.querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] div.arrow.down" + selectorModifier) {
             downvoteButton.click()
             post.isDownvoted.toggle()
@@ -168,6 +199,7 @@ class Model: ObservableObject {
                 }
             }
         }
+        return true
     }
     
     private func updateTitle(doc: Document, defaultTitle: String) {
@@ -187,6 +219,9 @@ class Model: ObservableObject {
         if doc.querySelector("#header .logout")?.text != nil {
             self.userName = doc.querySelector("#header .user a")!.text
         }
+//        else {
+//            self.userName = nil
+//        }
     }
     
     private func updatePosts(doc: Document, appendToExisting: Bool = false) {
@@ -202,6 +237,7 @@ class Model: ObservableObject {
     }
     
     private func updateCommunitiesList(doc: Document) {
+        self.subscribedCommunities = []
         for element in doc.querySelectorAll("#sr-header-area .drop-choices a:not(.bottom-option)") {
             self.subscribedCommunities.append(Community(element.text!, link: element["href"]!,
                                                         iconName: nil, isMultiCommunity: false))
@@ -215,44 +251,29 @@ class Model: ObservableObject {
                                                      iconName: nil, isMultiCommunity: false))
             }
         }
+        self.communities = []
         self.communities = unsortedCommunities
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
     }
     
-    private func setAdditionalCommunities() {
-        self.mainPageCommunities.append(Community("Home", link: redditBaseURL,
+    var setMainPageCommunities: [Community] {
+        var communities: [Community] = []
+        communities.append(Community("Home", link: redditBaseURL,
                                                   iconName: "house.fill", isMultiCommunity: true))
-        self.mainPageCommunities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular",
+        communities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular",
                                                   iconName: "chart.line.uptrend.xyaxis.circle.fill", isMultiCommunity: true))
-        self.mainPageCommunities.append(Community("All Posts", link: redditBaseURL + "/r/all",
+        communities.append(Community("All Posts", link: redditBaseURL + "/r/all",
                                                   iconName: "a.circle.fill", isMultiCommunity: true))
-        self.userFunctionCommunities.append(Community("Saved", link: redditBaseURL + "/saved",
+        return communities
+    }
+    
+    var setUserFunctionCommunities: [Community] {
+        var communities: [Community] = []
+        communities.append(Community("Saved", link: redditBaseURL + "/saved",
                                                       iconName: "heart.text.square", isMultiCommunity: true))
-        self.userFunctionCommunities.append(Community("Moderator Posts", link: redditBaseURL + "/mod",
+        communities.append(Community("Moderator Posts", link: redditBaseURL + "/mod",
                                                       iconName: "shield", isMultiCommunity: true))
-    }
-    
-    private func storeCookies() {
-        let userDefaults = UserDefaults.standard
-        var cookieDict = [String : AnyObject]()
-        
-        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-            for cookie in cookies {
-                cookieDict[cookie.name] = cookie.properties as AnyObject?
-            }
-            userDefaults.set(cookieDict, forKey: "cookies")
-        }
-    }
-    
-    private func restoreCookies() {
-        let userDefaults = UserDefaults.standard
-        if let cookieDictionary = userDefaults.dictionary(forKey: "cookies") {
-            for (_, cookieProperties) in cookieDictionary {
-                if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
-                    webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
-                }
-            }
-        }
+        return communities
     }
 }
 
@@ -271,4 +292,37 @@ struct ViewModelAttributes {
         "rising" : "chart.line.uptrend.xyaxis",
         "controversial" : "arrow.right.and.line.vertical.and.arrow.left"
     ]
+}
+
+extension WKWebView {
+    func copy(with zone: NSZone? = nil) -> Any {
+        let copy = WKWebView(frame: frame, configuration: configuration)
+        return copy
+    }
+}
+
+struct UserSessionManager {
+    func saveUserSession(webView: WKWebView, userName: String) {
+        var cookieDict = [String : AnyObject]()
+
+        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+            for cookie in cookies {
+                cookieDict[cookie.name] = cookie.properties as AnyObject?
+            }
+            UserDefaults.standard.set(cookieDict, forKey: "cookies_" + userName)
+            UserDefaults.standard.set(userName, forKey: "currentUserName")
+        }
+    }
+
+    func loadLastLoggedInUser(webView: WKWebView) {
+        if let userName = UserDefaults.standard.object(forKey: "currentUserName") as? String {
+            if let cookieDictionary = UserDefaults.standard.dictionary(forKey: "cookies_" + userName) {
+                for (_, cookieProperties) in cookieDictionary {
+                    if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
+                        webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+                    }
+                }
+            }
+        }
+    }
 }

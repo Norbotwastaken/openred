@@ -12,10 +12,11 @@ struct PostsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var popupViewModel: PopupViewModel
     @Binding var itemInView: String
+    @State var showComments = false
+    @State var commentInView = ""
     
     var body: some View {
         ZStack {
-//            NavigationStack {
             ScrollViewReader { proxy in
                 List {
                     ForEach(model.posts) { post in
@@ -41,20 +42,15 @@ struct PostsView: View {
                             })
                             .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                             .listRowSeparator(.hidden)
+                            .overlay(
+                                NavigationLink(destination: CommentsView(post: post, commentInView: $commentInView), label: { EmptyView() })
+                                .opacity(0))
                     }
                 }
                 .listStyle(PlainListStyle())
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-//                    ToolbarItem(placement: .navigationBarLeading) {
-//                        Button {
-//                            print("Left button tapped")
-//                        } label: {
-////                            Image(systemName: "chevron.left")
-//                            Text("Subreddits")
-//                        }
-//                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         HStack {
                             SortMenu()

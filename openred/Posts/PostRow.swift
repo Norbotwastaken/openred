@@ -26,6 +26,7 @@ struct PostRow: View {
             }
             .fixedSize(horizontal: false, vertical: true)
             .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
+            .disabled(true)
             PostRowContent(post: post)
                 .frame(maxWidth: .infinity, maxHeight: 650)
             PostRowFooter(post: post)
@@ -270,7 +271,6 @@ struct PostRowContent: View {
 struct PostRowFooter: View {
     @EnvironmentObject var model: Model
     @ObservedObject var post: Post
-//    @State var isUpvoted: Bool = post.isUpvoted
     
     var body: some View {
         HStack {
@@ -326,26 +326,22 @@ struct PostRowFooter: View {
             .font(.system(size: 14))
             .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 12) {
-//                Button(action: {}) {
-                    Image(systemName: "ellipsis")
-//                }
-                .foregroundStyle(.secondary)
-//                Button(action: { model.toggleUpvotePost(post: post) }) {
-                    Image(systemName: "arrow.up")
-                        .foregroundColor(post.isUpvoted ? .orange : .secondary)
-                        .onTapGesture {
-                            model.toggleUpvotePost(post: post)
+                Image(systemName: "ellipsis")
+                    .foregroundStyle(.secondary)
+                Image(systemName: "arrow.up")
+                    .foregroundColor(post.isUpvoted ? .orange : .secondary)
+                    .onTapGesture {
+                        if model.toggleUpvotePost(post: post) == false {
+                            // show login popup
                         }
-//                }
-//                .foregroundStyle(.secondary)
-//                Button(action: { model.toggleDownvotePost(post: post) }) {
-                    Image(systemName: "arrow.down")
-                        .foregroundColor(post.isDownvoted ? .blue : .secondary)
-                        .onTapGesture {
-                            model.toggleDownvotePost(post: post)
+                    }
+                Image(systemName: "arrow.down")
+                    .foregroundColor(post.isDownvoted ? .blue : .secondary)
+                    .onTapGesture {
+                        if model.toggleDownvotePost(post: post) == false {
+                            // show login popup
                         }
-//                }
-//                .foregroundStyle(.secondary)
+                    }
             }
             .font(.system(size: 22))
             .frame(maxWidth: 40, alignment: .trailing)

@@ -65,13 +65,6 @@ class Post: Identifiable, ObservableObject {
         self.totalAwardCount = self.awards.map({ Int($0.count)! }).reduce(0, +)
         return self.totalAwardCount!
     }
-    
-    func getMDFLair() -> String? {
-        if flair != nil {
-            return "<span style=\"background-color:blue\">\(flair!)</span>"
-        }
-        return nil
-    }
 }
 
 struct Crosspost: Identifiable, Codable {

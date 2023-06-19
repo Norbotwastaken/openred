@@ -148,8 +148,8 @@ open class WebKitLayoutEngine: NSObject, LayoutEngine {
     init(webView: WKWebView) {
         self.webView = webView
         super.init()
-        self.webView.configuration.userContentController.add(self, name: JavascriptErrorHandler)
-        self.webView.configuration.userContentController.add(self, name: JavascriptEndHandler)
+        self.webView.configuration.userContentController.add(self, name: JavascriptErrorHandler + String(Int.random(in: 0..<6000)))
+        self.webView.configuration.userContentController.add(self, name: JavascriptEndHandler + String(Int.random(in: 0..<6000)))
         
         if self.webView.navigationDelegate == nil {
             let delegate = LayoutEngineNavigationDelegate()
