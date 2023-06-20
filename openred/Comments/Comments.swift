@@ -15,6 +15,7 @@ class CommentsModel: ObservableObject {
     var document: Document? = nil
     let redditBaseURL: String = "https://old.reddit.com"
     var currentLink: String = "" // /r/something/comments
+    var jsonHandler: JSONHandler = JSONHandler()
     
     @Published var comments: [Comment] = []
     @Published var commentsCollapsed: [String:Bool] = [:]
@@ -41,6 +42,7 @@ class CommentsModel: ObservableObject {
         self.comments = []
         self.commentsCollapsed = [:]
         var commentsByID: [String: Comment] = [:]
+        jsonHandler.getData(url: redditBaseURL + linkToThread)
         browser.visit(url: URL(string: redditBaseURL + linkToThread)!) { object, error in
             if let doc = object {
                 self.title = doc.title!
@@ -48,7 +50,8 @@ class CommentsModel: ObservableObject {
                 for commentElement in doc.querySelectorAll(".commentarea .thing.comment:not(.deleted)") {
                     let id: String = commentElement.querySelector(".parent a")!["name"]! // jokhk6z
                     let user: String? = commentElement["data-author"]
-                    let content: String? = commentElement.querySelector(".usertext-body .md")?.innerHTML
+//                    let content: String? = commentElement.querySelector(".usertext-body .md")?.innerHTML
+                    let content: String? = self.jsonHandler.content[id]
                     let age: String? = commentElement.querySelector(".tagline time")?.text
                     let score: String? = commentElement.querySelector(".tagline .score")?["title"]
                     

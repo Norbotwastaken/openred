@@ -118,16 +118,20 @@ struct CommentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     if !(commentsModel.commentsCollapsed[comment.id] ?? true) {
                         ZStack {
-                            if (!isLoaded) {
-                                Spacer().frame(height: 40)
-                                    .onAppear{ isLoaded = true }
-                            } else {
-                                RichText(html: comment.content!)
-                                    .placeholder{ Spacer().frame(height: 40) }
-                            }
+//                            if (!isLoaded) {
+//                                Spacer().frame(height: 40)
+//                                    .onAppear{ isLoaded = true }
+//                            } else {
+                            Text(LocalizedStringKey(comment.content ?? "no content found"))
+                                .fixedSize(horizontal: false, vertical: true)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+//                                RichText(html: comment.content!)
+//                                    .placeholder{ Spacer().frame(height: 40) }
+//                            }
                         }
                         .font(.system(size: 14))
-                        .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
+//                        .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
             }
