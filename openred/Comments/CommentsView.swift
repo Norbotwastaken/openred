@@ -49,14 +49,14 @@ struct CommentsView: View {
                     }
                     .font(.system(size: 22))
 //                    VStack(alignment: .leading) {
-                        ForEach(commentsModel.comments) { comment in
+                    ForEach(commentsModel.comments) { comment in
                             //                        VStack(alignment: .leading) {
                             CommentView(comment: comment)
+//                        Text("some comment")
                                 .onAppear {
                                     commentInView = comment.id
                                 }
-                            //                        }
-//                                                    .listRowInsets(EdgeInsets(top: -15, leading: 0, bottom: -15, trailing: 0))
+                                .listRowInsets(EdgeInsets())
                                 .listRowSeparator(.hidden)
                         }
 //                    }
@@ -92,7 +92,6 @@ struct CommentView: View {
     var comment: Comment
     @State private var size: CGSize = .zero
     @State private var isLoaded: Bool = false
-    @State private var scoreColor: Color = .secondary
     
     var body: some View {
         if !isHidden {
@@ -117,11 +116,12 @@ struct CommentView: View {
                     .foregroundColor(.secondary)
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                    if !commentsModel.commentsCollapsed[comment.id]! {
+                    if !(commentsModel.commentsCollapsed[comment.id] ?? true) {
                         ZStack {
-                            Spacer().frame(height: 40)
-                                .onAppear{ isLoaded = true }
-                            if (isLoaded) {
+                            if (!isLoaded) {
+                                Spacer().frame(height: 40)
+                                    .onAppear{ isLoaded = true }
+                            } else {
                                 RichText(html: comment.content!)
                                     .placeholder{ Spacer().frame(height: 40) }
                             }
@@ -133,7 +133,7 @@ struct CommentView: View {
             }
             .background(Color(UIColor.systemBackground))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .padding(EdgeInsets(top: 2, leading: 10 * CGFloat(integerLiteral:comment.depth), bottom: 2, trailing: 0))
+            .padding(EdgeInsets(top: 0, leading: 10 * CGFloat(integerLiteral:comment.depth), bottom: 0, trailing: 0))
             .onTapGesture {
                 commentsModel.commentsCollapsed[comment.id]?.toggle()
             }
@@ -165,13 +165,13 @@ struct CommentView: View {
         return false
     }
     
-    var scoreColor: Color {
-        if comment.isUpvoted {
-            return .orange
-        }
-        if comment.isDownvoted {
-            return .blue
-        }
-        return .secondary
-    }
+//    var scoreColor: Color {
+//        if comment.isUpvoted {
+//            return .orange
+//        }
+//        if comment.isDownvoted {
+//            return .blue
+//        }
+//        return .secondary
+//    }
 }

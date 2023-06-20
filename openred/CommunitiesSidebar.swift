@@ -28,7 +28,7 @@ struct CommunitiesStack: View {
                                         CommunityRow(community: community, showPosts: $showPosts)
                                     }
                                 }
-                                if model.userName != nil {
+                                if model.userSessionManager.userName != nil {
                                     Section() {
                                         ForEach(model.userFunctionCommunities) { community in
                                             CommunityRow(community: community, showPosts: $showPosts)
@@ -126,7 +126,7 @@ struct UserSection: View {
     @Binding var loginPopupShowing: Bool
     
     var body: some View {
-        if model.userName != nil {
+        if model.userSessionManager.userName != nil {
             Menu {
                 Button(action: {
                     model.logOut()
@@ -139,7 +139,7 @@ struct UserSection: View {
                 }) {
                     HStack {
                         Image(systemName: "person.crop.circle")
-                        Text(model.userName!)
+                        Text(model.userSessionManager.userName!)
                     }
                     .foregroundColor(.primary)
                 }

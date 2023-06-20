@@ -22,16 +22,15 @@ class CommentsModel: ObservableObject {
     @Published var commentCount: String = ""
     
     let webView: WKWebView
+    let userSessionManager: UserSessionManager
     
-    init(webView: WKWebView) {
-        self.webView = webView
+    init(userSessionManager: UserSessionManager) {
+        self.webView = userSessionManager.getWebView()
+        userSessionManager.loadLastLoggedInUser(webView: self.webView)
         self.browser = Erik(webView: webView)
-    }
-    
-    init() {
-        self.webView = WKWebView()
-        self.browser = Erik(webView: webView)
-        UserSessionManager().loadLastLoggedInUser(webView: webView)
+        self.userSessionManager = userSessionManager
+//        UserSessionManager().loadLastLoggedInUser(webView: webView)
+//        webView
     }
     
     func openCommentsPage(linkToThread: String) {
@@ -46,7 +45,7 @@ class CommentsModel: ObservableObject {
             if let doc = object {
                 self.title = doc.title!
                 self.commentCount = doc.querySelector("#siteTable .thing")!["data-comments-count"]!
-                for commentElement in doc.querySelectorAll(".commentarea .thing.comment") {
+                for commentElement in doc.querySelectorAll(".commentarea .thing.comment:not(.deleted)") {
                     let id: String = commentElement.querySelector(".parent a")!["name"]! // jokhk6z
                     let user: String? = commentElement["data-author"]
                     let content: String? = commentElement.querySelector(".usertext-body .md")?.innerHTML
@@ -64,7 +63,12 @@ class CommentsModel: ObservableObject {
                             parent = nil
                         } else {
                             // child comment
-                            depth = commentsByID[parent!]!.depth + 1
+                            if let parentComment = commentsByID[parent!] {
+                                depth = parentComment.depth + 1
+                            } else {
+                                // parent is a deleted comment, skip children of deleted
+                                continue
+                            }
                         }
                     } else {
                         // top level comment without sub comments
@@ -105,9 +109,9 @@ class CommentsModel: ObservableObject {
     }
     
     func toggleUpvoteComment(comment: Comment) -> Bool {
-//        if userName == nil {
-//            return false
-//        }
+        if userSessionManager.userName == nil {
+            return false
+        }
         let selectorModifier = comment.isUpvoted ? "mod" : ""
         if let upvoteButton = document?.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + comment.id + "\"] div.arrow.up" + selectorModifier).first {
             upvoteButton.click()
@@ -123,9 +127,9 @@ class CommentsModel: ObservableObject {
     }
     
     func toggleDownvoteComment(comment: Comment) -> Bool {
-//        if userName == nil {
-//            return false
-//        }
+        if userSessionManager.userName == nil {
+            return false
+        }
         let selectorModifier = comment.isDownvoted ? "mod" : ""
         if let downButton = document?.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + comment.id + "\"] div.arrow.down" + selectorModifier).first {
             downButton.click()

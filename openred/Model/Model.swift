@@ -20,24 +20,29 @@ class Model: ObservableObject {
     @Published var selectedCommunityLink: String
     @Published var selectedSorting: String
     @Published var selectedSortingIcon: String
-    @Published var userName: String?
+//    @Published var userName: String?
     @Published var linkToNextPage: String?
     @Published var loginAttempt: LoginAttempt = .undecided
     
+//    @Published var commentsModel: CommentsModel = CommentsModel()
+    
     let defaults = UserDefaults.standard
-    let webView = WKWebView()
+    let userSessionManager: UserSessionManager
+    let webView: WKWebView = WKWebView()
     var browser: Erik = Erik()
     var document: Document? = nil
     let redditBaseURL: String = "https://old.reddit.com"
     
-    init() {
+    init(userSessionManager: UserSessionManager) {
+        self.userSessionManager = userSessionManager
         self.title = ""
         self.selectedCommunityLink = redditBaseURL + "/r/all"
         self.selectedSorting = ""
         self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[""]!
         self.mainPageCommunities = setMainPageCommunities
         self.userFunctionCommunities = setUserFunctionCommunities
-        UserSessionManager().loadLastLoggedInUser(webView: webView)
+        self.userSessionManager.loadLastLoggedInUser(webView: webView)
+//        self.userSessionManager.loadLastLoggedInUser(webView: commentsModel.webView)
         self.browser = Erik(webView: self.webView)
         self.load(initialURL: self.selectedCommunityLink)
     }
@@ -60,9 +65,9 @@ class Model: ObservableObject {
                             } else {
                                 self.loginAttempt = .successful
                                 self.document = document
-                                self.userName = username
-//                                self.storeCookies(userName: username)
-                                UserSessionManager().saveUserSession(webView: self.webView, userName: username)
+                                self.userSessionManager.userName = username
+//                                self.userName = username
+                                self.userSessionManager.saveUserSession(webView: self.webView, userName: username)
                                 self.updateCommunitiesList(doc: document)
                             }
                         }
@@ -73,12 +78,7 @@ class Model: ObservableObject {
     }
     
     func logOut() {
-        defaults.removeObject(forKey: "currentUserName")
-        self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-            for cookie in cookies {
-                self.webView.configuration.websiteDataStore.httpCookieStore.delete(cookie)
-            }
-        }
+        userSessionManager.logOut()
         load(initialURL: selectedCommunityLink)
     }
     
@@ -167,7 +167,7 @@ class Model: ObservableObject {
     }
     
     func toggleUpvotePost(post: Post) -> Bool {
-        if userName == nil {
+        if self.userSessionManager.userName == nil {
             return false
         }
         let selectorModifier = post.isUpvoted ? "mod" : ""
@@ -185,7 +185,7 @@ class Model: ObservableObject {
     }
     
     func toggleDownvotePost(post: Post) -> Bool {
-        if userName == nil {
+        if self.userSessionManager.userName == nil {
             return false
         }
         let selectorModifier = post.isDownvoted ? "mod" : ""
@@ -217,7 +217,8 @@ class Model: ObservableObject {
     
     private func loadUsername(doc: Document) {
         if doc.querySelector("#header .logout")?.text != nil {
-            self.userName = doc.querySelector("#header .user a")!.text
+            self.userSessionManager.userName = doc.querySelector("#header .user a")!.text
+//            userSessionManager.userName = self.userName
         }
 //        else {
 //            self.userName = nil
@@ -275,6 +276,16 @@ class Model: ObservableObject {
                                                       iconName: "shield", isMultiCommunity: true))
         return communities
     }
+    
+//    func saveUserSession(userName: String) {
+//        var cookieDict = [String : AnyObject]()
+//
+//        for cookie in HTTPCookieStorage.shared.cookies! {
+//            cookieDict[cookie.name] = cookie.properties as AnyObject?
+//        }
+//        UserDefaults.standard.set(cookieDict, forKey: "cookies_" + userName)
+//        UserDefaults.standard.set(userName, forKey: "currentUserName")
+//    }
 }
 
 enum LoginAttempt: Codable {
@@ -294,35 +305,31 @@ struct ViewModelAttributes {
     ]
 }
 
-extension WKWebView {
-    func copy(with zone: NSZone? = nil) -> Any {
-        let copy = WKWebView(frame: frame, configuration: configuration)
-        return copy
-    }
-}
-
-struct UserSessionManager {
-    func saveUserSession(webView: WKWebView, userName: String) {
-        var cookieDict = [String : AnyObject]()
-
-        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-            for cookie in cookies {
-                cookieDict[cookie.name] = cookie.properties as AnyObject?
-            }
-            UserDefaults.standard.set(cookieDict, forKey: "cookies_" + userName)
-            UserDefaults.standard.set(userName, forKey: "currentUserName")
-        }
-    }
-
-    func loadLastLoggedInUser(webView: WKWebView) {
-        if let userName = UserDefaults.standard.object(forKey: "currentUserName") as? String {
-            if let cookieDictionary = UserDefaults.standard.dictionary(forKey: "cookies_" + userName) {
-                for (_, cookieProperties) in cookieDictionary {
-                    if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
-                        webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
-                    }
-                }
-            }
-        }
-    }
-}
+//struct UserSessionManager {
+//    func saveUserSession(webView: WKWebView, userName: String, syncWith: [WKWebView]) {
+//        var cookieDict = [String : AnyObject]()
+//
+//        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+//            for cookie in cookies {
+//                cookieDict[cookie.name] = cookie.properties as AnyObject?
+//                for view in syncWith {
+//                    view.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+//                }
+//            }
+//            UserDefaults.standard.set(cookieDict, forKey: "cookies_" + userName)
+//            UserDefaults.standard.set(userName, forKey: "currentUserName")
+//        }
+//    }
+//
+//    func loadLastLoggedInUser(webView: WKWebView) {
+//        if let userName = UserDefaults.standard.object(forKey: "currentUserName") as? String {
+//            if let cookieDictionary = UserDefaults.standard.dictionary(forKey: "cookies_" + userName) {
+//                for (_, cookieProperties) in cookieDictionary {
+//                    if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
+//                        webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}

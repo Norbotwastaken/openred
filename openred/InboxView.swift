@@ -13,7 +13,7 @@ struct InboxView: View {
     @State var loginPopupShowing: Bool = true
     
     var body: some View {
-        if model.userName != nil {
+        if model.userSessionManager.userName != nil {
             Text("Inbox")
         } else {
             ZStack {

@@ -8,10 +8,17 @@
 import SwiftUI
 
 @main
-struct openredApp: App {
-    @StateObject private var model = Model()
+class openredApp: App {
+    var userSessionManager: UserSessionManager
+    @StateObject private var model: Model
     @StateObject var popupViewModel = PopupViewModel()
-    @StateObject var commentsModel = CommentsModel()
+    @StateObject var commentsModel: CommentsModel
+    
+    required init() {
+        userSessionManager = UserSessionManager()
+        _model = StateObject(wrappedValue: Model(userSessionManager: self.userSessionManager))
+        _commentsModel = StateObject(wrappedValue: CommentsModel(userSessionManager: self.userSessionManager))
+    }
     
     var body: some Scene {
         WindowGroup {
