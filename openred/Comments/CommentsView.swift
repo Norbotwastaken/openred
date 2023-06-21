@@ -6,14 +6,13 @@
 //
 
 import SwiftUI
-import RichText
 import WebKit
 
 struct CommentsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var popupViewModel: PopupViewModel
-    var post: Post
+    @ObservedObject var post: Post
     @Binding var commentInView: String
     
     var body: some View {
@@ -21,45 +20,53 @@ struct CommentsView: View {
             ScrollViewReader { proxy in
                 List {
                     VStack {
-                        Text(post.title)
-                            .font(.headline) +
-                        Text(post.flair != nil ? "  [" + post.flair! + "]" : "")
-                            .foregroundColor(.secondary)
-                            .font(.system(size: 12))
-                    }
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
-                    .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                    .listRowSeparator(.hidden)
-                    HStack {
-                        Image(systemName: "arrow.up")
-                            .foregroundColor(post.isUpvoted ? .orange : .secondary)
-                            .onTapGesture {
-                                if model.toggleUpvotePost(post: post) == false {
-                                    // show login popup
-                                }
-                            }
-                        Image(systemName: "arrow.down")
-                            .foregroundColor(post.isDownvoted ? .blue : .secondary)
-                            .onTapGesture {
-                                if model.toggleDownvotePost(post: post) == false {
-                                    // show login popup
-                                }
-                            }
-                    }
-                    .font(.system(size: 22))
-//                    VStack(alignment: .leading) {
-                    ForEach(commentsModel.comments) { comment in
-                            //                        VStack(alignment: .leading) {
-                            CommentView(comment: comment)
-//                        Text("some comment")
-                                .onAppear {
-                                    commentInView = comment.id
-                                }
-                                .listRowInsets(EdgeInsets())
-                                .listRowSeparator(.hidden)
+                        VStack {
+                            Text(post.title)
+                                .font(.headline) +
+                            Text(post.flair != nil ? "  [" + post.flair! + "]" : "")
+                                .foregroundColor(.secondary)
+                                .font(.system(size: 12))
                         }
-//                    }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                        .listRowSeparator(.hidden)
+                        
+                        PostRowContent(post: post)
+                            .frame(maxWidth: .infinity, maxHeight: 650, alignment: .center)
+                        
+                        HStack {
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
+                                .onTapGesture {
+                                    if model.toggleUpvotePost(post: post) == false {
+                                        // show login popup
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            Image(systemName: "arrow.down")
+                                .foregroundColor(post.isDownvoted ? .downvoteBlue : .secondary)
+                                .onTapGesture {
+                                    if model.toggleDownvotePost(post: post) == false {
+                                        // show login popup
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(EdgeInsets(top: 5, leading: 0, bottom: 8, trailing: 0))
+                        .font(.system(size: 28))
+                        .listRowSeparator(.hidden)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                    ForEach(commentsModel.comments) { comment in
+                        CommentView(comment: comment)
+                            .onAppear {
+                                commentInView = comment.id
+                            }
+                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 20, trailing: 0))
+                    }
                 }
                 .listStyle(PlainListStyle())
                 .navigationTitle(commentsModel.commentCount + " comments")
@@ -67,6 +74,7 @@ struct CommentsView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         HStack {
+                            CommentSortMenu()
                             Button {
                                 // Perform an action
                                 print("Add Item Tapped")
@@ -89,18 +97,19 @@ struct CommentsView: View {
 
 struct CommentView: View {
     @EnvironmentObject var commentsModel: CommentsModel
-    var comment: Comment
+    @ObservedObject var comment: Comment
     @State private var size: CGSize = .zero
     @State private var isLoaded: Bool = false
     
     var body: some View {
         if !isHidden {
             HStack(spacing: 10) {
-                if comment.depth > 0 && !commentsModel.commentsCollapsed[comment.id]! {
+                if comment.depth > 0 && !(commentsModel.commentsCollapsed[comment.id] ?? true) {
                     Rectangle()
                         .frame(maxWidth: 2, maxHeight: .infinity, alignment: .leading)
-//                        .padding(EdgeInsets(top: 3, leading: 0, bottom: 3, trailing: 0))
-                        .foregroundColor(Color.green)
+                        .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
+                        .foregroundColor(indentColor[comment.depth - 1])
+                        .opacity(0.8)
                 }
                 VStack {
                     HStack(spacing: 10) {
@@ -108,55 +117,43 @@ struct CommentView: View {
                         if comment.score != nil {
                             HStack(spacing: 2) {
                                 Image(systemName: "arrow.up")
+                                    .foregroundColor(comment.isUpvoted ? .upvoteOrange : comment.isDownvoted ? .downvoteBlue : .secondary)
                                 Text(comment.score!)
                             }
-                            .foregroundColor(comment.isUpvoted ? .orange : comment.isDownvoted ? .blue : .secondary)
                         }
                     }
                     .foregroundColor(.secondary)
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     if !(commentsModel.commentsCollapsed[comment.id] ?? true) {
-                        ZStack {
-//                            if (!isLoaded) {
-//                                Spacer().frame(height: 40)
-//                                    .onAppear{ isLoaded = true }
-//                            } else {
-                            Text(LocalizedStringKey(comment.content ?? "no content found"))
-                                .fixedSize(horizontal: false, vertical: true)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-
-//                                RichText(html: comment.content!)
-//                                    .placeholder{ Spacer().frame(height: 40) }
-//                            }
-                        }
-                        .font(.system(size: 14))
-//                        .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
+                        Text(LocalizedStringKey(comment.content ?? "no content found"))
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size: 15))
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
             }
             .background(Color(UIColor.systemBackground))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .padding(EdgeInsets(top: 0, leading: 10 * CGFloat(integerLiteral:comment.depth), bottom: 0, trailing: 0))
+            .padding(EdgeInsets(top: 0, leading: 10 * (CGFloat(integerLiteral:comment.depth) + 1), bottom: 0, trailing: 10))
             .onTapGesture {
                 commentsModel.commentsCollapsed[comment.id]?.toggle()
             }
-            .swipeActions(edge: .leading) {
+            .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button { commentsModel.toggleUpvoteComment(comment: comment) } label: {
                     Image(systemName: "arrow.up")
                 }
-                .tint(.orange)
-            }
-            .swipeActions(edge: .trailing) {
+                .tint(.upvoteOrange)
                 Button { commentsModel.toggleDownvoteComment(comment: comment) } label: {
                     Image(systemName: "arrow.down")
                 }
-                .tint(.blue)
+                .tint(.downvoteBlue)
             }
-            Rectangle()
-                .fill(Color(UIColor.systemGray5)
-                    .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
-                .frame(maxWidth: .infinity, maxHeight: 5)
+//            Rectangle()
+//                .fill(Color(UIColor.systemGray5)
+//                    .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
+//                .frame(maxWidth: .infinity, maxHeight: 5)
         }
     }
     
@@ -169,13 +166,54 @@ struct CommentView: View {
         return false
     }
     
-//    var scoreColor: Color {
-//        if comment.isUpvoted {
-//            return .orange
-//        }
-//        if comment.isDownvoted {
-//            return .blue
-//        }
-//        return .secondary
-//    }
+    var indentColor: [Color] = [
+        Color(red: 192 / 255, green: 57 / 255, blue: 43 / 255),
+        Color(red: 230 / 255, green: 126 / 255, blue: 34 / 255),
+        Color(red: 241 / 255, green: 196 / 255, blue: 15 / 255),
+        Color(red: 39 / 255, green: 174 / 255, blue: 96 / 255),
+        Color(red: 52 / 255, green: 152 / 255, blue: 219 / 255),
+        Color(red: 13 / 255, green: 71 / 255, blue: 161 / 255),
+        Color(red: 142 / 255, green: 68 / 255, blue: 173 / 255),
+        // start again
+        Color(red: 192 / 255, green: 57 / 255, blue: 43 / 255),
+        Color(red: 230 / 255, green: 126 / 255, blue: 34 / 255),
+        Color(red: 241 / 255, green: 196 / 255, blue: 15 / 255),
+        Color(red: 39 / 255, green: 174 / 255, blue: 96 / 255)
+    ]
+}
+
+struct CommentSortMenu: View {
+    @EnvironmentObject var commentsModel: CommentsModel
+    
+    let topURLBase: String = "/top/?sort=top&t="
+    let controversialURLBase: String = "/controversial/?sort=controversial&t="
+    
+    var body: some View {
+        Menu {
+            Button(action: {sortCommunity(sortModifier: "")}) {
+                Label("Hot", systemImage: CommentsModelAttributes.sortModifierIcons[""]!)
+            }
+            Button(action: {sortCommunity(sortModifier: "top")}) {
+                Label("Top", systemImage: CommentsModelAttributes.sortModifierIcons["top"]!)
+            }
+            Button(action: {sortCommunity(sortModifier: "new" )}) {
+                Label("New", systemImage: CommentsModelAttributes.sortModifierIcons["new"]!)
+            }
+            Button(action: {sortCommunity(sortModifier: "controversial" )}) {
+                Label("Controversial", systemImage: CommentsModelAttributes.sortModifierIcons["controversial"]!)
+            }
+            Button(action: {sortCommunity(sortModifier: "old" )}) {
+                Label("Old", systemImage: CommentsModelAttributes.sortModifierIcons["old"]!)
+            }
+            Button(action: {sortCommunity(sortModifier: "qa" )}) {
+                Label("Q&A", systemImage: CommentsModelAttributes.sortModifierIcons["qa"]!)
+            }
+        } label: {
+            Label("Sort by", systemImage: commentsModel.selectedSortingIcon)
+        }
+    }
+    
+    func sortCommunity(sortModifier: String) {
+        commentsModel.refreshWithSortModifier(sortModifier: sortModifier)
+    }
 }

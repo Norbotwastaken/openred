@@ -18,11 +18,10 @@ class JSONHandler {
                 config.httpCookieStorage?.setCookie(cookie)
             }
         }
-        
         let session = URLSession(configuration: config)
-        
-        if let url = URL(string: url + ".json") {
-            session.dataTask(with: url) { data, response, error in
+        let extendedUrl = url.hasSuffix("/") ? url : url + "/"
+        if let URL = URL(string: extendedUrl + ".json") {
+            session.dataTask(with: URL) { data, response, error in
                 if let data = data {
                     do {
                         let parsedData: [CommentRoot] = try JSONDecoder().decode([CommentRoot].self, from: data)

@@ -21,6 +21,8 @@ class CommentsModel: ObservableObject {
     @Published var commentsCollapsed: [String:Bool] = [:]
     @Published var title: String = ""
     @Published var commentCount: String = ""
+    @Published var selectedSorting: String = ""
+    @Published var selectedSortingIcon: String = CommentsModelAttributes.sortModifierIcons[""]!
     
     let webView: WKWebView
     let userSessionManager: UserSessionManager
@@ -34,8 +36,8 @@ class CommentsModel: ObservableObject {
 //        webView
     }
     
-    func openCommentsPage(linkToThread: String) {
-        if currentLink == linkToThread {
+    func openCommentsPage(linkToThread: String, withSortModifier: String = "") {
+        if currentLink == linkToThread && withSortModifier == "" {
             return
         }
         self.currentLink = linkToThread
@@ -43,8 +45,9 @@ class CommentsModel: ObservableObject {
         self.commentsCollapsed = [:]
         var commentsByID: [String: Comment] = [:]
         jsonHandler.getData(url: redditBaseURL + linkToThread)
-        browser.visit(url: URL(string: redditBaseURL + linkToThread)!) { object, error in
+        browser.visit(url: URL(string: redditBaseURL + linkToThread + withSortModifier)!) { object, error in
             if let doc = object {
+                self.document = doc
                 self.title = doc.title!
                 self.commentCount = doc.querySelector("#siteTable .thing")!["data-comments-count"]!
                 for commentElement in doc.querySelectorAll(".commentarea .thing.comment:not(.deleted)") {
@@ -52,6 +55,10 @@ class CommentsModel: ObservableObject {
                     let user: String? = commentElement["data-author"]
 //                    let content: String? = commentElement.querySelector(".usertext-body .md")?.innerHTML
                     let content: String? = self.jsonHandler.content[id]
+                    if content == nil {
+                        // an element which is present on website but not in json yet. (new)
+                        continue
+                    }
                     let age: String? = commentElement.querySelector(".tagline time")?.text
                     let score: String? = commentElement.querySelector(".tagline .score")?["title"]
                     
@@ -97,18 +104,23 @@ class CommentsModel: ObservableObject {
         var currentParentId: String? = firstParent
         var hasNextParent = true
         while (hasNextParent) {
-//            if comments.keys.contains(currentParentId!) {
-                currentParentId = comments[currentParentId!]!.parent
-                if currentParentId != nil {
-                    allParents.append(currentParentId!)
-                } else {
-                    hasNextParent = false
-                }
-//            } else {
-//                hasNextParent = false
-//            }
+            currentParentId = comments[currentParentId!]!.parent
+            if currentParentId != nil {
+                allParents.append(currentParentId!)
+            } else {
+                hasNextParent = false
+            }
         }
         return allParents
+    }
+    
+    func refreshWithSortModifier(sortModifier: String) {
+        // sortModifier format: "new"
+        self.selectedSortingIcon = CommentsModelAttributes
+            .sortModifierIcons[sortModifier] ?? "arrow.up.arrow.down"
+        var baseThreadLink = self.currentLink
+        self.openCommentsPage(linkToThread: currentLink, withSortModifier: "?sort=" + sortModifier)
+        self.currentLink = baseThreadLink
     }
     
     func toggleUpvoteComment(comment: Comment) -> Bool {
@@ -173,4 +185,16 @@ class Comment: Identifiable, ObservableObject {
         self.isUpvoted = isUpvoted
         self.isDownvoted = isDownvoted
     }
+}
+
+struct CommentsModelAttributes {
+    static var sortModifierIcons = [
+        "" : "arrow.up.arrow.down",
+        "best" : "flame",
+        "top" : "arrow.up.to.line.compact",
+        "new" : "clock.badge",
+        "old" : "clock.arrow.circlepath",
+        "qa" : "bubble.left.and.bubble.right",
+        "controversial" : "arrow.right.and.line.vertical.and.arrow.left"
+    ]
 }

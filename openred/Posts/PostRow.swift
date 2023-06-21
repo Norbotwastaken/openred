@@ -329,14 +329,14 @@ struct PostRowFooter: View {
                 Image(systemName: "ellipsis")
                     .foregroundStyle(.secondary)
                 Image(systemName: "arrow.up")
-                    .foregroundColor(post.isUpvoted ? .orange : .secondary)
+                    .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
                     .onTapGesture {
                         if model.toggleUpvotePost(post: post) == false {
                             // show login popup
                         }
                     }
                 Image(systemName: "arrow.down")
-                    .foregroundColor(post.isDownvoted ? .blue : .secondary)
+                    .foregroundColor(post.isDownvoted ? .downvoteBlue : .secondary)
                     .onTapGesture {
                         if model.toggleDownvotePost(post: post) == false {
                             // show login popup

@@ -21,17 +21,15 @@ struct PostsView: View {
                 List {
                     ForEach(model.posts) { post in
                         PostRow(post: post)
-                            .swipeActions(edge: .leading) {
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 Button { model.toggleUpvotePost(post: post) } label: {
                                     Image(systemName: "arrow.up")
                                 }
-                                .tint(.orange)
-                            }
-                            .swipeActions(edge: .trailing) {
+                                .tint(.upvoteOrange)
                                 Button { model.toggleDownvotePost(post: post) } label: {
                                     Image(systemName: "arrow.down")
                                 }
-                                .tint(.blue)
+                                .tint(.downvoteBlue)
                             }
                             .onAppear(perform: {
                                 itemInView = post.id
