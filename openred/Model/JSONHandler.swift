@@ -19,8 +19,8 @@ class JSONHandler {
             }
         }
         let session = URLSession(configuration: config)
-        let extendedUrl = url.hasSuffix("/") ? url : url + "/"
-        if let URL = URL(string: extendedUrl + ".json") {
+        
+        if let URL = URL(string: url) {
             session.dataTask(with: URL) { data, response, error in
                 if let data = data {
                     do {

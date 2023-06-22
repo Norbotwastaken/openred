@@ -26,13 +26,14 @@ class Post: Identifiable, ObservableObject {
     var isActiveLoadMarker: Bool
     @Published var isUpvoted: Bool
     @Published var isDownvoted: Bool
+    @Published var isSaved: Bool
     var awards: [Award]
     private var totalAwardCount: Int?
     
     init(_ linkToThread: String, title: String, flair: String?, community: String?, commentCount: String,
          userName: String?, submittedAge: String, score: String, contentType: ContentType,
          mediaLink: String?, thumbnailLink: String?, externalLink: String?, gallery: Gallery?, crosspost: Crosspost?,
-         isActiveLoadMarker: Bool, isUpvoted: Bool, isDownvoted: Bool, awards: [Award]) {
+         isActiveLoadMarker: Bool, isUpvoted: Bool, isDownvoted: Bool, isSaved: Bool, awards: [Award]) {
         self.id = linkToThread
         self.title = title
         self.flair = flair
@@ -51,6 +52,7 @@ class Post: Identifiable, ObservableObject {
         self.isActiveLoadMarker = isActiveLoadMarker
         self.isUpvoted = isUpvoted
         self.isDownvoted = isDownvoted
+        self.isSaved = isSaved
         self.awards = awards
     }
     

@@ -21,7 +21,6 @@ class CommentsModel: ObservableObject {
     @Published var commentsCollapsed: [String:Bool] = [:]
     @Published var title: String = ""
     @Published var commentCount: String = ""
-    @Published var selectedSorting: String = ""
     @Published var selectedSortingIcon: String = CommentsModelAttributes.sortModifierIcons[""]!
     
     let webView: WKWebView
@@ -41,10 +40,11 @@ class CommentsModel: ObservableObject {
             return
         }
         self.currentLink = linkToThread
+        self.selectedSortingIcon = CommentsModelAttributes.sortModifierIcons[""]!
         self.comments = []
         self.commentsCollapsed = [:]
         var commentsByID: [String: Comment] = [:]
-        jsonHandler.getData(url: redditBaseURL + linkToThread)
+        jsonHandler.getData(url: redditBaseURL + linkToThread + ".json" + withSortModifier)
         browser.visit(url: URL(string: redditBaseURL + linkToThread + withSortModifier)!) { object, error in
             if let doc = object {
                 self.document = doc
@@ -53,7 +53,6 @@ class CommentsModel: ObservableObject {
                 for commentElement in doc.querySelectorAll(".commentarea .thing.comment:not(.deleted)") {
                     let id: String = commentElement.querySelector(".parent a")!["name"]! // jokhk6z
                     let user: String? = commentElement["data-author"]
-//                    let content: String? = commentElement.querySelector(".usertext-body .md")?.innerHTML
                     let content: String? = self.jsonHandler.content[id]
                     if content == nil {
                         // an element which is present on website but not in json yet. (new)
@@ -64,6 +63,7 @@ class CommentsModel: ObservableObject {
                     
                     let isUpvoted = commentElement.querySelector(">div.midcol.likes") != nil
                     let isDownvoted = commentElement.querySelector(">div.midcol.dislikes") != nil
+                    let isSaved = commentElement.className!.contains("saved")
                     var parent: String? = commentElement.querySelector(".buttons li a[data-event-action=\"parent\"]")?["href"] // #jokhk6z
                     var depth: Int = 0
                     if parent != nil {
@@ -87,7 +87,7 @@ class CommentsModel: ObservableObject {
                     
                     let comment = Comment(id: id, depth: depth, score: score, content: content,
                                                  user: user, age: age, parent: parent, isUpvoted: isUpvoted,
-                                          isDownvoted: isDownvoted)
+                                          isDownvoted: isDownvoted, isSaved: isSaved)
                     commentsByID[id] = comment
                     if parent != nil {
                         comment.allParents = self.findAllParents(firstParent: parent!, comments: commentsByID)
@@ -116,10 +116,9 @@ class CommentsModel: ObservableObject {
     
     func refreshWithSortModifier(sortModifier: String) {
         // sortModifier format: "new"
-        self.selectedSortingIcon = CommentsModelAttributes
-            .sortModifierIcons[sortModifier] ?? "arrow.up.arrow.down"
         var baseThreadLink = self.currentLink
         self.openCommentsPage(linkToThread: currentLink, withSortModifier: "?sort=" + sortModifier)
+        self.selectedSortingIcon = CommentsModelAttributes.sortModifierIcons[sortModifier]!
         self.currentLink = baseThreadLink
     }
     
@@ -158,6 +157,18 @@ class CommentsModel: ObservableObject {
         }
         return true
     }
+    
+    func toggleSaveComment(comment: Comment) -> Bool {
+        if userSessionManager.userName == nil {
+            return false
+        }
+        let selectorModifier = comment.isDownvoted ? "mod" : ""
+        if let downButton = document?.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + comment.id + "\"] .buttons .save-button a").first {
+            downButton.click()
+            comment.isSaved.toggle()
+        }
+        return true
+    }
 }
 
 class Comment: Identifiable, ObservableObject {
@@ -171,9 +182,10 @@ class Comment: Identifiable, ObservableObject {
     var allParents: [String]
     @Published var isUpvoted: Bool
     @Published var isDownvoted: Bool
+    @Published var isSaved: Bool
     
     init(id: String, depth: Int, score: String?, content: String?, user: String?,
-         age: String?, parent: String?, isUpvoted: Bool, isDownvoted: Bool) {
+         age: String?, parent: String?, isUpvoted: Bool, isDownvoted: Bool, isSaved: Bool) {
         self.id = id
         self.depth = depth
         self.score = score
@@ -184,6 +196,7 @@ class Comment: Identifiable, ObservableObject {
         self.allParents = []
         self.isUpvoted = isUpvoted
         self.isDownvoted = isDownvoted
+        self.isSaved = isSaved
     }
 }
 

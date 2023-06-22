@@ -14,8 +14,13 @@ struct RedditParser {
     func parsePosts(document: Document) -> [Post] {
         var posts: [Post] = []
         let elements = document.querySelectorAll("#siteTable div.thing:not(.promoted)")
-        elements.indices.forEach { i in
+//        elements.indices.forEach { i in
+        for i in elements.indices {
             let element = elements[i]
+            if element.className!.contains("comment") {
+                // TODO: process comment elements (saved, user pages)
+                continue
+            }
             let title = element.querySelector(".entry .top-matter p.title a.title")?.text
             let flair = element.querySelector(".title .flairrichtext")?.text
             let community = element.querySelector(".entry .top-matter .tagline .subreddit")?.text // r/something
@@ -36,6 +41,7 @@ struct RedditParser {
             }
             let isUpvoted = element.querySelector("div.midcol.likes") != nil
             let isDownvoted = element.querySelector("div.midcol.dislikes") != nil
+            let isSaved = element.className!.contains("saved")
             var awards: [Award] = []
             
             if let mediaElement = element.querySelector(".entry .expando") {
@@ -135,6 +141,7 @@ struct RedditParser {
                 isActiveLoadMarker: isActiveLoadMarker,
                 isUpvoted: isUpvoted,
                 isDownvoted: isDownvoted,
+                isSaved: isSaved,
                 awards: awards))
         }
         return posts

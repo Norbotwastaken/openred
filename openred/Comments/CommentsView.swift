@@ -121,12 +121,17 @@ struct CommentView: View {
                                 Text(comment.score!)
                             }
                         }
+                        CommentActionsMenu(comment: comment)
+                            .frame(alignment: .trailing)
+                            .onTapGesture {
+                                // catch tap
+                            }
                     }
                     .foregroundColor(.secondary)
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     if !(commentsModel.commentsCollapsed[comment.id] ?? true) {
-                        Text(LocalizedStringKey(comment.content ?? "no content found"))
+                        Text(LocalizedStringKey(comment.content ?? "comment not found"))
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.system(size: 15))
@@ -150,10 +155,6 @@ struct CommentView: View {
                 }
                 .tint(.downvoteBlue)
             }
-//            Rectangle()
-//                .fill(Color(UIColor.systemGray5)
-//                    .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
-//                .frame(maxWidth: .infinity, maxHeight: 5)
         }
     }
     
@@ -215,5 +216,31 @@ struct CommentSortMenu: View {
     
     func sortCommunity(sortModifier: String) {
         commentsModel.refreshWithSortModifier(sortModifier: sortModifier)
+    }
+}
+
+struct CommentActionsMenu: View {
+    @EnvironmentObject var commentsModel: CommentsModel
+    @ObservedObject var comment: Comment
+    
+    var body: some View {
+        Menu {
+            Button(action: { commentsModel.toggleUpvoteComment(comment: comment) }) {
+                Label("Upvote", systemImage: "arrow.up")
+            }
+            Button(action: { commentsModel.toggleDownvoteComment(comment: comment) }) {
+                Label("Upvote", systemImage: "arrow.down")
+            }
+            Button(action: { commentsModel.toggleSaveComment(comment: comment) }) {
+                Label(comment.isSaved ? "Undo Save" : "Save", systemImage: comment.isSaved ? "bookmark.slash" : "bookmark")
+            }
+        } label: {
+            ZStack {
+                Spacer()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                Image(systemName: "ellipsis")
+            }
+            .frame(width: 20, height: 15)
+        }
     }
 }

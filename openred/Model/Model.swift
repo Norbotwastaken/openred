@@ -202,6 +202,17 @@ class Model: ObservableObject {
         return true
     }
     
+    func toggleSavePost(post: Post) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if let saveButton = document?.querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] .buttons .save-button a") {
+            saveButton.click()
+            post.isSaved.toggle()
+        }
+        return true
+    }
+    
     private func updateTitle(doc: Document, defaultTitle: String) {
         if let newTitle = doc.querySelector(".pagename.redditname a")?.text {
             self.title = newTitle.prefix(1).capitalized + String(newTitle.dropFirst())
