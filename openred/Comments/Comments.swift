@@ -15,7 +15,7 @@ class CommentsModel: ObservableObject {
     var document: Document? = nil
     let redditBaseURL: String = "https://old.reddit.com"
     var currentLink: String = "" // /r/something/comments
-    var jsonHandler: JSONHandler = JSONHandler()
+    var jsonLoader: JSONDataLoader
     
     @Published var comments: [Comment] = []
     @Published var commentsCollapsed: [String:Bool] = [:]
@@ -29,6 +29,7 @@ class CommentsModel: ObservableObject {
     init(userSessionManager: UserSessionManager) {
         self.webView = userSessionManager.getWebView()
         userSessionManager.loadLastLoggedInUser(webView: self.webView)
+        self.jsonLoader = JSONDataLoader()
         self.browser = Erik(webView: webView)
         self.userSessionManager = userSessionManager
 //        UserSessionManager().loadLastLoggedInUser(webView: webView)
@@ -44,7 +45,7 @@ class CommentsModel: ObservableObject {
         self.comments = []
         self.commentsCollapsed = [:]
         var commentsByID: [String: Comment] = [:]
-        jsonHandler.getData(url: redditBaseURL + linkToThread + ".json" + withSortModifier)
+        jsonLoader.getData(url: redditBaseURL + linkToThread + ".json" + withSortModifier)
         browser.visit(url: URL(string: redditBaseURL + linkToThread + withSortModifier)!) { object, error in
             if let doc = object {
                 self.document = doc
@@ -53,7 +54,7 @@ class CommentsModel: ObservableObject {
                 for commentElement in doc.querySelectorAll(".commentarea .thing.comment:not(.deleted)") {
                     let id: String = commentElement.querySelector(".parent a")!["name"]! // jokhk6z
                     let user: String? = commentElement["data-author"]
-                    let content: String? = self.jsonHandler.content[id]
+                    let content: String? = self.jsonLoader.content[id]
                     if content == nil {
                         // an element which is present on website but not in json yet. (new)
                         continue

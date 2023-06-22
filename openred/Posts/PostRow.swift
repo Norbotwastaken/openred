@@ -68,7 +68,7 @@ struct PostRowFooter: View {
                     }
                     HStack(spacing: 3) {
                         Image(systemName: "clock")
-                        Text(post.submittedAge)
+                        Text(post.displayAge)
                     }
                     HStack(spacing: 3) {
                         ForEach(post.awards.indices) { i in

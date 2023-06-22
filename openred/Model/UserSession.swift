@@ -50,6 +50,7 @@ class UserSessionManager {
         for (_, cookieProperties) in self.currentCookies! {
             if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
                 webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+                HTTPCookieStorage.shared.setCookie(cookie)
             }
         }
     }

@@ -7,21 +7,12 @@
 
 import Foundation
 
-class JSONHandler {
+class JSONDataLoader {
     var content: [String:String] = [:]
     
     func getData(url: String) {
-        let config = URLSessionConfiguration.default
-        config.httpCookieStorage = HTTPCookieStorage()
-        for (_, cookieProperties) in UserSessionManager().currentCookies ?? [:] {
-            if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
-                config.httpCookieStorage?.setCookie(cookie)
-            }
-        }
-        let session = URLSession(configuration: config)
-        
         if let URL = URL(string: url) {
-            session.dataTask(with: URL) { data, response, error in
+            URLSession.shared.dataTask(with: URL) { data, response, error in
                 if let data = data {
                     do {
                         let parsedData: [CommentRoot] = try JSONDecoder().decode([CommentRoot].self, from: data)
@@ -34,13 +25,35 @@ class JSONHandler {
         }
     }
     
-    func mapCommentRoot(commentRoot: CommentRoot) {
+    func loadPosts(url: String, completion: @escaping (Result<[JSONPost], Error>) -> Void) {
+        let urlSession = URLSession.shared.dataTask(with: URL(string: url)!) { (data, response, error) in
+            
+            if let error = error {
+                completion(.failure(error))
+            }
+            
+            do {
+                if let data = data {
+                    let parsedData: JSONPostsWrapper = try JSONDecoder().decode(JSONPostsWrapper.self, from: data)
+                    let posts: [JSONPost] = parsedData.data.children.map { wrapper in
+                        return wrapper.data
+                    }
+                    completion(.success(posts))
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+        urlSession.resume()
+    }
+    
+    private func mapCommentRoot(commentRoot: CommentRoot) {
         if commentRoot.data != nil {
             mapCommentData(commentData: commentRoot.data!)
         }
     }
     
-    func mapCommentData(commentData: CommentData) {
+    private func mapCommentData(commentData: CommentData) {
         if commentData.id != nil && commentData.body != nil {
             content[commentData.id!] = commentData.body!
         }

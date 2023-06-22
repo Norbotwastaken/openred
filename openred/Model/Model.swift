@@ -32,6 +32,7 @@ class Model: ObservableObject {
     var browser: Erik = Erik()
     var document: Document? = nil
     let redditBaseURL: String = "https://old.reddit.com"
+    var jsonLoader: JSONDataLoader
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
@@ -39,9 +40,10 @@ class Model: ObservableObject {
         self.selectedCommunityLink = redditBaseURL + "/r/all"
         self.selectedSorting = ""
         self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[""]!
+        self.userSessionManager.loadLastLoggedInUser(webView: webView)
+        self.jsonLoader = JSONDataLoader()
         self.mainPageCommunities = setMainPageCommunities
         self.userFunctionCommunities = setUserFunctionCommunities
-        self.userSessionManager.loadLastLoggedInUser(webView: webView)
 //        self.userSessionManager.loadLastLoggedInUser(webView: commentsModel.webView)
         self.browser = Erik(webView: self.webView)
         self.load(initialURL: self.selectedCommunityLink)
@@ -115,19 +117,36 @@ class Model: ObservableObject {
     }
     
     // 'communityCode' format is r/something
+//    func loadCommunity(communityCode: String) {
+//        self.selectedSorting = ""
+//        self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[selectedSorting]!
+//        self.selectedCommunityLink = redditBaseURL + "/" + communityCode
+//        self.posts = [] // prompt scroll reset to top
+//        browser.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
+//            if let doc = object {
+//                self.document = doc
+//                self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
+//                self.updatePosts(doc: doc)
+//
+//                self.updateCommunitiesList(doc: doc)
+//                self.loadUsername(doc: doc)
+//            }
+//        }
+//    }
+    
+    // 'communityCode' format is r/something
     func loadCommunity(communityCode: String) {
         self.selectedSorting = ""
         self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[selectedSorting]!
-        self.selectedCommunityLink = redditBaseURL + "/" + communityCode
+        self.selectedCommunityLink = redditBaseURL + "/" + communityCode + "/.json"
         self.posts = [] // prompt scroll reset to top
-        browser.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
-            if let doc = object {
-                self.document = doc
-                self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
-                self.updatePosts(doc: doc)
-                
-                self.updateCommunitiesList(doc: doc)
-                self.loadUsername(doc: doc)
+        jsonLoader.loadPosts(url: selectedCommunityLink) { (result) in
+            switch result {
+                case .success(let posts):
+                print(posts)
+            
+                case .failure(let error):
+                    print(error)
             }
         }
     }

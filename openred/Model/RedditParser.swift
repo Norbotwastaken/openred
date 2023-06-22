@@ -84,7 +84,7 @@ struct RedditParser {
                                                             fullLink: galleryItemFullLink, caption: galleryItemCaption))
                         }
                         let galleryTextHTML = doc.at_css(".usertext .md")?.innerHTML
-                        gallery = Gallery(textHTML: galleryTextHTML, items: galleryItems)
+//                        gallery = Gallery(textHTML: galleryTextHTML, items: galleryItems)
                     }
                 } else if let originalPostTitle = element["data-crosspost-root-title"] {
                     contentType = .crosspost
