@@ -16,15 +16,12 @@ class Model: ObservableObject {
     @Published var subscribedCommunities: [Community] = []
     @Published var mainPageCommunities: [Community] = []
     @Published var userFunctionCommunities: [Community] = []
-    @Published var title: String
-    @Published var selectedCommunityLink: String
-    @Published var selectedSorting: String
-    @Published var selectedSortingIcon: String
-//    @Published var userName: String?
-    @Published var linkToNextPage: String?
+    @Published var title: String = ""
+    @Published var selectedCommunityCode: String = "/r/all"
+    @Published var selectedSorting: String = ""
+    @Published var selectedSortTime: String?
+    @Published var after: String?
     @Published var loginAttempt: LoginAttempt = .undecided
-    
-//    @Published var commentsModel: CommentsModel = CommentsModel()
     
     let defaults = UserDefaults.standard
     let userSessionManager: UserSessionManager
@@ -32,21 +29,16 @@ class Model: ObservableObject {
     var browser: Erik = Erik()
     var document: Document? = nil
     let redditBaseURL: String = "https://old.reddit.com"
-    var jsonLoader: JSONDataLoader
+    var jsonLoader: JSONDataLoader = JSONDataLoader()
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
-        self.title = ""
-        self.selectedCommunityLink = redditBaseURL + "/r/all"
-        self.selectedSorting = ""
-        self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[""]!
         self.userSessionManager.loadLastLoggedInUser(webView: webView)
-        self.jsonLoader = JSONDataLoader()
+//        self.jsonLoader = JSONDataLoader()
         self.mainPageCommunities = setMainPageCommunities
         self.userFunctionCommunities = setUserFunctionCommunities
-//        self.userSessionManager.loadLastLoggedInUser(webView: commentsModel.webView)
         self.browser = Erik(webView: self.webView)
-        self.load(initialURL: self.selectedCommunityLink)
+        self.loadCommunity(communityCode: selectedCommunityCode)
     }
     
     func login(username: String, password: String) {
@@ -81,107 +73,68 @@ class Model: ObservableObject {
     
     func logOut() {
         userSessionManager.logOut()
-        load(initialURL: selectedCommunityLink)
+        loadCommunity(communityCode: selectedCommunityCode)
     }
     
-    func load(initialURL: String) {
-        browser.visit(url: URL(string: initialURL)! ) { object, error in
-            if let doc = object {
-                self.document = doc
-                self.updateTitle(doc: doc, defaultTitle: "")
-                self.updatePosts(doc: doc)
-                self.updateCommunitiesList(doc: doc)
-                self.loadUsername(doc: doc)
-            }
-        }
-    }
-    
-    func loadCommunity(community: Community) {
+    // 'communityCode': r/something
+    // 'sortBy': top
+    // 'sortTime': month
+    // 'after': t3_14c4ene
+    //  old.reddit.com/r/something/top/.json?sort=top&t=month&count=25&after=t3_14c4ene
+    func loadCommunity(communityCode: String, sortBy: String? = nil, sortTime: String? = nil, after: String? = nil) {
+        self.selectedCommunityCode = communityCode
+        self.selectedSortTime = sortTime
         self.selectedSorting = ""
-        self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[selectedSorting]!
-        self.selectedCommunityLink = community.link
-        if selectedCommunityLink.hasSuffix("/") {
-            selectedCommunityLink = String(selectedCommunityLink.dropLast())
-        }
-        self.posts = [] // prompt scroll reset to top
-        browser.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
-            if let doc = object {
-                self.document = doc
-                self.updateTitle(doc: doc, defaultTitle: community.name)
-                self.updatePosts(doc: doc)
-                
-                self.updateCommunitiesList(doc: doc)
-                self.loadUsername(doc: doc)
+        
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "old.reddit.com"
+        components.path = "/" + communityCode
+        components.queryItems = []
+        
+        if sortBy != nil {
+            self.selectedSorting = sortBy!
+            components.path = components.path + "/" + sortBy!
+            components.queryItems?.append(URLQueryItem(name: "sort", value: sortBy!))
+            if sortTime != nil {
+                components.queryItems?.append(URLQueryItem(name: "t", value: sortTime!))
             }
         }
-    }
-    
-    // 'communityCode' format is r/something
-//    func loadCommunity(communityCode: String) {
-//        self.selectedSorting = ""
-//        self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[selectedSorting]!
-//        self.selectedCommunityLink = redditBaseURL + "/" + communityCode
-//        self.posts = [] // prompt scroll reset to top
-//        browser.visit(url: URL(string: selectedCommunityLink)! ) { object, error in
-//            if let doc = object {
-//                self.document = doc
-//                self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
-//                self.updatePosts(doc: doc)
-//
-//                self.updateCommunitiesList(doc: doc)
-//                self.loadUsername(doc: doc)
-//            }
-//        }
-//    }
-    
-    // 'communityCode' format is r/something
-    func loadCommunity(communityCode: String) {
-        self.selectedSorting = ""
-        self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[selectedSorting]!
-        self.selectedCommunityLink = redditBaseURL + "/" + communityCode + "/.json"
-        self.posts = [] // prompt scroll reset to top
-        jsonLoader.loadPosts(url: selectedCommunityLink) { (result) in
-            switch result {
-                case .success(let posts):
-                print(posts)
-            
-                case .failure(let error):
-                    print(error)
-            }
-        }
-    }
-    
-    func refreshWithSortModifier(sortModifier: String) {
-        let sortModifierComponents = sortModifier.components(separatedBy: "/")
-        if (sortModifierComponents.count > 1) {
-            self.selectedSorting = sortModifier.components(separatedBy: "/")[1]
+        
+        if after != nil {
+            components.queryItems?.append(URLQueryItem(name: "after", value: after!))
         } else {
-            self.selectedSorting = sortModifier
+            self.posts = []
         }
-        self.selectedSortingIcon = ViewModelAttributes.sortModifierIcons[selectedSorting]!
-        self.posts = [] // prompt scroll reset to top
-        browser.visit(url: URL(string: self.selectedCommunityLink + sortModifier)! ) { object, error in
+        
+        browser.visit(url: components.url! ) { object, error in
             if let doc = object {
                 self.document = doc
-                self.updatePosts(doc: doc)
-                
+                self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
+
                 self.updateCommunitiesList(doc: doc)
                 self.loadUsername(doc: doc)
+            }
+        }
+        
+        components.path = components.path + "/.json"
+        jsonLoader.loadPosts(url: components.url!) { (posts, after, error) in
+            DispatchQueue.main.async {
+                if let posts = posts {
+                    for i in posts.indices {
+                        let isActiveLoadMarker = (i == posts.count - 7)
+                        self.posts.append(Post(jsonPost: posts[i], isActiveLoadMarker: isActiveLoadMarker))
+                    }
+                }
+                self.after = after
             }
         }
     }
     
     func loadNextPagePosts() {
-        if self.linkToNextPage != nil {
-            browser.visit(url: URL(string: self.linkToNextPage!)!, completionHandler: { object, error in
-                if let doc = object {
-                    self.updatePosts(doc: doc, appendToExisting: true)
-                    self.updateTitle(doc: doc, defaultTitle: "")
-                    
-                    self.updateCommunitiesList(doc: doc)
-                    self.loadUsername(doc: doc)
-                }
-            })
+        if self.after != nil {
+            loadCommunity(communityCode: selectedCommunityCode, sortBy: selectedSorting,
+                          sortTime: selectedSortTime, after: after)
         }
     }
     
@@ -238,11 +191,6 @@ class Model: ObservableObject {
         } else {
             self.title = defaultTitle
         }
-        if let linkToNextPageElement = doc.querySelector(".nav-buttons .next-button a") {
-            self.linkToNextPage = linkToNextPageElement["href"] ?? ""
-        } else {
-            self.linkToNextPage = ""
-        }
     }
     
     private func loadUsername(doc: Document) {
@@ -250,28 +198,14 @@ class Model: ObservableObject {
             self.userSessionManager.userName = doc.querySelector("#header .user a")!.text
 //            userSessionManager.userName = self.userName
         }
-//        else {
-//            self.userName = nil
-//        }
-    }
-    
-    private func updatePosts(doc: Document, appendToExisting: Bool = false) {
-        if !appendToExisting {
-            self.posts = []
-        }
-        
-        self.browser.currentContent { (obj, err) -> Void in
-            if let document = obj {
-                self.posts.append(contentsOf: RedditParser().parsePosts(document: document))
-            }
-        }
     }
     
     private func updateCommunitiesList(doc: Document) {
         self.subscribedCommunities = []
         for element in doc.querySelectorAll("#sr-header-area .drop-choices a:not(.bottom-option)") {
             self.subscribedCommunities.append(Community(element.text!, link: element["href"]!,
-                                                        iconName: nil, isMultiCommunity: false))
+                                                        iconName: nil, isMultiCommunity: false,
+                                                        communityCode: "r/" + element.text!))
         }
         var unsortedCommunities: [Community] = []
         let communityElements = doc.querySelectorAll(".sr-list .flat-list.sr-bar:nth-of-type(n+2) li a")
@@ -279,7 +213,8 @@ class Model: ObservableObject {
             if i > 4 { // nth-of-type does not work here, skip manually
                 let element = communityElements[i]
                 unsortedCommunities.append(Community(element.text!, link: element["href"]!,
-                                                     iconName: nil, isMultiCommunity: false))
+                                                     iconName: nil, isMultiCommunity: false,
+                                                     communityCode: "r/" + element.text!))
             }
         }
         self.communities = []
@@ -290,32 +225,28 @@ class Model: ObservableObject {
     var setMainPageCommunities: [Community] {
         var communities: [Community] = []
         communities.append(Community("Home", link: redditBaseURL,
-                                                  iconName: "house.fill", isMultiCommunity: true))
+                                                  iconName: "house.fill", isMultiCommunity: true, communityCode: ""))
         communities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular",
-                                                  iconName: "chart.line.uptrend.xyaxis.circle.fill", isMultiCommunity: true))
+                                                  iconName: "chart.line.uptrend.xyaxis.circle.fill",
+                                                  isMultiCommunity: true, communityCode: "r/popular"))
         communities.append(Community("All Posts", link: redditBaseURL + "/r/all",
-                                                  iconName: "a.circle.fill", isMultiCommunity: true))
+                                                  iconName: "a.circle.fill", isMultiCommunity: true,
+                                                  communityCode: "r/all"))
         return communities
     }
     
     var setUserFunctionCommunities: [Community] {
         var communities: [Community] = []
-        communities.append(Community("Saved", link: redditBaseURL + "/saved",
-                                                      iconName: "heart.text.square", isMultiCommunity: true))
-        communities.append(Community("Moderator Posts", link: redditBaseURL + "/mod",
-                                                      iconName: "shield", isMultiCommunity: true))
+        communities.append(Community("Saved", link: redditBaseURL + "/saved", iconName: "heart.text.square",
+                                     isMultiCommunity: true, communityCode: "/saved"))
+        communities.append(Community("Moderator Posts", link: redditBaseURL + "/mod", iconName: "shield",
+                                     isMultiCommunity: true, communityCode: "/mod"))
         return communities
     }
     
-//    func saveUserSession(userName: String) {
-//        var cookieDict = [String : AnyObject]()
-//
-//        for cookie in HTTPCookieStorage.shared.cookies! {
-//            cookieDict[cookie.name] = cookie.properties as AnyObject?
-//        }
-//        UserDefaults.standard.set(cookieDict, forKey: "cookies_" + userName)
-//        UserDefaults.standard.set(userName, forKey: "currentUserName")
-//    }
+    var selectedSortingIcon: String {
+        ViewModelAttributes.sortModifierIcons[selectedSorting]!
+    }
 }
 
 enum LoginAttempt: Codable {
@@ -334,32 +265,3 @@ struct ViewModelAttributes {
         "controversial" : "arrow.right.and.line.vertical.and.arrow.left"
     ]
 }
-
-//struct UserSessionManager {
-//    func saveUserSession(webView: WKWebView, userName: String, syncWith: [WKWebView]) {
-//        var cookieDict = [String : AnyObject]()
-//
-//        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-//            for cookie in cookies {
-//                cookieDict[cookie.name] = cookie.properties as AnyObject?
-//                for view in syncWith {
-//                    view.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
-//                }
-//            }
-//            UserDefaults.standard.set(cookieDict, forKey: "cookies_" + userName)
-//            UserDefaults.standard.set(userName, forKey: "currentUserName")
-//        }
-//    }
-//
-//    func loadLastLoggedInUser(webView: WKWebView) {
-//        if let userName = UserDefaults.standard.object(forKey: "currentUserName") as? String {
-//            if let cookieDictionary = UserDefaults.standard.dictionary(forKey: "cookies_" + userName) {
-//                for (_, cookieProperties) in cookieDictionary {
-//                    if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
-//                        webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}

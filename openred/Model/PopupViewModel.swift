@@ -12,6 +12,7 @@ import AVKit
 class PopupViewModel: ObservableObject {
     @Published var isShowing: Bool = false
     @Published var image: Image?
+    @Published var fullImageLink: String?
     @Published var gallery: Gallery?
     @Published var mediaPopupGalleryImageLinks: [String] = []
     @Published var videoLink: String?

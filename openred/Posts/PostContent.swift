@@ -23,13 +23,13 @@ struct PostRowContent: View {
                 Rectangle()
                     .fill(Color(UIColor.systemGray5))
                     .frame(maxWidth: .infinity, maxHeight: 650)
-                AsyncImage(url: URL(string: post.mediaLink ?? "")) { image in
+                AsyncImage(url: URL(string: post.imagePreviewLink ?? "")) { image in
                     image
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: .infinity, maxHeight: 650)
                         .onTapGesture {
-                            popupViewModel.image = image
+                            popupViewModel.fullImageLink = post.imageLink
                             popupViewModel.contentType = post.contentType
                             popupViewModel.isShowing = true
                         }
@@ -85,7 +85,7 @@ struct PostRowContent: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .onTapGesture {
-                popupViewModel.videoLink = post.mediaLink!
+                popupViewModel.videoLink = post.videoLink!
                 popupViewModel.contentType = post.contentType
                 popupViewModel.isShowing = true
             }
@@ -152,7 +152,7 @@ struct PostRowContent: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             }
         } else if post.contentType == .crosspost {
-            let crosspost = post.crosspost!
+            let crosspost = post.crosspostAsPost!
             ZStack {
                 Rectangle()
                     .fill(Color(UIColor.systemGray6))
@@ -168,7 +168,7 @@ struct PostRowContent: View {
                         HStack(spacing: 3) {
                             Image(systemName: "arrow.triangle.branch")
                                 .rotationEffect(.degrees(90))
-                            Text(crosspost.communityName)
+                            Text(crosspost.community!)
                         }
                         HStack(spacing: 2) {
                             Image(systemName: "arrow.up")
@@ -214,7 +214,7 @@ struct PostRowContent: View {
                         .frame(maxWidth: 90, maxHeight: 140, alignment: .leading)
                     }
                     VStack(spacing: 10) {
-                        Text("Open link")
+                        Text(post.externalLinkDomain ?? "Open link")
                             .font(.system(size: 16))
                             .foregroundStyle(.secondary)
                             .fontWeight(.semibold)

@@ -13,10 +13,6 @@ class UserSessionManager {
     var userName: String?
     var currentCookies: [String : Any]?
     
-    init() {
-        
-    }
-    
     func getWebView() -> WKWebView {
         let webView = WKWebView()
         self.webViews.append(webView)

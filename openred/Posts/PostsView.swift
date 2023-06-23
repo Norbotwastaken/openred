@@ -73,37 +73,34 @@ struct PostsView: View {
 struct SortMenu: View {
     @EnvironmentObject var model: Model
     
-    let topURLBase: String = "/top/?sort=top&t="
-    let controversialURLBase: String = "/controversial/?sort=controversial&t="
-    
     var body: some View {
         Menu {
-            Button(action: {sortCommunity(sortModifier: "")}) {
+            Button(action: {sortCommunity(sortBy: nil, sortTime: nil)}) {
                 Label("Hot", systemImage: ViewModelAttributes.sortModifierIcons["hot"]!)
             }
             Menu {
-                Button("Hour", action: { sortCommunity(sortModifier: topURLBase + "hour" )})
-                Button("Day", action: { sortCommunity(sortModifier: topURLBase + "day" )})
-                Button("Week", action: { sortCommunity(sortModifier: topURLBase + "week" )})
-                Button("Month", action: { sortCommunity(sortModifier: topURLBase + "month" )})
-                Button("Year", action: { sortCommunity(sortModifier: topURLBase + "year" )})
-                Button("All Time", action: { sortCommunity(sortModifier: topURLBase + "all" )})
+                Button("Hour", action: { sortCommunity(sortBy: "top", sortTime: "hour") })
+                Button("Day", action: { sortCommunity(sortBy: "top", sortTime: "day") })
+                Button("Week", action: { sortCommunity(sortBy: "top", sortTime: "week") })
+                Button("Month", action: { sortCommunity(sortBy: "top", sortTime: "month") })
+                Button("Year", action: { sortCommunity(sortBy: "top", sortTime: "year") })
+                Button("All Time", action: { sortCommunity(sortBy: "top", sortTime: "all") })
             } label: {
                 Label("Top", systemImage: ViewModelAttributes.sortModifierIcons["top"]!)
             }
-            Button(action: {sortCommunity(sortModifier: "/new" )}) {
+            Button(action: { sortCommunity(sortBy: "new", sortTime: nil) }) {
                 Label("New", systemImage: ViewModelAttributes.sortModifierIcons["new"]!)
             }
-            Button(action: {sortCommunity(sortModifier: "/rising" )}) {
+            Button(action: { sortCommunity(sortBy: "rising", sortTime: nil) }) {
                 Label("Rising", systemImage: ViewModelAttributes.sortModifierIcons["rising"]!)
             }
             Menu {
-                Button("Hour", action: { sortCommunity(sortModifier: controversialURLBase + "hour" )})
-                Button("Day", action: { sortCommunity(sortModifier: controversialURLBase + "day" )})
-                Button("Week", action: { sortCommunity(sortModifier: controversialURLBase + "week" )})
-                Button("Month", action: { sortCommunity(sortModifier: controversialURLBase + "month" )})
-                Button("Year", action: { sortCommunity(sortModifier: controversialURLBase + "year" )})
-                Button("All Time", action: { sortCommunity(sortModifier: controversialURLBase + "all" )})
+                Button("Hour", action: { sortCommunity(sortBy: "controversial", sortTime: "hour") })
+                Button("Day", action: { sortCommunity(sortBy: "controversial", sortTime: "day") })
+                Button("Week", action: { sortCommunity(sortBy: "controversial", sortTime: "week") })
+                Button("Month", action: { sortCommunity(sortBy: "controversial", sortTime: "month") })
+                Button("Year", action: { sortCommunity(sortBy: "controversial", sortTime: "year") })
+                Button("All Time", action: { sortCommunity(sortBy: "controversial", sortTime: "all") })
             } label: {
                 Label("Controversial", systemImage: ViewModelAttributes.sortModifierIcons["controversial"]!)
             }
@@ -112,7 +109,8 @@ struct SortMenu: View {
         }
     }
     
-    func sortCommunity(sortModifier: String) {
-        model.refreshWithSortModifier(sortModifier: sortModifier)
+    func sortCommunity(sortBy: String?, sortTime: String?) {
+        model.loadCommunity(communityCode: model.selectedCommunityCode,
+                            sortBy: sortBy, sortTime: sortTime)
     }
 }

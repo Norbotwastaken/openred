@@ -25,20 +25,16 @@ class JSONDataLoader {
         }
     }
     
-    func loadPosts(url: String, completion: @escaping (Result<[JSONPost], Error>) -> Void) {
-        let urlSession = URLSession.shared.dataTask(with: URL(string: url)!) { (data, response, error) in
-            
-            if let error = error {
-                completion(.failure(error))
-            }
-            
+//    func loadPosts(url: String, completion: @escaping (Result<[JSONPost], Error>) -> Void) { //((Document?, Error?) -> Void)
+    func loadPosts(url: URL, completion: @escaping ([JSONPost]?, String?, Error?) -> Void) {
+        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             do {
                 if let data = data {
-                    let parsedData: JSONPostsWrapper = try JSONDecoder().decode(JSONPostsWrapper.self, from: data)
-                    let posts: [JSONPost] = parsedData.data.children.map { wrapper in
+                    let postsWrapper: JSONPostsWrapper = try JSONDecoder().decode(JSONPostsWrapper.self, from: data)
+                    let posts: [JSONPost] = postsWrapper.data.children.map { wrapper in
                         return wrapper.data
                     }
-                    completion(.success(posts))
+                    completion(posts, postsWrapper.data.after, error)
                 }
             } catch let error {
                 print(error)
@@ -46,6 +42,23 @@ class JSONDataLoader {
         }
         urlSession.resume()
     }
+    
+//    func loadPosts(url: String, completion: @escaping ([JSONPost]?, Error?) -> Void) {
+//        URLSession.shared.dataTask(for: URL(string: url)!) { (data, response, error) in
+//            do {
+//                if let data = data {
+//                    let parsedData: JSONPostsWrapper = try JSONDecoder().decode(JSONPostsWrapper.self, from: data)
+//                    let posts: [JSONPost] = parsedData.data.children.map { wrapper in
+//                        return wrapper.data
+//                    }
+//                    completion(posts, error)
+//                }
+//            } catch let error {
+//                print(error)
+//            }
+//        }
+//        urlSession.resume()
+//    }
     
     private func mapCommentRoot(commentRoot: CommentRoot) {
         if commentRoot.data != nil {

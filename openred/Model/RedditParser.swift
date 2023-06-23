@@ -124,25 +124,25 @@ struct RedditParser {
                 awards.append(Award(link: awardElement.querySelector("img.awarding-icon")!["src"]!, count: awardElement["data-count"]!))
             }
             
-            posts.append(Post(linkToThread!,
-                title: title ?? "no title for this post",
-                flair: flair,
-                community: community,
-                commentCount: commentCount ?? "0",
-                userName: userName,
-                submittedAge: submittedAge,
-                score: score ?? "0",
-                contentType: contentType,
-                mediaLink: mediaLink,
-                thumbnailLink: thumbnailLink,
-                externalLink: externalLink,
-                gallery: gallery,
-                crosspost: crosspost,
-                isActiveLoadMarker: isActiveLoadMarker,
-                isUpvoted: isUpvoted,
-                isDownvoted: isDownvoted,
-                isSaved: isSaved,
-                awards: awards))
+//            posts.append(Post(linkToThread!,
+//                title: title ?? "no title for this post",
+//                flair: flair,
+//                community: community,
+//                commentCount: commentCount ?? "0",
+//                userName: userName,
+//                submittedAge: submittedAge,
+//                score: score ?? "0",
+//                contentType: contentType,
+//                mediaLink: mediaLink,
+//                thumbnailLink: thumbnailLink,
+//                externalLink: externalLink,
+//                gallery: gallery,
+//                crosspost: crosspost,
+//                isActiveLoadMarker: isActiveLoadMarker,
+//                isUpvoted: isUpvoted,
+//                isDownvoted: isDownvoted,
+//                isSaved: isSaved,
+//                awards: awards))
         }
         return posts
     }

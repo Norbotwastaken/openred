@@ -54,20 +54,20 @@ class Post: Identifiable, ObservableObject {
         self.linkToThread = jsonPost.permalink
         self.score = String(jsonPost.score)
         self.text = jsonPost.selftext ?? ""
-        self.contentType = ContentType.text // !
+        self.contentType = ContentType.text
         if (jsonPost.is_self) {
             self.contentType = ContentType.text
         }
         else if (jsonPost.is_gallery != nil && jsonPost.is_gallery!) {
             self.contentType = ContentType.gallery
             self.gallery = Gallery(galleryData: jsonPost.gallery_data!.items,
-                                   galleryItems: jsonPost.media_metadata!.galleryItems.elements,
+                                   galleryItems: jsonPost.media_metadata!.elements,
                                    text: jsonPost.selftext)
         }
         else if (jsonPost.is_video != nil && jsonPost.is_video!) {
             // post_hint == hosted:video
             self.contentType = ContentType.video
-            self.videoLink = jsonPost.media?.reddit_video.hls_url
+            self.videoLink = jsonPost.media?.reddit_video!.hls_url
         }
         else if (jsonPost.crosspost_parent_list != nil
                  && !jsonPost.crosspost_parent_list!.isEmpty) {
@@ -78,11 +78,11 @@ class Post: Identifiable, ObservableObject {
             self.contentType = ContentType.image
             if (jsonPost.preview?.images[0].variants?.mp4 != nil) {
                 self.contentType = ContentType.video // or gif?
-            } else {
-                var jsonImage = jsonPost.preview?.images[0]
-                self.imageLink = jsonImage!.source.url
-                self.imagePreviewLink = jsonImage!.resolutions[jsonImage!.resolutions.count - 2].url
+                self.videoLink = jsonPost.preview?.images[0].source.url
             }
+            let jsonImage = jsonPost.preview?.images[0]
+            self.imageLink = jsonImage!.source.url
+            self.imagePreviewLink = jsonImage!.resolutions[jsonImage!.resolutions.count - 1].url
         }
         else if (jsonPost.post_hint == nil) {
             self.contentType = ContentType.link
@@ -92,33 +92,7 @@ class Post: Identifiable, ObservableObject {
         
         self.awards = []
         self.displayAge = ""
-        self.displayAge = readableAge(difference: jsonPost.created)
-    }
-    
-    init(_ linkToThread: String, title: String, flair: String?, community: String?, commentCount: String,
-         userName: String?, submittedAge: String, score: String, contentType: ContentType,
-         mediaLink: String?, thumbnailLink: String?, externalLink: String?, gallery: Gallery?, crosspost: Crosspost?,
-         isActiveLoadMarker: Bool, isUpvoted: Bool, isDownvoted: Bool, isSaved: Bool, awards: [Award]) {
-        self.id = linkToThread
-        self.title = title
-        self.flair = flair
-        self.community = community
-        self.commentCount = commentCount
-        self.userName = userName
-        self.displayAge = submittedAge
-        self.linkToThread = linkToThread
-        self.score = score
-        self.contentType = contentType
-        self.mediaLink = mediaLink
-        self.thumbnailLink = thumbnailLink
-        self.externalLink = externalLink
-        self.gallery = gallery
-        self.crosspost = crosspost
-        self.isActiveLoadMarker = isActiveLoadMarker
-        self.isUpvoted = isUpvoted
-        self.isDownvoted = isDownvoted
-        self.isSaved = isSaved
-        self.awards = awards
+        self.displayAge = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonPost.created)).timeAgoDisplay())
     }
     
     func deactivateLoadMarker() {
@@ -133,11 +107,9 @@ class Post: Identifiable, ObservableObject {
         return self.totalAwardCount!
     }
     
-    func readableAge(difference: Double) -> String {
-        let date = Date().addingTimeInterval(difference)
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        return formatter.localizedString(for: date, relativeTo: Date())
+    func displayAge(_ formattedTime: String) -> String {
+        var timeSections = formattedTime.components(separatedBy: " ")
+        return timeSections[0] + timeSections[1].prefix(1)
     }
 }
 

@@ -14,7 +14,7 @@ struct Gallery: Codable {
     init(galleryData: [JSONPostGalleryDataItem], galleryItems: [String : JSONPostMediaMetaDataItem], text: String? = nil) {
         self.items = []
         for galleryDataElement in galleryData {
-            self.items.append(GalleryItem(galleryData: galleryDataElement, galleryItem: galleryItems[String(galleryDataElement.id)]!))
+            self.items.append(GalleryItem(galleryData: galleryDataElement, galleryItem: galleryItems[galleryDataElement.media_id]!))
         }
         self.text = text
     }

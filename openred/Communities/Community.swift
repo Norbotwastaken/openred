@@ -14,12 +14,15 @@ struct Community: Identifiable, Codable {
     var link: String
     var iconName: String?
     var isMultiCommunity: Bool = false
+    var communityCode: String
     
-    init(_ name: String, link: String, iconName: String?, isMultiCommunity: Bool){
+    init(_ name: String, link: String, iconName: String?,
+         isMultiCommunity: Bool, communityCode: String){
         self.id = name
         self.name = name
         self.link = link
         self.iconName = iconName
         self.isMultiCommunity = isMultiCommunity
+        self.communityCode = communityCode
     }
 }

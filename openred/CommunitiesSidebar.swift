@@ -107,7 +107,7 @@ struct CommunityRow: View {
     
     var body: some View {
         Button(action: {
-            model.loadCommunity(community: community)
+            model.loadCommunity(communityCode: community.communityCode)
             showPosts = true
         }) {
             HStack {
