@@ -29,7 +29,9 @@
 		AE4A96812A418B3900BA96CF /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96802A418B3900BA96CF /* UserSession.swift */; };
 		AE4A96832A422BBE00BA96CF /* JSONDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96822A422BBE00BA96CF /* JSONDataLoader.swift */; };
 		AE4A96852A43424D00BA96CF /* PostContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96842A43424D00BA96CF /* PostContent.swift */; };
-		AE4A96872A4450A200BA96CF /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96862A4450A200BA96CF /* JSONParser.swift */; };
+		AE4A96872A4450A200BA96CF /* JSONPostParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96862A4450A200BA96CF /* JSONPostParser.swift */; };
+		AE4A96892A48DEBD00BA96CF /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96882A48DEBD00BA96CF /* Search.swift */; };
+		AE4A968B2A49A02600BA96CF /* JSONDataCommentParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */; };
 		AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C32A2CCB3300889B3E /* openredApp.swift */; };
 		AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C52A2CCB3300889B3E /* ContentView.swift */; };
 		AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE89D4C72A2CCB3600889B3E /* Assets.xcassets */; };
@@ -78,7 +80,9 @@
 		AE4A96802A418B3900BA96CF /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		AE4A96822A422BBE00BA96CF /* JSONDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDataLoader.swift; sourceTree = "<group>"; };
 		AE4A96842A43424D00BA96CF /* PostContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostContent.swift; sourceTree = "<group>"; };
-		AE4A96862A4450A200BA96CF /* JSONParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParser.swift; sourceTree = "<group>"; };
+		AE4A96862A4450A200BA96CF /* JSONPostParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPostParser.swift; sourceTree = "<group>"; };
+		AE4A96882A48DEBD00BA96CF /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
+		AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDataCommentParser.swift; sourceTree = "<group>"; };
 		AE89D4C02A2CCB3300889B3E /* openred.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openred.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4C32A2CCB3300889B3E /* openredApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredApp.swift; sourceTree = "<group>"; };
 		AE89D4C52A2CCB3300889B3E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -158,7 +162,8 @@
 				AE4A96762A3D112700BA96CF /* RedditParser.swift */,
 				AE4A96802A418B3900BA96CF /* UserSession.swift */,
 				AE4A96822A422BBE00BA96CF /* JSONDataLoader.swift */,
-				AE4A96862A4450A200BA96CF /* JSONParser.swift */,
+				AE4A96862A4450A200BA96CF /* JSONPostParser.swift */,
+				AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -217,6 +222,7 @@
 				AE4A96692A387ECB00BA96CF /* LoginPopup.swift */,
 				AE4A966B2A38F1B400BA96CF /* InboxView.swift */,
 				AE4A96702A39ED3200BA96CF /* GifView.swift */,
+				AE4A96882A48DEBD00BA96CF /* Search.swift */,
 			);
 			path = openred;
 			sourceTree = "<group>";
@@ -432,7 +438,7 @@
 			files = (
 				AE4A96342A2FBBE300BA96CF /* Model.swift in Sources */,
 				AE4A96752A3B5DA500BA96CF /* PopupViewModel.swift in Sources */,
-				AE4A96872A4450A200BA96CF /* JSONParser.swift in Sources */,
+				AE4A96872A4450A200BA96CF /* JSONPostParser.swift in Sources */,
 				AE4A96712A39ED3200BA96CF /* GifView.swift in Sources */,
 				AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */,
 				AE4A96612A37832800BA96CF /* PostRow.swift in Sources */,
@@ -441,6 +447,7 @@
 				AE4A965F2A37829700BA96CF /* MediaPopup.swift in Sources */,
 				AE4A96592A33A27100BA96CF /* Community.swift in Sources */,
 				AE4A967C2A3F5F7100BA96CF /* Comments.swift in Sources */,
+				AE4A96892A48DEBD00BA96CF /* Search.swift in Sources */,
 				AE4A96772A3D112700BA96CF /* RedditParser.swift in Sources */,
 				AE4A966A2A387ECB00BA96CF /* LoginPopup.swift in Sources */,
 				AE4A96562A337B4000BA96CF /* CommunitiesSidebar.swift in Sources */,
@@ -450,6 +457,7 @@
 				AE4A96732A3B4B8200BA96CF /* GalleryItem.swift in Sources */,
 				AE4A96812A418B3900BA96CF /* UserSession.swift in Sources */,
 				AE4A967A2A3F4AC900BA96CF /* CommentsView.swift in Sources */,
+				AE4A968B2A49A02600BA96CF /* JSONDataCommentParser.swift in Sources */,
 				AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -607,6 +615,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"openred/Preview Content\"";
@@ -626,6 +635,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openredinc.openred;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -638,6 +648,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"openred/Preview Content\"";
@@ -657,6 +668,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openredinc.openred;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

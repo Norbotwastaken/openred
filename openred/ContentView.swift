@@ -13,26 +13,31 @@ struct ContentView: View {
     @State var communitiesSidebarVisible = true
     @State var loginPopupShowing = false
     @State private var sidebarOffset = CGSize(width: -300, height: 0)
+    @State private var tabSelection = 1
     
     var body: some View {
         ZStack {
-            TabView {
+            TabView(selection: $tabSelection) {
                 CommunitiesStack(loginPopupShowing: $loginPopupShowing)
                 .tabItem {
                     Label("Feed", systemImage: "newspaper")
                 }
+                .tag(1)
                 InboxView()
                 .tabItem {
                     Label("Inbox", systemImage: "envelope")
                 }
-                Text("Search")
+                .tag(2)
+                SearchView(tabSelection: $tabSelection)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
+                .tag(3)
                 Text("Settings")
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }
+                .tag(4)
             }
             
             if popupViewModel.isShowing {

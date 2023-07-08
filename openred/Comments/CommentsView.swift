@@ -13,7 +13,7 @@ struct CommentsView: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var popupViewModel: PopupViewModel
     @ObservedObject var post: Post
-    @Binding var commentInView: String
+//    @Binding var commentInView: String
     
     var body: some View {
         ZStack {
@@ -33,8 +33,8 @@ struct CommentsView: View {
                         .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                         .listRowSeparator(.hidden)
                         
-                        PostRowContent(post: post)
-                            .frame(maxWidth: .infinity, maxHeight: 650, alignment: .center)
+                        PostRowContent(post: post, isPostOpen: true)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: post.contentType == .text ? .leading : .center)
                         
                         HStack {
                             Image(systemName: "arrow.up")
@@ -62,10 +62,12 @@ struct CommentsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     ForEach(commentsModel.comments) { comment in
                         CommentView(comment: comment)
-                            .onAppear {
-                                commentInView = comment.id
-                            }
-                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 20, trailing: 0))
+//                            .onAppear {
+//                                commentInView = comment.id
+//                            }
+                            .listRowInsets(EdgeInsets(top: 16, leading: 0, bottom: 20, trailing: 0))
+                            .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
+                            .listRowSeparator(.hidden)
                     }
                 }
                 .listStyle(PlainListStyle())
@@ -90,7 +92,7 @@ struct CommentsView: View {
             }
         }
         .onAppear {
-            commentsModel.openCommentsPage(linkToThread: post.linkToThread)
+            commentsModel.loadComments(linkToThread: post.linkToThread)
         }
     }
 }
@@ -98,13 +100,11 @@ struct CommentsView: View {
 struct CommentView: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @ObservedObject var comment: Comment
-    @State private var size: CGSize = .zero
-    @State private var isLoaded: Bool = false
     
     var body: some View {
-        if !isHidden {
+        VStack {
             HStack(spacing: 10) {
-                if comment.depth > 0 && !(commentsModel.commentsCollapsed[comment.id] ?? true) {
+                if comment.depth > 0 && !comment.isHidden {
                     Rectangle()
                         .frame(maxWidth: 2, maxHeight: .infinity, alignment: .leading)
                         .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
@@ -114,14 +114,24 @@ struct CommentView: View {
                 VStack {
                     HStack(spacing: 10) {
                         Text(comment.user ?? "deleted")
-                        if comment.score != nil {
-                            HStack(spacing: 2) {
-                                Image(systemName: "arrow.up")
-                                    .foregroundColor(comment.isUpvoted ? .upvoteOrange : comment.isDownvoted ? .downvoteBlue : .secondary)
-                                Text(comment.score!)
-                            }
+                        //                        if comment.score != nil {
+                        HStack(spacing: 2) {
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(comment.isUpvoted ? .upvoteOrange : comment.isDownvoted ? .downvoteBlue : .secondary)
+                            Text(String(comment.score))
                         }
-                        CommentActionsMenu(comment: comment)
+                        //                        }
+//                        CommentActionsMenu(comment: comment)
+                        Menu {
+                            CommentActions(comment: comment)
+                        } label: {
+                            ZStack {
+                                Spacer()
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                Image(systemName: "ellipsis")
+                            }
+                            .frame(width: 20, height: 15)
+                        }
                             .frame(alignment: .trailing)
                             .onTapGesture {
                                 // catch tap
@@ -130,41 +140,41 @@ struct CommentView: View {
                     .foregroundColor(.secondary)
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                    if !(commentsModel.commentsCollapsed[comment.id] ?? true) {
-                        Text(LocalizedStringKey(comment.content ?? "comment not found"))
+                    if !comment.isHidden {
+                        Text(comment.content ?? "comment not found")
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size: 15))
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .font(.system(size: 15))
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
             }
             .background(Color(UIColor.systemBackground))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .padding(EdgeInsets(top: 0, leading: 10 * (CGFloat(integerLiteral:comment.depth) + 1), bottom: 0, trailing: 10))
+            .padding(EdgeInsets(top: 0, leading: 5 * (CGFloat(integerLiteral:comment.depth) + 1), bottom: 0, trailing: 10))
             .onTapGesture {
-                commentsModel.commentsCollapsed[comment.id]?.toggle()
+                comment.isHidden.toggle()
             }
-            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                Button { commentsModel.toggleUpvoteComment(comment: comment) } label: {
-                    Image(systemName: "arrow.up")
+//            TODO: swipe actions and context menu are a mess
+//            .contextMenu{ CommentActions(comment: comment) }
+//            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+//                Button { commentsModel.toggleUpvoteComment(comment: comment) } label: {
+//                    Image(systemName: "arrow.up")
+//                }
+//                .tint(.upvoteOrange)
+//                Button { commentsModel.toggleDownvoteComment(comment: comment) } label: {
+//                    Image(systemName: "arrow.down")
+//                }
+//                .tint(.downvoteBlue)
+//            }
+            if !comment.isHidden {
+                ForEach(comment.replies) { reply in
+                    CommentView(comment: reply)
+                        .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
+                    //                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 20, trailing: 0))
                 }
-                .tint(.upvoteOrange)
-                Button { commentsModel.toggleDownvoteComment(comment: comment) } label: {
-                    Image(systemName: "arrow.down")
-                }
-                .tint(.downvoteBlue)
             }
         }
-    }
-    
-    var isHidden: Bool {
-        for parentId in comment.allParents {
-            if commentsModel.commentsCollapsed[parentId] == true {
-                return true
-            }
-        }
-        return false
     }
     
     var indentColor: [Color] = [
@@ -179,19 +189,38 @@ struct CommentView: View {
         Color(red: 192 / 255, green: 57 / 255, blue: 43 / 255),
         Color(red: 230 / 255, green: 126 / 255, blue: 34 / 255),
         Color(red: 241 / 255, green: 196 / 255, blue: 15 / 255),
-        Color(red: 39 / 255, green: 174 / 255, blue: 96 / 255)
+        Color(red: 39 / 255, green: 174 / 255, blue: 96 / 255),
+        Color(red: 52 / 255, green: 152 / 255, blue: 219 / 255),
+        Color(red: 13 / 255, green: 71 / 255, blue: 161 / 255),
+        Color(red: 142 / 255, green: 68 / 255, blue: 173 / 255)
     ]
+}
+
+struct CommentActions: View {
+    @EnvironmentObject var commentsModel: CommentsModel
+    @ObservedObject var comment: Comment
+    
+    var body: some View {
+        Group {
+            Button(action: { commentsModel.toggleUpvoteComment(comment: comment) }) {
+                Label("Upvote", systemImage: "arrow.up")
+            }
+            Button(action: { commentsModel.toggleDownvoteComment(comment: comment) }) {
+                Label("Downvote", systemImage: "arrow.down")
+            }
+            Button(action: { commentsModel.toggleSaveComment(comment: comment) }) {
+                Label(comment.isSaved ? "Undo Save" : "Save", systemImage: comment.isSaved ? "bookmark.slash" : "bookmark")
+            }
+        }
+    }
 }
 
 struct CommentSortMenu: View {
     @EnvironmentObject var commentsModel: CommentsModel
     
-    let topURLBase: String = "/top/?sort=top&t="
-    let controversialURLBase: String = "/controversial/?sort=controversial&t="
-    
     var body: some View {
         Menu {
-            Button(action: {sortCommunity(sortModifier: "")}) {
+            Button(action: {sortCommunity(sortModifier: "confidence")}) {
                 Label("Hot", systemImage: CommentsModelAttributes.sortModifierIcons[""]!)
             }
             Button(action: {sortCommunity(sortModifier: "top")}) {
@@ -215,32 +244,20 @@ struct CommentSortMenu: View {
     }
     
     func sortCommunity(sortModifier: String) {
-        commentsModel.refreshWithSortModifier(sortModifier: sortModifier)
+        commentsModel.loadComments(linkToThread: commentsModel.currentLink, sortBy: sortModifier)
     }
 }
 
-struct CommentActionsMenu: View {
+struct CommentEditor: View {
     @EnvironmentObject var commentsModel: CommentsModel
-    @ObservedObject var comment: Comment
+    @State private var content: String = ""
+    @FocusState private var isFieldFocused: Bool
     
     var body: some View {
-        Menu {
-            Button(action: { commentsModel.toggleUpvoteComment(comment: comment) }) {
-                Label("Upvote", systemImage: "arrow.up")
-            }
-            Button(action: { commentsModel.toggleDownvoteComment(comment: comment) }) {
-                Label("Upvote", systemImage: "arrow.down")
-            }
-            Button(action: { commentsModel.toggleSaveComment(comment: comment) }) {
-                Label(comment.isSaved ? "Undo Save" : "Save", systemImage: comment.isSaved ? "bookmark.slash" : "bookmark")
-            }
-        } label: {
-            ZStack {
-                Spacer()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                Image(systemName: "ellipsis")
-            }
-            .frame(width: 20, height: 15)
+        ZStack {
+            TextField("Write...", text: $content)
+                .textFieldStyle(.roundedBorder)
+                .focused($isFieldFocused)
         }
     }
 }

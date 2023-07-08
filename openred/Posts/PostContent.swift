@@ -16,8 +16,20 @@ struct PostRowContent: View {
     @State var startLoadingGif: Bool = false
     @State var imageContainerSize: CGSize = CGSize(width: 1, height: 400)
     var post: Post
+    var isPostOpen: Bool = false
     
     var body: some View {
+        if post.contentType == .text {
+            var text = LocalizedStringKey(post.text!)
+//            Text(isPostOpen ? post.text! :
+//                    post.text!.count >= 180 ? post.text!.prefix(180) +  "..." : post.text!)
+            Text(text)
+                .font(.system(size: 15))
+                .padding(EdgeInsets(top: 0, leading: isPostOpen ? 0 : 10, bottom: 0,
+                                    trailing: isPostOpen ? 0 : 10))
+                .frame(maxHeight: isPostOpen ? .infinity : 60, alignment: .leading)
+                .opacity(0.9)
+        }
         if post.contentType == .image {
             ZStack {
                 Rectangle()
@@ -102,7 +114,7 @@ struct PostRowContent: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear(perform: { startLoadingGif = true })
                 if startLoadingGif {
-                    GIFView(url: URL(string: post.mediaLink ?? "")!)
+                    GIFView(url: URL(string: post.videoLink ?? "")!)
                         .frame(maxWidth: .infinity, maxHeight: 650)
                 }
             }
@@ -152,7 +164,7 @@ struct PostRowContent: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             }
         } else if post.contentType == .crosspost {
-            let crosspost = post.crosspostAsPost!
+            let crosspost = post.crosspost!
             ZStack {
                 Rectangle()
                     .fill(Color(UIColor.systemGray6))
@@ -164,6 +176,8 @@ struct PostRowContent: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5))
+                    PostRowContent(post: crosspost)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     HStack {
                         HStack(spacing: 3) {
                             Image(systemName: "arrow.triangle.branch")
@@ -172,7 +186,7 @@ struct PostRowContent: View {
                         }
                         HStack(spacing: 2) {
                             Image(systemName: "arrow.up")
-                            Text(crosspost.score)
+                            Text(formatScore(score:crosspost.score))
                         }
                         HStack(spacing: 2) {
                             Image(systemName: "text.bubble")
@@ -182,9 +196,12 @@ struct PostRowContent: View {
                     .font(.system(size: 14))
                     .opacity(0.8)
                     .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                    .frame(maxWidth: .infinity, maxHeight: 30, alignment: .leading)
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                .overlay(
+                    NavigationLink(destination: CommentsView(post: crosspost), label: { EmptyView() })
+                    .opacity(0))
             }
             .padding(SwiftUI.EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
         } else if post.contentType == .link {

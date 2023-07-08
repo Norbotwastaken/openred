@@ -71,8 +71,8 @@ struct LoginPopup: View {
                             .focused($isFieldFocused)
                             .textFieldStyle(.roundedBorder)
 //                            .foregroundColor(.white)
-                            .preferredColorScheme(.dark)
-                            .colorInvert()
+//                            .preferredColorScheme(.dark)
+//                            .colorInvert()
                             .border(failedAttemptIndicatorShowing ? Color.red : Color.black)
                             .frame(alignment: .top)
                             .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
@@ -84,8 +84,8 @@ struct LoginPopup: View {
                             .textFieldStyle(.roundedBorder)
                             .focused($isFieldFocused)
                             .textFieldStyle(.roundedBorder)
-                            .preferredColorScheme(.dark)
-                            .colorInvert()
+//                            .preferredColorScheme(.dark)
+//                            .colorInvert()
                             .border(failedAttemptIndicatorShowing ? Color.red : Color.black)
                             .frame(alignment: .top)
                             .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
@@ -137,6 +137,7 @@ struct LoginPopup: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             if model.loginAttempt == .successful {
                 loginPopupShowing = false
+                waitingLoginResponse = false
             } else if model.loginAttempt == .failed {
                 failedAttemptIndicatorShowing = true
                 waitingLoginResponse = false

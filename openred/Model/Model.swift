@@ -14,8 +14,8 @@ class Model: ObservableObject {
     @Published var posts: [Post] = []
     @Published var communities: [Community] = []
     @Published var subscribedCommunities: [Community] = []
-    @Published var mainPageCommunities: [Community] = []
-    @Published var userFunctionCommunities: [Community] = []
+//    @Published var mainPageCommunities: [Community] = []
+//    @Published var userFunctionCommunities: [Community] = []
     @Published var title: String = ""
     @Published var selectedCommunityCode: String = "/r/all"
     @Published var selectedSorting: String = ""
@@ -35,8 +35,8 @@ class Model: ObservableObject {
         self.userSessionManager = userSessionManager
         self.userSessionManager.loadLastLoggedInUser(webView: webView)
 //        self.jsonLoader = JSONDataLoader()
-        self.mainPageCommunities = setMainPageCommunities
-        self.userFunctionCommunities = setUserFunctionCommunities
+//        self.mainPageCommunities = mainPageCommunities
+//        self.userFunctionCommunities = userFunctionCommunities
         self.browser = Erik(webView: self.webView)
         self.loadCommunity(communityCode: selectedCommunityCode)
     }
@@ -109,11 +109,14 @@ class Model: ObservableObject {
         
         browser.visit(url: components.url! ) { object, error in
             if let doc = object {
-                self.document = doc
-                self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
-
-                self.updateCommunitiesList(doc: doc)
-                self.loadUsername(doc: doc)
+                if let nsfwButton = doc.querySelector(".interstitial form button[value=\"yes\"]") {
+                    nsfwButton.click()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        self.updateModel(doc, communityCode: communityCode)
+                    }
+                } else {
+                    self.updateModel(doc, communityCode: communityCode)
+                }
             }
         }
         
@@ -152,8 +155,9 @@ class Model: ObservableObject {
                     self.document = document
                 }
             }
+            return true
         }
-        return true
+        return false
     }
     
     func toggleDownvotePost(post: Post) -> Bool {
@@ -183,6 +187,13 @@ class Model: ObservableObject {
             post.isSaved.toggle()
         }
         return true
+    }
+    
+    private func updateModel(_ doc: Document, communityCode: String) {
+        self.document = doc
+        self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
+        self.updateCommunitiesList(doc: doc)
+        self.loadUsername(doc: doc)
     }
     
     private func updateTitle(doc: Document, defaultTitle: String) {
@@ -222,7 +233,7 @@ class Model: ObservableObject {
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
     }
     
-    var setMainPageCommunities: [Community] {
+    var mainPageCommunities: [Community] {
         var communities: [Community] = []
         communities.append(Community("Home", link: redditBaseURL,
                                                   iconName: "house.fill", isMultiCommunity: true, communityCode: ""))
@@ -235,7 +246,7 @@ class Model: ObservableObject {
         return communities
     }
     
-    var setUserFunctionCommunities: [Community] {
+    var userFunctionCommunities: [Community] {
         var communities: [Community] = []
         communities.append(Community("Saved", link: redditBaseURL + "/saved", iconName: "heart.text.square",
                                      isMultiCommunity: true, communityCode: "/saved"))
@@ -246,6 +257,10 @@ class Model: ObservableObject {
     
     var selectedSortingIcon: String {
         ViewModelAttributes.sortModifierIcons[selectedSorting]!
+    }
+    
+    var userName: String? {
+        self.userSessionManager.userName
     }
 }
 

@@ -11,7 +11,7 @@ import SwiftUI
 struct CommunitiesStack: View {
     @EnvironmentObject var model: Model
     @Binding var loginPopupShowing: Bool
-    @State var showPosts = false
+    @State var showPosts = true
     @State private var searchText = ""
     @State var itemInView = ""
     
@@ -37,19 +37,21 @@ struct CommunitiesStack: View {
                                 }
                             }
                             if !model.subscribedCommunities.isEmpty {
-                                Section(header: Text("Subscriptions")) {
+                                Section(header: Text("Subreddits")) {
                                     ForEach(filteredSubscribedCommunities) { community in
                                         CommunityRow(community: community, showPosts: $showPosts)
                                     }
                                 }
                                 .background(Color.clear)
                             }
-                            Section(header: Text("More Subreddits")) {
-                                ForEach(filteredCommunities) { community in
-                                    CommunityRow(community: community, showPosts: $showPosts)
-                                }
-                            }
-                            .background(Color.clear)
+//                            if !filteredCommunities.isEmpty {
+//                                Section(header: Text("More Subreddits")) {
+//                                    ForEach(filteredCommunities) { community in
+//                                        CommunityRow(community: community, showPosts: $showPosts)
+//                                    }
+//                                }
+//                                .background(Color.clear)
+//                            }
                         }
                         .listStyle(PlainListStyle())
                     }
@@ -126,7 +128,7 @@ struct UserSection: View {
     @Binding var loginPopupShowing: Bool
     
     var body: some View {
-        if model.userSessionManager.userName != nil {
+        if model.userName != nil {
             Menu {
                 Button(action: {
                     model.logOut()

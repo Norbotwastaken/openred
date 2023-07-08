@@ -25,7 +25,6 @@ class JSONDataLoader {
         }
     }
     
-//    func loadPosts(url: String, completion: @escaping (Result<[JSONPost], Error>) -> Void) { //((Document?, Error?) -> Void)
     func loadPosts(url: URL, completion: @escaping ([JSONPost]?, String?, Error?) -> Void) {
         let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             do {
@@ -35,6 +34,23 @@ class JSONDataLoader {
                         return wrapper.data
                     }
                     completion(posts, postsWrapper.data.after, error)
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+        urlSession.resume()
+    }
+    
+    func loadComments(url: URL, completion: @escaping ([Comment]?, Error?) -> Void) {
+        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            do {
+                if let data = data {
+                    let wrapper: [JSONEntityWrapper] = try JSONDecoder().decode([JSONEntityWrapper].self, from: data)
+                    let comments: [Comment] = wrapper[1].data!.children
+                        .filter{$0.commentData != nil}
+                        .map{ Comment(jsonComment: $0.commentData!) }
+                    completion(comments, error)
                 }
             } catch let error {
                 print(error)

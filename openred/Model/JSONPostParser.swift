@@ -33,7 +33,8 @@ class JSONPost: Codable {
     //    var gilded: Int?
     var clicked: Bool
     var title: String? //
-    //    var link_flair_richtext: String?
+    var link_flair_richtext: [JSONFlairSegment]
+    var flair: String?
     var subreddit_name_prefixed: String?
     var hidden: Bool
     //    var pwls: Int
@@ -48,7 +49,7 @@ class JSONPost: Codable {
     //    var upvote_ratio: Double
     //    var author_flair_background_color: String?
     //    var ups: Int
-    //    var total_awards_received: Int
+    var total_awards_received: Int
     //    var media_embed: String?
     //    var thumbnail_width: Int
     //    var author_flair_template_id: String?
@@ -156,7 +157,7 @@ class JSONPost: Codable {
         do { try self.title = String(htmlEncodedString: container.decode(String?.self, forKey: .title)!) } catch {}
         do { try self.subreddit_name_prefixed = container.decode(String?.self, forKey: .subreddit_name_prefixed) } catch {}
         do { try self.name = container.decode(String?.self, forKey: .name) } catch {}
-        do { try self.thumbnail = container.decode(String?.self, forKey: .thumbnail) } catch {}
+        try? self.thumbnail = String(htmlEncodedString: container.decode(String?.self, forKey: .thumbnail)!)
         do { try self.post_hint = container.decode(String?.self, forKey: .post_hint) } catch {}
         do { try self.domain = container.decode(String?.self, forKey: .domain) } catch {}
         do { try self.likes = container.decode(Bool?.self, forKey: .likes) } catch {}
@@ -194,6 +195,14 @@ class JSONPost: Codable {
         try self.stickied = container.decode( Bool.self, forKey: .stickied)
         try self.subreddit_subscribers = container.decode( Int.self, forKey: .subreddit_subscribers)
         try self.created_utc = container.decode( Double.self, forKey: .created_utc)
+        try self.total_awards_received = container.decode( Int.self, forKey: .total_awards_received)
+        
+        try self.link_flair_richtext = container.decode( [JSONFlairSegment].self, forKey: .link_flair_richtext)
+        for flairSegment in self.link_flair_richtext {
+            if flairSegment.e == "text" {
+                self.flair = self.flair ?? "" + flairSegment.t!
+            }
+        }
         
         try? self.link_flair_text = formatFlair(container.decode(String?.self, forKey: .link_flair_text))
         try? self.author_flair_text = formatFlair(container.decode( String?.self, forKey: .author_flair_text))
@@ -322,6 +331,11 @@ struct DecodedMediaMetaDataArray: Codable {
     }
 }
 
+class JSONFlairSegment: Codable {
+    var e: String?
+    var t: String?
+}
+
 
 class JSONPostAwarding: Codable {
 //    var giver_coin_reward: String?
@@ -336,7 +350,7 @@ class JSONPostAwarding: Codable {
     var icon_url: String?
 //    var days_of_premium: Int?
 //    var tiers_by_required_awardings: String?
-    var resized_icon: [JSONPostImageData]? // first is smallest
+    var resized_icons: [JSONPostImageData]? // first is smallest
     var name: String?
     var static_icon_url: String?
 }

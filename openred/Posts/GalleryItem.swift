@@ -37,7 +37,7 @@ struct GalleryItem: Identifiable, Codable {
     init(galleryData: JSONPostGalleryDataItem, galleryItem: JSONPostMediaMetaDataItem) {
         self.id = String(galleryData.id)
         // preview is second to last preview item or full sized image
-        self.previewLink = galleryItem.p[galleryItem.p.count - 2].u ?? galleryItem.s!.u!
+        self.previewLink = galleryItem.p[max(galleryItem.p.count - 2, 0)].u ?? galleryItem.s!.u!
         self.fullLink = galleryItem.s!.u!
         self.caption = galleryData.caption
         self.url = galleryData.outbound_url

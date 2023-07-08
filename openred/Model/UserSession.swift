@@ -8,10 +8,10 @@
 import Foundation
 import WebKit
 
-class UserSessionManager {
-    private var webViews: [WKWebView] = []
-    var userName: String?
+class UserSessionManager: ObservableObject {
+    @Published var userName: String?
     var currentCookies: [String : Any]?
+    private var webViews: [WKWebView] = []
     
     func getWebView() -> WKWebView {
         let webView = WKWebView()
@@ -38,15 +38,17 @@ class UserSessionManager {
     func loadLastLoggedInUser(webView: WKWebView) {
         if self.currentCookies == nil {
             if let userName = UserDefaults.standard.object(forKey: "currentUserName") as? String {
+                self.userName = userName
                 if let cookieDictionary = UserDefaults.standard.dictionary(forKey: "cookies_" + userName) {
                     self.currentCookies = cookieDictionary
+                    
+                    for (_, cookieProperties) in self.currentCookies! {
+                        if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
+                            webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+                            HTTPCookieStorage.shared.setCookie(cookie)
+                        }
+                    }
                 }
-            }
-        }
-        for (_, cookieProperties) in self.currentCookies! {
-            if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
-                webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
-                HTTPCookieStorage.shared.setCookie(cookie)
             }
         }
     }

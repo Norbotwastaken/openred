@@ -1,0 +1,168 @@
+//
+//  JSONDataCommentParser.swift
+//  openred
+//
+//  Created by Norbert Antal on 6/26/23.
+//
+
+import Foundation
+
+class JSONEntityWrapper: Codable {
+    var kind: String
+    var data: JSONEntityData?
+    var commentData: JSONCommentData?
+    
+    required init(from decoder: Decoder) throws {
+        let container =  try decoder.container(keyedBy: CodingKeys.self)
+        
+        try self.kind = container.decode(String.self, forKey: .kind)
+        try? self.data = container.decode(JSONEntityData.self, forKey: .data)
+        try? self.commentData = container.decode(JSONCommentData.self, forKey: .data)
+//        do {
+//            data = try container.decode(JSONEntityData.self, forKey: .data)
+//            commentData = nil
+//        } catch {
+//            do {
+//                commentData = try container.decode(JSONCommentData.self, forKey: .data)
+//                data = nil
+//            } catch { }
+//        }
+    }
+}
+
+class JSONEntityData: Codable {
+    var after: String?
+    var dist: Int?
+    var children: [JSONEntityWrapper]
+}
+
+class JSONCommentData: Codable {
+//    var subreddit_id: String?
+//    var approved_at_utc: String?
+    var author_is_blocked: Bool
+//    var comment_type: String?
+//    var awarders: [String]
+//    var mod_reason_by: String?
+//    var banned_by: String?
+    var author_flair_type: String?
+    var total_awards_received: Int?
+    var subreddit: String?
+//    var author_flair_template_id: String?
+    var likes: Bool?
+//    var user_reports: String?
+    var saved: Bool
+    var id: String
+//    var banned_at_utc: String?
+//    var mod_reason_title: String?
+//    var gilded: Int
+    var archived: Bool
+//    var collapsed_reason_code: String?
+//    var no_follow: String?
+    var author: String
+//    var can_mod_post: String?
+    var created_utc: Double
+//    var send_replies: String?
+    var parent_id: String?
+    var score: Int
+    var author_fullname: String?
+//    var approved_by: String?
+//    var mod_note: String?
+    var all_awardings: [JSONPostAwarding]
+    var collapsed: Bool
+    var body: String? // the content
+//    var edited: Bool // or maybe double
+//    var top_awarded_type: String?
+//    var author_flair_css_class: String?
+//    var name: String?
+    var is_submitter: Bool // op?
+//    var downs: String?
+//    var author_flair_richtext: String?
+//    var author_patreon_flair: String?
+//    var body_html: String?
+//    var removal_reason: String?
+//    var collapsed_reason: String?
+//    var distinguished: String?
+//    var associated_award: String?
+    var stickied: Bool
+//    var author_premium: String?
+//    var can_gild: String?
+//    var gildings: String?
+//    var unrepliable_reason: String?
+//    var author_flair_text_color: String?
+    var score_hidden: Bool
+    var permalink: String?
+    var subreddit_type: String?
+    var locked: Bool
+//    var report_reasons: String?
+    var created: Double
+    var author_flair_text: String?
+//    var treatment_tags: String?
+//    var link_id: String?
+    var subreddit_name_prefixed: String?
+//    var controversiality: Int
+    var depth: Int
+//    var author_flair_background_color: String?
+//    var collapsed_because_crowd_control: String?
+//    var mod_reports: String?
+//    var num_reports: String?
+//    var ups: Int
+    var replies: JSONEntityWrapper
+}
+
+/// Not JSON
+class Comment: Identifiable, ObservableObject {
+    var id: String
+    var depth: Int
+    var score: Int
+    var content: String?
+    var user: String?
+    var age: String?
+    @Published var isUpvoted: Bool
+    @Published var isDownvoted: Bool
+    @Published var isSaved: Bool
+    
+    var flair: String?
+    var awardLinks: [String] = []
+    var awardCount: Int?
+    var communityName: String?
+    var archived: Bool
+    
+    var isOP: Bool
+    var stickied: Bool
+    var locked: Bool
+    var replies: [Comment]
+    
+    @Published var isHidden: Bool = false
+    
+    init(jsonComment: JSONCommentData) {
+        self.id = jsonComment.id
+        self.depth = jsonComment.depth
+        self.score = jsonComment.score
+        self.content = jsonComment.body
+        self.user = jsonComment.author
+        self.isUpvoted = jsonComment.likes != nil ? jsonComment.likes! : false
+        self.isDownvoted = jsonComment.likes != nil ? !jsonComment.likes! : false
+        self.isSaved = jsonComment.saved
+        self.flair = jsonComment.author_flair_text
+        for award in jsonComment.all_awardings {
+            self.awardLinks.append(award.resized_icons![1].url)
+        }
+        self.awardCount = jsonComment.total_awards_received
+        self.communityName = jsonComment.subreddit
+        self.archived = jsonComment.archived
+        self.isOP = jsonComment.is_submitter
+        self.stickied = jsonComment.stickied
+        self.locked = jsonComment.locked
+        self.replies = jsonComment.replies.data!.children
+            .filter{$0.commentData != nil}
+            .map{ Comment(jsonComment: $0.commentData!) }
+        
+        self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
+    }
+    
+    // TODO: duplicate of funciton in post
+    func displayAge(_ formattedTime: String) -> String {
+        let timeSections = formattedTime.components(separatedBy: " ")
+        return timeSections[0] + timeSections[1].prefix(1)
+    }
+}

@@ -19,7 +19,7 @@ class Post: Identifiable, ObservableObject {
     var score: String
     var contentType: ContentType
     
-    var mediaLink: String?
+//    var mediaLink: String?
     var imagePreviewLink: String?
     var imageLink: String?
     var videoLink: String?
@@ -29,14 +29,15 @@ class Post: Identifiable, ObservableObject {
     var externalLinkDomain: String?
     var text: String?
     var gallery: Gallery?
-    var crosspost: Crosspost?
-    var crosspostAsPost: Post?
+    var crosspost: Post?
+//    var crosspostAsPost: Post?
     var isActiveLoadMarker: Bool
     @Published var isUpvoted: Bool
     @Published var isDownvoted: Bool
     @Published var isSaved: Bool
-    var awards: [Award]
-    private var totalAwardCount: Int?
+    var awardLinks: [String] = []
+    var awardCount: Int
+//    private var totalAwardCount: Int?
     
     init(jsonPost: JSONPost, isActiveLoadMarker: Bool = false) {
         self.id = jsonPost.id
@@ -47,13 +48,19 @@ class Post: Identifiable, ObservableObject {
         self.isUpvoted = jsonPost.likes != nil ? jsonPost.likes! : false
         self.isDownvoted = jsonPost.likes != nil ? !jsonPost.likes! : false
         self.isSaved = jsonPost.saved
-        self.flair = jsonPost.link_flair_text
+        self.flair = jsonPost.flair
         self.community = jsonPost.subreddit_name_prefixed
         self.commentCount = String(jsonPost.num_comments)
         self.userName = jsonPost.author
         self.linkToThread = jsonPost.permalink
         self.score = String(jsonPost.score)
         self.text = jsonPost.selftext ?? ""
+        
+        for award in jsonPost.all_awardings {
+            self.awardLinks.append(award.resized_icons![1].url)
+        }
+        self.awardCount = jsonPost.total_awards_received
+        
         self.contentType = ContentType.text
         if (jsonPost.is_self) {
             self.contentType = ContentType.text
@@ -72,39 +79,36 @@ class Post: Identifiable, ObservableObject {
         else if (jsonPost.crosspost_parent_list != nil
                  && !jsonPost.crosspost_parent_list!.isEmpty) {
             self.contentType = ContentType.crosspost
-            self.crosspostAsPost = Post(jsonPost: jsonPost.crosspost_parent_list![0])
+            self.crosspost = Post(jsonPost: jsonPost.crosspost_parent_list![0])
         }
         else if (jsonPost.post_hint != nil && jsonPost.post_hint! == "image") {
             self.contentType = ContentType.image
             if (jsonPost.preview?.images[0].variants?.mp4 != nil) {
-                self.contentType = ContentType.video // or gif?
-                self.videoLink = jsonPost.preview?.images[0].source.url
+                self.contentType = ContentType.gif // or gif?
+                let gifResolutions = jsonPost.preview?.images[0].variants?.gif?.resolutions
+                self.videoLink = gifResolutions![max(gifResolutions!.count - 2, 0)].url
             }
             let jsonImage = jsonPost.preview?.images[0]
             self.imageLink = jsonImage!.source.url
             self.imagePreviewLink = jsonImage!.resolutions[jsonImage!.resolutions.count - 1].url
         }
-        else if (jsonPost.post_hint == nil) {
-            self.contentType = ContentType.link
-            self.externalLink = jsonPost.url
-            self.externalLinkDomain = jsonPost.domain
+        else if (jsonPost.post_hint == nil || jsonPost.post_hint == "link") {
+            if jsonPost.url!.contains("imgur.com") && jsonPost.url!.contains(".gifv") {
+                contentType = .video // gif from imgur, but is a video file
+                videoLink = String(jsonPost.url!.dropLast(4)) + "mp4"
+            } else {
+                self.contentType = ContentType.link
+                self.externalLink = jsonPost.url
+                self.externalLinkDomain = jsonPost.domain
+            }
         }
         
-        self.awards = []
         self.displayAge = ""
         self.displayAge = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonPost.created)).timeAgoDisplay())
     }
     
     func deactivateLoadMarker() {
         self.isActiveLoadMarker = false
-    }
-    
-    func getTotalAwardCount() -> Int {
-        if self.totalAwardCount != nil {
-            return self.totalAwardCount!
-        }
-        self.totalAwardCount = self.awards.map({ Int($0.count)! }).reduce(0, +)
-        return self.totalAwardCount!
     }
     
     func displayAge(_ formattedTime: String) -> String {

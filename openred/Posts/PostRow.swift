@@ -18,7 +18,7 @@ struct PostRow: View {
             VStack {
                 Text(post.title)
                     .font(.headline) +
-                Text(post.flair != nil ? "  [" + post.flair! + "]" : "")
+                Text(post.flair != nil ? LocalizedStringKey("  [" +  post.flair! + "]") : "")
                     .foregroundColor(.secondary)
                     .font(.system(size: 12))
             }
@@ -26,7 +26,7 @@ struct PostRow: View {
             .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
             .disabled(true)
             PostRowContent(post: post)
-                .frame(maxWidth: .infinity, maxHeight: 650)
+                .frame(maxWidth: .infinity, maxHeight: 650, alignment: .leading)
             PostRowFooter(post: post)
             Rectangle()
                 .fill(Color(UIColor.systemGray5)
@@ -71,9 +71,9 @@ struct PostRowFooter: View {
                         Text(post.displayAge)
                     }
                     HStack(spacing: 3) {
-                        ForEach(post.awards.indices) { i in
+                        ForEach(post.awardLinks.indices) { i in
                             if i < 3 {
-                                AsyncImage(url: URL(string: post.awards[i].link)) { image in
+                                AsyncImage(url: URL(string: post.awardLinks[i])) { image in
                                     image.image?
                                         .resizable()
                                         .scaledToFill()
@@ -81,8 +81,8 @@ struct PostRowFooter: View {
                                 }
                             }
                         }
-                        if post.getTotalAwardCount() > 0 {
-                            Text(String(post.getTotalAwardCount()))
+                        if post.awardCount > 1 {
+                            Text(String(post.awardCount))
                         }
                     }
                 }
@@ -161,6 +161,7 @@ struct PostRowMenu: View {
                 Spacer()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 Image(systemName: "ellipsis")
+                    .foregroundColor(.secondary)
             }
             .frame(width: 20, height: 20)
         }

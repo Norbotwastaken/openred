@@ -8,7 +8,7 @@
 import Erik
 import Kanna
 import WebKit
-import RichText
+import SwiftUI
 
 class CommentsModel: ObservableObject {
     var browser: Erik = Erik()
@@ -21,7 +21,7 @@ class CommentsModel: ObservableObject {
     @Published var commentsCollapsed: [String:Bool] = [:]
     @Published var title: String = ""
     @Published var commentCount: String = ""
-    @Published var selectedSortingIcon: String = CommentsModelAttributes.sortModifierIcons[""]!
+    @Published var selectedSorting: String = ""
     
     let webView: WKWebView
     let userSessionManager: UserSessionManager
@@ -36,17 +36,59 @@ class CommentsModel: ObservableObject {
 //        webView
     }
     
+    func loadComments(linkToThread: String, sortBy: String? = "") {
+        if currentLink == linkToThread && sortBy == "" {
+            return
+            // returning to the same post comments again (may not be needed)
+        }
+        self.currentLink = linkToThread
+        self.selectedSorting = ""
+        self.comments = []
+        
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "old.reddit.com"
+        components.path = linkToThread.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!
+        components.queryItems = []
+        
+        if sortBy != nil {
+            self.selectedSorting = sortBy!
+            components.queryItems?.append(URLQueryItem(name: "sort", value: sortBy!))
+        }
+        
+        browser.visit(url: components.url!) { object, error in
+            if let doc = object {
+                self.document = doc
+                self.title = doc.title!
+                // TODO: get comment count some other way
+                self.commentCount = doc.querySelector("#siteTable .thing")!["data-comments-count"]!
+            }
+        }
+        
+        components.path = components.path + "/.json"
+        jsonLoader.loadComments(url: components.url!) { (comments, error) in
+            DispatchQueue.main.async {
+                if let comments = comments {
+                    for comment in comments {
+                        self.comments.append(comment)
+                    }
+                }
+            }
+        }
+    }
+    
     func openCommentsPage(linkToThread: String, withSortModifier: String = "") {
         if currentLink == linkToThread && withSortModifier == "" {
             return
         }
         self.currentLink = linkToThread
-        self.selectedSortingIcon = CommentsModelAttributes.sortModifierIcons[""]!
+//        self.selectedSortingIcon = CommentsModelAttributes.sortModifierIcons[""]!
+        self.selectedSorting = ""
         self.comments = []
         self.commentsCollapsed = [:]
-        var commentsByID: [String: Comment] = [:]
-        jsonLoader.getData(url: redditBaseURL + linkToThread + ".json" + withSortModifier)
-        browser.visit(url: URL(string: redditBaseURL + linkToThread + withSortModifier)!) { object, error in
+        var commentsByID: [String: CommentX] = [:]
+        jsonLoader.getData(url: redditBaseURL + linkToThread.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)! + ".json" + withSortModifier)
+        browser.visit(url: URL(string: redditBaseURL + linkToThread.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)! + withSortModifier)!) { object, error in
             if let doc = object {
                 self.document = doc
                 self.title = doc.title!
@@ -86,7 +128,7 @@ class CommentsModel: ObservableObject {
                         parent = nil
                     }
                     
-                    let comment = Comment(id: id, depth: depth, score: score, content: content,
+                    let comment = CommentX(id: id, depth: depth, score: score, content: content,
                                                  user: user, age: age, parent: parent, isUpvoted: isUpvoted,
                                           isDownvoted: isDownvoted, isSaved: isSaved)
                     commentsByID[id] = comment
@@ -94,13 +136,13 @@ class CommentsModel: ObservableObject {
                         comment.allParents = self.findAllParents(firstParent: parent!, comments: commentsByID)
                     }
                     self.commentsCollapsed[id] = false
-                    self.comments.append(comment)
+//                    self.comments.append(comment)
                 }
             }
         }
     }
     
-    private func findAllParents(firstParent: String, comments: [String: Comment]) -> [String] {
+    private func findAllParents(firstParent: String, comments: [String: CommentX]) -> [String] {
         var allParents: [String] = [firstParent]
         var currentParentId: String? = firstParent
         var hasNextParent = true
@@ -119,7 +161,8 @@ class CommentsModel: ObservableObject {
         // sortModifier format: "new"
         var baseThreadLink = self.currentLink
         self.openCommentsPage(linkToThread: currentLink, withSortModifier: "?sort=" + sortModifier)
-        self.selectedSortingIcon = CommentsModelAttributes.sortModifierIcons[sortModifier]!
+        self.selectedSorting = sortModifier
+//        self.selectedSortingIcon = CommentsModelAttributes.sortModifierIcons[sortModifier]!
         self.currentLink = baseThreadLink
     }
     
@@ -163,20 +206,23 @@ class CommentsModel: ObservableObject {
         if userSessionManager.userName == nil {
             return false
         }
-        let selectorModifier = comment.isDownvoted ? "mod" : ""
-        if let downButton = document?.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + comment.id + "\"] .buttons .save-button a").first {
-            downButton.click()
+        if let saveButton = document?.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + comment.id + "\"] .buttons .save-button a").first {
+            saveButton.click()
             comment.isSaved.toggle()
         }
         return true
     }
+    
+    var selectedSortingIcon: String {
+        CommentsModelAttributes.sortModifierIcons[selectedSorting]!
+    }
 }
 
-class Comment: Identifiable, ObservableObject {
+class CommentX: Identifiable, ObservableObject {
     var id: String
     var depth: Int
     var score: String?
-    var content: String?
+    var content: LocalizedStringKey?
     var user: String?
     var age: String?
     var parent: String?
@@ -190,7 +236,7 @@ class Comment: Identifiable, ObservableObject {
         self.id = id
         self.depth = depth
         self.score = score
-        self.content = content
+        self.content = LocalizedStringKey(content ?? "")
         self.user = user
         self.age = age
         self.parent = parent
@@ -203,8 +249,8 @@ class Comment: Identifiable, ObservableObject {
 
 struct CommentsModelAttributes {
     static var sortModifierIcons = [
-        "" : "arrow.up.arrow.down",
-        "best" : "flame",
+        "" : "arrow.up.arrow.down", // "best"
+        "confidence" : "arrow.up.arrow.down", // "best"
         "top" : "arrow.up.to.line.compact",
         "new" : "clock.badge",
         "old" : "clock.arrow.circlepath",
