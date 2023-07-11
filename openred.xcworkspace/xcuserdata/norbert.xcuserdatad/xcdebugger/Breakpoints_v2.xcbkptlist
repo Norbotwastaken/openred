@@ -3,4 +3,285 @@
    uuid = "E6E423EA-25D6-4854-A665-CA85E73536AF"
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "533FD19C-A847-4ED7-81B9-C803848F6018"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Comments/Comments.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
+            landmarkName = "sendReply(parent:content:postId:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "533FD19C-A847-4ED7-81B9-C803848F6018 - cff315ab83a4fcc6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "171"
+                  endingLineNumber = "171"
+                  offsetFromSymbolStart = "2100">
+               </Location>
+               <Location
+                  uuid = "533FD19C-A847-4ED7-81B9-C803848F6018 - 6962ddaddd45517"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "172"
+                  endingLineNumber = "172"
+                  offsetFromSymbolStart = "112">
+               </Location>
+               <Location
+                  uuid = "533FD19C-A847-4ED7-81B9-C803848F6018 - cff315ab83a4fce7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "172"
+                  endingLineNumber = "172"
+                  offsetFromSymbolStart = "2132">
+               </Location>
+               <Location
+                  uuid = "533FD19C-A847-4ED7-81B9-C803848F6018 - de2a0701fe1d3025"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String, postId: Swift.Optional&lt;Swift.String&gt;) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "173"
+                  endingLineNumber = "173"
+                  offsetFromSymbolStart = "2184">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9E0912D4-9BD3-400B-91D6-36A8D76BF667"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Comments/Comments.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
+            landmarkName = "sendReply(parent:content:postId:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9E0912D4-9BD3-400B-91D6-36A8D76BF667 - ee430dee2d532554"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "177"
+                  endingLineNumber = "177"
+                  offsetFromSymbolStart = "1096">
+               </Location>
+               <Location
+                  uuid = "9E0912D4-9BD3-400B-91D6-36A8D76BF667 - d86bfd4a4335facc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "179"
+                  endingLineNumber = "179"
+                  offsetFromSymbolStart = "72">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Comments/Comments.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
+            landmarkName = "sendReply(parent:content:postId:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82 - ee430dee2d532516"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "175"
+                  endingLineNumber = "175"
+                  offsetFromSymbolStart = "460">
+               </Location>
+               <Location
+                  uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82 - 5ec15532545644bc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "175"
+                  endingLineNumber = "175"
+                  offsetFromSymbolStart = "88">
+               </Location>
+               <Location
+                  uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82 - c74824cbbedb778e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "176"
+                  endingLineNumber = "176"
+                  offsetFromSymbolStart = "460">
+               </Location>
+               <Location
+                  uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82 - bc3f7c5f92b0327c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "175"
+                  endingLineNumber = "175"
+                  offsetFromSymbolStart = "88">
+               </Location>
+               <Location
+                  uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82 - ee430dee2d532537"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "176"
+                  endingLineNumber = "176"
+                  offsetFromSymbolStart = "460">
+               </Location>
+               <Location
+                  uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82 - 42361d768588eb25"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String, postId: Swift.Optional&lt;Swift.String&gt;) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "176"
+                  endingLineNumber = "176"
+                  offsetFromSymbolStart = "88">
+               </Location>
+               <Location
+                  uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82 - 7df2906863f9575"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String, postId: Swift.Optional&lt;Swift.String&gt;) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "177"
+                  endingLineNumber = "177"
+                  offsetFromSymbolStart = "460">
+               </Location>
+               <Location
+                  uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82 - 83d3387db6749b1d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String, postId: Swift.Optional&lt;Swift.String&gt;) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "175"
+                  endingLineNumber = "175"
+                  offsetFromSymbolStart = "88">
+               </Location>
+               <Location
+                  uuid = "C2B51390-2E2B-4DEA-B276-82A5F5E71A82 - 257dc0336d734625"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Any&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.sendReply(parent: Swift.Optional&lt;openred.Comment&gt;, content: Swift.String, postId: Swift.Optional&lt;Swift.String&gt;) -&gt; Swift.Bool"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "176"
+                  endingLineNumber = "176"
+                  offsetFromSymbolStart = "460">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

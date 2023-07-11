@@ -55,6 +55,21 @@ struct CommentsView: View {
                                     }
                                 }
                                 .frame(maxWidth: .infinity, alignment: .center)
+                            Image(systemName: post.isSaved ? "bookmark.slash" : "bookmark")
+                                .foregroundColor(.secondary)
+                                .onTapGesture {
+                                    if model.toggleSavePost(post: post) == false {
+                                        // show login popup
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            Image(systemName: "arrow.uturn.left")
+                                .foregroundColor(.secondary)
+                                .onTapGesture {
+                                    editorParentComment = nil
+                                    isEditorShowing = true
+                                }
+                                .frame(maxWidth: .infinity, alignment: .center)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(EdgeInsets(top: 5, leading: 0, bottom: 8, trailing: 0))
@@ -94,7 +109,7 @@ struct CommentsView: View {
 //                })
             }
             if isEditorShowing {
-                CommentEditor(isShowing: $isEditorShowing, parentComment: $editorParentComment)
+                CommentEditor(isShowing: $isEditorShowing, parentComment: $editorParentComment, postId: post.id)
             }
         }
         .onAppear {
@@ -120,20 +135,21 @@ struct CommentView: View {
                         .opacity(0.8)
                 }
                 VStack {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 5) {
                         Text(comment.user ?? "deleted")
                         //                        if comment.score != nil {
                         HStack(spacing: 2) {
                             Image(systemName: "arrow.up")
                                 .foregroundColor(comment.isUpvoted ? .upvoteOrange : comment.isDownvoted ? .downvoteBlue : .secondary)
                             Text(String(comment.score))
-                            if comment.age != nil {
-                                Image(systemName: "clock").foregroundColor(.secondary)
-                                Text(String(comment.age!))
-                            }
+//                            if comment.age != nil {
+//                                Image(systemName: "clock").foregroundColor(.secondary)
+//                                Text(String(comment.age!))
+//                            }
                         }
                         //                        }
 //                        CommentActionsMenu(comment: comment)
+                        Spacer()
                         Menu {
                             CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
                         } label: {
@@ -147,6 +163,12 @@ struct CommentView: View {
                         .frame(alignment: .trailing)
                         .onTapGesture {
                             // catch tap
+                        }
+                        if comment.age != nil {
+                            Image(systemName: "clock").foregroundColor(.secondary)
+                                .frame(alignment: .trailing)
+                            Text(String(comment.age!))
+                                .frame(alignment: .trailing)
                         }
                     }
                     .foregroundColor(.secondary)
@@ -273,7 +295,9 @@ struct CommentEditor: View {
     @Binding var isShowing: Bool
     @Binding var parentComment: Comment?
     @State private var content: String = ""
+    var postId: String?
     @FocusState private var isFieldFocused: Bool
+    @State private var loading: Bool = false
     
     var body: some View {
         ZStack {
@@ -302,8 +326,13 @@ struct CommentEditor: View {
                         .frame(maxWidth: .infinity, alignment: .topTrailing)
                         .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
                         .onTapGesture {
-                            commentsModel.sendReply(parent: parentComment, content: content)
-                            isShowing = false
+                            if content != "" {
+                                commentsModel.sendReply(parent: parentComment, content: content, postId: postId)
+                                loading = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    isShowing = false
+                                }
+                            }
                         }
                 }
                 .frame(maxWidth: .infinity)
@@ -336,6 +365,14 @@ struct CommentEditor: View {
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            if loading {
+                Rectangle()
+                    .fill(.black)
+                    .opacity(0.6)
+                    .ignoresSafeArea()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                ProgressView()
+            }
         }
 //        .ignoresSafeArea()
         .frame(maxWidth: .infinity, maxHeight: .infinity)

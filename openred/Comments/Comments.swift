@@ -127,7 +127,7 @@ class CommentsModel: ObservableObject {
         return true
     }
     
-    func sendReply(parent: Comment?, content: String) -> Bool {
+    func sendReply(parent: Comment?, content: String, postId: String? = nil) -> Bool {
         if userSessionManager.userName == nil {
             return false
         }
@@ -139,35 +139,56 @@ class CommentsModel: ObservableObject {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         self.browser.currentContent { (obj, err) -> Void in
                             self.document = obj
-//                            if let input = self.document?.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + parent!.id + "\"] .usertext-edit textarea").last {
-                                let stub = "document.getElementById(\"commentreply_t1_" + parent!.id +
-                                "\").getElementsByClassName(\"usertext-edit\")[0].getElementsByTagName(\"textarea\")[0].value"
-                                let js = stub + " = \"" + content + "\"; " //+ "var resultErik = " + stub + ";"
-                                self.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
-                                    // .sitetable div.thing[id="thing_t1_jr0mpq1"] .child form#commentreply_t1_jr0mpq1 .usertext-buttons button.save
-                                    self.browser.currentContent { (obj2, err2) -> Void in
-                                        self.document = obj2
-                                        self.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + parent!.id +
-                                                                        "\"] .child form#commentreply_t1_" + parent!.id + " .usertext-buttons button.save").last!.click()
+                            let stub = "document.getElementById(\"commentreply_t1_" + parent!.id +
+                            "\").getElementsByClassName(\"usertext-edit\")[0].getElementsByTagName(\"textarea\")[0].value"
+                            let js = stub + " = \"" + content + "\"; " //+ "var resultErik = " + stub + ";"
+                            self.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
+                                self.browser.currentContent { (obj2, err2) -> Void in
+                                    self.document = obj2
+                                    self.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + parent!.id +
+                                                                    "\"] .child form#commentreply_t1_" + parent!.id + " .usertext-buttons button.save").last!.click()
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        self.browser.currentContent { (obj3, err3) -> Void in
+                                            self.document = obj3
+                                            var newCommentTimeTag = self.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(parent!.id)\"] .child" +
+                                                                                                    " .thing.comment .tagline time").first
+                                            if newCommentTimeTag != nil && newCommentTimeTag!.text == "just now" {
+                                                let newCommentElement = self.document!
+                                                    .querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(parent!.id)\"] .child .thing.comment").first
+
+                                                let newComment = Comment(id: newCommentElement!["data-fullname"] ?? "", depth: parent!.depth + 1,
+                                                                         content: content, user: self.userSessionManager.userName!)
+                                                parent!.replies.insert(newComment, at: 0)
+                                            }
+                                        }
                                     }
-//                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                        // Read submitted comment from DOM
-//                                        self.browser.currentContent { (obj, err) -> Void in
-//                                            self.document = obj
-//                                            var newCommentTimeTag = self.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(parent!.id)\"] .child" +
-//                                                                                                    " .thing.comment .tagline time").first
-//                                            if newCommentTimeTag != nil && newCommentTimeTag!.text == "just now" {
-//                                                let newCommentElement = self.document!
-//                                                    .querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(parent!.id)\"] .child .thing.comment").first
-//
-//                                                let newComment = Comment(id: newCommentElement!["data-fullname"] ?? "", depth: parent!.depth + 1,
-//                                                                         content: content, user: self.userSessionManager.userName!)
-//                                                parent!.replies.insert(newComment, at: 0)
-//                                            }
-//                                        }
-//                                    }
                                 }
-//                            }
+                            }
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    let stub = "document.getElementsByClassName(\"commentarea\")[0].getElementsByClassName(\"usertext\")[0].getElementsByTagName(\"textarea\")[0].value"
+                    let js = stub + " = \"" + content + "\"; " + "var resultErik = " + stub + ";"
+                    self.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
+                        self.browser.currentContent { (obj2, err2) -> Void in
+                            self.document = obj2
+                            self.document!.querySelectorAll(".commentarea form[id^=\"form-t3\"] .usertext-buttons button.save").first!.click()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                //                            self.checkSentReply(content: content)
+                                self.browser.currentContent { (obj3, err3) -> Void in
+                                    self.document = obj3
+                                    if let newCommentElement = self.document!.querySelectorAll(".commentarea .thing.comment").first {
+                                        let newCommentTimeElement = newCommentElement.querySelector(".tagline time")
+                                        if newCommentTimeElement != nil && newCommentTimeElement!.text == "just now" {
+                                            let newComment = Comment(id: newCommentElement["data-fullname"] ?? "", depth: 0,
+                                                                     content: content, user: self.userSessionManager.userName!)
+                                            self.comments.insert(newComment, at: 0)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -175,6 +196,20 @@ class CommentsModel: ObservableObject {
         }
         return true
     }
+    
+//    func checkSentReply(content: String) {
+//        self.browser.currentContent { (obj3, err3) -> Void in
+//            self.document = obj3
+//            if let newCommentElement = self.document!.querySelectorAll(".commentarea .thing.comment").first {
+//                let newCommentTimeElement = newCommentElement.querySelector(".tagline time")
+//                if newCommentTimeElement != nil && newCommentTimeElement!.text == "just now" {
+//                    let newComment = Comment(id: newCommentElement["data-fullname"] ?? "", depth: 0,
+//                                             content: content, user: self.userSessionManager.userName!)
+//                    self.comments.insert(newComment, at: 0)
+//                }
+//            }
+//        }
+//    }
     
     var selectedSortingIcon: String {
         CommentsModelAttributes.sortModifierIcons[selectedSorting]!
