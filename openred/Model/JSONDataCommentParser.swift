@@ -106,7 +106,41 @@ class JSONCommentData: Codable {
 //    var mod_reports: String?
 //    var num_reports: String?
 //    var ups: Int
-    var replies: JSONEntityWrapper
+    var replies: JSONEntityWrapper? // ="" when empty
+    
+    required init(from decoder: Decoder) throws {
+        let container =  try decoder.container(keyedBy: CodingKeys.self)
+        
+        try self.author_is_blocked = container.decode(Bool.self, forKey: .author_is_blocked)
+        try? self.author_flair_type = container.decode(String?.self, forKey: .author_flair_type)
+        try? self.total_awards_received = container.decode(Int?.self, forKey: .total_awards_received)
+        try? self.subreddit = container.decode(String?.self, forKey: .subreddit)
+        try? self.likes = container.decode(Bool?.self, forKey: .likes)
+        try self.saved = container.decode(Bool.self, forKey: .saved)
+        try self.id = container.decode(String.self, forKey: .id)
+        try self.archived = container.decode(Bool.self, forKey: .archived)
+        try self.author = container.decode(String.self, forKey: .author)
+        try self.created_utc = container.decode(Double.self, forKey: .created_utc)
+        try? self.parent_id = container.decode(String?.self, forKey: .parent_id)
+        try self.score = container.decode(Int.self, forKey: .score)
+        try? self.author_fullname = container.decode(String?.self, forKey: .author_fullname)
+        try self.all_awardings = container.decode([JSONPostAwarding].self, forKey: .all_awardings)
+        try self.collapsed = container.decode(Bool.self, forKey: .collapsed)
+        try? self.body = container.decode(String?.self, forKey: .body)
+        try self.is_submitter = container.decode(Bool.self, forKey: .is_submitter)
+        try self.stickied = container.decode(Bool.self, forKey: .stickied)
+        try self.score_hidden = container.decode(Bool.self, forKey: .score_hidden)
+        try? self.permalink = container.decode(String?.self, forKey: .permalink)
+        try? self.subreddit_type = container.decode(String?.self, forKey: .subreddit_type)
+        try self.locked = container.decode(Bool.self, forKey: .locked)
+        try self.created = container.decode(Double.self, forKey: .created)
+        try? self.author_flair_text = container.decode(String?.self, forKey: .author_flair_text)
+        try? self.subreddit_name_prefixed = container.decode(String?.self, forKey: .subreddit_name_prefixed)
+        try self.depth = container.decode(Int.self, forKey: .depth)
+        
+        self.replies = nil
+        try? self.replies = container.decode(JSONEntityWrapper?.self, forKey: .replies)
+    }
 }
 
 /// Not JSON
@@ -130,7 +164,7 @@ class Comment: Identifiable, ObservableObject {
     var isOP: Bool
     var stickied: Bool
     var locked: Bool
-    var replies: [Comment]
+    @Published var replies: [Comment] = []
     
     @Published var isHidden: Bool = false
     
@@ -153,11 +187,33 @@ class Comment: Identifiable, ObservableObject {
         self.isOP = jsonComment.is_submitter
         self.stickied = jsonComment.stickied
         self.locked = jsonComment.locked
-        self.replies = jsonComment.replies.data!.children
-            .filter{$0.commentData != nil}
-            .map{ Comment(jsonComment: $0.commentData!) }
+        if jsonComment.replies != nil {
+            self.replies = jsonComment.replies!.data!.children
+                .filter{$0.commentData != nil}
+                .map{ Comment(jsonComment: $0.commentData!) }
+        }
+        self.isHidden = jsonComment.collapsed
         
         self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
+    }
+    
+    init(id: String, depth: Int, content: String, user: String) {
+        self.id = id
+        self.depth = depth
+        self.score = 1
+        self.content = content
+        self.user = user
+        self.isUpvoted = true
+        self.isDownvoted = false
+        self.isSaved = false
+        self.awardCount = 0
+        self.archived = false
+        self.isOP = false // ?
+        self.stickied = false
+        self.locked = false
+        self.isHidden = false
+        
+//        self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }
     
     // TODO: duplicate of funciton in post

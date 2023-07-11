@@ -11,9 +11,11 @@ import WebKit
 struct CommentsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var commentsModel: CommentsModel
-    @EnvironmentObject var popupViewModel: PopupViewModel
+//    @EnvironmentObject var popupViewModel: PopupViewModel
     @ObservedObject var post: Post
 //    @Binding var commentInView: String
+    @State var isEditorShowing: Bool = false
+    @State var editorParentComment: Comment?
     
     var body: some View {
         ZStack {
@@ -61,7 +63,7 @@ struct CommentsView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     ForEach(commentsModel.comments) { comment in
-                        CommentView(comment: comment)
+                        CommentView(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
 //                            .onAppear {
 //                                commentInView = comment.id
 //                            }
@@ -73,6 +75,7 @@ struct CommentsView: View {
                 .listStyle(PlainListStyle())
                 .navigationTitle(commentsModel.commentCount + " comments")
                 .navigationBarTitleDisplayMode(.inline)
+                .navigationBarHidden(isEditorShowing)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         HStack {
@@ -90,6 +93,9 @@ struct CommentsView: View {
 //                    proxy.scrollTo(commentInView)
 //                })
             }
+            if isEditorShowing {
+                CommentEditor(isShowing: $isEditorShowing, parentComment: $editorParentComment)
+            }
         }
         .onAppear {
             commentsModel.loadComments(linkToThread: post.linkToThread)
@@ -100,6 +106,8 @@ struct CommentsView: View {
 struct CommentView: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @ObservedObject var comment: Comment
+    @Binding var editorParentComment: Comment?
+    @Binding var isEditorShowing: Bool
     
     var body: some View {
         VStack {
@@ -119,11 +127,15 @@ struct CommentView: View {
                             Image(systemName: "arrow.up")
                                 .foregroundColor(comment.isUpvoted ? .upvoteOrange : comment.isDownvoted ? .downvoteBlue : .secondary)
                             Text(String(comment.score))
+                            if comment.age != nil {
+                                Image(systemName: "clock").foregroundColor(.secondary)
+                                Text(String(comment.age!))
+                            }
                         }
                         //                        }
 //                        CommentActionsMenu(comment: comment)
                         Menu {
-                            CommentActions(comment: comment)
+                            CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
                         } label: {
                             ZStack {
                                 Spacer()
@@ -132,16 +144,16 @@ struct CommentView: View {
                             }
                             .frame(width: 20, height: 15)
                         }
-                            .frame(alignment: .trailing)
-                            .onTapGesture {
-                                // catch tap
-                            }
+                        .frame(alignment: .trailing)
+                        .onTapGesture {
+                            // catch tap
+                        }
                     }
                     .foregroundColor(.secondary)
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     if !comment.isHidden {
-                        Text(comment.content ?? "comment not found")
+                        Text(comment.content ?? "")
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.system(size: 15))
@@ -169,7 +181,7 @@ struct CommentView: View {
 //            }
             if !comment.isHidden {
                 ForEach(comment.replies) { reply in
-                    CommentView(comment: reply)
+                    CommentView(comment: reply, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
                         .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
                     //                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 20, trailing: 0))
                 }
@@ -199,6 +211,8 @@ struct CommentView: View {
 struct CommentActions: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @ObservedObject var comment: Comment
+    @Binding var editorParentComment: Comment?
+    @Binding var isEditorShowing: Bool
     
     var body: some View {
         Group {
@@ -210,6 +224,12 @@ struct CommentActions: View {
             }
             Button(action: { commentsModel.toggleSaveComment(comment: comment) }) {
                 Label(comment.isSaved ? "Undo Save" : "Save", systemImage: comment.isSaved ? "bookmark.slash" : "bookmark")
+            }
+            Button(action: {
+                editorParentComment = comment
+                isEditorShowing = true
+            }) {
+                Label("Reply", systemImage: "arrow.uturn.left")
             }
         }
     }
@@ -250,14 +270,74 @@ struct CommentSortMenu: View {
 
 struct CommentEditor: View {
     @EnvironmentObject var commentsModel: CommentsModel
+    @Binding var isShowing: Bool
+    @Binding var parentComment: Comment?
     @State private var content: String = ""
     @FocusState private var isFieldFocused: Bool
     
     var body: some View {
         ZStack {
-            TextField("Write...", text: $content)
-                .textFieldStyle(.roundedBorder)
-                .focused($isFieldFocused)
+            Rectangle()
+                .fill(Color(UIColor.systemBackground))
+//                .opacity(0.75)
+                .ignoresSafeArea()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            VStack(spacing: 30) {
+                HStack {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 25))
+                        .foregroundColor(Color(UIColor.systemBlue))
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .padding(EdgeInsets(top: 5, leading: 15, bottom: 0, trailing: 0))
+                        .onTapGesture {
+                            isShowing = false
+                        }
+                    Text("Reply")
+                        .font(.system(size: 20))
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .top)
+                    Image(systemName: "paperplane.fill")
+                        .foregroundColor(Color(UIColor.systemBlue))
+                        .font(.system(size: 25))
+                        .frame(maxWidth: .infinity, alignment: .topTrailing)
+                        .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
+                        .onTapGesture {
+                            commentsModel.sendReply(parent: parentComment, content: content)
+                            isShowing = false
+                        }
+                }
+                .frame(maxWidth: .infinity)
+                VStack {
+                    if parentComment != nil {
+//                        var content = parentComment!.content!.count > 350 ?
+//                        String(parentComment!.content!.prefix(350)) + "..." : parentComment!.content!
+                        ScrollView {
+                            Group {
+                                Text(parentComment!.user!).bold() +
+                                Text("\n" + parentComment!.content!)
+                            }
+                            .font(.system(size: 15))
+                            .padding(EdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6))
+                            .foregroundStyle(.opacity(0.8))
+                            .background(Color(UIColor.systemGray5))
+                            .cornerRadius(10)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: 200, alignment: .topLeading)
+                    }
+                    TextField("Add a comment", text: $content, axis: .vertical)
+                    //                .textFieldStyle(.roundedBorder)
+                        .focused($isFieldFocused)
+                        .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
+                        .frame(maxHeight: .infinity, alignment: .topLeading)
+                    
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
+//        .ignoresSafeArea()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

@@ -13,7 +13,6 @@ import SwiftUI
 class CommentsModel: ObservableObject {
     var browser: Erik = Erik()
     var document: Document? = nil
-    let redditBaseURL: String = "https://old.reddit.com"
     var currentLink: String = "" // /r/something/comments
     var jsonLoader: JSONDataLoader
     
@@ -62,6 +61,10 @@ class CommentsModel: ObservableObject {
                 self.title = doc.title!
                 // TODO: get comment count some other way
                 self.commentCount = doc.querySelector("#siteTable .thing")!["data-comments-count"]!
+                // Expand first layer of collapsed comments (DOM needs refreshing)
+                for expandButton in doc.querySelectorAll(".thing.collapsed .expand") {
+                    expandButton.click()
+                }
             }
         }
         
@@ -75,95 +78,6 @@ class CommentsModel: ObservableObject {
                 }
             }
         }
-    }
-    
-    func openCommentsPage(linkToThread: String, withSortModifier: String = "") {
-        if currentLink == linkToThread && withSortModifier == "" {
-            return
-        }
-        self.currentLink = linkToThread
-//        self.selectedSortingIcon = CommentsModelAttributes.sortModifierIcons[""]!
-        self.selectedSorting = ""
-        self.comments = []
-        self.commentsCollapsed = [:]
-        var commentsByID: [String: CommentX] = [:]
-        jsonLoader.getData(url: redditBaseURL + linkToThread.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)! + ".json" + withSortModifier)
-        browser.visit(url: URL(string: redditBaseURL + linkToThread.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)! + withSortModifier)!) { object, error in
-            if let doc = object {
-                self.document = doc
-                self.title = doc.title!
-                self.commentCount = doc.querySelector("#siteTable .thing")!["data-comments-count"]!
-                for commentElement in doc.querySelectorAll(".commentarea .thing.comment:not(.deleted)") {
-                    let id: String = commentElement.querySelector(".parent a")!["name"]! // jokhk6z
-                    let user: String? = commentElement["data-author"]
-                    let content: String? = self.jsonLoader.content[id]
-                    if content == nil {
-                        // an element which is present on website but not in json yet. (new)
-                        continue
-                    }
-                    let age: String? = commentElement.querySelector(".tagline time")?.text
-                    let score: String? = commentElement.querySelector(".tagline .score")?["title"]
-                    
-                    let isUpvoted = commentElement.querySelector(">div.midcol.likes") != nil
-                    let isDownvoted = commentElement.querySelector(">div.midcol.dislikes") != nil
-                    let isSaved = commentElement.className!.contains("saved")
-                    var parent: String? = commentElement.querySelector(".buttons li a[data-event-action=\"parent\"]")?["href"] // #jokhk6z
-                    var depth: Int = 0
-                    if parent != nil {
-                        parent = String(parent!.dropFirst(1))
-                        if parent == id {
-                            // top level comment with sub comments
-                            parent = nil
-                        } else {
-                            // child comment
-                            if let parentComment = commentsByID[parent!] {
-                                depth = parentComment.depth + 1
-                            } else {
-                                // parent is a deleted comment, skip children of deleted
-                                continue
-                            }
-                        }
-                    } else {
-                        // top level comment without sub comments
-                        parent = nil
-                    }
-                    
-                    let comment = CommentX(id: id, depth: depth, score: score, content: content,
-                                                 user: user, age: age, parent: parent, isUpvoted: isUpvoted,
-                                          isDownvoted: isDownvoted, isSaved: isSaved)
-                    commentsByID[id] = comment
-                    if parent != nil {
-                        comment.allParents = self.findAllParents(firstParent: parent!, comments: commentsByID)
-                    }
-                    self.commentsCollapsed[id] = false
-//                    self.comments.append(comment)
-                }
-            }
-        }
-    }
-    
-    private func findAllParents(firstParent: String, comments: [String: CommentX]) -> [String] {
-        var allParents: [String] = [firstParent]
-        var currentParentId: String? = firstParent
-        var hasNextParent = true
-        while (hasNextParent) {
-            currentParentId = comments[currentParentId!]!.parent
-            if currentParentId != nil {
-                allParents.append(currentParentId!)
-            } else {
-                hasNextParent = false
-            }
-        }
-        return allParents
-    }
-    
-    func refreshWithSortModifier(sortModifier: String) {
-        // sortModifier format: "new"
-        var baseThreadLink = self.currentLink
-        self.openCommentsPage(linkToThread: currentLink, withSortModifier: "?sort=" + sortModifier)
-        self.selectedSorting = sortModifier
-//        self.selectedSortingIcon = CommentsModelAttributes.sortModifierIcons[sortModifier]!
-        self.currentLink = baseThreadLink
     }
     
     func toggleUpvoteComment(comment: Comment) -> Bool {
@@ -213,37 +127,57 @@ class CommentsModel: ObservableObject {
         return true
     }
     
+    func sendReply(parent: Comment?, content: String) -> Bool {
+        if userSessionManager.userName == nil {
+            return false
+        }
+        browser.currentContent { (obj, err) -> Void in
+            self.document = obj
+            if parent != nil {
+                if let replyButton = self.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + parent!.id + "\"]>.entry .buttons .reply-button a").first {
+                    replyButton.click()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.browser.currentContent { (obj, err) -> Void in
+                            self.document = obj
+//                            if let input = self.document?.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + parent!.id + "\"] .usertext-edit textarea").last {
+                                let stub = "document.getElementById(\"commentreply_t1_" + parent!.id +
+                                "\").getElementsByClassName(\"usertext-edit\")[0].getElementsByTagName(\"textarea\")[0].value"
+                                let js = stub + " = \"" + content + "\"; " //+ "var resultErik = " + stub + ";"
+                                self.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
+                                    // .sitetable div.thing[id="thing_t1_jr0mpq1"] .child form#commentreply_t1_jr0mpq1 .usertext-buttons button.save
+                                    self.browser.currentContent { (obj2, err2) -> Void in
+                                        self.document = obj2
+                                        self.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + parent!.id +
+                                                                        "\"] .child form#commentreply_t1_" + parent!.id + " .usertext-buttons button.save").last!.click()
+                                    }
+//                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        // Read submitted comment from DOM
+//                                        self.browser.currentContent { (obj, err) -> Void in
+//                                            self.document = obj
+//                                            var newCommentTimeTag = self.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(parent!.id)\"] .child" +
+//                                                                                                    " .thing.comment .tagline time").first
+//                                            if newCommentTimeTag != nil && newCommentTimeTag!.text == "just now" {
+//                                                let newCommentElement = self.document!
+//                                                    .querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(parent!.id)\"] .child .thing.comment").first
+//
+//                                                let newComment = Comment(id: newCommentElement!["data-fullname"] ?? "", depth: parent!.depth + 1,
+//                                                                         content: content, user: self.userSessionManager.userName!)
+//                                                parent!.replies.insert(newComment, at: 0)
+//                                            }
+//                                        }
+//                                    }
+                                }
+//                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true
+    }
+    
     var selectedSortingIcon: String {
         CommentsModelAttributes.sortModifierIcons[selectedSorting]!
-    }
-}
-
-class CommentX: Identifiable, ObservableObject {
-    var id: String
-    var depth: Int
-    var score: String?
-    var content: LocalizedStringKey?
-    var user: String?
-    var age: String?
-    var parent: String?
-    var allParents: [String]
-    @Published var isUpvoted: Bool
-    @Published var isDownvoted: Bool
-    @Published var isSaved: Bool
-    
-    init(id: String, depth: Int, score: String?, content: String?, user: String?,
-         age: String?, parent: String?, isUpvoted: Bool, isDownvoted: Bool, isSaved: Bool) {
-        self.id = id
-        self.depth = depth
-        self.score = score
-        self.content = LocalizedStringKey(content ?? "")
-        self.user = user
-        self.age = age
-        self.parent = parent
-        self.allParents = []
-        self.isUpvoted = isUpvoted
-        self.isDownvoted = isDownvoted
-        self.isSaved = isSaved
     }
 }
 
