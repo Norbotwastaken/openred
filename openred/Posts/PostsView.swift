@@ -144,6 +144,7 @@ struct CreatePostForm: View {
     @State private var enableReplies = true
     @State private var showingExitAlert = false
     @State private var showingFailedAlert = false
+    @State private var showingSuccessAlert = false
     @State private var awaitingResponse: Bool = false
     
     var body: some View {
@@ -197,7 +198,7 @@ struct CreatePostForm: View {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
                                         awaitingResponse = false
                                         if postCreateModel.submissionState == .success {
-                                            isShowing = false
+                                            showingSuccessAlert = true
                                         } else if postCreateModel.submissionState == .failed {
                                             showingFailedAlert = true
                                         }
@@ -207,6 +208,13 @@ struct CreatePostForm: View {
                         }
                         .alert("Failed to create post", isPresented: $showingFailedAlert) {
                             Button("OK", role: .cancel) { showingFailedAlert = false }
+                        }
+                        .alert("Post successfully created", isPresented: $showingSuccessAlert) {
+                            Button("OK", role: .cancel) {
+                                showingSuccessAlert = false
+                                isShowing = false
+                                // TODO: redirect to newly created post
+                            }
                         }
                 }
                 .frame(maxWidth: .infinity)

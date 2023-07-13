@@ -63,11 +63,12 @@ class PostCreateModel: ObservableObject {
                     self.document = o2
                 }
             }
-        } else if !(link!.starts(with: "https://") || link!.starts(with: "http://")) {
+        } else if link != "" && !(link!.starts(with: "https://") || link!.starts(with: "http://")) {
             // an invalid link
             self.submissionState = .failed
             return
         }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             var js = "document.getElementById(\"title-field\").getElementsByTagName(\"textarea\")[0].value = \"" + title + "\"; "
             if isLink {
