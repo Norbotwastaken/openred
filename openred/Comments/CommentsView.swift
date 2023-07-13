@@ -37,7 +37,7 @@ struct CommentsView: View {
                         
                         PostRowContent(post: post, isPostOpen: true)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: post.contentType == .text ? .leading : .center)
-                        
+                        Divider()
                         HStack {
                             Image(systemName: "arrow.up")
                                 .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
@@ -126,6 +126,7 @@ struct CommentView: View {
     
     var body: some View {
         VStack {
+            Divider()
             HStack(spacing: 10) {
                 if comment.depth > 0 && !comment.isHidden {
                     Rectangle()
@@ -306,6 +307,7 @@ struct CommentEditor: View {
 //                .opacity(0.75)
                 .ignoresSafeArea()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear { isFieldFocused = true }
             VStack(spacing: 30) {
                 HStack {
                     Image(systemName: "xmark")

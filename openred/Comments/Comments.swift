@@ -170,13 +170,12 @@ class CommentsModel: ObservableObject {
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     let stub = "document.getElementsByClassName(\"commentarea\")[0].getElementsByClassName(\"usertext\")[0].getElementsByTagName(\"textarea\")[0].value"
-                    let js = stub + " = \"" + content + "\"; " + "var resultErik = " + stub + ";"
+                    let js = stub + " = \"" + content + "\"; " // + "var resultErik = " + stub + ";"
                     self.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
                         self.browser.currentContent { (obj2, err2) -> Void in
                             self.document = obj2
                             self.document!.querySelectorAll(".commentarea form[id^=\"form-t3\"] .usertext-buttons button.save").first!.click()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                //                            self.checkSentReply(content: content)
                                 self.browser.currentContent { (obj3, err3) -> Void in
                                     self.document = obj3
                                     if let newCommentElement = self.document!.querySelectorAll(".commentarea .thing.comment").first {
@@ -196,20 +195,6 @@ class CommentsModel: ObservableObject {
         }
         return true
     }
-    
-//    func checkSentReply(content: String) {
-//        self.browser.currentContent { (obj3, err3) -> Void in
-//            self.document = obj3
-//            if let newCommentElement = self.document!.querySelectorAll(".commentarea .thing.comment").first {
-//                let newCommentTimeElement = newCommentElement.querySelector(".tagline time")
-//                if newCommentTimeElement != nil && newCommentTimeElement!.text == "just now" {
-//                    let newComment = Comment(id: newCommentElement["data-fullname"] ?? "", depth: 0,
-//                                             content: content, user: self.userSessionManager.userName!)
-//                    self.comments.insert(newComment, at: 0)
-//                }
-//            }
-//        }
-//    }
     
     var selectedSortingIcon: String {
         CommentsModelAttributes.sortModifierIcons[selectedSorting]!

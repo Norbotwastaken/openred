@@ -10,10 +10,11 @@ import AVKit
 
 struct PostsView: View {
     @EnvironmentObject var model: Model
-    @EnvironmentObject var popupViewModel: PopupViewModel
+//    @EnvironmentObject var popupViewModel: PopupViewModel
     @Binding var itemInView: String
-    @State var showComments = false
-    @State var commentInView = ""
+//    @State var showComments = false
+//    @State var commentInView = ""
+    @State var isPostCreatorShowing: Bool = false
     
     var body: some View {
         ZStack {
@@ -48,16 +49,12 @@ struct PostsView: View {
                 .listStyle(PlainListStyle())
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
+                .navigationBarHidden(isPostCreatorShowing)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         HStack {
                             SortMenu()
-                            Button {
-                                // Perform an action
-                                print("Add Item Tapped")
-                            } label: {
-                                Image(systemName: "ellipsis")
-                            }
+                            ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing)
                         }
                     }
                 }
@@ -66,6 +63,24 @@ struct PostsView: View {
                 })
                 .toolbarBackground(.visible, for: .navigationBar)
             }
+            if isPostCreatorShowing {
+                CreatePostForm(communityCode: model.selectedCommunityCode, isShowing: $isPostCreatorShowing)
+            }
+        }
+    }
+}
+
+struct ActionsMenu: View {
+    @EnvironmentObject var model: Model
+    @Binding var isPostCreatorShowing: Bool
+    
+    var body: some View {
+        Menu {
+            Button(action: { isPostCreatorShowing = true }) {
+                Label("Create Post", systemImage: "plus")
+            }
+        } label: {
+            Label("Actions", systemImage: "ellipsis")
         }
     }
 }
@@ -112,5 +127,130 @@ struct SortMenu: View {
     func sortCommunity(sortBy: String?, sortTime: String?) {
         model.loadCommunity(communityCode: model.selectedCommunityCode,
                             sortBy: sortBy, sortTime: sortTime)
+    }
+}
+
+struct CreatePostForm: View {
+    @EnvironmentObject var postCreateModel: PostCreateModel
+    @FocusState private var isFieldFocused: Bool
+    @State private var loading: Bool = false
+    var communityCode: String
+    @Binding var isShowing: Bool
+    @State private var title: String = ""
+    @State private var link: String = "https://"
+    @State private var text: String = ""
+    var types = ["Link", "Text"]
+    @State private var type = "Link"
+    @State private var enableReplies = true
+    @State private var showingExitAlert = false
+    @State private var showingFailedAlert = false
+    @State private var awaitingResponse: Bool = false
+    
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(Color(UIColor.systemBackground))
+                .ignoresSafeArea()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    isFieldFocused = true
+                    postCreateModel.openCreatePage(communityCode: communityCode)
+                }
+            VStack(spacing: 5) {
+                HStack {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 25))
+                        .foregroundColor(Color(UIColor.systemBlue))
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .padding(EdgeInsets(top: 5, leading: 15, bottom: 0, trailing: 0))
+                        .alert("Unsaved changes", isPresented: $showingExitAlert) {
+                            Button("Exit", role: .destructive) { isShowing = false }
+                            Button("Cancel", role: .cancel) {}
+                        } message: {
+                            Text("If you exit all changes will be lost.")
+                        }
+                        .onTapGesture {
+                            if title == "" && link == "" && text == "" {
+                                isShowing = false
+                            } else {
+                                showingExitAlert = true
+                            }
+                        }
+                    Text("Submit post")
+                        .font(.system(size: 20))
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .top)
+                    Image(systemName: "paperplane.fill")
+                        .foregroundColor(Color(UIColor.systemBlue))
+                        .font(.system(size: 25))
+                        .frame(maxWidth: .infinity, alignment: .topTrailing)
+                        .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
+                        .onTapGesture {
+                            postCreateModel.post(isLink: type == "Link",title: title,
+                                                 text: text, link: link, sendReplies: enableReplies)
+                            awaitingResponse = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                if postCreateModel.submissionState == .failed {
+                                    awaitingResponse = false
+                                    showingFailedAlert = true
+                                } else {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+                                        awaitingResponse = false
+                                        if postCreateModel.submissionState == .success {
+                                            isShowing = false
+                                        } else if postCreateModel.submissionState == .failed {
+                                            showingFailedAlert = true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .alert("Failed to create post", isPresented: $showingFailedAlert) {
+                            Button("OK", role: .cancel) { showingFailedAlert = false }
+                        }
+                }
+                .frame(maxWidth: .infinity)
+                VStack {
+                    Picker("Post type", selection: $type) {
+                        ForEach(types, id: \.self) {
+                            Text($0)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
+                    .frame(alignment: .top)
+                    TextField("Title", text: $title, axis: .vertical)
+                        .focused($isFieldFocused)
+                        .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
+                        .frame(maxHeight: 80, alignment: .topLeading)
+                    if type == "Link" {
+                        TextField("Link", text: $link, axis: .vertical)
+                            .focused($isFieldFocused)
+                            .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
+                            .frame(maxHeight: 60, alignment: .topLeading)
+                    } else {
+                        TextField("Text", text: $text, axis: .vertical)
+                            .focused($isFieldFocused)
+                            .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
+                            .frame(maxHeight: 150, alignment: .topLeading)
+                    }
+                    Toggle("Send replies to my inbox", isOn: $enableReplies)
+                        .tint(Color(UIColor.systemBlue))
+                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0))
+                        .frame(alignment: .bottom)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            if awaitingResponse {
+                Rectangle()
+                    .fill(.black)
+                    .opacity(0.6)
+                    .ignoresSafeArea()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                ProgressView()
+            }
+        }
     }
 }

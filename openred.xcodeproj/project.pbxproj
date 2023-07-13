@@ -32,6 +32,7 @@
 		AE4A96872A4450A200BA96CF /* JSONPostParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96862A4450A200BA96CF /* JSONPostParser.swift */; };
 		AE4A96892A48DEBD00BA96CF /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96882A48DEBD00BA96CF /* Search.swift */; };
 		AE4A968B2A49A02600BA96CF /* JSONDataCommentParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */; };
+		AE4A968D2A5DF5CE00BA96CF /* PostCreateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */; };
 		AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C32A2CCB3300889B3E /* openredApp.swift */; };
 		AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C52A2CCB3300889B3E /* ContentView.swift */; };
 		AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE89D4C72A2CCB3600889B3E /* Assets.xcassets */; };
@@ -83,6 +84,7 @@
 		AE4A96862A4450A200BA96CF /* JSONPostParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPostParser.swift; sourceTree = "<group>"; };
 		AE4A96882A48DEBD00BA96CF /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDataCommentParser.swift; sourceTree = "<group>"; };
+		AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateModel.swift; sourceTree = "<group>"; };
 		AE89D4C02A2CCB3300889B3E /* openred.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openred.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4C32A2CCB3300889B3E /* openredApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredApp.swift; sourceTree = "<group>"; };
 		AE89D4C52A2CCB3300889B3E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				AE4A96602A37832800BA96CF /* PostRow.swift */,
 				AE4A96722A3B4B8200BA96CF /* GalleryItem.swift */,
 				AE4A96842A43424D00BA96CF /* PostContent.swift */,
+				AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */,
 			);
 			path = Posts;
 			sourceTree = "<group>";
@@ -447,6 +450,7 @@
 				AE4A965F2A37829700BA96CF /* MediaPopup.swift in Sources */,
 				AE4A96592A33A27100BA96CF /* Community.swift in Sources */,
 				AE4A967C2A3F5F7100BA96CF /* Comments.swift in Sources */,
+				AE4A968D2A5DF5CE00BA96CF /* PostCreateModel.swift in Sources */,
 				AE4A96892A48DEBD00BA96CF /* Search.swift in Sources */,
 				AE4A96772A3D112700BA96CF /* RedditParser.swift in Sources */,
 				AE4A966A2A387ECB00BA96CF /* LoginPopup.swift in Sources */,
