@@ -127,7 +127,7 @@ class CommentsModel: ObservableObject {
         return true
     }
     
-    func sendReply(parent: Comment?, content: String, postId: String? = nil) -> Bool {
+    func sendReply(parent: Comment?, content: String) -> Bool {
         if userSessionManager.userName == nil {
             return false
         }

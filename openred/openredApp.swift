@@ -14,12 +14,14 @@ class openredApp: App {
     @StateObject var popupViewModel = PopupViewModel()
     @StateObject var commentsModel: CommentsModel
     @StateObject var postCreateModel: PostCreateModel
+    @StateObject var messageModel: MessageModel
     
     required init() {
         userSessionManager = UserSessionManager()
         _model = StateObject(wrappedValue: Model(userSessionManager: self.userSessionManager))
         _commentsModel = StateObject(wrappedValue: CommentsModel(userSessionManager: self.userSessionManager))
         _postCreateModel = StateObject(wrappedValue: PostCreateModel(userSessionManager: self.userSessionManager))
+        _messageModel = StateObject(wrappedValue: MessageModel(userSessionManager: self.userSessionManager))
     }
     
     var body: some Scene {
@@ -28,6 +30,7 @@ class openredApp: App {
                 .environmentObject(popupViewModel)
                 .environmentObject(commentsModel)
                 .environmentObject(postCreateModel)
+                .environmentObject(messageModel)
         }
     }
 }

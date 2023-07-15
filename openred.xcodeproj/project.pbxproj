@@ -33,7 +33,8 @@
 		AE4A96892A48DEBD00BA96CF /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96882A48DEBD00BA96CF /* Search.swift */; };
 		AE4A968B2A49A02600BA96CF /* JSONDataCommentParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */; };
 		AE4A968D2A5DF5CE00BA96CF /* PostCreateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */; };
-		AE4A968F2A60165400BA96CF /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AE4A968E2A60165300BA96CF /* Info.plist */; };
+		AE4A96932A604D2000BA96CF /* JSONMessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */; };
+		AE4A96952A60620300BA96CF /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96942A60620300BA96CF /* MessageModel.swift */; };
 		AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C32A2CCB3300889B3E /* openredApp.swift */; };
 		AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C52A2CCB3300889B3E /* ContentView.swift */; };
 		AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE89D4C72A2CCB3600889B3E /* Assets.xcassets */; };
@@ -86,7 +87,8 @@
 		AE4A96882A48DEBD00BA96CF /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDataCommentParser.swift; sourceTree = "<group>"; };
 		AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateModel.swift; sourceTree = "<group>"; };
-		AE4A968E2A60165300BA96CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMessageParser.swift; sourceTree = "<group>"; };
+		AE4A96942A60620300BA96CF /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		AE89D4C02A2CCB3300889B3E /* openred.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openred.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4C32A2CCB3300889B3E /* openredApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredApp.swift; sourceTree = "<group>"; };
 		AE89D4C52A2CCB3300889B3E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -169,6 +171,8 @@
 				AE4A96822A422BBE00BA96CF /* JSONDataLoader.swift */,
 				AE4A96862A4450A200BA96CF /* JSONPostParser.swift */,
 				AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */,
+				AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */,
+				AE4A96942A60620300BA96CF /* MessageModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -228,7 +232,6 @@
 				AE4A966B2A38F1B400BA96CF /* InboxView.swift */,
 				AE4A96702A39ED3200BA96CF /* GifView.swift */,
 				AE4A96882A48DEBD00BA96CF /* Search.swift */,
-				AE4A968E2A60165300BA96CF /* Info.plist */,
 			);
 			path = openred;
 			sourceTree = "<group>";
@@ -376,7 +379,6 @@
 			files = (
 				AE89D4CB2A2CCB3600889B3E /* Preview Assets.xcassets in Resources */,
 				AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */,
-				AE4A968F2A60165400BA96CF /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,10 +464,12 @@
 				AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */,
 				AE4A966C2A38F1B400BA96CF /* InboxView.swift in Sources */,
 				AE4A96832A422BBE00BA96CF /* JSONDataLoader.swift in Sources */,
+				AE4A96952A60620300BA96CF /* MessageModel.swift in Sources */,
 				AE4A96732A3B4B8200BA96CF /* GalleryItem.swift in Sources */,
 				AE4A96812A418B3900BA96CF /* UserSession.swift in Sources */,
 				AE4A967A2A3F4AC900BA96CF /* CommentsView.swift in Sources */,
 				AE4A968B2A49A02600BA96CF /* JSONDataCommentParser.swift in Sources */,
+				AE4A96932A604D2000BA96CF /* JSONMessageParser.swift in Sources */,
 				AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

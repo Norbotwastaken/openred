@@ -59,6 +59,23 @@ class JSONDataLoader {
         urlSession.resume()
     }
     
+    func loadMessages(url: URL, completion: @escaping ([Message]?, Error?) -> Void) {
+        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            do {
+                if let data = data {
+                    let wrapper: JSONMessageEntityWrapper = try JSONDecoder().decode(JSONMessageEntityWrapper.self, from: data)
+                    let messages: [Message] = wrapper.data!.children
+                        .filter{$0.messageData != nil}
+                        .map{ Message(json: $0.messageData!, type: $0.kind) }
+                    completion(messages, error)
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+        urlSession.resume()
+    }
+    
 //    func loadPosts(url: String, completion: @escaping ([JSONPost]?, Error?) -> Void) {
 //        URLSession.shared.dataTask(for: URL(string: url)!) { (data, response, error) in
 //            do {

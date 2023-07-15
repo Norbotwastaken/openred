@@ -10,6 +10,7 @@ import AVKit
 
 struct ContentView: View {
     @EnvironmentObject var popupViewModel: PopupViewModel
+    @EnvironmentObject var model: Model
     @State var communitiesSidebarVisible = true
     @State var loginPopupShowing = false
     @State private var sidebarOffset = CGSize(width: -300, height: 0)
@@ -27,6 +28,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Inbox", systemImage: "envelope")
                 }
+                .badge(model.messageCount)
                 .tag(2)
                 SearchView(tabSelection: $tabSelection)
                 .tabItem {

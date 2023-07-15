@@ -22,6 +22,7 @@ class Model: ObservableObject {
     @Published var selectedSortTime: String?
     @Published var after: String?
     @Published var loginAttempt: LoginAttempt = .undecided
+    @Published var messageCount: Int = 0
     
     let defaults = UserDefaults.standard
     let userSessionManager: UserSessionManager
@@ -190,10 +191,12 @@ class Model: ObservableObject {
     }
     
     private func updateModel(_ doc: Document, communityCode: String) {
+        let defaultTitle = communityCode.contains("r/") ? communityCode.components(separatedBy: "/")[1] : ""
         self.document = doc
-        self.updateTitle(doc: doc, defaultTitle: communityCode.components(separatedBy: "/")[1])
+        self.updateTitle(doc: doc, defaultTitle: defaultTitle)
         self.updateCommunitiesList(doc: doc)
         self.loadUsername(doc: doc)
+        self.updateMessageCount(doc: doc)
     }
     
     private func updateTitle(doc: Document, defaultTitle: String) {
@@ -201,6 +204,14 @@ class Model: ObservableObject {
             self.title = newTitle.prefix(1).capitalized + String(newTitle.dropFirst())
         } else {
             self.title = defaultTitle
+        }
+    }
+    
+    private func updateMessageCount(doc: Document) {
+        if let count = doc.querySelector(".message-count")?.text {
+            self.messageCount = Int(count)!
+        } else {
+            self.messageCount = 0
         }
     }
     

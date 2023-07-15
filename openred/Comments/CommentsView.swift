@@ -109,7 +109,7 @@ struct CommentsView: View {
 //                })
             }
             if isEditorShowing {
-                CommentEditor(isShowing: $isEditorShowing, parentComment: $editorParentComment, postId: post.id)
+                CommentEditor(isShowing: $isEditorShowing, parentComment: $editorParentComment)
             }
         }
         .onAppear {
@@ -296,7 +296,6 @@ struct CommentEditor: View {
     @Binding var isShowing: Bool
     @Binding var parentComment: Comment?
     @State private var content: String = ""
-    var postId: String?
     @FocusState private var isFieldFocused: Bool
     @State private var loading: Bool = false
     
@@ -304,7 +303,6 @@ struct CommentEditor: View {
         ZStack {
             Rectangle()
                 .fill(Color(UIColor.systemBackground))
-//                .opacity(0.75)
                 .ignoresSafeArea()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear { isFieldFocused = true }
@@ -329,7 +327,7 @@ struct CommentEditor: View {
                         .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
                         .onTapGesture {
                             if content != "" {
-                                commentsModel.sendReply(parent: parentComment, content: content, postId: postId)
+                                commentsModel.sendReply(parent: parentComment, content: content)
                                 loading = true
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                                     isShowing = false
@@ -376,7 +374,6 @@ struct CommentEditor: View {
                 ProgressView()
             }
         }
-//        .ignoresSafeArea()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
