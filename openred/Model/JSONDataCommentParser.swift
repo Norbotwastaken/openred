@@ -170,7 +170,8 @@ class Comment: Identifiable, ObservableObject {
     var locked: Bool
     @Published var replies: [Comment] = []
     
-    @Published var isHidden: Bool = false
+    @Published var isCollapsed: Bool
+    var allParents: [String] = []
     
     init(jsonComment: JSONCommentData) {
         self.id = jsonComment.id
@@ -196,7 +197,7 @@ class Comment: Identifiable, ObservableObject {
                 .filter{$0.commentData != nil}
                 .map{ Comment(jsonComment: $0.commentData!) }
         }
-        self.isHidden = jsonComment.collapsed
+        self.isCollapsed = jsonComment.collapsed
         self.linkTitle = jsonComment.link_title
         
         self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
@@ -216,7 +217,7 @@ class Comment: Identifiable, ObservableObject {
         self.isOP = false // ?
         self.stickied = false
         self.locked = false
-        self.isHidden = false
+        self.isCollapsed = false
         self.communityName = ""
 //        self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }

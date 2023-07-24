@@ -36,6 +36,7 @@ struct CommentsView: View {
 //                        .listRowSeparator(.hidden)
                         
                         PostRowContent(post: post, isPostOpen: true)
+                            .padding(EdgeInsets(top: 0, leading: post.contentType == .text ? 10 : 0, bottom: 0, trailing: post.contentType == .text ? 10 : 0))
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: post.contentType == .text ? .leading : .center)
                         Divider()
                         HStack {
@@ -80,19 +81,21 @@ struct CommentsView: View {
                         .font(.system(size: 28))
                         .foregroundColor(Color(UIColor.systemBlue))
 //                        .listRowSeparator(.hidden)
+                        Divider()
                     }
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                    ForEach(commentsModel.comments) { comment in
-                        CommentView(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
-//                            .onAppear {
-//                                commentInView = comment.id
-//                            }
-                            .listRowInsets(EdgeInsets(top: 16, leading: 0, bottom: 20, trailing: 0))
-                            .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
-                            .listRowSeparator(.hidden)
+                    ForEach(commentsModel.flatCommentsList) { comment in
+                        if !commentsModel.anyParentsCollapsed(comment: comment) {
+                            CommentView(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
+                            //                            .onAppear {
+                            //                                commentInView = comment.id
+                            //                            }
+                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                        }
                     }
                 }
                 .listStyle(PlainListStyle())
@@ -134,10 +137,10 @@ struct CommentView: View {
     
     var body: some View {
         VStack {
-            Divider()
-            HStack(spacing: 10) {
+//            Divider()
+            HStack(spacing: 6) {
 //            HStack() {
-                if comment.depth > 0 && !comment.isHidden {
+                if comment.depth > 0 && !comment.isCollapsed {
                     Rectangle()
                         .frame(maxWidth: 2, maxHeight: .infinity, alignment: .leading)
                         .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
@@ -184,42 +187,43 @@ struct CommentView: View {
                     .foregroundColor(.secondary)
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                    if !comment.isHidden {
+                    if !comment.isCollapsed {
                         Text(comment.content ?? "")
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.system(size: 15))
-//                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+//                            .padding(EdgeInsets(top: 6, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
-                .padding(EdgeInsets(top: 0, leading: comment.isHidden ? 5 * (CGFloat(integerLiteral: comment.depth) + 1) : 0, bottom: 0, trailing: 0))
+//                .padding(EdgeInsets(top: 0, leading: comment.isCollapsed ? 5 * (CGFloat(integerLiteral: comment.depth) + 1) : 0, bottom: 0, trailing: 0))
             }
             .background(Color(UIColor.systemBackground))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .padding(EdgeInsets(top: 0, leading: 5 * (CGFloat(integerLiteral: comment.depth) + 1) - 2, bottom: 0, trailing: 10))
+            .padding(EdgeInsets(top: 0, leading: indentSize, bottom: 0, trailing: 10))
             .onTapGesture {
-                comment.isHidden.toggle()
+                comment.isCollapsed.toggle()
+                commentsModel.commentsCollapsed[comment.id]!.toggle()
             }
-//            TODO: swipe actions and context menu are a mess
-//            .contextMenu{ CommentActions(comment: comment) }
-//            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-//                Button { commentsModel.toggleUpvoteComment(comment: comment) } label: {
-//                    Image(systemName: "arrow.up")
-//                }
-//                .tint(.upvoteOrange)
-//                Button { commentsModel.toggleDownvoteComment(comment: comment) } label: {
-//                    Image(systemName: "arrow.down")
-//                }
-//                .tint(.downvoteBlue)
-//            }
-            if !comment.isHidden {
-                ForEach(comment.replies) { reply in
-                    CommentView(comment: reply, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
-                        .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
-                    //                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 20, trailing: 0))
+            .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing) }
+            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                Button { commentsModel.toggleUpvoteComment(comment: comment) } label: {
+                    Image(systemName: "arrow.up")
                 }
+                .tint(.upvoteOrange)
+                Button { commentsModel.toggleDownvoteComment(comment: comment) } label: {
+                    Image(systemName: "arrow.down")
+                }
+                .tint(.downvoteBlue)
             }
         }
+    }
+    
+    var indentSize: CGFloat {
+        var indent = 5 * (CGFloat(integerLiteral: comment.depth) + 1)
+        if comment.isCollapsed && comment.depth > 0 {
+            indent = indent + 8.5
+        }
+        return indent
     }
     
     var indentColor: [Color] = [

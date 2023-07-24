@@ -17,6 +17,7 @@ class CommentsModel: ObservableObject {
     var jsonLoader: JSONDataLoader
     
     @Published var comments: [Comment] = []
+    @Published var flatCommentsList: [Comment] = []
     @Published var commentsCollapsed: [String:Bool] = [:]
     @Published var title: String = ""
     @Published var commentCount: String = ""
@@ -43,6 +44,8 @@ class CommentsModel: ObservableObject {
         self.currentLink = linkToThread
         self.selectedSorting = ""
         self.comments = []
+        self.flatCommentsList = []
+        self.commentsCollapsed = [:]
         
         var components = URLComponents()
         components.scheme = "https"
@@ -75,9 +78,27 @@ class CommentsModel: ObservableObject {
                     for comment in comments {
                         self.comments.append(comment)
                     }
+                    self.buildCommentArray(comments: comments, parents: [])
                 }
             }
         }
+    }
+    
+    private func buildCommentArray(comments: [Comment], parents: [String]) {
+        for comment in comments {
+            comment.allParents = parents
+            commentsCollapsed[comment.id] = comment.isCollapsed
+            flatCommentsList.append(comment)
+            if !comment.replies.isEmpty {
+                var newParents = parents
+                newParents.append(comment.id)
+                buildCommentArray(comments: comment.replies, parents: newParents)
+            }
+        }
+    }
+    
+    func anyParentsCollapsed(comment: Comment) -> Bool {
+        !comment.allParents.map{ commentsCollapsed[$0] }.filter{ $0 == true }.isEmpty
     }
     
     func toggleUpvoteComment(comment: Comment) -> Bool {
@@ -159,6 +180,13 @@ class CommentsModel: ObservableObject {
                                                 let newComment = Comment(id: newCommentElement!["data-fullname"] ?? "", depth: parent!.depth + 1,
                                                                          content: content, user: self.userSessionManager.userName!)
                                                 parent!.replies.insert(newComment, at: 0)
+                                                var i = 0
+                                                while i < self.flatCommentsList.count && self.flatCommentsList[i].id != parent?.id {
+                                                    i = i + 1
+                                                }
+                                                self.flatCommentsList.insert(newComment, at: i + 1)
+                                                self.commentsCollapsed[newComment.id] = false
+                                                // TODO: update other model collections
                                             }
                                         }
                                     }
@@ -184,6 +212,8 @@ class CommentsModel: ObservableObject {
                                             let newComment = Comment(id: newCommentElement["data-fullname"] ?? "", depth: 0,
                                                                      content: content, user: self.userSessionManager.userName!)
                                             self.comments.insert(newComment, at: 0)
+                                            self.flatCommentsList.insert(newComment, at: 0)
+                                            self.commentsCollapsed[newComment.id] = false
                                         }
                                     }
                                 }
