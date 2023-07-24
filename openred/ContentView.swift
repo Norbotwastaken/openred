@@ -13,13 +13,14 @@ struct ContentView: View {
     @EnvironmentObject var model: Model
     @State var communitiesSidebarVisible = true
     @State var loginPopupShowing = false
+    @State var showPosts = true
     @State private var sidebarOffset = CGSize(width: -300, height: 0)
     @State private var tabSelection = 1
     
     var body: some View {
         ZStack {
             TabView(selection: $tabSelection) {
-                CommunitiesStack(loginPopupShowing: $loginPopupShowing)
+                CommunitiesStack(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts)
                 .tabItem {
                     Label("Feed", systemImage: "newspaper")
                 }
@@ -30,7 +31,7 @@ struct ContentView: View {
                 }
                 .badge(model.messageCount)
                 .tag(2)
-                SearchView(tabSelection: $tabSelection)
+                SearchView(tabSelection: $tabSelection, showPosts: $showPosts)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct SearchView: View {
     @EnvironmentObject var model: Model
     @Binding var tabSelection: Int
+    @Binding var showPosts: Bool
     @State private var communityName: String = ""
     @FocusState private var isFieldFocused: Bool
     
@@ -27,6 +28,7 @@ struct SearchView: View {
                 .onSubmit {
                     model.loadCommunity(communityCode: "r/" + communityName)
                     tabSelection = 1
+                    showPosts = true
                 }
                 .frame(alignment: .top)
                 .padding(EdgeInsets(top: 50, leading: 0, bottom: 0, trailing: 0))

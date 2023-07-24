@@ -62,5 +62,6 @@ class UserSessionManager: ObservableObject {
                 }
             }
         }
+        self.userName = nil
     }
 }

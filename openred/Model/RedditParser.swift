@@ -80,8 +80,8 @@ struct RedditParser {
                                 galleryItemFullLink = galleryItemPreviewLink
                             }
                             
-                            galleryItems.append(GalleryItem(galleryItemPreviewLink,
-                                                            fullLink: galleryItemFullLink, caption: galleryItemCaption))
+//                            galleryItems.append(GalleryItem(galleryItemPreviewLink,
+//                                                            fullLink: galleryItemFullLink, caption: galleryItemCaption))
                         }
                         let galleryTextHTML = doc.at_css(".usertext .md")?.innerHTML
 //                        gallery = Gallery(textHTML: galleryTextHTML, items: galleryItems)

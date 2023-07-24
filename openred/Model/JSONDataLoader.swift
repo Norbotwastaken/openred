@@ -25,15 +25,42 @@ class JSONDataLoader {
         }
     }
     
-    func loadPosts(url: URL, completion: @escaping ([JSONPost]?, String?, Error?) -> Void) {
+//    func loadPosts(url: URL, completion: @escaping ([JSONPost]?, String?, Error?) -> Void) {
+//        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+//            do {
+//                if let data = data {
+//                    let postsWrapper: JSONPostsWrapper = try JSONDecoder().decode(JSONPostsWrapper.self, from: data)
+//                    let posts: [JSONPost] = postsWrapper.data.children.map { wrapper in
+//                        return wrapper.data
+//                    }
+//                    completion(posts, postsWrapper.data.after, error)
+//                }
+//            } catch let error {
+//                print(error)
+//            }
+//        }
+//        urlSession.resume()
+//    }
+    
+    func loadItems(url: URL, completion: @escaping ([PostOrComment]?, String?, Error?) -> Void) {
         let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             do {
                 if let data = data {
                     let postsWrapper: JSONPostsWrapper = try JSONDecoder().decode(JSONPostsWrapper.self, from: data)
-                    let posts: [JSONPost] = postsWrapper.data.children.map { wrapper in
-                        return wrapper.data
+                    var items: [PostOrComment] = []
+                    for i in postsWrapper.data.children.indices {
+                        let wrapper = postsWrapper.data.children[i]
+                        let isActiveLoadMarker = (i == postsWrapper.data.children.count - 7)
+                        if wrapper.data != nil {
+                            items.append(PostOrComment(post: Post(jsonPost: wrapper.data!),
+                                                       isActiveLoadMarker: isActiveLoadMarker))
+                        } else if wrapper.commentData != nil {
+                            items.append(PostOrComment(comment: Comment(jsonComment: wrapper.commentData!),
+                                                       isActiveLoadMarker: isActiveLoadMarker))
+                        }
+                        
                     }
-                    completion(posts, postsWrapper.data.after, error)
+                    completion(items, postsWrapper.data.after, error)
                 }
             } catch let error {
                 print(error)

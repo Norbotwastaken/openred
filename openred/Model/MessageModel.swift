@@ -105,7 +105,11 @@ class MessageModel: ObservableObject {
         }
         browser.currentContent { (obj, err) -> Void in
             self.document = obj
-            self.document!.querySelectorAll("#thing_\(message.type)_\(message.id) .buttons .yes").first!.click()
+            self.document!.querySelector("#thing_\(message.type)_\(message.id) .buttons .block-button .togglebutton")!.click() { (o, e) -> Void in
+                self.browser.currentContent { (obj2, err2) -> Void in
+                    self.document!.querySelectorAll("#thing_\(message.type)_\(message.id) .buttons .yes").first!.click()
+                }
+            }
         }
     }
 }

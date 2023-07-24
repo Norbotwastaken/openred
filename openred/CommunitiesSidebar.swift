@@ -11,7 +11,7 @@ import SwiftUI
 struct CommunitiesStack: View {
     @EnvironmentObject var model: Model
     @Binding var loginPopupShowing: Bool
-    @State var showPosts = true
+    @Binding var showPosts: Bool
     @State private var searchText = ""
     @State var itemInView = ""
     
@@ -22,7 +22,7 @@ struct CommunitiesStack: View {
                     VStack(alignment: .leading, spacing: 0) {
                         List {
                             if searchText.isEmpty {
-                                UserSection(loginPopupShowing: $loginPopupShowing)
+                                UserSection(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts)
                                 Section() {
                                     ForEach(model.mainPageCommunities) { community in
                                         CommunityRow(community: community, showPosts: $showPosts)
@@ -109,7 +109,7 @@ struct CommunityRow: View {
     
     var body: some View {
         Button(action: {
-            model.loadCommunity(communityCode: community.communityCode)
+            model.loadCommunity(community: CommunityOrUser(community: community))
             showPosts = true
         }) {
             HStack {
@@ -126,10 +126,17 @@ struct CommunityRow: View {
 struct UserSection: View {
     @EnvironmentObject var model: Model
     @Binding var loginPopupShowing: Bool
+    @Binding var showPosts: Bool
     
     var body: some View {
         if model.userName != nil {
             Menu {
+                Button(action: {
+                    showPosts = true
+                    model.loadCommunity(community: CommunityOrUser(user: User(model.userName!)))
+                }) {
+                    Label("My Profile", systemImage: "person")
+                }
                 Button(action: {
                     model.logOut()
                 }) {

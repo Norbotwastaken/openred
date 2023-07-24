@@ -107,6 +107,7 @@ class JSONCommentData: Codable {
 //    var num_reports: String?
 //    var ups: Int
     var replies: JSONEntityWrapper? // ="" when empty
+    var link_title: String?
     
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
@@ -136,7 +137,9 @@ class JSONCommentData: Codable {
         try self.created = container.decode(Double.self, forKey: .created)
         try? self.author_flair_text = container.decode(String?.self, forKey: .author_flair_text)
         try? self.subreddit_name_prefixed = container.decode(String?.self, forKey: .subreddit_name_prefixed)
-        try self.depth = container.decode(Int.self, forKey: .depth)
+        try? self.link_title = container.decode(String?.self, forKey: .link_title)
+        self.depth = 0
+        try? self.depth = container.decode(Int.self, forKey: .depth)
         
         self.replies = nil
         try? self.replies = container.decode(JSONEntityWrapper?.self, forKey: .replies)
@@ -158,8 +161,9 @@ class Comment: Identifiable, ObservableObject {
     var flair: String?
     var awardLinks: [String] = []
     var awardCount: Int?
-    var communityName: String?
+    var communityName: String
     var archived: Bool
+    var linkTitle: String?
     
     var isOP: Bool
     var stickied: Bool
@@ -182,7 +186,7 @@ class Comment: Identifiable, ObservableObject {
             self.awardLinks.append(award.resized_icons![1].url)
         }
         self.awardCount = jsonComment.total_awards_received
-        self.communityName = jsonComment.subreddit
+        self.communityName = jsonComment.subreddit ?? ""
         self.archived = jsonComment.archived
         self.isOP = jsonComment.is_submitter
         self.stickied = jsonComment.stickied
@@ -193,6 +197,7 @@ class Comment: Identifiable, ObservableObject {
                 .map{ Comment(jsonComment: $0.commentData!) }
         }
         self.isHidden = jsonComment.collapsed
+        self.linkTitle = jsonComment.link_title
         
         self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }
@@ -212,7 +217,7 @@ class Comment: Identifiable, ObservableObject {
         self.stickied = false
         self.locked = false
         self.isHidden = false
-        
+        self.communityName = ""
 //        self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }
     

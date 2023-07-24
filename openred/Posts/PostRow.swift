@@ -36,6 +36,47 @@ struct PostRow: View {
     }
 }
 
+struct PostCommentRow: View {
+    @EnvironmentObject var model: Model
+    var comment: Comment
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            VStack(spacing: 8) {
+                Text(comment.linkTitle ?? "")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("r/" + comment.communityName)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .font(.system(size: 14))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .onTapGesture {
+                        model.loadCommunity(communityCode: "r/" + comment.communityName)
+                    }
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            VStack(spacing: 8) {
+                Text(comment.user ?? "")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .font(.system(size: 14))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(comment.content ?? "")
+                    .font(.system(size: 15))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            }
+            Rectangle()
+                .fill(Color(UIColor.systemGray5)
+                    .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
+                .frame(maxWidth: .infinity, maxHeight: 5)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
+    }
+}
+
+
 struct PostRowFooter: View {
     @EnvironmentObject var model: Model
     @ObservedObject var post: Post
@@ -43,16 +84,19 @@ struct PostRowFooter: View {
     var body: some View {
         HStack {
             VStack(spacing: 8) {
-                Text(getFooterLabel(post: post))
+                Text(model.selectedCommunity.isMultiCommunity ? post.community ?? "" :
+                        post.userName != nil ? "u/" + post.userName! : "")
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onTapGesture {
-                        if post.community != nil {
+                        if model.selectedCommunity.isMultiCommunity {
                             model.loadCommunity(communityCode: post.community!)
                         } else {
-                            // TODO: load user page
+                            if post.userName != "[deleted]" {
+                                model.loadCommunity(community: CommunityOrUser(user: User(post.userName!)))
+                            }
                         }
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))

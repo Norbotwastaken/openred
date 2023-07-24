@@ -26,11 +26,11 @@ class PostCreateModel: ObservableObject {
     }
     
     // 'communityCode': r/something
-    func openCreatePage(communityCode: String) {
+    func openCreatePage(community: Community) {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "old.reddit.com"
-        components.path = "/" + communityCode.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)! + "/submit"
+        components.path = "/" + community.communityCode.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)! + "/submit"
         self.submissionLink = components.url
         
         browser.visit(url: self.submissionLink!) { o, e in

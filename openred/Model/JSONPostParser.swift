@@ -10,6 +10,13 @@ import Foundation
 class JSONPostsWrapper: Codable {
     var kind: String
     var data: JSONPostsData
+    
+    required init(from decoder: Decoder) throws {
+        let container =  try decoder.container(keyedBy: CodingKeys.self)
+        
+        try self.kind = container.decode(String.self, forKey: .kind)
+        try self.data = container.decode(JSONPostsData.self, forKey: .data)
+    }
 }
 
 class JSONPostsData: Codable {
@@ -20,7 +27,16 @@ class JSONPostsData: Codable {
 
 class JSONPostWrapper: Codable {
     var kind: String
-    var data: JSONPost
+    var data: JSONPost?
+    var commentData: JSONCommentData?
+    
+    required init(from decoder: Decoder) throws {
+        let container =  try decoder.container(keyedBy: CodingKeys.self)
+        
+        try self.kind = container.decode(String.self, forKey: .kind)
+        try? self.data = container.decode(JSONPost.self, forKey: .data)
+        try? self.commentData = container.decode(JSONCommentData.self, forKey: .data)
+    }
 }
 
 class JSONPost: Codable {
@@ -292,7 +308,7 @@ class JSONPostMediaMetaData: Codable {
 
 class JSONPostMediaMetaDataItem: Codable {
     var status: String?
-//    var e: String?
+    var e: String?
 //    var m: String?
     var p: [JSONPostMediaMetaDataItemImage] // preview data
     var s: JSONPostMediaMetaDataItemImage?
@@ -301,9 +317,12 @@ class JSONPostMediaMetaDataItem: Codable {
 
 class JSONPostMediaMetaDataItemImage: Codable {
     var u: String? // url of gallery image
+//    var gif: String? // url if animated image
+    var mp4: String? // url if animated image
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
-        try u = String(htmlEncodedString: container.decode(String.self, forKey: .u))!
+        try? self.u = String(htmlEncodedString: container.decode(String?.self, forKey: .u)!)
+        try? self.mp4 = String(htmlEncodedString: container.decode(String?.self, forKey: .mp4)!)
     }
 }
 

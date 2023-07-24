@@ -31,16 +31,17 @@ struct CommentsView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
-                        .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                        .listRowSeparator(.hidden)
+                        .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
+//                        .listRowInsets(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+//                        .listRowSeparator(.hidden)
                         
                         PostRowContent(post: post, isPostOpen: true)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: post.contentType == .text ? .leading : .center)
                         Divider()
                         HStack {
                             Image(systemName: "arrow.up")
-                                .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
+                                .foregroundColor(post.isUpvoted ? .upvoteOrange : Color(UIColor.systemBlue))
+                                .fontWeight(post.isUpvoted ? .semibold : .regular)
                                 .onTapGesture {
                                     if model.toggleUpvotePost(post: post) == false {
                                         // show login popup
@@ -48,7 +49,8 @@ struct CommentsView: View {
                                 }
                                 .frame(maxWidth: .infinity, alignment: .center)
                             Image(systemName: "arrow.down")
-                                .foregroundColor(post.isDownvoted ? .downvoteBlue : .secondary)
+                                .fontWeight(post.isDownvoted ? .semibold : .regular)
+                                .foregroundColor(post.isDownvoted ? .downvoteBlue : Color(UIColor.systemBlue))
                                 .onTapGesture {
                                     if model.toggleDownvotePost(post: post) == false {
                                         // show login popup
@@ -56,7 +58,9 @@ struct CommentsView: View {
                                 }
                                 .frame(maxWidth: .infinity, alignment: .center)
                             Image(systemName: post.isSaved ? "bookmark.slash" : "bookmark")
-                                .foregroundColor(.secondary)
+//                            Image(systemName: "bookmark")
+//                                .fontWeight(post.isSaved ? .semibold : .regular)
+//                                .foregroundColor(.secondary)
                                 .onTapGesture {
                                     if model.toggleSavePost(post: post) == false {
                                         // show login popup
@@ -64,7 +68,7 @@ struct CommentsView: View {
                                 }
                                 .frame(maxWidth: .infinity, alignment: .center)
                             Image(systemName: "arrow.uturn.left")
-                                .foregroundColor(.secondary)
+//                                .foregroundColor(.secondary)
                                 .onTapGesture {
                                     editorParentComment = nil
                                     isEditorShowing = true
@@ -72,10 +76,14 @@ struct CommentsView: View {
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(EdgeInsets(top: 5, leading: 0, bottom: 8, trailing: 0))
+                        .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
                         .font(.system(size: 28))
-                        .listRowSeparator(.hidden)
+                        .foregroundColor(Color(UIColor.systemBlue))
+//                        .listRowSeparator(.hidden)
                     }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     ForEach(commentsModel.comments) { comment in
                         CommentView(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
@@ -128,6 +136,7 @@ struct CommentView: View {
         VStack {
             Divider()
             HStack(spacing: 10) {
+//            HStack() {
                 if comment.depth > 0 && !comment.isHidden {
                     Rectangle()
                         .frame(maxWidth: 2, maxHeight: .infinity, alignment: .leading)
@@ -180,13 +189,14 @@ struct CommentView: View {
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.system(size: 15))
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+//                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
+                .padding(EdgeInsets(top: 0, leading: comment.isHidden ? 5 * (CGFloat(integerLiteral: comment.depth) + 1) : 0, bottom: 0, trailing: 0))
             }
             .background(Color(UIColor.systemBackground))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .padding(EdgeInsets(top: 0, leading: 5 * (CGFloat(integerLiteral:comment.depth) + 1), bottom: 0, trailing: 10))
+            .padding(EdgeInsets(top: 0, leading: 5 * (CGFloat(integerLiteral: comment.depth) + 1) - 2, bottom: 0, trailing: 10))
             .onTapGesture {
                 comment.isHidden.toggle()
             }

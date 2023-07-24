@@ -7,6 +7,31 @@
 
 import Foundation
 
+class PostOrComment: Identifiable, ObservableObject {
+    var id: String
+    var post: Post?
+    var comment: Comment?
+    var isComment: Bool
+    var isActiveLoadMarker: Bool
+    
+    init(post: Post, isActiveLoadMarker: Bool = false) {
+        self.post = post
+        self.isComment = false
+        self.id = post.id
+        self.isActiveLoadMarker = isActiveLoadMarker
+    }
+    init(comment: Comment, isActiveLoadMarker: Bool = false) {
+        self.comment = comment
+        self.isComment = true
+        self.id = comment.id
+        self.isActiveLoadMarker = isActiveLoadMarker
+    }
+    
+    func deactivateLoadMarker() {
+        self.isActiveLoadMarker = false
+    }
+}
+
 class Post: Identifiable, ObservableObject {
     var id: String
     var title: String
@@ -31,7 +56,6 @@ class Post: Identifiable, ObservableObject {
     var gallery: Gallery?
     var crosspost: Post?
 //    var crosspostAsPost: Post?
-    var isActiveLoadMarker: Bool
     @Published var isUpvoted: Bool
     @Published var isDownvoted: Bool
     @Published var isSaved: Bool
@@ -39,12 +63,12 @@ class Post: Identifiable, ObservableObject {
     var awardCount: Int
 //    private var totalAwardCount: Int?
     
-    init(jsonPost: JSONPost, isActiveLoadMarker: Bool = false) {
+    init(jsonPost: JSONPost) {
         self.id = jsonPost.id
         self.title = jsonPost.title!
         self.thumbnailLink = jsonPost.thumbnail
         self.externalLink = jsonPost.url
-        self.isActiveLoadMarker = isActiveLoadMarker
+        
         self.isUpvoted = jsonPost.likes != nil ? jsonPost.likes! : false
         self.isDownvoted = jsonPost.likes != nil ? !jsonPost.likes! : false
         self.isSaved = jsonPost.saved
@@ -65,7 +89,13 @@ class Post: Identifiable, ObservableObject {
         if (jsonPost.is_self) {
             self.contentType = ContentType.text
         }
-        else if (jsonPost.is_gallery != nil && jsonPost.is_gallery!) {
+        else if (jsonPost.crosspost_parent_list != nil
+                 && !jsonPost.crosspost_parent_list!.isEmpty) {
+            self.contentType = ContentType.crosspost
+            self.crosspost = Post(jsonPost: jsonPost.crosspost_parent_list![0])
+        }
+        else if (jsonPost.is_gallery != nil && jsonPost.is_gallery! &&
+                 jsonPost.gallery_data != nil && jsonPost.media_metadata != nil) {
             self.contentType = ContentType.gallery
             self.gallery = Gallery(galleryData: jsonPost.gallery_data!.items,
                                    galleryItems: jsonPost.media_metadata!.elements,
@@ -75,11 +105,6 @@ class Post: Identifiable, ObservableObject {
             // post_hint == hosted:video
             self.contentType = ContentType.video
             self.videoLink = jsonPost.media?.reddit_video!.hls_url
-        }
-        else if (jsonPost.crosspost_parent_list != nil
-                 && !jsonPost.crosspost_parent_list!.isEmpty) {
-            self.contentType = ContentType.crosspost
-            self.crosspost = Post(jsonPost: jsonPost.crosspost_parent_list![0])
         }
         else if (jsonPost.post_hint != nil && jsonPost.post_hint! == "image") {
             self.contentType = ContentType.image
@@ -91,6 +116,10 @@ class Post: Identifiable, ObservableObject {
             let jsonImage = jsonPost.preview?.images[0]
             self.imageLink = jsonImage!.source.url
             self.imagePreviewLink = jsonImage!.resolutions[jsonImage!.resolutions.count - 1].url
+        }
+        else if (jsonPost.post_hint != nil && jsonPost.post_hint! == "rich:video") {
+            self.contentType = ContentType.video
+            self.videoLink = jsonPost.url
         }
         else if (jsonPost.post_hint == nil || jsonPost.post_hint == "link") {
             if jsonPost.url!.contains("imgur.com") && jsonPost.url!.contains(".gifv") {
@@ -105,10 +134,6 @@ class Post: Identifiable, ObservableObject {
         
         self.displayAge = ""
         self.displayAge = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonPost.created)).timeAgoDisplay())
-    }
-    
-    func deactivateLoadMarker() {
-        self.isActiveLoadMarker = false
     }
     
     func displayAge(_ formattedTime: String) -> String {

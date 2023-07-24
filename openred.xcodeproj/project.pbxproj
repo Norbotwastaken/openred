@@ -35,6 +35,7 @@
 		AE4A968D2A5DF5CE00BA96CF /* PostCreateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */; };
 		AE4A96932A604D2000BA96CF /* JSONMessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */; };
 		AE4A96952A60620300BA96CF /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96942A60620300BA96CF /* MessageModel.swift */; };
+		AE4A96972A69324700BA96CF /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96962A69324600BA96CF /* UserView.swift */; };
 		AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C32A2CCB3300889B3E /* openredApp.swift */; };
 		AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C52A2CCB3300889B3E /* ContentView.swift */; };
 		AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE89D4C72A2CCB3600889B3E /* Assets.xcassets */; };
@@ -89,6 +90,7 @@
 		AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateModel.swift; sourceTree = "<group>"; };
 		AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMessageParser.swift; sourceTree = "<group>"; };
 		AE4A96942A60620300BA96CF /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
+		AE4A96962A69324600BA96CF /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		AE89D4C02A2CCB3300889B3E /* openred.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openred.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4C32A2CCB3300889B3E /* openredApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredApp.swift; sourceTree = "<group>"; };
 		AE89D4C52A2CCB3300889B3E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				AE4A96722A3B4B8200BA96CF /* GalleryItem.swift */,
 				AE4A96842A43424D00BA96CF /* PostContent.swift */,
 				AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */,
+				AE4A96962A69324600BA96CF /* UserView.swift */,
 			);
 			path = Posts;
 			sourceTree = "<group>";
@@ -470,6 +473,7 @@
 				AE4A967A2A3F4AC900BA96CF /* CommentsView.swift in Sources */,
 				AE4A968B2A49A02600BA96CF /* JSONDataCommentParser.swift in Sources */,
 				AE4A96932A604D2000BA96CF /* JSONMessageParser.swift in Sources */,
+				AE4A96972A69324700BA96CF /* UserView.swift in Sources */,
 				AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

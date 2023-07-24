@@ -14,6 +14,7 @@ struct InboxView: View {
     @State var loginPopupShowing: Bool = true
     @State var isEditorShowing: Bool = false
     @State var replyToMessage: Message?
+    @State var showingBlockAlert: Bool = false
     var types: KeyValuePairs<String, String> {
         return ["inbox": "All",
 //                "unread": "Unread",
@@ -39,8 +40,15 @@ struct InboxView: View {
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                         ForEach(messageModel.messages) { message in
-                            MessageView(message: message, isEditorShowing: $isEditorShowing, replyToMessage: $replyToMessage)
+                            MessageView(message: message, isEditorShowing: $isEditorShowing,
+                                        replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert)
                                 .listRowInsets(EdgeInsets(top: 8, leading: message.new ? 3 : 15, bottom: 8, trailing: 15))
+                                .alert("Block user", isPresented: $showingBlockAlert) {
+                                    Button("Cancel", role: .cancel) {}
+                                    Button("Block", role: .destructive) { messageModel.blockUser(message: message) }
+                                } message: {
+                                    Text("\(message.author) will be blocked")
+                                }
                         }
                         HStack(spacing: 30) {
                             if messageModel.prevLink != nil {
@@ -125,6 +133,7 @@ struct MessageView: View {
     @ObservedObject var message: Message
     @Binding var isEditorShowing: Bool
     @Binding var replyToMessage: Message?
+    @Binding var showingBlockAlert: Bool
     
     var body: some View {
         HStack(spacing: 10) {
@@ -141,7 +150,8 @@ struct MessageView: View {
                         .bold()
                     Spacer()
                     Menu {
-                        MessageActions(message: message, isEditorShowing: $isEditorShowing, replyToMessage: $replyToMessage)
+                        MessageActions(message: message, isEditorShowing: $isEditorShowing,
+                                       replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert)
                     } label: {
                         ZStack {
                             Spacer()
@@ -182,6 +192,7 @@ struct MessageActions: View {
 //    @Binding var editorParentComment: Comment?
     @Binding var isEditorShowing: Bool
     @Binding var replyToMessage: Message?
+    @Binding var showingBlockAlert: Bool
     
     var body: some View {
         Group {
@@ -197,9 +208,15 @@ struct MessageActions: View {
 //            Button(action: {  }) {
 //                Label("Spam", systemImage: "exclamationmark.octagon")
 //            }
-            Button(action: {  }) {
+            Button(action: { showingBlockAlert = true }) {
                 Label("Block User", systemImage: "xmark")
             }
+//            .alert("Block user", isPresented: $showingBlockAlert) {
+//                Button("Cancel", role: .cancel) {}
+//                Button("Block", role: .destructive) { messageModel.blockUser(message: message) }
+//            } message: {
+//                Text("\(message.author) will be blocked")
+//            }
         }
     }
 }

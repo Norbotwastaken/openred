@@ -11,13 +11,14 @@ import Kanna
 import WebKit
 
 class Model: ObservableObject {
-    @Published var posts: [Post] = []
+    @Published var items: [PostOrComment] = []
     @Published var communities: [Community] = []
     @Published var subscribedCommunities: [Community] = []
 //    @Published var mainPageCommunities: [Community] = []
 //    @Published var userFunctionCommunities: [Community] = []
     @Published var title: String = ""
-    @Published var selectedCommunityCode: String = "/r/all"
+    @Published var selectedCommunity: CommunityOrUser =
+    CommunityOrUser(community: Community("All", link: "https://old.reddit.com", iconName: nil, isMultiCommunity: true, communityCode: "r/all"))
     @Published var selectedSorting: String = ""
     @Published var selectedSortTime: String?
     @Published var after: String?
@@ -39,7 +40,7 @@ class Model: ObservableObject {
 //        self.mainPageCommunities = mainPageCommunities
 //        self.userFunctionCommunities = userFunctionCommunities
         self.browser = Erik(webView: self.webView)
-        self.loadCommunity(communityCode: selectedCommunityCode)
+        self.loadCommunity(community: selectedCommunity)
     }
     
     func login(username: String, password: String) {
@@ -74,28 +75,42 @@ class Model: ObservableObject {
     
     func logOut() {
         userSessionManager.logOut()
-        loadCommunity(communityCode: selectedCommunityCode)
+        loadCommunity(community: selectedCommunity)
     }
     
     // 'communityCode': r/something
+    func loadCommunity(communityCode: String, sortBy: String? = nil, sortTime: String? = nil, after: String? = nil) {
+        let community = CommunityOrUser(community: Community("", link: "", iconName: nil, isMultiCommunity: false, communityCode: communityCode))
+        self.loadCommunity(community: community, sortBy: sortBy, sortTime: sortTime, after: after)
+    }
+    
     // 'sortBy': top
     // 'sortTime': month
     // 'after': t3_14c4ene
     //  old.reddit.com/r/something/top/.json?sort=top&t=month&count=25&after=t3_14c4ene
-    func loadCommunity(communityCode: String, sortBy: String? = nil, sortTime: String? = nil, after: String? = nil) {
-        self.selectedCommunityCode = communityCode
+    func loadCommunity(community: CommunityOrUser, filter: String = "", sortBy: String? = nil, sortTime: String? = nil, after: String? = nil) {
+        self.selectedCommunity = community
         self.selectedSortTime = sortTime
         self.selectedSorting = ""
         
         var components = URLComponents()
         components.scheme = "https"
         components.host = "old.reddit.com"
-        components.path = "/" + communityCode
         components.queryItems = []
+        if !community.isUser {
+            components.path = "/" + community.community!.communityCode
+        } else {
+            components.path = "/user/" + community.user!.name
+            if filter != "" {
+                components.path = components.path + "/\(filter)"
+            }
+        }
         
         if sortBy != nil {
             self.selectedSorting = sortBy!
-            components.path = components.path + "/" + sortBy!
+            if !community.isUser {
+                components.path = components.path + "/" + sortBy!
+            }
             components.queryItems?.append(URLQueryItem(name: "sort", value: sortBy!))
             if sortTime != nil {
                 components.queryItems?.append(URLQueryItem(name: "t", value: sortTime!))
@@ -105,29 +120,30 @@ class Model: ObservableObject {
         if after != nil {
             components.queryItems?.append(URLQueryItem(name: "after", value: after!))
         } else {
-            self.posts = []
+            self.items = []
         }
         
         browser.visit(url: components.url! ) { object, error in
+            let defaultTitle = community.isUser ? community.user!.name :
+            community.community!.communityCode.contains("r/") ? community.community!.communityCode.components(separatedBy: "/")[1] : ""
             if let doc = object {
                 if let nsfwButton = doc.querySelector(".interstitial form button[value=\"yes\"]") {
                     nsfwButton.click()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                        self.updateModel(doc, communityCode: communityCode)
+                        self.updateModel(doc, defaultTitle: defaultTitle)
                     }
                 } else {
-                    self.updateModel(doc, communityCode: communityCode)
+                    self.updateModel(doc, defaultTitle: defaultTitle)
                 }
             }
         }
         
         components.path = components.path + "/.json"
-        jsonLoader.loadPosts(url: components.url!) { (posts, after, error) in
+        jsonLoader.loadItems(url: components.url!) { (items, after, error) in
             DispatchQueue.main.async {
-                if let posts = posts {
-                    for i in posts.indices {
-                        let isActiveLoadMarker = (i == posts.count - 7)
-                        self.posts.append(Post(jsonPost: posts[i], isActiveLoadMarker: isActiveLoadMarker))
+                if let items = items {
+                    for i in items.indices {
+                        self.items.append(items[i])
                     }
                 }
                 self.after = after
@@ -137,7 +153,7 @@ class Model: ObservableObject {
     
     func loadNextPagePosts() {
         if self.after != nil {
-            loadCommunity(communityCode: selectedCommunityCode, sortBy: selectedSorting,
+            loadCommunity(community: selectedCommunity, sortBy: selectedSorting,
                           sortTime: selectedSortTime, after: after)
         }
     }
@@ -190,8 +206,7 @@ class Model: ObservableObject {
         return true
     }
     
-    private func updateModel(_ doc: Document, communityCode: String) {
-        let defaultTitle = communityCode.contains("r/") ? communityCode.components(separatedBy: "/")[1] : ""
+    private func updateModel(_ doc: Document, defaultTitle: String) {
         self.document = doc
         self.updateTitle(doc: doc, defaultTitle: defaultTitle)
         self.updateCommunitiesList(doc: doc)
@@ -248,7 +263,7 @@ class Model: ObservableObject {
         var communities: [Community] = []
         communities.append(Community("Home", link: redditBaseURL,
                                                   iconName: "house.fill", isMultiCommunity: true, communityCode: ""))
-        communities.append(Community("Popular Posts", link: redditBaseURL + "/r/popular",
+        communities.append(Community("Popular Posts", link: redditBaseURL + "r/popular",
                                                   iconName: "chart.line.uptrend.xyaxis.circle.fill",
                                                   isMultiCommunity: true, communityCode: "r/popular"))
         communities.append(Community("All Posts", link: redditBaseURL + "/r/all",
@@ -260,9 +275,9 @@ class Model: ObservableObject {
     var userFunctionCommunities: [Community] {
         var communities: [Community] = []
         communities.append(Community("Saved", link: redditBaseURL + "/saved", iconName: "heart.text.square",
-                                     isMultiCommunity: true, communityCode: "/saved"))
+                                     isMultiCommunity: true, communityCode: "saved"))
         communities.append(Community("Moderator Posts", link: redditBaseURL + "/mod", iconName: "shield",
-                                     isMultiCommunity: true, communityCode: "/mod"))
+                                     isMultiCommunity: true, communityCode: "mod"))
         return communities
     }
     
