@@ -14,16 +14,15 @@ struct PostRowContent: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var popupViewModel: PopupViewModel
     @State var startLoadingGif: Bool = false
+    @State var restorePostsPlaceholder: Bool = false
     @State var imageContainerSize: CGSize = CGSize(width: 1, height: 400)
     var post: Post
+    @Binding var target: CommunityOrUser
     var isPostOpen: Bool = false
     
     var body: some View {
         if post.contentType == .text {
-            var text = LocalizedStringKey(post.text!)
-//            Text(isPostOpen ? post.text! :
-//                    post.text!.count >= 180 ? post.text!.prefix(180) +  "..." : post.text!)
-            Text(text)
+            Text(post.text!)
                 .font(.system(size: 15))
                 .padding(EdgeInsets(top: 0, leading: isPostOpen ? 0 : 10, bottom: 0,
                                     trailing: isPostOpen ? 0 : 10))
@@ -176,13 +175,13 @@ struct PostRowContent: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5))
-                    PostRowContent(post: crosspost)
+                    PostRowContent(post: crosspost, target: $target)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     HStack {
                         HStack(spacing: 3) {
                             Image(systemName: "arrow.triangle.branch")
                                 .rotationEffect(.degrees(90))
-                            Text(crosspost.community!)
+                            Text("r/" + crosspost.community!)
                         }
                         HStack(spacing: 2) {
                             Image(systemName: "arrow.up")
@@ -200,7 +199,9 @@ struct PostRowContent: View {
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
                 .overlay(
-                    NavigationLink(destination: CommentsView(post: crosspost), label: { EmptyView() })
+                    NavigationLink(destination: CommentsView(post: crosspost,
+                                                             restorePostsScroll: $restorePostsPlaceholder,
+                                                             postsTarget: $target), label: { EmptyView() })
                     .opacity(0))
             }
             .padding(SwiftUI.EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))

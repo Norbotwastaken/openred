@@ -69,7 +69,7 @@ class JSONCommentData: Codable {
 //    var mod_note: String?
     var all_awardings: [JSONPostAwarding]
     var collapsed: Bool
-    var body: String? // the content
+    var body: AttributedString? // the content
 //    var edited: Bool // or maybe double
 //    var top_awarded_type: String?
 //    var author_flair_css_class: String?
@@ -127,7 +127,11 @@ class JSONCommentData: Codable {
         try? self.author_fullname = container.decode(String?.self, forKey: .author_fullname)
         try self.all_awardings = container.decode([JSONPostAwarding].self, forKey: .all_awardings)
         try self.collapsed = container.decode(Bool.self, forKey: .collapsed)
-        try? self.body = container.decode(String?.self, forKey: .body)
+
+        var text: String = ""
+        try text = String(container.decode(AttributedString?.self, forKey: .body)!.characters[...])
+        self.body = ContentFormatter().format(text: text)
+        
         try self.is_submitter = container.decode(Bool.self, forKey: .is_submitter)
         try self.stickied = container.decode(Bool.self, forKey: .stickied)
         try self.score_hidden = container.decode(Bool.self, forKey: .score_hidden)
@@ -151,7 +155,7 @@ class Comment: Identifiable, ObservableObject {
     var id: String
     var depth: Int
     var score: Int
-    var content: String?
+    var content: AttributedString?
     var user: String?
     var age: String?
     @Published var isUpvoted: Bool
@@ -207,7 +211,7 @@ class Comment: Identifiable, ObservableObject {
         self.id = id
         self.depth = depth
         self.score = 1
-        self.content = content
+        try? self.content = AttributedString(markdown: content)
         self.user = user
         self.isUpvoted = true
         self.isDownvoted = false

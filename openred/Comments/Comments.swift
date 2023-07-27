@@ -63,7 +63,7 @@ class CommentsModel: ObservableObject {
                 self.document = doc
                 self.title = doc.title!
                 // TODO: get comment count some other way
-                self.commentCount = doc.querySelector("#siteTable .thing")!["data-comments-count"]!
+                self.commentCount = doc.querySelector("#siteTable .thing")?["data-comments-count"] ?? ""
                 // Expand first layer of collapsed comments (DOM needs refreshing)
                 for expandButton in doc.querySelectorAll(".thing.collapsed .expand") {
                     expandButton.click()

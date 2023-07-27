@@ -13,7 +13,8 @@ struct CommunitiesStack: View {
     @Binding var loginPopupShowing: Bool
     @Binding var showPosts: Bool
     @State private var searchText = ""
-    @State var itemInView = ""
+    @State var target: CommunityOrUser = CommunityOrUser(community: Community("all", isMultiCommunity: true))
+    @State var restoreScroll: Bool = true
     
     var body: some View {
         ZStack {
@@ -22,16 +23,16 @@ struct CommunitiesStack: View {
                     VStack(alignment: .leading, spacing: 0) {
                         List {
                             if searchText.isEmpty {
-                                UserSection(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts)
+                                UserSection(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts, target: $target)
                                 Section() {
                                     ForEach(model.mainPageCommunities) { community in
-                                        CommunityRow(community: community, showPosts: $showPosts)
+                                        CommunityRow(community: community, showPosts: $showPosts, target: $target)
                                     }
                                 }
                                 if model.userSessionManager.userName != nil {
                                     Section() {
                                         ForEach(model.userFunctionCommunities) { community in
-                                            CommunityRow(community: community, showPosts: $showPosts)
+                                            CommunityRow(community: community, showPosts: $showPosts, target: $target)
                                         }
                                     }
                                 }
@@ -39,7 +40,7 @@ struct CommunitiesStack: View {
                             if !model.subscribedCommunities.isEmpty {
                                 Section(header: Text("Subreddits")) {
                                     ForEach(filteredSubscribedCommunities) { community in
-                                        CommunityRow(community: community, showPosts: $showPosts)
+                                        CommunityRow(community: community, showPosts: $showPosts, target: $target)
                                     }
                                 }
                                 .background(Color.clear)
@@ -60,6 +61,7 @@ struct CommunitiesStack: View {
                             .fill(Color.blue)
                             .frame(width: 65, height: 65, alignment: .bottomTrailing)
                             .onTapGesture {
+                                restoreScroll = true
                                 showPosts = true
                             }
                         Image(systemName: "chevron.right")
@@ -73,7 +75,7 @@ struct CommunitiesStack: View {
                 .navigationTitle("Communities")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(isPresented: $showPosts) {
-                    PostsView(itemInView: $itemInView)
+                    PostsView(restoreScroll: $restoreScroll, target: $target)
                 }
             }
             .searchable(text: $searchText)
@@ -106,9 +108,11 @@ struct CommunityRow: View {
     @EnvironmentObject var model: Model
     var community: Community
     @Binding var showPosts: Bool
+    @Binding var target: CommunityOrUser
     
     var body: some View {
         Button(action: {
+            target = CommunityOrUser(community: Community(community.name))
             model.loadCommunity(community: CommunityOrUser(community: community))
             showPosts = true
         }) {
@@ -116,7 +120,7 @@ struct CommunityRow: View {
                 if community.iconName != nil {
                     Image(systemName: community.iconName!)
                 }
-                Text(community.name)
+                Text(community.displayName ?? community.name)
             }
         }
         .listRowBackground(Color.clear)
@@ -127,13 +131,15 @@ struct UserSection: View {
     @EnvironmentObject var model: Model
     @Binding var loginPopupShowing: Bool
     @Binding var showPosts: Bool
+    @Binding var target: CommunityOrUser
     
     var body: some View {
         if model.userName != nil {
             Menu {
                 Button(action: {
+                    target = CommunityOrUser(user: User(model.userName!))
                     showPosts = true
-                    model.loadCommunity(community: CommunityOrUser(user: User(model.userName!)))
+                    model.loadCommunity(community: target)
                 }) {
                     Label("My Profile", systemImage: "person")
                 }

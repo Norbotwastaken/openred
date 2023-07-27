@@ -26,7 +26,8 @@ struct SearchView: View {
                 .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
                 .onTapGesture {} // override other onTap
                 .onSubmit {
-                    model.loadCommunity(communityCode: "r/" + communityName)
+                    model.loadCommunity(community: CommunityOrUser(community: Community(communityName, isMultiCommunity: ["all", "popular", "saved", "mod", ""]
+                        .contains(communityName.lowercased()))))
                     tabSelection = 1
                     showPosts = true
                 }

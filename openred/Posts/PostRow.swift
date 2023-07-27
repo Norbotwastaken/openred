@@ -12,6 +12,7 @@ struct PostRow: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var popupViewModel: PopupViewModel
     var post: Post
+    @Binding var target: CommunityOrUser
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -25,9 +26,9 @@ struct PostRow: View {
             .fixedSize(horizontal: false, vertical: true)
             .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
             .disabled(true)
-            PostRowContent(post: post)
+            PostRowContent(post: post, target: $target)
                 .frame(maxWidth: .infinity, maxHeight: 650, alignment: .leading)
-            PostRowFooter(post: post)
+            PostRowFooter(post: post, target: $target)
             Rectangle()
                 .fill(Color(UIColor.systemGray5)
                     .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
@@ -52,7 +53,7 @@ struct PostCommentRow: View {
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onTapGesture {
-                        model.loadCommunity(communityCode: "r/" + comment.communityName)
+                        model.loadCommunity(community: CommunityOrUser(community: Community(comment.communityName)))
                     }
             }
             .fixedSize(horizontal: false, vertical: true)
@@ -80,24 +81,34 @@ struct PostCommentRow: View {
 struct PostRowFooter: View {
     @EnvironmentObject var model: Model
     @ObservedObject var post: Post
+    @Binding var target: CommunityOrUser
+    @State var isPresented: Bool = false
+    @State var restoreScrollPlaceholder: Bool = true
+    @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community("")) // placeholder value
     
     var body: some View {
         HStack {
             VStack(spacing: 8) {
-                Text(model.selectedCommunity.isMultiCommunity ? post.community ?? "" :
+                Text(model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity ? "r/" + post.community! :
                         post.userName != nil ? "u/" + post.userName! : "")
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .navigationDestination(isPresented: $isPresented) {
+                        PostsView(restoreScroll: $restoreScrollPlaceholder, target: $newTarget)
+                    }
                     .onTapGesture {
-                        if model.selectedCommunity.isMultiCommunity {
-                            model.loadCommunity(communityCode: post.community!)
+                        if model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity {
+                            newTarget = CommunityOrUser(community: Community(post.community!))
+                            model.loadCommunity(community: newTarget)
                         } else {
                             if post.userName != "[deleted]" {
-                                model.loadCommunity(community: CommunityOrUser(user: User(post.userName!)))
+                                newTarget = CommunityOrUser(user: User(post.userName!))
+                                model.loadCommunity(community: newTarget)
                             }
                         }
+                        isPresented = true
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
                 
@@ -137,18 +148,28 @@ struct PostRowFooter: View {
             .font(.system(size: 14))
             .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 12) {
-                PostRowMenu(post: post)
+                Menu {
+                    PostRowMenu(post: post, target: $target)
+                } label: {
+                    ZStack {
+                        Spacer()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        Image(systemName: "ellipsis")
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(width: 20, height: 20)
+                }
                 Image(systemName: "arrow.up")
                     .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
                     .onTapGesture {
-                        if model.toggleUpvotePost(post: post) == false {
+                        if model.toggleUpvotePost(target: target.getCode(), post: post) == false {
                             // show login popup
                         }
                     }
                 Image(systemName: "arrow.down")
                     .foregroundColor(post.isDownvoted ? .downvoteBlue : .secondary)
                     .onTapGesture {
-                        if model.toggleDownvotePost(post: post) == false {
+                        if model.toggleDownvotePost(target: target.getCode(), post: post) == false {
                             // show login popup
                         }
                     }
@@ -161,12 +182,12 @@ struct PostRowFooter: View {
         .padding(EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 10))
     }
     
-    private func getFooterLabel(post: Post) -> String {
-        if let community = post.community {
-            return community
-        }
-        return post.userName != nil ? "u/" + post.userName! : ""
-    }
+//    private func getFooterLabel(post: Post) -> String {
+//        if let community = post.community {
+//            return community
+//        }
+//        return post.userName != nil ? "u/" + post.userName! : ""
+//    }
 }
 
 func formatScore(score: String) -> String {
@@ -188,26 +209,22 @@ func formatScore(score: String) -> String {
 struct PostRowMenu: View {
     @EnvironmentObject var model: Model
     @ObservedObject var post: Post
+    @Binding var target: CommunityOrUser
     
     var body: some View {
-        Menu {
-            Button(action: { model.toggleUpvotePost(post: post) }) {
+        Group {
+            Button(action: { model.toggleUpvotePost(target: target.getCode(), post: post) }) {
                 Label("Upvote", systemImage: "arrow.up")
             }
-            Button(action: { model.toggleDownvotePost(post: post) }) {
+            Button(action: { model.toggleDownvotePost(target: target.getCode(), post: post) }) {
                 Label("Downvote", systemImage: "arrow.down")
             }
-            Button(action: { model.toggleSavePost(post: post) }) {
+            Button(action: { model.toggleSavePost(target: target.getCode(), post: post) }) {
                 Label(post.isSaved ? "Undo Save" : "Save", systemImage: post.isSaved ? "bookmark.slash" : "bookmark")
             }
-        } label: {
-            ZStack {
-                Spacer()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                Image(systemName: "ellipsis")
-                    .foregroundColor(.secondary)
+            Button(action: { model.loadCommunity(community: CommunityOrUser(user: User(post.userName!))) }) {
+                Label("User Profile", systemImage: "person")
             }
-            .frame(width: 20, height: 20)
         }
     }
 }

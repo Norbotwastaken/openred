@@ -52,7 +52,7 @@ class Post: Identifiable, ObservableObject {
     var thumbnailLink: String?
     var externalLink: String?
     var externalLinkDomain: String?
-    var text: String?
+    var text: AttributedString?
     var gallery: Gallery?
     var crosspost: Post?
 //    var crosspostAsPost: Post?
@@ -73,7 +73,7 @@ class Post: Identifiable, ObservableObject {
         self.isDownvoted = jsonPost.likes != nil ? !jsonPost.likes! : false
         self.isSaved = jsonPost.saved
         self.flair = jsonPost.flair
-        self.community = jsonPost.subreddit_name_prefixed
+        self.community = jsonPost.subreddit
         self.commentCount = String(jsonPost.num_comments)
         self.userName = jsonPost.author
         self.linkToThread = jsonPost.permalink

@@ -9,13 +9,17 @@ import SwiftUI
 import WebKit
 
 struct CommentsView: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var model: Model
     @EnvironmentObject var commentsModel: CommentsModel
 //    @EnvironmentObject var popupViewModel: PopupViewModel
     @ObservedObject var post: Post
 //    @Binding var commentInView: String
+    @Binding var restorePostsScroll: Bool
+    @Binding var postsTarget: CommunityOrUser
     @State var isEditorShowing: Bool = false
     @State var editorParentComment: Comment?
+    @State var scrollTarget: String?
     
     var body: some View {
         ZStack {
@@ -35,7 +39,7 @@ struct CommentsView: View {
 //                        .listRowInsets(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
 //                        .listRowSeparator(.hidden)
                         
-                        PostRowContent(post: post, isPostOpen: true)
+                        PostRowContent(post: post, target: $postsTarget, isPostOpen: true)
                             .padding(EdgeInsets(top: 0, leading: post.contentType == .text ? 10 : 0, bottom: 0, trailing: post.contentType == .text ? 10 : 0))
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: post.contentType == .text ? .leading : .center)
                         Divider()
@@ -44,7 +48,7 @@ struct CommentsView: View {
                                 .foregroundColor(post.isUpvoted ? .upvoteOrange : Color(UIColor.systemBlue))
                                 .fontWeight(post.isUpvoted ? .semibold : .regular)
                                 .onTapGesture {
-                                    if model.toggleUpvotePost(post: post) == false {
+                                    if model.toggleUpvotePost(target: postsTarget.getCode(), post: post) == false {
                                         // show login popup
                                     }
                                 }
@@ -53,7 +57,7 @@ struct CommentsView: View {
                                 .fontWeight(post.isDownvoted ? .semibold : .regular)
                                 .foregroundColor(post.isDownvoted ? .downvoteBlue : Color(UIColor.systemBlue))
                                 .onTapGesture {
-                                    if model.toggleDownvotePost(post: post) == false {
+                                    if model.toggleDownvotePost(target: postsTarget.getCode(), post: post) == false {
                                         // show login popup
                                     }
                                 }
@@ -63,7 +67,7 @@ struct CommentsView: View {
 //                                .fontWeight(post.isSaved ? .semibold : .regular)
 //                                .foregroundColor(.secondary)
                                 .onTapGesture {
-                                    if model.toggleSavePost(post: post) == false {
+                                    if model.toggleSavePost(target: postsTarget.getCode(), post: post) == false {
                                         // show login popup
                                     }
                                 }
@@ -89,12 +93,12 @@ struct CommentsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     ForEach(commentsModel.flatCommentsList) { comment in
                         if !commentsModel.anyParentsCollapsed(comment: comment) {
-                            CommentView(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
+                            CommentView(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget, dismiss: dismiss)
                             //                            .onAppear {
                             //                                commentInView = comment.id
                             //                            }
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                                .padding(EdgeInsets(top: 8, leading: 0, bottom: 12, trailing: 0))
                         }
                     }
                 }
@@ -115,6 +119,15 @@ struct CommentsView: View {
                         }
                     }
                 }
+                .onChange(of: scrollTarget) { target in
+                    if let target = target {
+                        scrollTarget = nil
+                        
+//                        withAnimation {
+                            proxy.scrollTo(target, anchor: .top)
+//                        }
+                    }
+                }
 //                .onAppear(perform: {
 //                    proxy.scrollTo(commentInView)
 //                })
@@ -125,6 +138,7 @@ struct CommentsView: View {
         }
         .onAppear {
             commentsModel.loadComments(linkToThread: post.linkToThread)
+            restorePostsScroll = false
         }
     }
 }
@@ -134,6 +148,8 @@ struct CommentView: View {
     @ObservedObject var comment: Comment
     @Binding var editorParentComment: Comment?
     @Binding var isEditorShowing: Bool
+    @Binding var scrollTarget: String?
+    var dismiss: DismissAction
     
     var body: some View {
         VStack {
@@ -150,6 +166,7 @@ struct CommentView: View {
                 VStack {
                     HStack(spacing: 5) {
                         Text(comment.user ?? "deleted")
+                            .lineLimit(1)
                         //                        if comment.score != nil {
                         HStack(spacing: 2) {
                             Image(systemName: "arrow.up")
@@ -160,11 +177,20 @@ struct CommentView: View {
 //                                Text(String(comment.age!))
 //                            }
                         }
+                        if comment.flair != nil && comment.flair! != "" {
+                            Text(comment.flair!)
+                                .lineLimit(1)
+                                .foregroundColor(.secondary)
+                                .font(.system(size: 12))
+                                .padding(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
+                                .background(Color(UIColor.systemGray6))
+                                .cornerRadius(5)
+                        }
                         //                        }
 //                        CommentActionsMenu(comment: comment)
                         Spacer()
                         Menu {
-                            CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
+                            CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing, dismiss: dismiss)
                         } label: {
                             ZStack {
                                 Spacer()
@@ -203,8 +229,9 @@ struct CommentView: View {
             .onTapGesture {
                 comment.isCollapsed.toggle()
                 commentsModel.commentsCollapsed[comment.id]!.toggle()
+                scrollTarget = comment.id
             }
-            .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing) }
+            .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing, dismiss: dismiss) }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button { commentsModel.toggleUpvoteComment(comment: comment) } label: {
                     Image(systemName: "arrow.up")
@@ -247,9 +274,11 @@ struct CommentView: View {
 
 struct CommentActions: View {
     @EnvironmentObject var commentsModel: CommentsModel
+    @EnvironmentObject var model: Model
     @ObservedObject var comment: Comment
     @Binding var editorParentComment: Comment?
     @Binding var isEditorShowing: Bool
+    var dismiss: DismissAction
     
     var body: some View {
         Group {
@@ -267,6 +296,14 @@ struct CommentActions: View {
                 isEditorShowing = true
             }) {
                 Label("Reply", systemImage: "arrow.uturn.left")
+            }
+            if comment.user != nil {
+                Button(action: {
+                    model.loadCommunity(community: CommunityOrUser(user: User(comment.user!)))
+                    dismiss()
+                }) {
+                    Label("User Profile", systemImage: "person")
+                }
             }
         }
     }

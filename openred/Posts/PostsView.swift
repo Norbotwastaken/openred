@@ -9,14 +9,17 @@ import SwiftUI
 import AVKit
 
 struct PostsView: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var model: Model
 //    @EnvironmentObject var popupViewModel: PopupViewModel
-    @Binding var itemInView: String
+    @State var itemInView: String = ""
+    @Binding var restoreScroll: Bool
+    @Binding var target: CommunityOrUser
 //    @State var showComments = false
 //    @State var commentInView = ""
     @State var isPostCreatorShowing: Bool = false
     var filters: KeyValuePairs<String, String> {
-        if model.selectedCommunity.isUser && model.userName == model.selectedCommunity.user!.name {
+        if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
                 "": "All", "comments": "Comments", "submitted": "Submitted", "gilded": "Gilded",
                 "upvoted": "Upvoted", "downvoted": "Downvoted", "hidden": "Hidden", "saved": "Saved"
@@ -29,79 +32,97 @@ struct PostsView: View {
     @State private var filter = "inbox"
     
     var body: some View {
-        ZStack {
-            ScrollViewReader { proxy in
-                List {
-                    if model.selectedCommunity.isUser {
-                        Picker("Filter By", selection: $filter) {
-                            ForEach(filters, id: \.key) { key, value in
-                                Text(value)
-                            }
-                        }.onChange(of: filter) { _ in
-                            model.loadCommunity(community: model.selectedCommunity, filter: filter)
-                        }
-                        .foregroundColor(.secondary)
-                        .listRowSeparator(.hidden)
-                    }
-                    ForEach(model.items) { item in
-                        if !item.isComment {
-                            PostRow(post: item.post!)
-                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                    Button { model.toggleUpvotePost(post: item.post!) } label: {
-                                        Image(systemName: "arrow.up")
-                                    }
-                                    .tint(.upvoteOrange)
-                                    Button { model.toggleDownvotePost(post: item.post!) } label: {
-                                        Image(systemName: "arrow.down")
-                                    }
-                                    .tint(.downvoteBlue)
+        if model.pages[target.getCode()] != nil {
+            ZStack {
+                ScrollViewReader { proxy in
+                    List {
+                        if model.pages[target.getCode()]!.selectedCommunity.isUser {
+                            Picker("Filter By", selection: $filter) {
+                                ForEach(filters, id: \.key) { key, value in
+                                    Text(value)
                                 }
-                                .onAppear(perform: {
-                                    itemInView = item.id
-                                    if (item.isActiveLoadMarker) {
-                                        item.deactivateLoadMarker()
-                                        model.loadNextPagePosts()
+                            }.onChange(of: filter) { _ in
+                                model.loadCommunity(community: model.pages[target.getCode()]!.selectedCommunity, filter: filter)
+                            }
+                            .foregroundColor(.secondary)
+                            .listRowSeparator(.hidden)
+                        }
+                        ForEach(model.pages[target.getCode()]!.items) { item in
+                            if !item.isComment {
+                                PostRow(post: item.post!, target: $target)
+                                    .contextMenu{ PostRowMenu(post: item.post!, target: $target) }
+                                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                        Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
+                                            Image(systemName: "arrow.up")
+                                        }
+                                        .tint(.upvoteOrange)
+                                        Button { model.toggleDownvotePost(target: target.getCode(), post: item.post!) } label: {
+                                            Image(systemName: "arrow.down")
+                                        }
+                                        .tint(.downvoteBlue)
                                     }
-                                })
-                                .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                                .listRowSeparator(.hidden)
-                                .overlay(
-                                    NavigationLink(destination: CommentsView(post: item.post!), label: { EmptyView() })
+                                    .onAppear(perform: {
+                                        itemInView = item.id
+                                        if (item.isActiveLoadMarker) {
+                                            item.deactivateLoadMarker()
+                                            model.loadNextPagePosts(target: target.getCode())
+                                        }
+                                    })
+                                    .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                    .listRowSeparator(.hidden)
+                                    .overlay(
+                                        NavigationLink(destination: CommentsView(post: item.post!, restorePostsScroll: $restoreScroll, postsTarget: $target),
+                                                       label: { EmptyView() })
                                         .opacity(0)
-                                )
-                        } else {
-                            PostCommentRow(comment: item.comment!)
-                                .onAppear(perform: {
-                                    itemInView = item.id
-                                    if (item.isActiveLoadMarker) {
-                                        item.deactivateLoadMarker()
-                                        model.loadNextPagePosts()
-                                    }
-                                })
-                                .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                                .listRowSeparator(.hidden)
+                                    )
+                            } else {
+                                PostCommentRow(comment: item.comment!)
+                                    .onAppear(perform: {
+                                        itemInView = item.id
+                                        if (item.isActiveLoadMarker) {
+                                            item.deactivateLoadMarker()
+                                            model.loadNextPagePosts(target: target.getCode())
+                                        }
+                                    })
+                                    .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                    .listRowSeparator(.hidden)
+                            }
                         }
                     }
-                }
-                .listStyle(PlainListStyle())
-                .navigationTitle(model.title)
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarHidden(isPostCreatorShowing)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        HStack {
-                            SortMenu()
-                            ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing)
+                    .listStyle(PlainListStyle())
+                    .navigationTitle(model.pages[target.getCode()]!.title)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarHidden(isPostCreatorShowing)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button {
+                                model.dismissPage(target: target)
+                                dismiss()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "chevron.backward")
+                                    Text("Back")
+                                }
+                            }
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            HStack {
+                                SortMenu(target: $target)
+                                ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing, target: $target)
+                            }
                         }
                     }
+                    .onAppear(perform: {
+                        if restoreScroll {
+                            proxy.scrollTo(itemInView)
+                        }
+                    })
+                    .toolbarBackground(.visible, for: .navigationBar)
                 }
-                .onAppear(perform: {
-                    proxy.scrollTo(itemInView)
-                })
-                .toolbarBackground(.visible, for: .navigationBar)
-            }
-            if isPostCreatorShowing {
-                CreatePostForm(community: model.selectedCommunity.community!, isShowing: $isPostCreatorShowing)
+                if isPostCreatorShowing {
+                    CreatePostForm(community: model.pages[target.getCode()]!.selectedCommunity.community!, isShowing: $isPostCreatorShowing)
+                }
             }
         }
     }
@@ -110,10 +131,11 @@ struct PostsView: View {
 struct ActionsMenu: View {
     @EnvironmentObject var model: Model
     @Binding var isPostCreatorShowing: Bool
+    @Binding var target: CommunityOrUser
     
     var body: some View {
         Menu {
-            if !model.selectedCommunity.isUser {
+            if !target.isUser {
                 Button(action: { isPostCreatorShowing = true }) {
                     Label("Create Post", systemImage: "plus")
                 }
@@ -126,6 +148,7 @@ struct ActionsMenu: View {
 
 struct SortMenu: View {
     @EnvironmentObject var model: Model
+    @Binding var target: CommunityOrUser
     
     var body: some View {
         Menu {
@@ -145,7 +168,7 @@ struct SortMenu: View {
             Button(action: { sortCommunity(sortBy: "new", sortTime: nil) }) {
                 Label("New", systemImage: ViewModelAttributes.sortModifierIcons["new"]!)
             }
-            if !model.selectedCommunity.isUser {
+            if !target.isUser {
                 Button(action: { sortCommunity(sortBy: "rising", sortTime: nil) }) {
                     Label("Rising", systemImage: ViewModelAttributes.sortModifierIcons["rising"]!)
                 }
@@ -161,13 +184,12 @@ struct SortMenu: View {
                 Label("Controversial", systemImage: ViewModelAttributes.sortModifierIcons["controversial"]!)
             }
         } label: {
-            Label("Sort by", systemImage: model.selectedSortingIcon)
+            Label("Sort by", systemImage: model.selectedSortingIcon(target: target.getCode()))
         }
     }
     
     func sortCommunity(sortBy: String?, sortTime: String?) {
-        model.loadCommunity(community: model.selectedCommunity,
-                            sortBy: sortBy, sortTime: sortTime)
+        model.loadCommunity(community: model.pages[target.getCode()]!.selectedCommunity, sortBy: sortBy, sortTime: sortTime)
     }
 }
 

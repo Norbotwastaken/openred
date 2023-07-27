@@ -27,25 +27,27 @@ struct CommunityOrUser: Identifiable, Codable {
             self.isMultiCommunity = true
         }
     }
+    
+    func getCode() -> String {
+        isUser ? "user/" + user!.name.lowercased() : "r/" + community!.name.lowercased()
+    }
 }
 
 struct Community: Identifiable, Codable {
     var id: String
-    
     var name: String
-    var link: String
     var iconName: String?
+    var displayName: String?
+    var path: String? // for pages with path other than r/whatever, eg. /saved
     var isMultiCommunity: Bool = false
-    var communityCode: String
     
-    init(_ name: String, link: String, iconName: String?,
-         isMultiCommunity: Bool = false, communityCode: String){
+    init(_ name: String, iconName: String? = nil, isMultiCommunity: Bool = false, displayName: String? = nil, path: String? = nil) {
         self.id = name
         self.name = name
-        self.link = link
         self.iconName = iconName
         self.isMultiCommunity = isMultiCommunity
-        self.communityCode = communityCode
+        self.displayName = displayName
+        self.path = path
     }
 }
 

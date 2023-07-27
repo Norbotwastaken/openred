@@ -8,10 +8,10 @@
 import Foundation
 
 struct Gallery: Codable {
-    var text: String?
+    var text: AttributedString?
     var items: [GalleryItem]
     
-    init(galleryData: [JSONPostGalleryDataItem], galleryItems: [String : JSONPostMediaMetaDataItem], text: String? = nil) {
+    init(galleryData: [JSONPostGalleryDataItem], galleryItems: [String : JSONPostMediaMetaDataItem], text: AttributedString? = nil) {
         self.items = []
         for galleryDataElement in galleryData {
             self.items.append(GalleryItem(galleryData: galleryDataElement, galleryItem: galleryItems[galleryDataElement.media_id]!))

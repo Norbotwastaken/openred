@@ -3,4 +3,149 @@
    uuid = "E6E423EA-25D6-4854-A665-CA85E73536AF"
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "306CD31D-0BF2-478C-971F-FCEBFECA482C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Comments/CommentsView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "651AEF7E-3E7E-4653-B9B0-A7142D5FB937"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Model/Model.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
+            landmarkName = "loadCommunity(community:filter:sortBy:sortTime:after:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "651AEF7E-3E7E-4653-B9B0-A7142D5FB937 - 11025997ba9ba896"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "openred.Model.loadCommunity(community: openred.CommunityOrUser, filter: Swift.String, sortBy: Swift.Optional&lt;Swift.String&gt;, sortTime: Swift.Optional&lt;Swift.String&gt;, after: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "155"
+                  endingLineNumber = "155"
+                  offsetFromSymbolStart = "932">
+               </Location>
+               <Location
+                  uuid = "651AEF7E-3E7E-4653-B9B0-A7142D5FB937 - de8892d87d98127e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.Optional&lt;Swift.Array&lt;openred.PostOrComment&gt;&gt;, Swift.Optional&lt;Swift.String&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.Model.loadCommunity(community: openred.CommunityOrUser, filter: Swift.String, sortBy: Swift.Optional&lt;Swift.String&gt;, sortTime: Swift.Optional&lt;Swift.String&gt;, after: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "155"
+                  endingLineNumber = "155"
+                  offsetFromSymbolStart = "292">
+               </Location>
+               <Location
+                  uuid = "651AEF7E-3E7E-4653-B9B0-A7142D5FB937 - a4e64dffe44059a8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #2 (Swift.Optional&lt;Swift.Array&lt;openred.PostOrComment&gt;&gt;, Swift.Optional&lt;Swift.String&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.Model.loadCommunity(community: openred.CommunityOrUser, filter: Swift.String, sortBy: Swift.Optional&lt;Swift.String&gt;, sortTime: Swift.Optional&lt;Swift.String&gt;, after: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "155"
+                  endingLineNumber = "155"
+                  offsetFromSymbolStart = "88">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D01376B8-D2BD-43DC-AA09-83A59F73599B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Model/Model.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
+            landmarkName = "loadCommunity(community:filter:sortBy:sortTime:after:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D01376B8-D2BD-43DC-AA09-83A59F73599B - 11025997ba9bac74"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "openred.Model.loadCommunity(community: openred.CommunityOrUser, filter: Swift.String, sortBy: Swift.Optional&lt;Swift.String&gt;, sortTime: Swift.Optional&lt;Swift.String&gt;, after: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "185"
+                  endingLineNumber = "185"
+                  offsetFromSymbolStart = "4148">
+               </Location>
+               <Location
+                  uuid = "D01376B8-D2BD-43DC-AA09-83A59F73599B - 94630dfbd10d08d6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.Model.loadCommunity(community: openred.CommunityOrUser, filter: Swift.String, sortBy: Swift.Optional&lt;Swift.String&gt;, sortTime: Swift.Optional&lt;Swift.String&gt;, after: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "186"
+                  endingLineNumber = "186"
+                  offsetFromSymbolStart = "432">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D8F037CA-C793-47D8-B428-CBD1233EFB17"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Model/Model.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "loadCommunity(community:filter:sortBy:sortTime:after:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

@@ -42,7 +42,7 @@ class JSONPostWrapper: Codable {
 class JSONPost: Codable {
     //    var approved_at_utc: String?
     var subreddit: String?
-    var selftext: String?
+    var selftext: AttributedString?
     var author_fullname: String?
     var saved: Bool //
     //    var mod_reason_title: String?
@@ -168,7 +168,12 @@ class JSONPost: Codable {
         do { try self.gallery_data = container.decode( JSONPostGalleryData?.self, forKey: .gallery_data) } catch {}
         do { try self.crosspost_parent_list = container.decode( [JSONPost]?.self, forKey: .crosspost_parent_list) } catch {}
         do { try self.subreddit = container.decode(String?.self, forKey: .subreddit) } catch {}
-        do { try self.selftext = String(htmlEncodedString: container.decode(String?.self, forKey: .selftext)!) } catch {}
+        do {
+            var text: String = ""
+            try text = String(container.decode(AttributedString?.self, forKey: .selftext)!.characters[...])
+            self.selftext = ContentFormatter().format(text: text)
+        } catch {}
+        
         do { try self.author_fullname = container.decode(String?.self, forKey: .author_fullname) } catch {}
         do { try self.title = String(htmlEncodedString: container.decode(String?.self, forKey: .title)!) } catch {}
         do { try self.subreddit_name_prefixed = container.decode(String?.self, forKey: .subreddit_name_prefixed) } catch {}

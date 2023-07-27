@@ -177,3 +177,16 @@ class CommentData: Codable {
         }
     }
 }
+
+struct ContentFormatter {
+    // TODO: more formatting options (>, #, etc.) using attrString.range(of:)
+    func format(text: String) -> AttributedString {
+        var result: AttributedString = AttributedString()
+        var formatted: String = text
+        
+        formatted = formatted.replacingOccurrences(of: "&amp;#x200B;", with: "")
+        try? result = AttributedString(markdown: formatted, options: AttributedString
+            .MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))
+        return result
+    }
+}

@@ -30,7 +30,8 @@ class PostCreateModel: ObservableObject {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "old.reddit.com"
-        components.path = "/" + community.communityCode.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)! + "/submit"
+//        components.path = "/" + community.communityCode.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)! + "/submit"
+        components.path = "/r/" + community.name.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)! + "/submit"
         self.submissionLink = components.url
         
         browser.visit(url: self.submissionLink!) { o, e in
