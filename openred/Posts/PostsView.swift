@@ -9,12 +9,12 @@ import SwiftUI
 import AVKit
 
 struct PostsView: View {
-    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var model: Model
 //    @EnvironmentObject var popupViewModel: PopupViewModel
-    @State var itemInView: String = ""
+    @Binding var itemInView: String
     @Binding var restoreScroll: Bool
     @Binding var target: CommunityOrUser
+    @Binding var loadPosts: Bool
 //    @State var showComments = false
 //    @State var commentInView = ""
     @State var isPostCreatorShowing: Bool = false
@@ -29,11 +29,18 @@ struct PostsView: View {
             "": "All", "comments": "Comments", "submitted": "Submitted", "gilded": "Gilded"
         ]
     }
-    @State private var filter = "inbox"
+    @State private var filter = ""
     
     var body: some View {
-        if model.pages[target.getCode()] != nil {
-            ZStack {
+        ZStack {
+            ProgressView()
+                .task {
+                    if loadPosts {
+                        model.loadCommunity(community: target)
+                        loadPosts = false
+                    }
+                }
+            if model.pages[target.getCode()] != nil {
                 ScrollViewReader { proxy in
                     List {
                         if model.pages[target.getCode()]!.selectedCommunity.isUser {
@@ -92,20 +99,20 @@ struct PostsView: View {
                     .listStyle(PlainListStyle())
                     .navigationTitle(model.pages[target.getCode()]!.title)
                     .navigationBarTitleDisplayMode(.inline)
-                    .navigationBarBackButtonHidden(true)
+//                    .navigationBarBackButtonHidden(true)
                     .navigationBarHidden(isPostCreatorShowing)
                     .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button {
-                                model.dismissPage(target: target)
-                                dismiss()
-                            } label: {
-                                HStack {
-                                    Image(systemName: "chevron.backward")
-                                    Text("Back")
-                                }
-                            }
-                        }
+//                        ToolbarItem(placement: .navigationBarLeading) {
+//                            Button {
+//                                model.dismissPage(target: target)
+//                                dismiss()
+//                            } label: {
+//                                HStack {
+//                                    Image(systemName: "chevron.backward")
+//                                    Text("Back")
+//                                }
+//                            }
+//                        }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             HStack {
                                 SortMenu(target: $target)

@@ -40,6 +40,11 @@ struct PostRow: View {
 struct PostCommentRow: View {
     @EnvironmentObject var model: Model
     var comment: Comment
+    @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
+    @State var isPresented: Bool = false
+    @State var restoreScrollPlaceholder: Bool = true
+    @State var loadPosts: Bool = true
+    @State var itemInView: String = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -52,8 +57,12 @@ struct PostCommentRow: View {
                     .foregroundStyle(.secondary)
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .navigationDestination(isPresented: $isPresented) {
+                        PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                    }
                     .onTapGesture {
-                        model.loadCommunity(community: CommunityOrUser(community: Community(comment.communityName)))
+                        newTarget = CommunityOrUser(community: Community(comment.communityName))
+                        isPresented = true
                     }
             }
             .fixedSize(horizontal: false, vertical: true)
@@ -85,6 +94,8 @@ struct PostRowFooter: View {
     @State var isPresented: Bool = false
     @State var restoreScrollPlaceholder: Bool = true
     @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community("")) // placeholder value
+    @State var loadPosts: Bool = true
+    @State var itemInView: String = ""
     
     var body: some View {
         HStack {
@@ -96,16 +107,16 @@ struct PostRowFooter: View {
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .navigationDestination(isPresented: $isPresented) {
-                        PostsView(restoreScroll: $restoreScrollPlaceholder, target: $newTarget)
+                        PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
                     }
                     .onTapGesture {
                         if model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity {
                             newTarget = CommunityOrUser(community: Community(post.community!))
-                            model.loadCommunity(community: newTarget)
+//                            model.loadCommunity(community: newTarget)
                         } else {
                             if post.userName != "[deleted]" {
                                 newTarget = CommunityOrUser(user: User(post.userName!))
-                                model.loadCommunity(community: newTarget)
+//                                model.loadCommunity(community: newTarget)
                             }
                         }
                         isPresented = true
@@ -210,6 +221,11 @@ struct PostRowMenu: View {
     @EnvironmentObject var model: Model
     @ObservedObject var post: Post
     @Binding var target: CommunityOrUser
+//    @State var isPresented: Bool = false
+    @State var restoreScrollPlaceholder: Bool = true
+    @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
+    @State var loadPosts: Bool = true
+    @State var itemInView: String = ""
     
     var body: some View {
         Group {
@@ -222,9 +238,15 @@ struct PostRowMenu: View {
             Button(action: { model.toggleSavePost(target: target.getCode(), post: post) }) {
                 Label(post.isSaved ? "Undo Save" : "Save", systemImage: post.isSaved ? "bookmark.slash" : "bookmark")
             }
-            Button(action: { model.loadCommunity(community: CommunityOrUser(user: User(post.userName!))) }) {
-                Label("User Profile", systemImage: "person")
+            NavigationLink(destination: PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {
+                Button(action: {
+//                    newTarget = CommunityOrUser(community: nil, user: User(post.userName!))
+//                    model.loadCommunity(community: newTarget)
+                }) {
+                    Label("User Profile", systemImage: "person")
+                }
             }
         }
+        .onAppear { newTarget = CommunityOrUser(community: nil, user: User(post.userName!)) }
     }
 }

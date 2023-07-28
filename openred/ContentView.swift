@@ -14,13 +14,14 @@ struct ContentView: View {
     @State var communitiesSidebarVisible = true
     @State var loginPopupShowing = false
     @State var showPosts = true
+    @State var target: CommunityOrUser = CommunityOrUser(community: Community("all", isMultiCommunity: true))
     @State private var sidebarOffset = CGSize(width: -300, height: 0)
     @State private var tabSelection = 1
     
     var body: some View {
         ZStack {
             TabView(selection: $tabSelection) {
-                CommunitiesStack(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts)
+                CommunitiesStack(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts, target: $target)
                 .tabItem {
                     Label("Feed", systemImage: "newspaper")
                 }
@@ -31,7 +32,7 @@ struct ContentView: View {
                 }
                 .badge(model.messageCount)
                 .tag(2)
-                SearchView(tabSelection: $tabSelection, showPosts: $showPosts)
+                SearchView(tabSelection: $tabSelection, showPosts: $showPosts, target: $target)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
@@ -257,13 +258,13 @@ extension Date {
 }
 
 // keep slide back when back button disabled
-extension UINavigationController: UIGestureRecognizerDelegate {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        interactivePopGestureRecognizer?.delegate = self
-    }
-
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1
-    }
-}
+//extension UINavigationController: UIGestureRecognizerDelegate {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//        interactivePopGestureRecognizer?.delegate = self
+//    }
+//
+//    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+//        return viewControllers.count > 1
+//    }
+//}

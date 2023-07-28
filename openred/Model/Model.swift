@@ -272,12 +272,17 @@ class Model: ObservableObject {
         return true
     }
     
-    func dismissPage(target: CommunityOrUser) {
-        pages[target.getCode()] = nil
+    func resetPagesTo(target: CommunityOrUser) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            let community = self.pages[target.getCode()]
+            var newPages: [String:Page] = [:]
+            newPages[target.getCode()] = community
+            self.pages = newPages
+        }
     }
     
     private func updateModel(_ target: String, doc: Document, defaultTitle: String) {
-        var page = self.pages[target]!
+        let page = self.pages[target]!
         page.document = doc
         if let newTitle = doc.querySelector(".pagename.redditname a")?.text {
             page.title = newTitle.prefix(1).capitalized + String(newTitle.dropFirst())
@@ -341,7 +346,11 @@ class Model: ObservableObject {
     }
     
     func selectedSortingIcon(target: String) -> String {
-        ViewModelAttributes.sortModifierIcons[pages[target]!.selectedSorting]!
+//        if pages[target] != nil {
+            return ViewModelAttributes.sortModifierIcons[pages[target]!.selectedSorting]!
+//        } else {
+//            return ViewModelAttributes.sortModifierIcons[""]!
+//        }
     }
     
     var userName: String? {

@@ -11,6 +11,7 @@ struct SearchView: View {
     @EnvironmentObject var model: Model
     @Binding var tabSelection: Int
     @Binding var showPosts: Bool
+    @Binding var target: CommunityOrUser
     @State private var communityName: String = ""
     @FocusState private var isFieldFocused: Bool
     
@@ -26,8 +27,12 @@ struct SearchView: View {
                 .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
                 .onTapGesture {} // override other onTap
                 .onSubmit {
-                    model.loadCommunity(community: CommunityOrUser(community: Community(communityName, isMultiCommunity: ["all", "popular", "saved", "mod", ""]
-                        .contains(communityName.lowercased()))))
+//                    showPosts = false
+                    let community = CommunityOrUser(community: Community(communityName, isMultiCommunity: ["all", "popular", "saved", "mod", ""]
+                        .contains(communityName.lowercased())))
+                    model.resetPagesTo(target: community)
+                    model.loadCommunity(community: community)
+                    target = community
                     tabSelection = 1
                     showPosts = true
                 }
