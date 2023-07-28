@@ -9,7 +9,6 @@ import SwiftUI
 import WebKit
 
 struct CommentsView: View {
-    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var model: Model
     @EnvironmentObject var commentsModel: CommentsModel
 //    @EnvironmentObject var popupViewModel: PopupViewModel
@@ -93,7 +92,7 @@ struct CommentsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     ForEach(commentsModel.flatCommentsList) { comment in
                         if !commentsModel.anyParentsCollapsed(comment: comment) {
-                            CommentView(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget, dismiss: dismiss)
+                            CommentView(comment: comment, post: post, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget)
                             //                            .onAppear {
                             //                                commentInView = comment.id
                             //                            }
@@ -146,10 +145,10 @@ struct CommentsView: View {
 struct CommentView: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @ObservedObject var comment: Comment
+    var post: Post
     @Binding var editorParentComment: Comment?
     @Binding var isEditorShowing: Bool
     @Binding var scrollTarget: String?
-    var dismiss: DismissAction
     
     var body: some View {
         VStack {
@@ -167,6 +166,10 @@ struct CommentView: View {
                     HStack(spacing: 5) {
                         Text(comment.user ?? "deleted")
                             .lineLimit(1)
+                            .padding(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
+                            .foregroundColor(comment.isOP ? .primary : .secondary)
+                            .background(comment.isOP ? Color(UIColor.systemBlue) : .clear)
+                            .cornerRadius(5)
                         //                        if comment.score != nil {
                         HStack(spacing: 2) {
                             Image(systemName: "arrow.up")
@@ -190,7 +193,7 @@ struct CommentView: View {
 //                        CommentActionsMenu(comment: comment)
                         Spacer()
                         Menu {
-                            CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing, dismiss: dismiss)
+                            CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
                         } label: {
                             ZStack {
                                 Spacer()
@@ -231,7 +234,7 @@ struct CommentView: View {
                 commentsModel.commentsCollapsed[comment.id]!.toggle()
                 scrollTarget = comment.id
             }
-            .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing, dismiss: dismiss) }
+            .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing) }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button { commentsModel.toggleUpvoteComment(comment: comment) } label: {
                     Image(systemName: "arrow.up")
@@ -278,7 +281,11 @@ struct CommentActions: View {
     @ObservedObject var comment: Comment
     @Binding var editorParentComment: Comment?
     @Binding var isEditorShowing: Bool
-    var dismiss: DismissAction
+    
+    @State var restoreScrollPlaceholder: Bool = true
+    @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
+    @State var loadPosts: Bool = true
+    @State var itemInView: String = ""
     
     var body: some View {
         Group {
@@ -297,15 +304,16 @@ struct CommentActions: View {
             }) {
                 Label("Reply", systemImage: "arrow.uturn.left")
             }
+            
             if comment.user != nil {
-                Button(action: {
-                    model.loadCommunity(community: CommunityOrUser(user: User(comment.user!)))
-                    dismiss()
-                }) {
-                    Label("User Profile", systemImage: "person")
+                NavigationLink(destination: PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {
+                    Button(action: {}) {
+                        Label("User Profile", systemImage: "person")
+                    }
                 }
             }
         }
+        .onAppear { newTarget = CommunityOrUser(community: nil, user: User(comment.user!)) }
     }
 }
 

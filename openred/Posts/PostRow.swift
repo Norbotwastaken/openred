@@ -239,10 +239,7 @@ struct PostRowMenu: View {
                 Label(post.isSaved ? "Undo Save" : "Save", systemImage: post.isSaved ? "bookmark.slash" : "bookmark")
             }
             NavigationLink(destination: PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {
-                Button(action: {
-//                    newTarget = CommunityOrUser(community: nil, user: User(post.userName!))
-//                    model.loadCommunity(community: newTarget)
-                }) {
+                Button(action: {}) {
                     Label("User Profile", systemImage: "person")
                 }
             }

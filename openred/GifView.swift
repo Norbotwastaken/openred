@@ -21,6 +21,7 @@ struct GIFView: UIViewRepresentable {
     imageView.translatesAutoresizingMaskIntoConstraints = false
 //    imageView.layer.cornerRadius = 24
     imageView.layer.masksToBounds = true
+      imageView.contentMode = .scaleAspectFit
     return imageView
   }()
 
