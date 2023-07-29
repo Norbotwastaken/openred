@@ -81,7 +81,7 @@ class JSONCommentData: Codable {
 //    var body_html: String?
 //    var removal_reason: String?
 //    var collapsed_reason: String?
-//    var distinguished: String?
+    var distinguished: String?
 //    var associated_award: String?
     var stickied: Bool
 //    var author_premium: String?
@@ -140,6 +140,7 @@ class JSONCommentData: Codable {
         try self.locked = container.decode(Bool.self, forKey: .locked)
         try self.created = container.decode(Double.self, forKey: .created)
         try? self.author_flair_text = container.decode(String?.self, forKey: .author_flair_text)
+        try? self.distinguished = container.decode(String?.self, forKey: .distinguished)
         try? self.subreddit_name_prefixed = container.decode(String?.self, forKey: .subreddit_name_prefixed)
         try? self.link_title = container.decode(String?.self, forKey: .link_title)
         self.depth = 0
@@ -170,6 +171,7 @@ class Comment: Identifiable, ObservableObject {
     var linkTitle: String?
     
     var isOP: Bool
+    var isMod: Bool
     var stickied: Bool
     var locked: Bool
     @Published var replies: [Comment] = []
@@ -203,6 +205,7 @@ class Comment: Identifiable, ObservableObject {
         }
         self.isCollapsed = jsonComment.collapsed
         self.linkTitle = jsonComment.link_title
+        self.isMod = jsonComment.distinguished == "moderator"
         
         self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }
@@ -223,6 +226,7 @@ class Comment: Identifiable, ObservableObject {
         self.locked = false
         self.isCollapsed = false
         self.communityName = ""
+        self.isMod = false
 //        self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }
     

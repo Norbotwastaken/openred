@@ -272,6 +272,16 @@ class Model: ObservableObject {
         return true
     }
     
+    func toggleSubscribe(target: CommunityOrUser) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if let subscribeButton = self.pages[target.getCode()]!.document?.querySelectorAll(".subscribe-button a").first {
+            subscribeButton.click()
+        }
+        return true
+    }
+    
     func resetPagesTo(target: CommunityOrUser) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             let community = self.pages[target.getCode()]

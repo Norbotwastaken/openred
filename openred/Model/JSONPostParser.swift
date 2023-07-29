@@ -62,7 +62,7 @@ class JSONPost: Codable {
     var name: String? // t3_ + id
     //    var quarantine: Bool
     //    var link_flair_text_color: String?
-    //    var upvote_ratio: Double
+    var upvote_ratio: Double?
     //    var author_flair_background_color: String?
     //    var ups: Int
     var total_awards_received: Int
@@ -168,6 +168,7 @@ class JSONPost: Codable {
         do { try self.gallery_data = container.decode( JSONPostGalleryData?.self, forKey: .gallery_data) } catch {}
         do { try self.crosspost_parent_list = container.decode( [JSONPost]?.self, forKey: .crosspost_parent_list) } catch {}
         do { try self.subreddit = container.decode(String?.self, forKey: .subreddit) } catch {}
+        do { try self.upvote_ratio = container.decode( Double?.self, forKey: .upvote_ratio) } catch {}
         do {
             var text: String = ""
             try text = String(container.decode(AttributedString?.self, forKey: .selftext)!.characters[...])

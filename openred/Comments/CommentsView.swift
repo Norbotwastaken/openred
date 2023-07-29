@@ -19,6 +19,12 @@ struct CommentsView: View {
     @State var isEditorShowing: Bool = false
     @State var editorParentComment: Comment?
     @State var scrollTarget: String?
+    //
+    @State var isPresented: Bool = false
+    @State var restoreScrollPlaceholder: Bool = true
+    @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community("")) // placeholder value
+    @State var loadPosts: Bool = true
+    @State var itemInView: String = ""
     
     var body: some View {
         ZStack {
@@ -41,6 +47,80 @@ struct CommentsView: View {
                         PostRowContent(post: post, target: $postsTarget, isPostOpen: true)
                             .padding(EdgeInsets(top: 0, leading: post.contentType == .text ? 10 : 0, bottom: 0, trailing: post.contentType == .text ? 10 : 0))
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: post.contentType == .text ? .leading : .center)
+                        VStack(spacing: 6) {
+                            HStack(spacing: 3) {
+                                if post.stickied {
+                                    Image(systemName: "megaphone.fill")
+                                        .foregroundColor(Color(UIColor.systemGreen))
+                                        .font(.system(size: 12))
+                                }
+                                Text("in \(post.community!)")
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                                    .frame(alignment: .leading)
+                                    .navigationDestination(isPresented: $isPresented) {
+                                        PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                                    }
+                                    .onTapGesture {
+                                        newTarget = CommunityOrUser(community: Community(post.community!), user: nil)
+                                        isPresented = true
+                                    }
+                                Text("by \(post.userName!)")
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                                    .frame(alignment: .leading)
+                                    .navigationDestination(isPresented: $isPresented) {
+                                        PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                                    }
+                                    .onTapGesture {
+                                        newTarget = CommunityOrUser(community: nil, user: User(post.userName!))
+                                        isPresented = true
+                                    }
+                                
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
+                            HStack {
+                                HStack(spacing: 3) {
+                                    Image(systemName: "arrow.up")
+                                    Text(formatScore(score: post.score))
+                                }
+                                HStack(spacing: 3) {
+                                    Image(systemName: "face.smiling.inverse")
+                                    Text("\(Int(round(post.upvoteRatio * 100)))%")
+                                }
+                                HStack(spacing: 3) {
+                                    Image(systemName: "text.bubble")
+                                    Text(formatScore(score: post.commentCount))
+                                }
+                                HStack(spacing: 3) {
+                                    Image(systemName: "clock")
+                                    Text(post.displayAge)
+                                }
+                                HStack(spacing: 3) {
+                                    ForEach(post.awardLinks.indices) { i in
+                                        if i < 5 {
+                                            AsyncImage(url: URL(string: post.awardLinks[i])) { image in
+                                                image.image?
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .frame(maxWidth: 15, maxHeight: 15)
+                                            }
+                                        }
+                                    }
+                                    if post.awardCount > 1 {
+                                        Text(String(post.awardCount))
+                                    }
+                                }
+                            }
+                            .foregroundStyle(.secondary)
+                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
+                            .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
+                        }
+                        .font(.system(size: 14))
+                        .padding(EdgeInsets(top: 8, leading: 0, bottom:  8, trailing: 0))
                         Divider()
                         HStack {
                             Image(systemName: "arrow.up")
@@ -180,6 +260,13 @@ struct CommentView: View {
 //                                Text(String(comment.age!))
 //                            }
                         }
+                        if comment.isMod {
+                            Text("MOD")
+                                .lineLimit(1)
+                                .foregroundColor(Color(UIColor.systemGreen))
+                                .font(.system(size: 12))
+                                .fontWeight(.semibold)
+                        }
                         if comment.flair != nil && comment.flair! != "" {
                             Text(comment.flair!)
                                 .lineLimit(1)
@@ -192,6 +279,11 @@ struct CommentView: View {
                         //                        }
 //                        CommentActionsMenu(comment: comment)
                         Spacer()
+                        if comment.stickied {
+                            Image(systemName: "pin.fill")
+                                .foregroundColor(Color(UIColor.systemGreen))
+                                .font(.system(size: 12))
+                        }
                         Menu {
                             CommentActions(comment: comment, editorParentComment: $editorParentComment, isEditorShowing: $isEditorShowing)
                         } label: {

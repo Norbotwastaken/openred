@@ -55,10 +55,12 @@ class Post: Identifiable, ObservableObject {
     var text: AttributedString?
     var gallery: Gallery?
     var crosspost: Post?
+    var stickied: Bool
 //    var crosspostAsPost: Post?
     @Published var isUpvoted: Bool
     @Published var isDownvoted: Bool
     @Published var isSaved: Bool
+    var upvoteRatio: Double = 0
     var awardLinks: [String] = []
     var awardCount: Int
 //    private var totalAwardCount: Int?
@@ -69,6 +71,7 @@ class Post: Identifiable, ObservableObject {
         self.thumbnailLink = jsonPost.thumbnail
         self.externalLink = jsonPost.url
         
+        self.stickied = jsonPost.stickied
         self.isUpvoted = jsonPost.likes != nil ? jsonPost.likes! : false
         self.isDownvoted = jsonPost.likes != nil ? !jsonPost.likes! : false
         self.isSaved = jsonPost.saved
@@ -79,6 +82,7 @@ class Post: Identifiable, ObservableObject {
         self.linkToThread = jsonPost.permalink
         self.score = String(jsonPost.score)
         self.text = jsonPost.selftext ?? ""
+        self.upvoteRatio = jsonPost.upvote_ratio ?? 0
         
         for award in jsonPost.all_awardings {
             self.awardLinks.append(award.resized_icons![1].url)

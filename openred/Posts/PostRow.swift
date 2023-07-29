@@ -100,8 +100,14 @@ struct PostRowFooter: View {
     var body: some View {
         HStack {
             VStack(spacing: 8) {
-                Text(model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity ? "r/" + post.community! :
-                        post.userName != nil ? "u/" + post.userName! : "")
+                HStack(spacing: 5) {
+                    if post.stickied {
+                        Image(systemName: "megaphone.fill")
+                            .foregroundColor(Color(UIColor.systemGreen))
+                            .font(.system(size: 12))
+                    }
+                    Text(model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity ? "r/" + post.community! :
+                            post.userName != nil ? "by " + post.userName! : "")
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -112,16 +118,17 @@ struct PostRowFooter: View {
                     .onTapGesture {
                         if model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity {
                             newTarget = CommunityOrUser(community: Community(post.community!))
-//                            model.loadCommunity(community: newTarget)
+                            //                            model.loadCommunity(community: newTarget)
                         } else {
                             if post.userName != "[deleted]" {
                                 newTarget = CommunityOrUser(user: User(post.userName!))
-//                                model.loadCommunity(community: newTarget)
+                                //                                model.loadCommunity(community: newTarget)
                             }
                         }
                         isPresented = true
                     }
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
+                }
+                .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
                 
                 HStack {
                     HStack(spacing: 3) {

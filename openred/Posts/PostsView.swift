@@ -146,6 +146,9 @@ struct ActionsMenu: View {
                 Button(action: { isPostCreatorShowing = true }) {
                     Label("Create Post", systemImage: "plus")
                 }
+                Button(action: { model.toggleSubscribe(target: target) }) {
+                    Label("Subscribe", systemImage: "heart")
+                }
             }
         } label: {
             Label("Actions", systemImage: "ellipsis")

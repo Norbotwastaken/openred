@@ -44,7 +44,7 @@ class JSONMessage: Codable {
 //    var subreddit_name_prefixed: String
     var new: Bool // unread
 //    var type: String
-    var body: String
+    var body: AttributedString?
     var link_title: String?
     var dest: String // my username or sub name
 //    var was_comment: Bool
@@ -54,6 +54,27 @@ class JSONMessage: Codable {
 //    var created_utc: String
     var context: String? // link
 //    var distinguished: String?
+    
+    required init(from decoder: Decoder) throws {
+        let container =  try decoder.container(keyedBy: CodingKeys.self)
+        do { try self.subreddit = container.decode(String?.self, forKey: .subreddit) } catch {}
+        do { try self.parent_id = container.decode(String?.self, forKey: .parent_id) } catch {}
+        do { try self.num_comments = container.decode(Int?.self, forKey: .num_comments) } catch {}
+        do { try self.link_title = container.decode(String?.self, forKey: .link_title) } catch {}
+        do { try self.context = container.decode(String?.self, forKey: .context) } catch {}
+        do {
+            var text: String = ""
+            try text = String(container.decode(AttributedString?.self, forKey: .body)!.characters[...])
+            self.body = ContentFormatter().format(text: text)
+        } catch {}
+        
+        try self.id = container.decode(String.self, forKey: .id)
+        try self.subject = container.decode(String.self, forKey: .subject)
+        try self.author = container.decode(String.self, forKey: .author)
+        try self.new = container.decode(Bool.self, forKey: .new)
+        try self.dest = container.decode(String.self, forKey: .dest)
+        try self.created = container.decode(Int.self, forKey: .created)
+    }
 }
 
 class Message: Identifiable, ObservableObject {
@@ -64,7 +85,7 @@ class Message: Identifiable, ObservableObject {
     var num_comments: Int?
     var parent_id: String?
     var new: Bool
-    var body: String
+    var body: AttributedString
     var link_title: String?
     var dest: String
     var created: Int
@@ -80,7 +101,7 @@ class Message: Identifiable, ObservableObject {
         self.num_comments = json.num_comments
         self.parent_id = json.parent_id
         self.new = json.new
-        self.body = json.body
+        self.body = json.body ?? ""
         self.link_title = json.link_title
         self.dest = json.dest
         self.created = json.created
