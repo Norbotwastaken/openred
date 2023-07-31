@@ -226,6 +226,54 @@ class CommentsModel: ObservableObject {
         return true
     }
     
+    func toggleUpvotePost(target: String, post: Post) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        let selectorModifier = post.isUpvoted ? "mod" : ""
+        if let upvoteButton = self.document?.querySelector("#siteTable div.arrow.up" + selectorModifier) {
+            upvoteButton.click()
+            post.isUpvoted.toggle()
+            post.isDownvoted = false
+            self.browser.currentContent { (obj, err) -> Void in
+                if let document = obj {
+                    self.document = document
+                }
+            }
+            return true
+        }
+        return false
+    }
+    
+    func toggleDownvotePost(target: String, post: Post) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        let selectorModifier = post.isDownvoted ? "mod" : ""
+        if let downvoteButton = self.document?.querySelector("#siteTable div.arrow.down" + selectorModifier) {
+            downvoteButton.click()
+            post.isDownvoted.toggle()
+            post.isUpvoted = false
+            self.browser.currentContent { (obj, err) -> Void in
+                if let document = obj {
+                    self.document = document
+                }
+            }
+        }
+        return true
+    }
+    
+    func toggleSavePost(target: String, post: Post) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if let saveButton = self.document?.querySelector("#siteTable .buttons .save-button a") {
+            saveButton.click()
+            post.isSaved.toggle()
+        }
+        return true
+    }
+    
     var selectedSortingIcon: String {
         CommentsModelAttributes.sortModifierIcons[selectedSorting]!
     }

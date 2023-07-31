@@ -54,7 +54,10 @@ struct CommentsView: View {
                                         .foregroundColor(Color(UIColor.systemGreen))
                                         .font(.system(size: 12))
                                 }
-                                Text("in \(post.community!)")
+                                Text("in")
+                                    .foregroundStyle(.secondary)
+                                    .frame(alignment: .leading)
+                                Text(post.community!)
                                     .fontWeight(.semibold)
                                     .foregroundStyle(.secondary)
                                     .lineLimit(1)
@@ -66,7 +69,10 @@ struct CommentsView: View {
                                         newTarget = CommunityOrUser(community: Community(post.community!), user: nil)
                                         isPresented = true
                                     }
-                                Text("by \(post.userName!)")
+                                 Text("by")
+                                     .foregroundStyle(.secondary)
+                                     .frame(alignment: .leading)
+                                Text(post.userName!)
                                     .fontWeight(.semibold)
                                     .foregroundStyle(.secondary)
                                     .lineLimit(1)
@@ -127,7 +133,7 @@ struct CommentsView: View {
                                 .foregroundColor(post.isUpvoted ? .upvoteOrange : Color(UIColor.systemBlue))
                                 .fontWeight(post.isUpvoted ? .semibold : .regular)
                                 .onTapGesture {
-                                    if model.toggleUpvotePost(target: postsTarget.getCode(), post: post) == false {
+                                    if commentsModel.toggleUpvotePost(target: postsTarget.getCode(), post: post) == false {
                                         // show login popup
                                     }
                                 }
@@ -136,7 +142,7 @@ struct CommentsView: View {
                                 .fontWeight(post.isDownvoted ? .semibold : .regular)
                                 .foregroundColor(post.isDownvoted ? .downvoteBlue : Color(UIColor.systemBlue))
                                 .onTapGesture {
-                                    if model.toggleDownvotePost(target: postsTarget.getCode(), post: post) == false {
+                                    if commentsModel.toggleDownvotePost(target: postsTarget.getCode(), post: post) == false {
                                         // show login popup
                                     }
                                 }
@@ -146,7 +152,7 @@ struct CommentsView: View {
 //                                .fontWeight(post.isSaved ? .semibold : .regular)
 //                                .foregroundColor(.secondary)
                                 .onTapGesture {
-                                    if model.toggleSavePost(target: postsTarget.getCode(), post: post) == false {
+                                    if commentsModel.toggleSavePost(target: postsTarget.getCode(), post: post) == false {
                                         // show login popup
                                     }
                                 }

@@ -142,12 +142,16 @@ struct ActionsMenu: View {
     
     var body: some View {
         Menu {
-            if !target.isUser {
+            if !target.isUser && !target.isMultiCommunity {
                 Button(action: { isPostCreatorShowing = true }) {
                     Label("Create Post", systemImage: "plus")
                 }
                 Button(action: { model.toggleSubscribe(target: target) }) {
-                    Label("Subscribe", systemImage: "heart")
+                    if model.subscribedCommunities.contains(where: { c in c.id.lowercased() == target.id.lowercased() }) {
+                        Label("Unsubscribe", systemImage: "heart.slash")
+                    } else {
+                        Label("Subscribe", systemImage: "heart")
+                    }
                 }
             }
         } label: {

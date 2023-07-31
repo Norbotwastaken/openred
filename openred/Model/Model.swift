@@ -278,6 +278,12 @@ class Model: ObservableObject {
         }
         if let subscribeButton = self.pages[target.getCode()]!.document?.querySelectorAll(".subscribe-button a").first {
             subscribeButton.click()
+            let community = self.subscribedCommunities.filter { $0.id.lowercased() == target.id.lowercased() }.first
+            if community != nil {
+                self.subscribedCommunities = self.subscribedCommunities.filter { $0.id.lowercased() != target.id.lowercased() }
+            } else {
+                self.subscribedCommunities.append(target.community!)
+            }
         }
         return true
     }
