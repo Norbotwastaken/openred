@@ -42,6 +42,7 @@
 		AE89D4D52A2CCB3600889B3E /* openredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4D42A2CCB3600889B3E /* openredTests.swift */; };
 		AE89D4DF2A2CCB3600889B3E /* openredUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4DE2A2CCB3600889B3E /* openredUITests.swift */; };
 		AE89D4E12A2CCB3600889B3E /* openredUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */; };
+		AEBA65B02A791BE900431529 /* JSONAboutParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,7 @@
 		AE89D4DA2A2CCB3600889B3E /* openredUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = openredUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4DE2A2CCB3600889B3E /* openredUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITests.swift; sourceTree = "<group>"; };
 		AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAboutParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +175,7 @@
 				AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */,
 				AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */,
 				AE4A96942A60620300BA96CF /* MessageModel.swift */,
+				AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -470,6 +473,7 @@
 				AE4A967A2A3F4AC900BA96CF /* CommentsView.swift in Sources */,
 				AE4A968B2A49A02600BA96CF /* JSONDataCommentParser.swift in Sources */,
 				AE4A96932A604D2000BA96CF /* JSONMessageParser.swift in Sources */,
+				AEBA65B02A791BE900431529 /* JSONAboutParser.swift in Sources */,
 				AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

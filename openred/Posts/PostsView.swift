@@ -33,7 +33,9 @@ struct PostsView: View {
     
     var body: some View {
         ZStack {
-            ProgressView()
+            Spacer()
+                .padding()
+                .frame(maxHeight: .infinity, alignment: .top)
                 .task {
                     if loadPosts {
                         model.loadCommunity(community: target)
@@ -146,11 +148,36 @@ struct ActionsMenu: View {
                 Button(action: { isPostCreatorShowing = true }) {
                     Label("Create Post", systemImage: "plus")
                 }
+                NavigationLink(destination: CommunityAboutView(community: model.pages[target.getCode()]!.selectedCommunity.community!)) {
+                    Button(action: { }) {
+                        Label("About this community", systemImage: "questionmark.circle")
+                    }
+                }
                 Button(action: { model.toggleSubscribe(target: target) }) {
                     if model.subscribedCommunities.contains(where: { c in c.id.lowercased() == target.id.lowercased() }) {
                         Label("Unsubscribe", systemImage: "heart.slash")
                     } else {
                         Label("Subscribe", systemImage: "heart")
+                    }
+                }
+            } else if target.isUser {
+                NavigationLink(destination: UserAboutView(user: model.pages[target.getCode()]!.selectedCommunity.user!)) {
+                    Button(action: { }) {
+                        Label("About user", systemImage: "person")
+                    }
+                }
+                if model.pages[target.getCode()]!.selectedCommunity.user!.about != nil {
+                    Button(action: { model.toggleFriend(target: target) }) {
+                        if model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_friend {
+                            Label("Remove from friends", systemImage: "heart.slash")
+                        } else {
+                            Label("Add as friend", systemImage: "heart")
+                        }
+                    }
+                    if !model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_blocked {
+                        Button(action: { model.blockUser(target: target) }) {
+                            Label("Block user", systemImage: "xmark")
+                        }
                     }
                 }
             }
@@ -335,6 +362,192 @@ struct CreatePostForm: View {
                     .ignoresSafeArea()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 ProgressView()
+            }
+        }
+    }
+}
+
+struct CommunityAboutView: View {
+    @EnvironmentObject var model: Model
+    var community: Community
+    
+    var details = ["About", "Rules"]
+    @State private var selectedDetail = "About"
+    
+    var body: some View {
+        if community.about != nil {
+            ScrollView {
+                VStack(spacing: 10) {
+                    Text(community.about!.headerTitle ?? "")
+                        .font(.subheadline)
+                        .frame(alignment: .leading)
+                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 15, trailing: 10))
+                        .foregroundColor(.secondary)
+                    Picker("View", selection: $selectedDetail) {
+                        ForEach(details, id: \.self) {
+                            Text($0)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
+                    if selectedDetail == "About" {
+                        HStack() {
+                            VStack {
+                                Text("Subscribers")
+                                    .lineLimit(1)
+                                    .font(.system(size: 14))
+                                    .fontWeight(.bold)
+                                Text(formatScore(score: String(community.about!.subscribers)))
+                                    .font(.system(size: 28))
+                            }
+                            .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 0))
+                            .frame(maxWidth: .infinity)
+                            VStack {
+                                Text("Active Users")
+                                    .lineLimit(1)
+                                    .font(.system(size: 14))
+                                    .fontWeight(.bold)
+                                Text(formatScore(score: String(community.about!.activeUserCount)))
+                                    .font(.system(size: 28))
+                            }
+                            .frame(maxWidth: .infinity)
+                            VStack {
+                                Text("Community age")
+                                    .lineLimit(1)
+                                    .font(.system(size: 14))
+                                    .fontWeight(.bold)
+                                Text(community.about!.created)
+                                    .font(.system(size: 28))
+                            }
+                            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 10))
+                            .frame(maxWidth: .infinity)
+                        }
+                        Divider()
+                        Text(community.about!.description ?? "")
+                            .font(.system(size: 18))
+                            .padding(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
+                    } else {
+                        ForEach(community.rules) { rule in
+                            Text(rule.short_name)
+                                .padding(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
+                                .font(.system(size: 18))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text(rule.description)
+                                .padding(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
+                                .font(.system(size: 16))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    Spacer()
+                        .frame(height: 50)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .navigationTitle(community.about!.title)
+            }
+        }
+    }
+}
+
+struct UserAboutView: View {
+    @EnvironmentObject var model: Model
+    var user: User
+    
+    var body: some View {
+        if user.about != nil {
+            ScrollView {
+                VStack {
+                    Spacer().frame(height: 20)
+//                    if user.about!.icon_img != nil {
+//                        HStack {
+//                            AsyncImage(url: URL(string: user.about!.icon_img!)) { image in
+//                                image.image?
+//                                    .resizable()
+//                                    .scaledToFill()
+//                                    .frame(maxWidth: 80, maxHeight: 80)
+//                            }
+//                            VStack {
+//                                Text(user.name).font(.headline)
+//                                Text(user.about!.public_description)
+//                                    .foregroundColor(.secondary)
+//                                    .font(.system(size: 14))
+//                            }
+//                        }
+//                    }
+                    HStack {
+                        VStack {
+                            Text("Post karma")
+                                .lineLimit(1)
+                                .font(.system(size: 14))
+                                .fontWeight(.bold)
+                            Text(String(user.about!.link_karma))
+                                .font(.system(size: 24))
+                        }
+                        .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 0))
+                        .frame(maxWidth: .infinity)
+                        VStack {
+                            Text("Comment karma")
+                                .lineLimit(1)
+                                .font(.system(size: 14))
+                                .fontWeight(.bold)
+                            Text(String(user.about!.comment_karma))
+                                .font(.system(size: 24))
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    HStack {
+                        VStack {
+                            Text("Awarder karma")
+                                .lineLimit(1)
+                                .font(.system(size: 14))
+                                .fontWeight(.bold)
+                            Text(String(user.about!.awarder_karma))
+                                .font(.system(size: 24))
+                        }
+                        .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 0))
+                        .frame(maxWidth: .infinity)
+                        VStack {
+                            Text("Awardee karma")
+                                .lineLimit(1)
+                                .font(.system(size: 14))
+                                .fontWeight(.bold)
+                            Text(String(user.about!.awardee_karma))
+                                .font(.system(size: 24))
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    Text(user.about!.public_description)
+                        .foregroundColor(.secondary)
+                        .font(.system(size: 14))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                    ForEach(user.trophies) { trophy in
+                        HStack(spacing: 10) {
+                            AsyncImage(url: URL(string: trophy.icon_70)) { image in
+                                image.image?
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(maxWidth: 60, maxHeight: 60)
+                            }
+                            VStack(spacing: 10) {
+                                Text(trophy.name)
+                                    .fontWeight(.bold)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                if trophy.description != nil {
+                                    Text(trophy.description!)
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.secondary)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .padding(EdgeInsets(top: 15, leading: 10, bottom: 0, trailing: 10))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    Spacer().frame(height: 50)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .navigationTitle(user.name)
             }
         }
     }

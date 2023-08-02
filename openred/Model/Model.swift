@@ -21,6 +21,7 @@ class Model: ObservableObject {
 //    @Published var after: String?
     @Published var loginAttempt: LoginAttempt = .undecided
     @Published var messageCount: Int = 0
+    var resetPagesToCommunity: String?
     
     let defaults = UserDefaults.standard
     let userSessionManager: UserSessionManager
@@ -161,6 +162,7 @@ class Model: ObservableObject {
         components.host = "old.reddit.com"
         components.queryItems = []
         components.path = "/" + community.getCode()
+        var baseComponents = components
         if !community.isUser && community.community?.path != nil {
             components.path = "/" + community.community!.path!
         }
@@ -210,6 +212,46 @@ class Model: ObservableObject {
                 }
                 page.after = after
                 self.pages[community.getCode()] = page
+            }
+        }
+        
+        if !community.isUser && !community.isMultiCommunity {
+            var aboutPageComponents = baseComponents
+            aboutPageComponents.path = aboutPageComponents.path + "/about.json"
+            jsonLoader.loadAbout(url: aboutPageComponents.url!) { (about, error) in
+                DispatchQueue.main.async {
+                    if let about = about {
+                        self.pages[community.getCode()]?.selectedCommunity.community!.about = about
+                    }
+                }
+            }
+            var rulesPageComponents = baseComponents
+            rulesPageComponents.path = rulesPageComponents.path + "/about/rules.json"
+            jsonLoader.loadRules(url: rulesPageComponents.url!) { (rules, error) in
+                DispatchQueue.main.async {
+                    if let rules = rules {
+                        self.pages[community.getCode()]?.selectedCommunity.community!.rules = rules
+                    }
+                }
+            }
+        } else if community.isUser {
+            var aboutUserPageComponents = baseComponents
+            aboutUserPageComponents.path = aboutUserPageComponents.path + "/about.json"
+            jsonLoader.loadAboutUser(url: aboutUserPageComponents.url!) { (about, error) in
+                DispatchQueue.main.async {
+                    if let about = about {
+                        self.pages[community.getCode()]?.selectedCommunity.user!.about = about
+                    }
+                }
+            }
+            var trophiesPageComponents = baseComponents
+            trophiesPageComponents.path = trophiesPageComponents.path + "/trophies.json"
+            jsonLoader.loadTrophies(url: trophiesPageComponents.url!) { (trophies, error) in
+                DispatchQueue.main.async {
+                    if let trophies = trophies {
+                        self.pages[community.getCode()]?.selectedCommunity.user!.trophies = trophies
+                    }
+                }
             }
         }
     }
@@ -288,28 +330,60 @@ class Model: ObservableObject {
         return true
     }
     
+    func toggleFriend(target: CommunityOrUser) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if self.pages[target.getCode()]!.selectedCommunity.isUser {
+            if let toggleButton = self.pages[target.getCode()]!.document?.querySelectorAll(".titlebox .fancy-toggle-button a.active").first {
+                toggleButton.click()
+                self.pages[target.getCode()]!.selectedCommunity.user!.about!.is_friend.toggle()
+                objectWillChange.send()
+            }
+            return true
+        }
+        return false
+    }
+    
+    func blockUser(target: CommunityOrUser) -> Bool {
+        if userSessionManager.userName == nil {
+            return false
+        }
+        if self.pages[target.getCode()]!.selectedCommunity.isUser {
+            if let toggleButton = self.pages[target.getCode()]!.document!.querySelector(".titlebox .block_user-button .error a.yes") {
+                toggleButton.click()
+                self.pages[target.getCode()]!.selectedCommunity.user!.about!.is_blocked = true
+                objectWillChange.send()
+                return true
+            }
+        }
+        return false
+    }
+    
     func resetPagesTo(target: CommunityOrUser) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
-            let community = self.pages[target.getCode()]
+        resetPagesToCommunity = target.getCode()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            let community = self.pages[self.resetPagesToCommunity!]
             var newPages: [String:Page] = [:]
-            newPages[target.getCode()] = community
+            newPages[self.resetPagesToCommunity!] = community
             self.pages = newPages
         }
     }
     
     private func updateModel(_ target: String, doc: Document, defaultTitle: String) {
-        let page = self.pages[target]!
-        page.document = doc
-        if let newTitle = doc.querySelector(".pagename.redditname a")?.text {
-            page.title = newTitle.prefix(1).capitalized + String(newTitle.dropFirst())
-        } else {
-            page.title = defaultTitle
+        if let page = self.pages[target] {
+            page.document = doc
+            if let newTitle = doc.querySelector(".pagename.redditname a")?.text {
+                page.title = newTitle.prefix(1).capitalized + String(newTitle.dropFirst())
+            } else {
+                page.title = defaultTitle
+            }
+            self.pages[target] = page
+            
+            self.updateCommunitiesList(doc: doc)
+            self.loadUsername(doc: doc)
+            self.updateMessageCount(doc: doc)
         }
-        self.pages[target] = page
-        
-        self.updateCommunitiesList(doc: doc)
-        self.loadUsername(doc: doc)
-        self.updateMessageCount(doc: doc)
     }
     
     private func updateMessageCount(doc: Document) {

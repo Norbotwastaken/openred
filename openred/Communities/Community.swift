@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct CommunityOrUser: Identifiable, Codable {
+class CommunityOrUser: Identifiable, ObservableObject {
     var id: String
-    var community: Community?
-    var user: User?
+    @Published var community: Community?
+    @Published var user: User?
     var isUser: Bool = false
     var isMultiCommunity: Bool = false
     
@@ -33,13 +33,15 @@ struct CommunityOrUser: Identifiable, Codable {
     }
 }
 
-struct Community: Identifiable, Codable {
+class Community: Identifiable, ObservableObject {
     var id: String
     var name: String
     var iconName: String?
     var displayName: String?
     var path: String? // for pages with path other than r/whatever, eg. /saved
     var isMultiCommunity: Bool = false
+    @Published var about: AboutCommunity?
+    @Published var rules: [CommunityRule] = []
     
     init(_ name: String, iconName: String? = nil, isMultiCommunity: Bool = false, displayName: String? = nil, path: String? = nil) {
         self.id = name
@@ -51,9 +53,11 @@ struct Community: Identifiable, Codable {
     }
 }
 
-struct User: Identifiable, Codable {
+class User: Identifiable, ObservableObject {
     var id: String
     var name: String
+    @Published var trophies: [Trophy] = []
+    @Published var about: AboutUser?
     
     init(_ name: String) {
         self.id = name

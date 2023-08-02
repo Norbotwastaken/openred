@@ -106,6 +106,68 @@ class JSONDataLoader {
         urlSession.resume()
     }
     
+    func loadRules(url: URL, completion: @escaping ([CommunityRule]?, Error?) -> Void) {
+        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            do {
+                if let data = data {
+                    let wrapper: JSONRulesWrapper = try JSONDecoder().decode(JSONRulesWrapper.self, from: data)
+                    let rules: [CommunityRule] = wrapper.rules
+                        .map{ CommunityRule(json: $0) }
+                    completion(rules, error)
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+        urlSession.resume()
+    }
+    
+    func loadAbout(url: URL, completion: @escaping (AboutCommunity?, Error?) -> Void) {
+        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            do {
+                if let data = data {
+                    let wrapper: JSONAboutEntityWrapper = try JSONDecoder().decode(JSONAboutEntityWrapper.self, from: data)
+                    let about = AboutCommunity(json: wrapper.data)
+                    completion(about, error)
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+        urlSession.resume()
+    }
+    
+    func loadAboutUser(url: URL, completion: @escaping (AboutUser?, Error?) -> Void) {
+        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            do {
+                if let data = data {
+                    let wrapper: JSONAboutUserWrapper = try JSONDecoder().decode(JSONAboutUserWrapper.self, from: data)
+                    let about = AboutUser(json: wrapper.data)
+                    completion(about, error)
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+        urlSession.resume()
+    }
+    
+    func loadTrophies(url: URL, completion: @escaping ([Trophy]?, Error?) -> Void) {
+        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            do {
+                if let data = data {
+                    let wrapper: JSONTrophiesWrapper = try JSONDecoder().decode(JSONTrophiesWrapper.self, from: data)
+                    let rules: [Trophy] = wrapper.data.trophies
+                        .map{ Trophy(json: $0.data) }
+                    completion(rules, error)
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+        urlSession.resume()
+    }
+    
 //    func loadPosts(url: String, completion: @escaping ([JSONPost]?, Error?) -> Void) {
 //        URLSession.shared.dataTask(for: URL(string: url)!) { (data, response, error) in
 //            do {

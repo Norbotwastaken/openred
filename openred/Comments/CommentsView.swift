@@ -21,6 +21,7 @@ struct CommentsView: View {
     @State var scrollTarget: String?
     //
     @State var isPresented: Bool = false
+    @State var isUserPresented: Bool = false
     @State var restoreScrollPlaceholder: Bool = true
     @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community("")) // placeholder value
     @State var loadPosts: Bool = true
@@ -77,12 +78,12 @@ struct CommentsView: View {
                                     .foregroundStyle(.secondary)
                                     .lineLimit(1)
                                     .frame(alignment: .leading)
-                                    .navigationDestination(isPresented: $isPresented) {
+                                    .navigationDestination(isPresented: $isUserPresented) {
                                         PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
                                     }
                                     .onTapGesture {
                                         newTarget = CommunityOrUser(community: nil, user: User(post.userName!))
-                                        isPresented = true
+                                        isUserPresented = true
                                     }
                                 
                             }

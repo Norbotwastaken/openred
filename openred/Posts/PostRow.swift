@@ -211,6 +211,13 @@ struct PostRowFooter: View {
 func formatScore(score: String) -> String {
     if var number = Int(score) {
         if number >= 1000 {
+            if number >= 1000000 {
+                number = number / 100000
+                var displayScore = String(number)
+                displayScore.insert(".", at: displayScore.index(before: displayScore.endIndex))
+                displayScore = displayScore + "M"
+                return displayScore
+            }
             number = number / 100
             var displayScore = String(number)
             displayScore.insert(".", at: displayScore.index(before: displayScore.endIndex))
