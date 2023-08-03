@@ -7,7 +7,16 @@
 
 import Foundation
 
-class JSONAboutEntityWrapper: Codable {
+class JSONAboutCommunitiesWrapper: Codable {
+    var kind: String
+    var data: JSONAboutListWrapper
+}
+
+class JSONAboutListWrapper: Codable {
+    var children: [JSONAboutWrapper]
+}
+
+class JSONAboutWrapper: Codable {
     var kind: String
     var data: JSONAbout
 }
@@ -21,13 +30,13 @@ class JSONAbout: Codable {
 //    var wiki_enabled: String
 //    var user_is_muted: String
 //    var user_can_flair_in_sr: String
-//    var display_name: String
+    var display_name: String
 //    var header_img: String
     var title: String
 //    var allow_galleries: String
 //    var icon_size: String
 //    var primary_color: String
-    var active_user_count: Int
+    var active_user_count: Int?
 //    var icon_img: String
 //    var display_name_prefixed: String
 //    var accounts_active: String
@@ -118,10 +127,10 @@ class JSONAbout: Codable {
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
         do { try self.banner_background_image = container.decode(String?.self, forKey: .banner_background_image) } catch {}
-        do { try self.community_icon = container.decode(String?.self, forKey: .community_icon) } catch {}
         do { try self.public_description = container.decode(String?.self, forKey: .public_description) } catch {}
         do { try self.advertiser_category = container.decode(String?.self, forKey: .advertiser_category) } catch {}
         do { try self.header_title = container.decode(String?.self, forKey: .header_title) } catch {}
+        do { try self.active_user_count = container.decode(Int?.self, forKey: .active_user_count) } catch {}
         do {
             var text: String = ""
             try text = String(container.decode(AttributedString?.self, forKey: .description)!.characters[...])
@@ -132,9 +141,10 @@ class JSONAbout: Codable {
             try text = String(container.decode(AttributedString?.self, forKey: .submit_text)!.characters[...])
             self.submit_text = ContentFormatter().format(text: text)
         } catch {}
+        do { try self.community_icon = String(htmlEncodedString: container.decode( String?.self, forKey: .community_icon)!) } catch {}
         
         try self.title = container.decode(String.self, forKey: .title)
-        try self.active_user_count = container.decode(Int.self, forKey: .active_user_count)
+        try self.display_name = container.decode(String.self, forKey: .display_name)
         try self.subscribers = container.decode(Int.self, forKey: .subscribers)
         try self.over18 = container.decode(Bool.self, forKey: .over18)
         try self.created = container.decode(Double.self, forKey: .created)
@@ -144,6 +154,7 @@ class JSONAbout: Codable {
 
 class AboutCommunity: ObservableObject {
     var title: String
+    var displayName: String
     var activeUserCount: Int
     var subscribers: Int
     var advertiserCategory: String?
@@ -159,7 +170,8 @@ class AboutCommunity: ObservableObject {
     
     init(json: JSONAbout) {
         self.title = json.title
-        self.activeUserCount = json.active_user_count
+        self.displayName = json.display_name
+        self.activeUserCount = json.active_user_count ?? 0
         self.subscribers = json.subscribers
         self.advertiserCategory = json.advertiser_category
         self.publicDescription = json.public_description
@@ -258,17 +270,17 @@ class JSONAboutUser: Codable {
 //    var snoovatar_img: String
     var comment_karma: Int
     var accept_followers: Bool
-    var has_subscribed: Bool
-    var accept_pms: Bool
+//    var has_subscribed: Bool
+//    var accept_pms: Bool
 }
 
 class JSONAboutUserSubreddit: Codable {
 //    var default_set: Bool
-    var user_is_contributor: Bool
+//    var user_is_contributor: Bool?
     var banner_img: String
 //    var allowed_media_in_comments: String
-    var user_is_banned: Bool
-    var free_form_reports: Bool
+//    var user_is_banned: Bool
+//    var free_form_reports: Bool
 //    var community_icon: String?
 //    var show_media: Bool
 //    var icon_color: String
@@ -286,7 +298,7 @@ class JSONAboutUserSubreddit: Codable {
 //    var header_size: String
 //    var restrict_posting: Bool
 //    var restrict_commenting: Bool
-    var subscribers: Int
+//    var subscribers: Int
 //    var submit_text_label: String
 //    var is_default_icon: Bool
 //    var link_flair_position: String
@@ -297,7 +309,7 @@ class JSONAboutUserSubreddit: Codable {
 //    var url: String
 //    var quarantine: Bool?
 //    var banner_size: String
-    var user_is_moderator: Bool
+//    var user_is_moderator: Bool
 //    var accept_followers: Bool
     var public_description: String
 //    var link_flair_enabled: Bool
@@ -322,19 +334,19 @@ class AboutUser: Identifiable, ObservableObject {
     var created: Double
     var comment_karma: Int
     var accept_followers: Bool
-    var has_subscribed: Bool
-    var accept_pms: Bool
+//    var has_subscribed: Bool
+//    var accept_pms: Bool
     
-    var user_is_contributor: Bool
+//    var user_is_contributor: Bool?
     var banner_img: String
-    var user_is_banned: Bool
-    var free_form_reports: Bool
+//    var user_is_banned: Bool
+//    var free_form_reports: Bool
     var display_name: String
     var over_18: Bool
     var description: String
-    var subscribers: Int
+//    var subscribers: Int
     var display_name_prefixed: String
-    var user_is_moderator: Bool
+//    var user_is_moderator: Bool
     var public_description: String
     
     init(json: JSONAboutUser) {
@@ -353,18 +365,18 @@ class AboutUser: Identifiable, ObservableObject {
         self.created = json.created
         self.comment_karma = json.comment_karma
         self.accept_followers = json.accept_followers
-        self.has_subscribed = json.has_subscribed
-        self.accept_pms = json.accept_pms
-        self.user_is_contributor = json.subreddit.user_is_contributor
+//        self.has_subscribed = json.has_subscribed
+//        self.accept_pms = json.accept_pms
+//        self.user_is_contributor = json.subreddit.user_is_contributor
         self.banner_img = json.subreddit.banner_img
-        self.user_is_banned = json.subreddit.user_is_banned
-        self.free_form_reports = json.subreddit.free_form_reports
+//        self.user_is_banned = json.subreddit.user_is_banned
+//        self.free_form_reports = json.subreddit.free_form_reports
         self.display_name = json.subreddit.display_name
         self.over_18 = json.subreddit.over_18
         self.description = json.subreddit.description
-        self.subscribers = json.subreddit.subscribers
+//        self.subscribers = json.subreddit.subscribers
         self.display_name_prefixed = json.subreddit.display_name_prefixed
-        self.user_is_moderator = json.subreddit.user_is_moderator
+//        self.user_is_moderator = json.subreddit.user_is_moderator
         self.public_description = json.subreddit.public_description
     }
 }

@@ -10,38 +10,23 @@ import WebKit
 
 class Model: ObservableObject {
     @Published var pages: [String:Page] = [:]
-    
-//    @Published var items: [PostOrComment] = []
     @Published var communities: [Community] = []
-    @Published var subscribedCommunities: [Community] = []
-//    @Published var title: String = ""
-//    @Published var selectedCommunity: CommunityOrUser
-//    @Published var selectedSorting: String = ""
-//    @Published var selectedSortTime: String?
-//    @Published var after: String?
     @Published var loginAttempt: LoginAttempt = .undecided
     @Published var messageCount: Int = 0
     var resetPagesToCommunity: String?
     
     let defaults = UserDefaults.standard
     let userSessionManager: UserSessionManager
-//    let webView: WKWebView = WKWebView()
-//    var browser: Erik //= Erik()
-//    var document: Document? = nil
     let redditBaseURL: String = "https://old.reddit.com"
     var jsonLoader: JSONDataLoader = JSONDataLoader()
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
-        
-//        self.jsonLoader = JSONDataLoader()
-//        self.mainPageCommunities = mainPageCommunities
-//        self.userFunctionCommunities = userFunctionCommunities
-        self.pages["r/all"] = Page(target: CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true)),
+        pages["r/all"] = Page(target: CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true)),
                                    webView: userSessionManager.getWebView())
-        self.userSessionManager.loadLastLoggedInUser(webView: pages["r/all"]!.webView)
-//        self.browser = Erik(webView: self.webView)
+        userSessionManager.loadLastLoggedInUser(webView: pages["r/all"]!.webView)
         loadCommunity(community: pages["r/all"]!.selectedCommunity)
+        loadCommunitiesData()
     }
     
     func login(username: String, password: String) {
@@ -58,14 +43,14 @@ class Model: ObservableObject {
                     page.browser.currentContent { (obj, err) -> Void in
                         if let document = obj {
                             if document.querySelector("#login_login-main .error") != nil {
-                                // failed login attempt
                                 self.loginAttempt = .failed
                             } else {
                                 self.loginAttempt = .successful
                                 page.document = document
                                 self.userSessionManager.userName = username
                                 self.userSessionManager.saveUserSession(webView: page.webView, userName: username)
-                                self.updateCommunitiesList(doc: document)
+                                self.loadCommunitiesDataFromDoc(doc: document)
+                                self.loadCommunitiesData() // doesn't work here for some reason
                             }
                         }
                     }
@@ -76,82 +61,28 @@ class Model: ObservableObject {
     
     func logOut() {
         userSessionManager.logOut()
-        // TODO: erase tabs and load some community
-//        loadCommunity(community: selectedCommunity)
+        pages["r/all"] = Page(target: CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true)),
+                                   webView: userSessionManager.getWebView())
+        loadCommunity(community: pages["r/all"]!.selectedCommunity)
+        resetPagesTo(target: pages["r/all"]!.selectedCommunity)
+        communities = []
     }
     
-    // 'communityCode': r/something
-//    func loadCommunity(communityCode: String, sortBy: String? = nil, sortTime: String? = nil, after: String? = nil) {
-//        let community = CommunityOrUser(community: Community("", iconName: nil, isMultiCommunity: false))
-//        self.loadCommunity(community: community, sortBy: sortBy, sortTime: sortTime, after: after)
-//    }
+    func switchAccountTo(userName: String) {
+        userSessionManager.switchToAccount(userName: userName)
+        pages["r/all"] = Page(target: CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true)),
+                                   webView: userSessionManager.getWebView())
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.loadCommunity(community: self.pages["r/all"]!.selectedCommunity)
+            self.loadCommunitiesData()
+            self.resetPagesTo(target: self.pages["r/all"]!.selectedCommunity)
+//        }
+    }
     
     // 'sortBy': top
     // 'sortTime': month
     // 'after': t3_14c4ene
     //  old.reddit.com/r/something/top/.json?sort=top&t=month&count=25&after=t3_14c4ene
-//    func loadCommunity(community: CommunityOrUser, filter: String = "", sortBy: String? = nil, sortTime: String? = nil, after: String? = nil) {
-//        self.selectedCommunity = community
-//        self.selectedSortTime = sortTime
-//        self.selectedSorting = ""
-//
-//        var components = URLComponents()
-//        components.scheme = "https"
-//        components.host = "old.reddit.com"
-//        components.queryItems = []
-//        if !community.isUser {
-//            components.path = "/r/" + community.community!.name
-//        } else {
-//            components.path = "/user/" + community.user!.name
-//            if filter != "" {
-//                components.path = components.path + "/\(filter)"
-//            }
-//        }
-//
-//        if sortBy != nil {
-//            self.selectedSorting = sortBy!
-//            if !community.isUser {
-//                components.path = components.path + "/" + sortBy!
-//            }
-//            components.queryItems?.append(URLQueryItem(name: "sort", value: sortBy!))
-//            if sortTime != nil {
-//                components.queryItems?.append(URLQueryItem(name: "t", value: sortTime!))
-//            }
-//        }
-//
-//        if after != nil {
-//            components.queryItems?.append(URLQueryItem(name: "after", value: after!))
-//        } else {
-//            self.items = []
-//        }
-//
-//        browser.visit(url: components.url! ) { object, error in
-//            let defaultTitle = community.isUser ? community.user!.name : community.community!.name
-//            if let doc = object {
-//                if let nsfwButton = doc.querySelector(".interstitial form button[value=\"yes\"]") {
-//                    nsfwButton.click()
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-//                        self.updateModel(doc, defaultTitle: defaultTitle)
-//                    }
-//                } else {
-//                    self.updateModel(doc, defaultTitle: defaultTitle)
-//                }
-//            }
-//        }
-//
-//        components.path = components.path + "/.json"
-//        jsonLoader.loadItems(url: components.url!) { (items, after, error) in
-//            DispatchQueue.main.async {
-//                if let items = items {
-//                    for i in items.indices {
-//                        self.items.append(items[i])
-//                    }
-//                }
-//                self.after = after
-//            }
-//        }
-//    }
-    
     func loadCommunity(community: CommunityOrUser, filter: String = "", sortBy: String? = nil, sortTime: String? = nil, after: String? = nil) {
         var page = pages[community.getCode()] ?? Page(target: community, webView: userSessionManager.getWebView())
         page.selectedSortTime = sortTime
@@ -218,7 +149,7 @@ class Model: ObservableObject {
         if !community.isUser && !community.isMultiCommunity {
             var aboutPageComponents = baseComponents
             aboutPageComponents.path = aboutPageComponents.path + "/about.json"
-            jsonLoader.loadAbout(url: aboutPageComponents.url!) { (about, error) in
+            jsonLoader.loadAboutCommunity(url: aboutPageComponents.url!) { (about, error) in
                 DispatchQueue.main.async {
                     if let about = about {
                         self.pages[community.getCode()]?.selectedCommunity.community!.about = about
@@ -320,11 +251,11 @@ class Model: ObservableObject {
         }
         if let subscribeButton = self.pages[target.getCode()]!.document?.querySelectorAll(".subscribe-button a").first {
             subscribeButton.click()
-            let community = self.subscribedCommunities.filter { $0.id.lowercased() == target.id.lowercased() }.first
+            let community = self.communities.filter { $0.id.lowercased() == target.id.lowercased() }.first
             if community != nil {
-                self.subscribedCommunities = self.subscribedCommunities.filter { $0.id.lowercased() != target.id.lowercased() }
+                self.communities = self.communities.filter { $0.id.lowercased() != target.id.lowercased() }
             } else {
-                self.subscribedCommunities.append(target.community!)
+                self.communities.append(target.community!)
             }
         }
         return true
@@ -370,6 +301,23 @@ class Model: ObservableObject {
         }
     }
     
+    func loadCommunitiesData() {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "old.reddit.com"
+        components.queryItems = []
+        components.path = "/subreddits/mine/.json"
+        jsonLoader.loadAboutCommunities(url: components.url!) { (abouts, error) in
+            DispatchQueue.main.async {
+                if let abouts = abouts {
+                    self.communities = abouts
+                        .map{ Community($0.displayName, iconURL: $0.communityIcon!, isMultiCommunity: false) }
+                        .sorted { $0.name.lowercased() < $1.name.lowercased() }
+                }
+            }
+        }
+    }
+    
     private func updateModel(_ target: String, doc: Document, defaultTitle: String) {
         if let page = self.pages[target] {
             page.document = doc
@@ -380,7 +328,7 @@ class Model: ObservableObject {
             }
             self.pages[target] = page
             
-            self.updateCommunitiesList(doc: doc)
+//            self.updateCommunitiesList(doc: doc)
             self.loadUsername(doc: doc)
             self.updateMessageCount(doc: doc)
         }
@@ -400,11 +348,7 @@ class Model: ObservableObject {
         }
     }
     
-    private func updateCommunitiesList(doc: Document) {
-        self.subscribedCommunities = []
-        for element in doc.querySelectorAll("#sr-header-area .drop-choices a:not(.bottom-option)") {
-            self.subscribedCommunities.append(Community(element.text!, iconName: nil, isMultiCommunity: false))
-        }
+    private func loadCommunitiesDataFromDoc(doc: Document) {
         var unsortedCommunities: [Community] = []
         let communityElements = doc.querySelectorAll(".sr-list .flat-list.sr-bar:nth-of-type(n+2) li a")
         communityElements.indices.forEach { i in
@@ -420,7 +364,7 @@ class Model: ObservableObject {
     
     var mainPageCommunities: [Community] {
         var communities: [Community] = []
-        communities.append(Community("", iconName: "house.fill", isMultiCommunity: true, displayName: "Home"))
+        communities.append(Community("", iconName: "house.fill", isMultiCommunity: true, displayName: "Home", path: ""))
         communities.append(Community("Popular", iconName: "chart.line.uptrend.xyaxis.circle.fill",
                                      isMultiCommunity: true, displayName: "Popular Posts"))
         communities.append(Community("All", iconName: "a.circle.fill",
@@ -445,6 +389,12 @@ class Model: ObservableObject {
     
     var userName: String? {
         self.userSessionManager.userName
+    }
+    
+    var savedUserNames: [String] {
+        self.userSessionManager.userNames
+            .filter{ $0.lowercased() != userName?.lowercased() }
+            .sorted { $0.lowercased() < $1.lowercased() }
     }
 }
 

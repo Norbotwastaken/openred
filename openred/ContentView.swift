@@ -18,6 +18,7 @@ struct ContentView: View {
     @State private var sidebarOffset = CGSize(width: -300, height: 0)
     @State private var tabSelection = 1
     
+    
     var body: some View {
         ZStack {
             TabView(selection: $tabSelection) {
@@ -62,12 +63,58 @@ struct ContentView: View {
             if loginPopupShowing {
                 LoginPopup(loginPopupShowing: $loginPopupShowing)
             }
+            MessageOverlay()
         }
     }
     
     private func dismissPopup() {
         popupViewModel.player.pause()
         popupViewModel.isShowing = false
+    }
+}
+
+struct MessageOverlay: View {
+    @EnvironmentObject var overlayModel: MessageOverlayModel
+    
+    var body: some View {
+        if overlayModel.showing {
+            ZStack {
+                if overlayModel.loading {
+                    Rectangle()
+                        .fill(Color.black)
+                        .opacity(0.75)
+                        .ignoresSafeArea()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    ProgressView().progressViewStyle(.circular)
+                } else {
+                    Text(overlayModel.text)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .onAppear{
+                DispatchQueue.main.asyncAfter(deadline: .now() + overlayModel.duration) {
+                    withAnimation {
+                        overlayModel.showing = false
+                    }
+                }
+            }
+        }
+    }
+}
+
+class MessageOverlayModel: ObservableObject {
+    @Published var showing: Bool
+    @Published var text: String
+    @Published var duration: Double
+    @Published var loading: Bool
+    
+    init(showing: Bool, text: String, duration: Double, loading: Bool) {
+        self.showing = showing
+        self.text = text
+        self.duration = duration
+        self.loading = loading
     }
 }
 

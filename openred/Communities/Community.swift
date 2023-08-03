@@ -37,16 +37,18 @@ class Community: Identifiable, ObservableObject {
     var id: String
     var name: String
     var iconName: String?
+    var iconURL: String?
     var displayName: String?
     var path: String? // for pages with path other than r/whatever, eg. /saved
     var isMultiCommunity: Bool = false
     @Published var about: AboutCommunity?
     @Published var rules: [CommunityRule] = []
     
-    init(_ name: String, iconName: String? = nil, isMultiCommunity: Bool = false, displayName: String? = nil, path: String? = nil) {
+    init(_ name: String, iconName: String? = nil, iconURL: String? = nil, isMultiCommunity: Bool = false, displayName: String? = nil, path: String? = nil) {
         self.id = name
         self.name = name
         self.iconName = iconName
+        self.iconURL = iconURL
         self.isMultiCommunity = isMultiCommunity
         self.displayName = displayName
         self.path = path

@@ -25,7 +25,8 @@ struct CommunitiesStack: View {
                     VStack(alignment: .leading, spacing: 0) {
                         List {
                             if searchText.isEmpty {
-                                UserSection(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
+                                UserSection(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts,
+                                            target: $target, loadPosts: $loadPosts)
                                 Section() {
                                     ForEach(model.mainPageCommunities) { community in
                                         CommunityRow(community: community, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
@@ -39,7 +40,7 @@ struct CommunitiesStack: View {
                                     }
                                 }
                             }
-                            if !model.subscribedCommunities.isEmpty {
+                            if !model.communities.isEmpty {
                                 Section(header: Text("Subreddits")) {
                                     ForEach(filteredSubscribedCommunities) { community in
                                         CommunityRow(community: community, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
@@ -88,9 +89,9 @@ struct CommunitiesStack: View {
     
     var filteredSubscribedCommunities: [Community] {
         if searchText.isEmpty {
-            return model.subscribedCommunities
+            return model.communities
         } else {
-            return model.subscribedCommunities.filter {
+            return model.communities.filter {
                 $0.name.lowercased().contains(searchText.lowercased())
             }
         }
@@ -124,9 +125,21 @@ struct CommunityRow: View {
         }) {
             HStack {
                 if community.iconName != nil {
-                    Image(systemName: community.iconName!)
+                    Text(Image(systemName: community.iconName!))
+                } else if let icon = community.iconURL {
+                    ZStack {
+                        Text(Image(systemName: "r.circle.fill"))
+                            .frame(maxWidth: 30, maxHeight: 30)
+                        AsyncImage(url: URL(string: icon)) { image in
+                            image.image?
+                                .resizable()
+                                .scaledToFill()
+                                .frame(maxWidth: 30, maxHeight: 30)
+                                .clipShape(Circle())
+                        }
+                    }
                 }
-                Text(community.displayName ?? community.name)
+                Text(community.displayName ?? community.name.prefix(1).capitalized + community.name.dropFirst())
             }
         }
         .listRowBackground(Color.clear)
@@ -135,10 +148,12 @@ struct CommunityRow: View {
 
 struct UserSection: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @Binding var loginPopupShowing: Bool
     @Binding var showPosts: Bool
     @Binding var target: CommunityOrUser
     @Binding var loadPosts: Bool
+    @State private var showingExitAlert = false
     
     var body: some View {
         if model.userName != nil {
@@ -153,6 +168,22 @@ struct UserSection: View {
                     Label("My Profile", systemImage: "person")
                 }
                 Button(action: {
+                    showingExitAlert = true
+                }) {
+                    Label("Add account", systemImage: "plus")
+                }
+                Menu {
+                    ForEach(model.savedUserNames, id: \.self) { userName in
+                        Button(userName, action: {
+                            model.switchAccountTo(userName: userName)
+                            overlayModel.loading = true
+                            overlayModel.showing = true
+                        })
+                    }
+                } label: {
+                    Label("Switch account", systemImage: "person.2")
+                }
+                Button(action: {
                     model.logOut()
                 }) {
                     Label("Log out", systemImage: "rectangle.portrait.and.arrow.forward")
@@ -165,20 +196,51 @@ struct UserSection: View {
                         Image(systemName: "person.crop.circle")
                         Text(model.userSessionManager.userName!)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     .foregroundColor(.primary)
                 }
                 .listRowBackground(Color.clear)
-            }
-        } else {
-            Button(action: {
-                loginPopupShowing.toggle()
-            }) {
-                HStack {
-                    Image(systemName: "rectangle.portrait.and.arrow.forward")
-                    Text("Log in")
+                .alert("Log out", isPresented: $showingExitAlert) {
+                    Button("Log out", role: .destructive) {
+                        model.logOut()
+                        showingExitAlert = false
+                        loginPopupShowing = true
+                    }
+                    Button("Cancel", role: .cancel) { showingExitAlert = false }
+                } message: {
+                    Text("To add a new account you first need to log out of your current session.")
                 }
             }
-            .listRowBackground(Color.clear)
+        } else {
+            if model.savedUserNames.isEmpty {
+                Button(action: {
+                    loginPopupShowing.toggle()
+                }) {
+                    HStack {
+                        Image(systemName: "rectangle.portrait.and.arrow.forward")
+                        Text("Log in")
+                    }
+                }
+                .listRowBackground(Color.clear)
+            } else {
+                Menu {
+                    Button(action: {
+                        loginPopupShowing = true
+                    }) {
+                        Label("Add account", systemImage: "plus")
+                    }
+                    ForEach(model.savedUserNames, id: \.self) { userName in
+                        Button(userName, action: { model.switchAccountTo(userName: userName) })
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: "rectangle.portrait.and.arrow.forward")
+                        Text("Log in")
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                    .foregroundColor(.primary)
+                }
+            }
         }
     }
 }

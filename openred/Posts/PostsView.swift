@@ -154,7 +154,7 @@ struct ActionsMenu: View {
                     }
                 }
                 Button(action: { model.toggleSubscribe(target: target) }) {
-                    if model.subscribedCommunities.contains(where: { c in c.id.lowercased() == target.id.lowercased() }) {
+                    if model.communities.contains(where: { c in c.id.lowercased() == target.id.lowercased() }) {
                         Label("Unsubscribe", systemImage: "heart.slash")
                     } else {
                         Label("Subscribe", systemImage: "heart")

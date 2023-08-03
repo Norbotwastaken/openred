@@ -115,7 +115,7 @@ class Post: Identifiable, ObservableObject {
             if (jsonPost.preview?.images[0].variants?.mp4 != nil) {
                 self.contentType = ContentType.gif // or gif?
                 let gifResolutions = jsonPost.preview?.images[0].variants?.gif?.resolutions
-                self.videoLink = gifResolutions![max(gifResolutions!.count - 2, 0)].url
+                self.videoLink = !gifResolutions!.isEmpty ? gifResolutions![max(gifResolutions!.count - 2, 0)].url : ""
             }
             let jsonImage = jsonPost.preview?.images[0]
             self.imageLink = jsonImage!.source.url
