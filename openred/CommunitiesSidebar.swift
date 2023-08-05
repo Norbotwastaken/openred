@@ -59,20 +59,22 @@ struct CommunitiesStack: View {
                         }
                         .listStyle(PlainListStyle())
                     }
-                    ZStack {
-                        Circle()
-                            .fill(Color.blue)
-                            .frame(width: 65, height: 65, alignment: .bottomTrailing)
-                            .onTapGesture {
-                                restoreScroll = true
-                                showPosts = true
-                            }
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 30))
-                            .foregroundColor(.white)
+                    if !model.pages.isEmpty {
+                        ZStack {
+                            Circle()
+                                .fill(Color.blue)
+                                .frame(width: 65, height: 65, alignment: .bottomTrailing)
+                                .onTapGesture {
+                                    restoreScroll = true
+                                    showPosts = true
+                                }
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 30))
+                                .foregroundColor(.white)
+                        }
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 30))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                     }
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 30))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .navigationTitle("Communities")
@@ -148,6 +150,7 @@ struct CommunityRow: View {
 
 struct UserSection: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var messageModel: MessageModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
     @Binding var loginPopupShowing: Bool
     @Binding var showPosts: Bool
@@ -176,6 +179,10 @@ struct UserSection: View {
                     ForEach(model.savedUserNames, id: \.self) { userName in
                         Button(userName, action: {
                             model.switchAccountTo(userName: userName)
+                            if !messageModel.messages.isEmpty {
+                                // reload only if previously loaded
+                                messageModel.openInbox(forceLoad: true)
+                            }
                             overlayModel.loading = true
                             overlayModel.showing = true
                         })

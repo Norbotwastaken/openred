@@ -26,6 +26,7 @@ struct CommentsView: View {
     @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community("")) // placeholder value
     @State var loadPosts: Bool = true
     @State var itemInView: String = ""
+    @State var selectedSort: String?
     
     var body: some View {
         ZStack {
@@ -195,7 +196,7 @@ struct CommentsView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         HStack {
-                            CommentSortMenu()
+                            CommentSortMenu(selectedSort: $selectedSort)
                             Button {
                                 // Perform an action
                                 print("Add Item Tapped")
@@ -210,9 +211,14 @@ struct CommentsView: View {
                         scrollTarget = nil
                         
 //                        withAnimation {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             proxy.scrollTo(target, anchor: .top)
+                        }
 //                        }
                     }
+                }
+                .refreshable {
+                    commentsModel.loadComments(linkToThread: post.linkToThread, sortBy: selectedSort)
                 }
 //                .onAppear(perform: {
 //                    proxy.scrollTo(commentInView)
@@ -418,6 +424,7 @@ struct CommentActions: View {
 
 struct CommentSortMenu: View {
     @EnvironmentObject var commentsModel: CommentsModel
+    @Binding var selectedSort: String?
     
     var body: some View {
         Menu {
@@ -445,6 +452,7 @@ struct CommentSortMenu: View {
     }
     
     func sortCommunity(sortModifier: String) {
+        selectedSort = sortModifier
         commentsModel.loadComments(linkToThread: commentsModel.currentLink, sortBy: sortModifier)
     }
 }

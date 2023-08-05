@@ -18,13 +18,16 @@ class Model: ObservableObject {
     let defaults = UserDefaults.standard
     let userSessionManager: UserSessionManager
     let redditBaseURL: String = "https://old.reddit.com"
-    var jsonLoader: JSONDataLoader = JSONDataLoader()
+    let jsonLoader: JSONDataLoader = JSONDataLoader()
+    private let starterCommunity = CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true))
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
-        pages["r/all"] = Page(target: CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true)),
-                                   webView: userSessionManager.getWebView())
-        userSessionManager.loadLastLoggedInUser(webView: pages["r/all"]!.webView)
+        userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
+        pages["r/all"] = Page(target: starterCommunity, webView: userSessionManager
+            .getWebViewFor(viewName: starterCommunity.getCode()))
+//        userSessionManager.loadLastLoggedInUser(webView: userSessionManager
+//            .getWebViewFor(viewName: starterCommunity.getCode()))
         loadCommunity(community: pages["r/all"]!.selectedCommunity)
         loadCommunitiesData()
     }
@@ -47,8 +50,7 @@ class Model: ObservableObject {
                             } else {
                                 self.loginAttempt = .successful
                                 page.document = document
-                                self.userSessionManager.userName = username
-                                self.userSessionManager.saveUserSession(webView: page.webView, userName: username)
+                                self.userSessionManager.saveUserSession(webViewKey: page.selectedCommunity.getCode(), userName: username)
                                 self.loadCommunitiesDataFromDoc(doc: document)
                                 self.loadCommunitiesData() // doesn't work here for some reason
                             }
@@ -61,21 +63,25 @@ class Model: ObservableObject {
     
     func logOut() {
         userSessionManager.logOut()
-        pages["r/all"] = Page(target: CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true)),
-                                   webView: userSessionManager.getWebView())
+        userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
+        pages["r/all"] = Page(target: starterCommunity, webView: userSessionManager
+            .getWebViewFor(viewName: starterCommunity.getCode()))
         loadCommunity(community: pages["r/all"]!.selectedCommunity)
         resetPagesTo(target: pages["r/all"]!.selectedCommunity)
+//        pages = [:]
         communities = []
     }
     
     func switchAccountTo(userName: String) {
         userSessionManager.switchToAccount(userName: userName)
-        pages["r/all"] = Page(target: CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true)),
-                                   webView: userSessionManager.getWebView())
+//        userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
+//        pages["r/all"] = Page(target: starterCommunity, webView: userSessionManager
+//            .getWebViewFor(viewName: starterCommunity.getCode()))
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.loadCommunity(community: self.pages["r/all"]!.selectedCommunity)
-            self.loadCommunitiesData()
-            self.resetPagesTo(target: self.pages["r/all"]!.selectedCommunity)
+//            self.loadCommunity(community: self.pages["r/all"]!.selectedCommunity)
+        pages = [:]
+        self.loadCommunitiesData()
+//            self.resetPagesTo(target: self.pages["r/all"]!.selectedCommunity)
 //        }
     }
     
@@ -84,7 +90,11 @@ class Model: ObservableObject {
     // 'after': t3_14c4ene
     //  old.reddit.com/r/something/top/.json?sort=top&t=month&count=25&after=t3_14c4ene
     func loadCommunity(community: CommunityOrUser, filter: String = "", sortBy: String? = nil, sortTime: String? = nil, after: String? = nil) {
-        var page = pages[community.getCode()] ?? Page(target: community, webView: userSessionManager.getWebView())
+        if pages[community.getCode()] == nil {
+            userSessionManager.createWebViewFor(viewName: community.getCode())
+        }
+        let page = pages[community.getCode()] ?? Page(target: community, webView: userSessionManager
+            .getWebViewFor(viewName: community.getCode()))
         page.selectedSortTime = sortTime
         page.selectedSorting = ""
         
@@ -93,7 +103,7 @@ class Model: ObservableObject {
         components.host = "old.reddit.com"
         components.queryItems = []
         components.path = "/" + community.getCode()
-        var baseComponents = components
+        let baseComponents = components
         if !community.isUser && community.community?.path != nil {
             components.path = "/" + community.community!.path!
         }

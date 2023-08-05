@@ -18,10 +18,12 @@ class PostCreateModel: ObservableObject {
     var requiresCaptcha: Bool = false
     var submissionLink: URL?
     @Published var submissionState: SubmissionState = .idle
+    private let webViewKey = "create"
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
-        self.webView = userSessionManager.getWebView()
+        userSessionManager.createWebViewFor(viewName: webViewKey)
+        self.webView = userSessionManager.getWebViewFor(viewName: webViewKey)
         self.browser = Erik(webView: webView)
     }
     

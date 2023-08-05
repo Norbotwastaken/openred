@@ -90,6 +90,9 @@ struct InboxView: View {
                             }
                         }
                     }
+                    .refreshable {
+                        messageModel.openInbox(filter: type, forceLoad: true)
+                    }
                     if isEditorShowing {
                         MessageEditor(isShowing: $isEditorShowing, replyToMessage: $replyToMessage)
                     }

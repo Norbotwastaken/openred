@@ -112,8 +112,8 @@ struct PostRowContent: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear(perform: { startLoadingGif = true })
-                if startLoadingGif {
-                    GIFView(url: URL(string: post.videoLink ?? "")!)
+                if startLoadingGif && post.videoLink != nil {
+                    GIFView(url: URL(string: post.videoLink!)!)
                         .frame(maxWidth: .infinity, maxHeight: 650)
                 }
             }

@@ -115,11 +115,14 @@ class Post: Identifiable, ObservableObject {
             if (jsonPost.preview?.images[0].variants?.mp4 != nil) {
                 self.contentType = ContentType.gif // or gif?
                 let gifResolutions = jsonPost.preview?.images[0].variants?.gif?.resolutions
-                self.videoLink = !gifResolutions!.isEmpty ? gifResolutions![max(gifResolutions!.count - 2, 0)].url : ""
+                if !gifResolutions!.isEmpty {
+                    self.videoLink = gifResolutions![max(gifResolutions!.count - 2, 0)].url
+                }
             }
             let jsonImage = jsonPost.preview?.images[0]
             self.imageLink = jsonImage!.source.url
-            self.imagePreviewLink = jsonImage!.resolutions[jsonImage!.resolutions.count - 1].url
+            self.imagePreviewLink = !jsonImage!.resolutions.isEmpty ?
+                jsonImage!.resolutions[jsonImage!.resolutions.count - 1].url : jsonImage!.source.url
         }
         else if (jsonPost.post_hint != nil && jsonPost.post_hint! == "rich:video") {
             self.contentType = ContentType.video

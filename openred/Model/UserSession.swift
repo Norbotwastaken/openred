@@ -10,30 +10,45 @@ import WebKit
 
 class UserSessionManager: ObservableObject {
     @Published var userName: String?
-    var currentCookies: [String : Any]?
-    private var webViews: [WKWebView] = []
+    var currentCookies: [String : Any] = [:]
+    private var webViews: [String:WKWebView] = [:]
     @Published var userNames: [String] = []
     
-    func getWebView() -> WKWebView {
+    func createWebViewFor(viewName: String) {
         let webView = WKWebView()
-        self.webViews.append(webView)
-        return webView
+        for (_, cookieProperties) in self.currentCookies {
+            if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
+                webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+            }
+        }
+        if webViews.isEmpty {
+            loadLastLoggedInUser(webView: webView)
+        }
+        webViews[viewName] = webView
     }
     
-    func saveUserSession(webView: WKWebView, userName: String) {
+    func getWebViewFor(viewName: String) -> WKWebView {
+        webViews[viewName]!
+    }
+    
+    func saveUserSession(webViewKey: String, userName: String) {
         var cookieDict = [String : AnyObject]()
         
+        let webView = webViews[webViewKey]!
         webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
             for cookie in cookies {
                 cookieDict[cookie.name] = cookie.properties as AnyObject?
-                for view in self.webViews {
-                    view.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+                for viewKey in self.webViews.keys {
+                    if viewKey != webViewKey {
+                        self.webViews[viewKey]!.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+                    }
                 }
                 HTTPCookieStorage.shared.setCookie(cookie)
             }
             self.currentCookies = cookieDict
             UserDefaults.standard.set(cookieDict, forKey: "cookies_" + userName)
             UserDefaults.standard.set(userName, forKey: "currentUserName")
+            self.userName = userName
             
             var users: [String] = []
             if let savedUsers = UserDefaults.standard.object(forKey: "users") as? [String] {
@@ -55,13 +70,13 @@ class UserSessionManager: ObservableObject {
 //    }
 
     func loadLastLoggedInUser(webView: WKWebView) {
-        if self.currentCookies == nil {
+        if self.currentCookies.isEmpty {
             if let userName = UserDefaults.standard.object(forKey: "currentUserName") as? String {
                 self.userName = userName
                 if let cookieDictionary = UserDefaults.standard.dictionary(forKey: "cookies_" + userName) {
                     self.currentCookies = cookieDictionary
                     
-                    for (_, cookieProperties) in self.currentCookies! {
+                    for (_, cookieProperties) in self.currentCookies {
                         if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
                             webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
                             HTTPCookieStorage.shared.setCookie(cookie)
@@ -81,8 +96,11 @@ class UserSessionManager: ObservableObject {
             self.userName = userName
             self.currentCookies = cookieDictionary
             
-            for (_, cookieProperties) in self.currentCookies! {
+            for (_, cookieProperties) in self.currentCookies {
                 if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
+                    for webView in webViews.values {
+                        webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+                    }
                     HTTPCookieStorage.shared.setCookie(cookie)
                 }
             }
@@ -92,16 +110,21 @@ class UserSessionManager: ObservableObject {
     
     func logOut() {
         UserDefaults.standard.removeObject(forKey: "currentUserName")
-        for view in webViews {
-            view.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+//        for viewKey in webViews.keys {
+//            webViews[viewKey] = WKWebView()
+//        }
+        for webView in webViews.values {
+            webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
                 for cookie in cookies {
-                    view.configuration.websiteDataStore.httpCookieStore.delete(cookie)
+                    webView.configuration.websiteDataStore.httpCookieStore.delete(cookie)
                 }
             }
         }
-        for cookie in HTTPCookieStorage.shared.cookies! {
-            HTTPCookieStorage.shared.deleteCookie(cookie)
-        }
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        self.currentCookies = [:]
+//        for cookie in HTTPCookieStorage.shared.cookies! {
+//            HTTPCookieStorage.shared.deleteCookie(cookie)
+//        }
         self.userName = nil
     }
 }

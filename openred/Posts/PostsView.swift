@@ -18,6 +18,8 @@ struct PostsView: View {
 //    @State var showComments = false
 //    @State var commentInView = ""
     @State var isPostCreatorShowing: Bool = false
+    @State var sortBy: String?
+    @State var sortTime: String?
     var filters: KeyValuePairs<String, String> {
         if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
@@ -117,7 +119,7 @@ struct PostsView: View {
 //                        }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             HStack {
-                                SortMenu(target: $target)
+                                SortMenu(target: $target, currentSortBy: $sortBy, currentSortTime: $sortTime)
                                 ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing, target: $target)
                             }
                         }
@@ -128,6 +130,9 @@ struct PostsView: View {
                         }
                     })
                     .toolbarBackground(.visible, for: .navigationBar)
+                    .refreshable {
+                        model.loadCommunity(community: target, sortBy: sortBy, sortTime: sortTime)
+                    }
                 }
                 if isPostCreatorShowing {
                     CreatePostForm(community: model.pages[target.getCode()]!.selectedCommunity.community!, isShowing: $isPostCreatorShowing)
@@ -190,6 +195,8 @@ struct ActionsMenu: View {
 struct SortMenu: View {
     @EnvironmentObject var model: Model
     @Binding var target: CommunityOrUser
+    @Binding var currentSortBy: String?
+    @Binding var currentSortTime: String?
     
     var body: some View {
         Menu {
@@ -230,6 +237,8 @@ struct SortMenu: View {
     }
     
     func sortCommunity(sortBy: String?, sortTime: String?) {
+        currentSortBy = sortBy
+        currentSortTime = sortTime
         model.loadCommunity(community: model.pages[target.getCode()]!.selectedCommunity, sortBy: sortBy, sortTime: sortTime)
     }
 }

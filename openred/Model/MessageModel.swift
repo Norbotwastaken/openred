@@ -11,7 +11,6 @@ import WebKit
 
 class MessageModel: ObservableObject {
     let browser: Erik
-    let webView: WKWebView
     let userSessionManager: UserSessionManager
     let jsonLoader: JSONDataLoader = JSONDataLoader()
     
@@ -21,14 +20,15 @@ class MessageModel: ObservableObject {
     @Published var nextLink: String?
     @Published var prevLink: String?
     @Published var submissionState: SubmissionState = .idle
+    private let webViewKey = "inbox"
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
-        self.webView = userSessionManager.getWebView()
-        self.browser = Erik(webView: webView)
+        userSessionManager.createWebViewFor(viewName: webViewKey)
+        self.browser = Erik(webView: userSessionManager.getWebViewFor(viewName: webViewKey))
     }
     
-    func openInbox(filter: String = "inbox", link: String? = nil) {
+    func openInbox(filter: String = "inbox", link: String? = nil, forceLoad: Bool = false) {
         var url: URL
         if link != nil {
             self.messages = [] // reset scroll
@@ -36,8 +36,13 @@ class MessageModel: ObservableObject {
             self.prevLink = nil
             url = URL(string: link!)!
         } else {
-            if filter == currentFilter {
+            if !forceLoad && filter == currentFilter {
                 return
+            }
+            if forceLoad {
+                self.messages = []
+                self.nextLink = nil
+                self.prevLink = nil
             }
             currentFilter = filter
             var components = URLComponents()

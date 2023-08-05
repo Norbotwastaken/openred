@@ -22,12 +22,14 @@ class CommentsModel: ObservableObject {
     @Published var title: String = ""
     @Published var commentCount: String = ""
     @Published var selectedSorting: String = ""
+    private let webViewKey = "comments"
     
     let webView: WKWebView
     let userSessionManager: UserSessionManager
     
     init(userSessionManager: UserSessionManager) {
-        self.webView = userSessionManager.getWebView()
+        userSessionManager.createWebViewFor(viewName: webViewKey)
+        self.webView = userSessionManager.getWebViewFor(viewName: webViewKey)
         userSessionManager.loadLastLoggedInUser(webView: self.webView)
         self.jsonLoader = JSONDataLoader()
         self.browser = Erik(webView: webView)
@@ -36,8 +38,8 @@ class CommentsModel: ObservableObject {
 //        webView
     }
     
-    func loadComments(linkToThread: String, sortBy: String? = "") {
-        if currentLink == linkToThread && sortBy == "" {
+    func loadComments(linkToThread: String, sortBy: String? = nil) {
+        if currentLink == linkToThread && sortBy == nil {
             return
             // returning to the same post comments again (may not be needed)
         }
