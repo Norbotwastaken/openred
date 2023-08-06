@@ -18,7 +18,6 @@ struct ContentView: View {
     @State private var sidebarOffset = CGSize(width: -300, height: 0)
     @State private var tabSelection = 1
     
-    
     var body: some View {
         ZStack {
             TabView(selection: $tabSelection) {
@@ -86,10 +85,15 @@ struct MessageOverlay: View {
                         .ignoresSafeArea()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     ProgressView().progressViewStyle(.circular)
-                } else {
-                    Text(overlayModel.text)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
+                } else if overlayModel.text != nil {
+                    ZStack {
+                        Text(overlayModel.text!)
+                            .padding()
+                            .background(VisualEffect(style: .systemUltraThinMaterial))
+                            .clipShape(Capsule())
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -106,12 +110,18 @@ struct MessageOverlay: View {
 
 class MessageOverlayModel: ObservableObject {
     @Published var showing: Bool
-    @Published var text: String
+    @Published var text: String?
     @Published var duration: Double
     @Published var loading: Bool
     
-    init(showing: Bool, text: String, duration: Double, loading: Bool) {
-        self.showing = showing
+    init() {
+        self.showing = false
+        self.duration = 4.0
+        self.loading = false
+    }
+    
+    func show(_ text: String? = nil, duration: Double = 3.0, loading: Bool = false) {
+        self.showing = true
         self.text = text
         self.duration = duration
         self.loading = loading

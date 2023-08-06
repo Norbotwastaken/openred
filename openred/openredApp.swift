@@ -12,7 +12,7 @@ class openredApp: App {
     var userSessionManager: UserSessionManager
     @StateObject private var model: Model
     @StateObject var popupViewModel = PopupViewModel()
-    @StateObject var messageOverlayModel = MessageOverlayModel(showing: false, text: "", duration: 4, loading: false)
+    @StateObject var messageOverlayModel = MessageOverlayModel()
     @StateObject var commentsModel: CommentsModel
     @StateObject var postCreateModel: PostCreateModel
     @StateObject var messageModel: MessageModel

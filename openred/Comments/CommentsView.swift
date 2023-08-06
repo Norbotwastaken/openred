@@ -11,6 +11,7 @@ import WebKit
 struct CommentsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var commentsModel: CommentsModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
 //    @EnvironmentObject var popupViewModel: PopupViewModel
     @ObservedObject var post: Post
 //    @Binding var commentInView: String
@@ -154,7 +155,8 @@ struct CommentsView: View {
 //                                .fontWeight(post.isSaved ? .semibold : .regular)
 //                                .foregroundColor(.secondary)
                                 .onTapGesture {
-                                    if commentsModel.toggleSavePost(target: postsTarget.getCode(), post: post) == false {
+                                    if commentsModel.toggleSavePost(target: postsTarget.getCode(), post: post) {
+                                        overlayModel.show(post.isSaved ? "Post saved" : "Removed from saved")
                                         // show login popup
                                     }
                                 }
@@ -211,6 +213,7 @@ struct CommentsView: View {
                         scrollTarget = nil
                         
 //                        withAnimation {
+                        proxy.scrollTo(target, anchor: .top)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             proxy.scrollTo(target, anchor: .top)
                         }
@@ -383,6 +386,7 @@ struct CommentView: View {
 struct CommentActions: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var model: Model
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @ObservedObject var comment: Comment
     @Binding var editorParentComment: Comment?
     @Binding var isEditorShowing: Bool
@@ -400,7 +404,11 @@ struct CommentActions: View {
             Button(action: { commentsModel.toggleDownvoteComment(comment: comment) }) {
                 Label("Downvote", systemImage: "arrow.down")
             }
-            Button(action: { commentsModel.toggleSaveComment(comment: comment) }) {
+            Button(action: {
+                if commentsModel.toggleSaveComment(comment: comment) {
+                    overlayModel.show(comment.isSaved ? "Comment saved" : "Removed from saved")
+                }
+            }) {
                 Label(comment.isSaved ? "Undo Save" : "Save", systemImage: comment.isSaved ? "bookmark.slash" : "bookmark")
             }
             Button(action: {

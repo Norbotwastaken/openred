@@ -144,6 +144,7 @@ struct PostsView: View {
 
 struct ActionsMenu: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @Binding var isPostCreatorShowing: Bool
     @Binding var target: CommunityOrUser
     
@@ -158,7 +159,12 @@ struct ActionsMenu: View {
                         Label("About this community", systemImage: "questionmark.circle")
                     }
                 }
-                Button(action: { model.toggleSubscribe(target: target) }) {
+                Button(action: {
+                    if model.toggleSubscribe(target: target) {
+                        overlayModel.show(model.communities.contains(where: { c in c.id.lowercased() == target.id.lowercased() })
+                                          ? "Subscribed to \(target.community!.name)" : "Removed \(target.community!.name) from subscriptions")
+                    }
+                }) {
                     if model.communities.contains(where: { c in c.id.lowercased() == target.id.lowercased() }) {
                         Label("Unsubscribe", systemImage: "heart.slash")
                     } else {
@@ -171,8 +177,13 @@ struct ActionsMenu: View {
                         Label("About user", systemImage: "person")
                     }
                 }
-                if model.pages[target.getCode()]!.selectedCommunity.user!.about != nil {
-                    Button(action: { model.toggleFriend(target: target) }) {
+                if model.pages[target.getCode()]!.selectedCommunity.user!.about != nil &&
+                    target.user!.name.lowercased() != model.userName {
+                    Button(action: {
+                        if model.toggleFriend(target: target) {
+                            overlayModel.show(model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_friend ? "Added as friend" : "Removed from friends")
+                        }
+                    }) {
                         if model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_friend {
                             Label("Remove from friends", systemImage: "heart.slash")
                         } else {
@@ -180,7 +191,11 @@ struct ActionsMenu: View {
                         }
                     }
                     if !model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_blocked {
-                        Button(action: { model.blockUser(target: target) }) {
+                        Button(action: {
+                            if model.blockUser(target: target) {
+                                overlayModel.show("User blocked")
+                            }
+                        }) {
                             Label("Block user", systemImage: "xmark")
                         }
                     }

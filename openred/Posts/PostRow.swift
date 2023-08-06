@@ -233,6 +233,7 @@ func formatScore(score: String) -> String {
 
 struct PostRowMenu: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @ObservedObject var post: Post
     @Binding var target: CommunityOrUser
 //    @State var isPresented: Bool = false
@@ -249,7 +250,11 @@ struct PostRowMenu: View {
             Button(action: { model.toggleDownvotePost(target: target.getCode(), post: post) }) {
                 Label("Downvote", systemImage: "arrow.down")
             }
-            Button(action: { model.toggleSavePost(target: target.getCode(), post: post) }) {
+            Button(action: {
+                if model.toggleSavePost(target: target.getCode(), post: post) {
+                    overlayModel.show(post.isSaved ? "Post saved" : "Removed from saved")
+                }
+            }) {
                 Label(post.isSaved ? "Undo Save" : "Save", systemImage: post.isSaved ? "bookmark.slash" : "bookmark")
             }
             NavigationLink(destination: PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {

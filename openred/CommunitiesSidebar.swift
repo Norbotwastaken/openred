@@ -183,8 +183,7 @@ struct UserSection: View {
                                 // reload only if previously loaded
                                 messageModel.openInbox(forceLoad: true)
                             }
-                            overlayModel.loading = true
-                            overlayModel.showing = true
+                            overlayModel.show(duration: 4, loading: true)
                         })
                     }
                 } label: {
