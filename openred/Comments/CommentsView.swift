@@ -245,6 +245,8 @@ struct CommentView: View {
     @Binding var editorParentComment: Comment?
     @Binding var isEditorShowing: Bool
     @Binding var scrollTarget: String?
+    @State var showSafari: Bool = false
+    @State var safariLink: URL?
     
     var body: some View {
         VStack {
@@ -325,10 +327,23 @@ struct CommentView: View {
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     if !comment.isCollapsed {
-                        Text(comment.content ?? "")
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.system(size: 15))
+                        ZStack {
+                            if showSafari {
+                                Spacer()
+                                    .fullScreenCover(isPresented: $showSafari, content: {
+                                        SFSafariViewWrapper(url: safariLink!)
+                                    })
+                            }
+                            Text(comment.content ?? "")
+                                .fixedSize(horizontal: false, vertical: true)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.system(size: 15))
+                                .environment(\.openURL, OpenURLAction { url in
+                                    safariLink = url
+                                    showSafari = true
+                                    return .handled
+                                })
+                        }
 //                            .padding(EdgeInsets(top: 6, leading: 0, bottom: 0, trailing: 0))
                     }
                 }

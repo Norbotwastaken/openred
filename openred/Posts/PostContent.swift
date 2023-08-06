@@ -16,18 +16,33 @@ struct PostRowContent: View {
     @State var startLoadingGif: Bool = false
     @State var restorePostsPlaceholder: Bool = false
     @State var imageContainerSize: CGSize = CGSize(width: 1, height: 400)
+    @State var showSafari: Bool = false
+    @State var safariLink: URL?
     var post: Post
     @Binding var target: CommunityOrUser
     var isPostOpen: Bool = false
     
     var body: some View {
         if post.contentType == .text {
-            Text(post.text!)
-                .font(.system(size: 15))
-                .padding(EdgeInsets(top: 0, leading: isPostOpen ? 0 : 10, bottom: 0,
-                                    trailing: isPostOpen ? 0 : 10))
-                .frame(maxHeight: isPostOpen ? .infinity : 60, alignment: .leading)
-                .opacity(0.9)
+            ZStack {
+                if showSafari {
+                    Spacer()
+                        .fullScreenCover(isPresented: $showSafari, content: {
+                            SFSafariViewWrapper(url: safariLink!)
+                        })
+                }
+                Text(post.text!)
+                    .font(.system(size: 15))
+                    .padding(EdgeInsets(top: 0, leading: isPostOpen ? 0 : 10, bottom: 0,
+                                        trailing: isPostOpen ? 0 : 10))
+                    .frame(maxHeight: isPostOpen ? .infinity : 60, alignment: .leading)
+                    .opacity(0.9)
+                    .environment(\.openURL, OpenURLAction { url in
+                        safariLink = url
+                        showSafari = true
+                        return .handled
+                    })
+            }
         }
         if post.contentType == .image {
             ZStack {
@@ -252,8 +267,12 @@ struct PostRowContent: View {
             }
             .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
             .onTapGesture {
-                UIApplication.shared.open(URL(string: post.externalLink!)!)
+//                UIApplication.shared.open(URL(string: post.externalLink!)!)
+                showSafari.toggle()
             }
+            .fullScreenCover(isPresented: $showSafari, content: {
+                SFSafariViewWrapper(url: URL(string: post.externalLink!)!)
+            })
         }
     }
 }

@@ -41,6 +41,7 @@ class Community: Identifiable, ObservableObject {
     var displayName: String?
     var path: String? // for pages with path other than r/whatever, eg. /saved
     var isMultiCommunity: Bool = false
+    @Published var isFavorite: Bool = false
     @Published var about: AboutCommunity?
     @Published var rules: [CommunityRule] = []
     

@@ -11,6 +11,7 @@ import WebKit
 class Model: ObservableObject {
     @Published var pages: [String:Page] = [:]
     @Published var communities: [Community] = []
+    @Published var favoriteCommunities: [Community] = []
     @Published var loginAttempt: LoginAttempt = .undecided
     @Published var messageCount: Int = 0
     var resetPagesToCommunity: String?
@@ -26,8 +27,6 @@ class Model: ObservableObject {
         userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
         pages["r/all"] = Page(target: starterCommunity, webView: userSessionManager
             .getWebViewFor(viewName: starterCommunity.getCode()))
-//        userSessionManager.loadLastLoggedInUser(webView: userSessionManager
-//            .getWebViewFor(viewName: starterCommunity.getCode()))
         loadCommunity(community: pages["r/all"]!.selectedCommunity)
         loadCommunitiesData()
     }
@@ -304,10 +303,12 @@ class Model: ObservableObject {
     func resetPagesTo(target: CommunityOrUser) {
         resetPagesToCommunity = target.getCode()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            let keysToDelete: [String] = self.pages.keys.filter{ $0 != self.resetPagesToCommunity! }
             let community = self.pages[self.resetPagesToCommunity!]
             var newPages: [String:Page] = [:]
             newPages[self.resetPagesToCommunity!] = community
             self.pages = newPages
+            self.userSessionManager.removeWebViews(keys: keysToDelete)
         }
     }
     
@@ -323,9 +324,25 @@ class Model: ObservableObject {
                     self.communities = abouts
                         .map{ Community($0.displayName, iconURL: $0.communityIcon!, isMultiCommunity: false) }
                         .sorted { $0.name.lowercased() < $1.name.lowercased() }
+                    for name in self.userSessionManager.favoriteCommunities {
+                        let c = self.communities.filter{ $0.name.lowercased() == name.lowercased() }.first
+                        c?.isFavorite = true
+                        if c != nil {self.favoriteCommunities.append(c!)}
+                    }
                 }
             }
         }
+    }
+    
+    func toggleAsFavoriteCommunity(community: Community) {
+        community.isFavorite.toggle()
+        let difference = favoriteCommunities.filter{ $0.name.lowercased() != community.name.lowercased() }
+        if (difference.count == favoriteCommunities.count) {
+            favoriteCommunities.append(community)
+        } else {
+            favoriteCommunities = difference
+        }
+        userSessionManager.setFavoriteCommunities(favoriteCommunities.map{ $0.name.lowercased() })
     }
     
     private func updateModel(_ target: String, doc: Document, defaultTitle: String) {

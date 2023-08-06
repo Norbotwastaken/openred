@@ -13,6 +13,7 @@ class UserSessionManager: ObservableObject {
     var currentCookies: [String : Any] = [:]
     private var webViews: [String:WKWebView] = [:]
     @Published var userNames: [String] = []
+    var favoriteCommunities: [String] = []
     
     func createWebViewFor(viewName: String) {
         let webView = WKWebView()
@@ -48,6 +49,7 @@ class UserSessionManager: ObservableObject {
             self.currentCookies = cookieDict
             UserDefaults.standard.set(cookieDict, forKey: "cookies_" + userName)
             UserDefaults.standard.set(userName, forKey: "currentUserName")
+            UserDefaults.standard.set([String](), forKey: "favorites_" + userName)
             self.userName = userName
             
             var users: [String] = []
@@ -61,18 +63,16 @@ class UserSessionManager: ObservableObject {
             self.userNames = users
         }
     }
-    
-//    func getAllUserNames() -> Set<String> {
-//        if let savedUsers = UserDefaults.standard.object(forKey: "users") as? Set<String> {
-//            return savedUsers
-//        }
-//        return []
-//    }
 
     func loadLastLoggedInUser(webView: WKWebView) {
         if self.currentCookies.isEmpty {
             if let userName = UserDefaults.standard.object(forKey: "currentUserName") as? String {
                 self.userName = userName
+                if let favorites = UserDefaults.standard.object(forKey: "favorites_" + userName) as? [String] {
+                    favoriteCommunities = favorites
+                } else {
+                    UserDefaults.standard.set([String](), forKey: "favorites_" + userName)
+                }
                 if let cookieDictionary = UserDefaults.standard.dictionary(forKey: "cookies_" + userName) {
                     self.currentCookies = cookieDictionary
                     
@@ -126,5 +126,16 @@ class UserSessionManager: ObservableObject {
 //            HTTPCookieStorage.shared.deleteCookie(cookie)
 //        }
         self.userName = nil
+    }
+    
+    func removeWebViews(keys: [String]) {
+        for key in keys {
+            webViews.removeValue(forKey: key)
+        }
+    }
+    
+    func setFavoriteCommunities(_ communities: [String]) {
+        favoriteCommunities = communities
+        UserDefaults.standard.set(favoriteCommunities, forKey: "favorites_" + userName!)
     }
 }

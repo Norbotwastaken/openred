@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVKit
+import SafariServices
 
 struct ContentView: View {
     @EnvironmentObject var popupViewModel: PopupViewModel
@@ -88,6 +89,7 @@ struct MessageOverlay: View {
                 } else if overlayModel.text != nil {
                     ZStack {
                         Text(overlayModel.text!)
+                            .opacity(0.8)
                             .padding()
                             .background(VisualEffect(style: .systemUltraThinMaterial))
                             .clipShape(Capsule())
@@ -325,3 +327,15 @@ extension Date {
 //        return viewControllers.count > 1
 //    }
 //}
+
+struct SFSafariViewWrapper: UIViewControllerRepresentable {
+    let url: URL
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<Self>) -> SFSafariViewController {
+        return SFSafariViewController(url: url)
+    }
+
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: UIViewControllerRepresentableContext<SFSafariViewWrapper>) {
+        return
+    }
+}

@@ -29,16 +29,24 @@ struct CommunitiesStack: View {
                                             target: $target, loadPosts: $loadPosts)
                                 Section() {
                                     ForEach(model.mainPageCommunities) { community in
-                                        CommunityRow(community: community, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
+                                        CommunityRow(community: community, isFavoritable: false, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
                                     }
                                 }
                                 if model.userSessionManager.userName != nil {
                                     Section() {
                                         ForEach(model.userFunctionCommunities) { community in
-                                            CommunityRow(community: community, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
+                                            CommunityRow(community: community, isFavoritable: false, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
                                         }
                                     }
                                 }
+                            }
+                            if !model.favoriteCommunities.isEmpty {
+                                Section(header: Text("Favorites")) {
+                                    ForEach(filteredFavoriteCommunities) { community in
+                                        CommunityRow(community: community, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
+                                    }
+                                }
+                                .background(Color.clear)
                             }
                             if !model.communities.isEmpty {
                                 Section(header: Text("Subreddits")) {
@@ -99,13 +107,14 @@ struct CommunitiesStack: View {
         }
     }
     
-    var filteredCommunities: [Community] {
+    var filteredFavoriteCommunities: [Community] {
         if searchText.isEmpty {
-            return model.communities
+            return model.favoriteCommunities
+                .sorted { $0.name.lowercased() < $1.name.lowercased() }
         } else {
-            return model.communities.filter {
-                $0.name.lowercased().contains(searchText.lowercased())
-            }
+            return model.favoriteCommunities
+                .filter { $0.name.lowercased().contains(searchText.lowercased()) }
+                .sorted { $0.name.lowercased() < $1.name.lowercased() }
         }
     }
 }
@@ -113,6 +122,7 @@ struct CommunitiesStack: View {
 struct CommunityRow: View {
     @EnvironmentObject var model: Model
     var community: Community
+    var isFavoritable: Bool = true
     @Binding var showPosts: Bool
     @Binding var target: CommunityOrUser
     @Binding var loadPosts: Bool
@@ -142,7 +152,25 @@ struct CommunityRow: View {
                     }
                 }
                 Text(community.displayName ?? community.name.prefix(1).capitalized + community.name.dropFirst())
+                if isFavoritable {
+                    if community.isFavorite {
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .onTapGesture {
+                                model.toggleAsFavoriteCommunity(community: community)
+                            }
+                    } else {
+                        Image(systemName: "star")
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .onTapGesture {
+                                model.toggleAsFavoriteCommunity(community: community)
+                            }
+                    }
+                }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .listRowBackground(Color.clear)
     }

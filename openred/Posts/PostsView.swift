@@ -397,6 +397,8 @@ struct CommunityAboutView: View {
     
     var details = ["About", "Rules"]
     @State private var selectedDetail = "About"
+    @State var showSafari: Bool = false
+    @State var safariLink: URL?
     
     var body: some View {
         if community.about != nil {
@@ -447,19 +449,45 @@ struct CommunityAboutView: View {
                             .frame(maxWidth: .infinity)
                         }
                         Divider()
-                        Text(community.about!.description ?? "")
-                            .font(.system(size: 18))
-                            .padding(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
+                        ZStack {
+                            if showSafari {
+                                Spacer()
+                                    .fullScreenCover(isPresented: $showSafari, content: {
+                                        SFSafariViewWrapper(url: safariLink!)
+                                    })
+                            }
+                            Text(community.about!.description ?? "")
+                                .font(.system(size: 18))
+                                .padding(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
+                                .environment(\.openURL, OpenURLAction { url in
+                                    safariLink = url
+                                    showSafari = true
+                                    return .handled
+                                })
+                        }
                     } else {
                         ForEach(community.rules) { rule in
                             Text(rule.short_name)
                                 .padding(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
                                 .font(.system(size: 18))
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            Text(rule.description)
-                                .padding(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
-                                .font(.system(size: 16))
-                                .foregroundColor(.secondary)
+                            ZStack {
+                                if showSafari {
+                                    Spacer()
+                                        .fullScreenCover(isPresented: $showSafari, content: {
+                                            SFSafariViewWrapper(url: safariLink!)
+                                        })
+                                }
+                                Text(rule.description)
+                                    .padding(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.secondary)
+                                    .environment(\.openURL, OpenURLAction { url in
+                                        safariLink = url
+                                        showSafari = true
+                                        return .handled
+                                    })
+                            }
                         }
                     }
                     Spacer()

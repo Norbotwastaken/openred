@@ -77,7 +77,7 @@ class JSONDataLoader {
                     let comments: [Comment] = wrapper[1].data!.children
                         .filter{$0.commentData != nil}
                         .map{ Comment(jsonComment: $0.commentData!) }
-                    if comments[0].stickied && comments[0].isMod {
+                    if comments.count > 0 && comments[0].stickied && comments[0].isMod {
                         comments[0].isCollapsed = true
                     }
                     completion(comments, error)
