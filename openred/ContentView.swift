@@ -339,3 +339,10 @@ struct SFSafariViewWrapper: UIViewControllerRepresentable {
         return
     }
 }
+
+extension URL {
+    var isImage: Bool {
+        [".jpg", ".jpeg", ".png", ".svg"]
+            .filter{ self.lastPathComponent.hasSuffix($0) }.first != nil
+    }
+}

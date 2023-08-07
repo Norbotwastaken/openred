@@ -240,6 +240,7 @@ struct CommentsView: View {
 
 struct CommentView: View {
     @EnvironmentObject var commentsModel: CommentsModel
+    @EnvironmentObject var popupViewModel: PopupViewModel
     @ObservedObject var comment: Comment
     var post: Post
     @Binding var editorParentComment: Comment?
@@ -339,8 +340,14 @@ struct CommentView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .font(.system(size: 15))
                                 .environment(\.openURL, OpenURLAction { url in
-                                    safariLink = url
-                                    showSafari = true
+                                    if url.isImage {
+                                        popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
+                                        popupViewModel.contentType = .image
+                                        popupViewModel.isShowing = true
+                                    }  else {
+                                        safariLink = url
+                                        showSafari = true
+                                    }
                                     return .handled
                                 })
                         }

@@ -101,7 +101,7 @@ class JSONCommentData: Codable {
     var subreddit_name_prefixed: String?
 //    var controversiality: Int
     var depth: Int
-    var over_18: Bool
+    var over_18: Bool?
 //    var author_flair_background_color: String?
 //    var collapsed_because_crowd_control: String?
 //    var mod_reports: String?
@@ -139,7 +139,7 @@ class JSONCommentData: Codable {
         try? self.permalink = container.decode(String?.self, forKey: .permalink)
         try? self.subreddit_type = container.decode(String?.self, forKey: .subreddit_type)
         try self.locked = container.decode(Bool.self, forKey: .locked)
-        try self.over_18 = container.decode(Bool.self, forKey: .over_18)
+        try? self.over_18 = container.decode(Bool?.self, forKey: .over_18)
         try self.created = container.decode(Double.self, forKey: .created)
         try? self.author_flair_text = container.decode(String?.self, forKey: .author_flair_text)
         try? self.distinguished = container.decode(String?.self, forKey: .distinguished)
@@ -209,7 +209,7 @@ class Comment: Identifiable, ObservableObject {
         self.isCollapsed = jsonComment.collapsed
         self.linkTitle = jsonComment.link_title
         self.isMod = jsonComment.distinguished == "moderator"
-        self.nsfw = jsonComment.over_18
+        self.nsfw = jsonComment.over_18 ?? false
         
         self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }

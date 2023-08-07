@@ -22,6 +22,11 @@ struct PostRowContent: View {
     @Binding var target: CommunityOrUser
     var isPostOpen: Bool = false
     
+//    func isImage(_ url: URL) -> Bool {
+//        [".jpg", ".jpeg", ".png", ".svg"]
+//            .filter{ url.lastPathComponent.hasSuffix($0) }.first != nil
+//    }
+    
     var body: some View {
         if post.contentType == .text {
             ZStack {
@@ -38,8 +43,14 @@ struct PostRowContent: View {
                     .frame(maxHeight: isPostOpen ? .infinity : 60, alignment: .leading)
                     .opacity(0.9)
                     .environment(\.openURL, OpenURLAction { url in
-                        safariLink = url
-                        showSafari = true
+                        if url.isImage {
+                            popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
+                            popupViewModel.contentType = .image
+                            popupViewModel.isShowing = true
+                        }  else {
+                            safariLink = url
+                            showSafari = true
+                        }
                         return .handled
                     })
             }
