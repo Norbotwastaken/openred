@@ -95,6 +95,11 @@ class UserSessionManager: ObservableObject {
             logOut()
             self.userName = userName
             self.currentCookies = cookieDictionary
+            if let favorites = UserDefaults.standard.object(forKey: "favorites_" + userName) as? [String] {
+                favoriteCommunities = favorites
+            } else {
+                UserDefaults.standard.set([String](), forKey: "favorites_" + userName)
+            }
             
             for (_, cookieProperties) in self.currentCookies {
                 if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
@@ -126,6 +131,7 @@ class UserSessionManager: ObservableObject {
 //            HTTPCookieStorage.shared.deleteCookie(cookie)
 //        }
         self.userName = nil
+        self.favoriteCommunities = []
     }
     
     func removeWebViews(keys: [String]) {
