@@ -16,15 +16,27 @@ struct PostRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            VStack {
+            VStack(alignment: .leading) {
                 Text(post.title)
                     .font(.headline) +
                 Text(post.flair != nil ? LocalizedStringKey("  [" +  post.flair! + "]") : "")
                     .foregroundColor(.secondary)
                     .font(.system(size: 12))
+                if post.nsfw {
+                    Text("NSFW")
+                        .font(.system(size: 14))
+                        .fontWeight(.semibold)
+//                        .frame(alignment: .leading)
+//                        .opacity(0.8)
+                        .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                        .background(Color(red: 1, green: 0, blue: 93 / 255))
+                        .cornerRadius(5)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .fixedSize(horizontal: false, vertical: true)
-            .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
+            .padding(EdgeInsets(top: 8, leading: 10, bottom: 4, trailing: 10))
             .disabled(true)
             PostRowContent(post: post, target: $target)
                 .frame(maxWidth: .infinity, maxHeight: 650, alignment: .leading)
@@ -52,6 +64,17 @@ struct PostCommentRow: View {
                 Text(comment.linkTitle ?? "")
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                if comment.nsfw {
+                    Text("NSFW")
+                        .font(.system(size: 14))
+                        .fontWeight(.semibold)
+//                        .frame(alignment: .leading)
+//                        .opacity(0.8)
+                        .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                        .background(Color(red: 1, green: 0, blue: 93 / 255))
+                        .cornerRadius(5)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
                 Text("r/" + comment.communityName)
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
@@ -65,6 +88,7 @@ struct PostCommentRow: View {
                         isPresented = true
                     }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .fixedSize(horizontal: false, vertical: true)
             VStack(spacing: 8) {
                 Text(comment.user ?? "")

@@ -63,6 +63,7 @@ class Post: Identifiable, ObservableObject {
     var upvoteRatio: Double = 0
     var awardLinks: [String] = []
     var awardCount: Int
+    var nsfw: Bool
 //    private var totalAwardCount: Int?
     
     init(jsonPost: JSONPost) {
@@ -139,6 +140,7 @@ class Post: Identifiable, ObservableObject {
             }
         }
         
+        self.nsfw = jsonPost.over_18
         self.displayAge = ""
         self.displayAge = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonPost.created)).timeAgoDisplay())
     }

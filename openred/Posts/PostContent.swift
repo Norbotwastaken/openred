@@ -50,16 +50,32 @@ struct PostRowContent: View {
                     .fill(Color(UIColor.systemGray5))
                     .frame(maxWidth: .infinity, maxHeight: 650)
                 AsyncImage(url: URL(string: post.imagePreviewLink ?? "")) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity, maxHeight: 650)
-                        .onTapGesture {
-                            popupViewModel.fullImageLink = post.imageLink
-                            popupViewModel.contentType = post.contentType
-                            popupViewModel.isShowing = true
+                    ZStack {
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: 650)
+                            .blur(radius: post.nsfw ? 30 : 0, opaque: true)
+                            .onTapGesture {
+                                popupViewModel.fullImageLink = post.imageLink
+                                popupViewModel.contentType = post.contentType
+                                popupViewModel.isShowing = true
+                            }
+                            .saveSize(in: $imageContainerSize)
+                        if post.nsfw {
+                            VStack {
+                                Text("NSFW")
+                                    .font(.system(size: 24))
+                                    .fontWeight(.semibold)
+                                    .opacity(0.8)
+                                    .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                    .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
+                                    .cornerRadius(5)
+                                Text("Sensitive content")
+                                    .opacity(0.7)
+                            }
                         }
-                        .saveSize(in: $imageContainerSize)
+                    }
                 } placeholder: {
                     ZStack {
                         Rectangle()
@@ -80,12 +96,28 @@ struct PostRowContent: View {
                 ZStack {
                     image.resizable()
                         .frame(maxWidth: .infinity, maxHeight: 140)
-                        .blur(radius: 10, opaque: true)
-                    image.frame(maxWidth: .infinity, maxHeight: 140)
-                    Image(systemName: "play.fill")
-                        .font(.system(size: 45))
-                        .opacity(0.4)
-                        .foregroundColor(Color.white)
+                        .blur(radius: post.nsfw ? 20 : 10, opaque: true)
+                    if !post.nsfw {
+                        image.frame(maxWidth: .infinity, maxHeight: 140)
+                    }
+                    if post.nsfw {
+                        VStack {
+                            Text("NSFW")
+                                .font(.system(size: 24))
+                                .fontWeight(.semibold)
+                                .opacity(0.8)
+                                .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
+                                .cornerRadius(5)
+                            Text("Sensitive content")
+                                .opacity(0.7)
+                        }
+                    } else {
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 45))
+                            .opacity(0.4)
+                            .foregroundColor(Color.white)
+                    }
                     Text("VIDEO")
                         .font(.system(size: 15))
                         .fontWeight(.semibold)
@@ -120,13 +152,37 @@ struct PostRowContent: View {
                 ZStack {
                     Rectangle()
                         .fill(Color(UIColor.systemGray5))
-                        .opacity(0)
+                        .opacity(0.01)
                         .frame(height: imageContainerSize.height)
                         .scaledToFill()
-                    ProgressView()
+                        .onTapGesture {
+                            startLoadingGif = true
+                        }
+                    if post.nsfw && !startLoadingGif {
+                        VStack {
+                            Text("NSFW")
+                                .font(.system(size: 24))
+                                .fontWeight(.semibold)
+                                .opacity(0.8)
+                                .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
+                                .cornerRadius(5)
+                            Text("Tap to open content")
+                                .opacity(0.7)
+                        }
+                        .onTapGesture {
+                            startLoadingGif = true
+                        }
+                    } else {
+                        ProgressView()
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .onAppear(perform: { startLoadingGif = true })
+                .onAppear(perform: {
+                    if !post.nsfw {
+                        startLoadingGif = true
+                    }
+                })
                 if startLoadingGif && post.videoLink != nil {
                     GIFView(url: URL(string: post.videoLink!)!)
                         .frame(maxWidth: .infinity, maxHeight: 650)
@@ -138,17 +194,33 @@ struct PostRowContent: View {
                     .fill(Color(UIColor.systemGray5))
                     .frame(maxWidth: .infinity, maxHeight: 650)
                 AsyncImage(url: URL(string: post.gallery!.items[0].previewLink)) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity, maxHeight: 650)
-                        .onTapGesture {
-                            popupViewModel.image = image
-                            popupViewModel.contentType = post.contentType
-                            popupViewModel.gallery = post.gallery
-                            popupViewModel.isShowing = true
+                    ZStack {
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: 650)
+                            .blur(radius: post.nsfw ? 30 : 0, opaque: true)
+                            .onTapGesture {
+                                popupViewModel.image = image
+                                popupViewModel.contentType = post.contentType
+                                popupViewModel.gallery = post.gallery
+                                popupViewModel.isShowing = true
+                            }
+                            .saveSize(in: $imageContainerSize)
+                        if post.nsfw {
+                            VStack {
+                                Text("NSFW")
+                                    .font(.system(size: 24))
+                                    .fontWeight(.semibold)
+                                    .opacity(0.8)
+                                    .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                    .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
+                                    .cornerRadius(5)
+                                Text("Sensitive content")
+                                    .opacity(0.7)
+                            }
                         }
-                        .saveSize(in: $imageContainerSize)
+                    }
                 } placeholder: {
                     ZStack {
                         Rectangle()
@@ -232,6 +304,7 @@ struct PostRowContent: View {
                             .scaledToFill()
                             .roundedCorner(10, corners: [.topLeft, .bottomLeft])
                             .frame(maxWidth: 140, maxHeight: 140, alignment: .leading)
+                            .blur(radius: post.nsfw ? 20 : 0, opaque: true)
                             .clipped()
                     } placeholder: {
                         ZStack {
@@ -267,7 +340,6 @@ struct PostRowContent: View {
             }
             .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
             .onTapGesture {
-//                UIApplication.shared.open(URL(string: post.externalLink!)!)
                 showSafari.toggle()
             }
             .fullScreenCover(isPresented: $showSafari, content: {
