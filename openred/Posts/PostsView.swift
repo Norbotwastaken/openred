@@ -10,7 +10,8 @@ import AVKit
 
 struct PostsView: View {
     @EnvironmentObject var model: Model
-//    @EnvironmentObject var popupViewModel: PopupViewModel
+//    @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) var presentation
     @Binding var itemInView: String
     @Binding var restoreScroll: Bool
     @Binding var target: CommunityOrUser
@@ -45,97 +46,142 @@ struct PostsView: View {
                     }
                 }
             if model.pages[target.getCode()] != nil {
-                ScrollViewReader { proxy in
-                    List {
-                        if model.pages[target.getCode()]!.selectedCommunity.isUser {
-                            Picker("Filter By", selection: $filter) {
-                                ForEach(filters, id: \.key) { key, value in
-                                    Text(value)
-                                }
-                            }.onChange(of: filter) { _ in
-                                model.loadCommunity(community: model.pages[target.getCode()]!.selectedCommunity, filter: filter)
-                            }
-                            .foregroundColor(.secondary)
-                            .listRowSeparator(.hidden)
-                        }
-                        ForEach(model.pages[target.getCode()]!.items) { item in
-                            if !item.isComment {
-                                PostRow(post: item.post!, target: $target)
-                                    .contextMenu{ PostRowMenu(post: item.post!, target: $target) }
-                                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                        Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
-                                            Image(systemName: "arrow.up")
-                                        }
-                                        .tint(.upvoteOrange)
-                                        Button { model.toggleDownvotePost(target: target.getCode(), post: item.post!) } label: {
-                                            Image(systemName: "arrow.down")
-                                        }
-                                        .tint(.downvoteBlue)
+                if model.pages[target.getCode()]!.interstitialTitle == nil {
+                    ScrollViewReader { proxy in
+                        List {
+                            if model.pages[target.getCode()]!.selectedCommunity.isUser {
+                                Picker("Filter By", selection: $filter) {
+                                    ForEach(filters, id: \.key) { key, value in
+                                        Text(value)
                                     }
-                                    .onAppear(perform: {
-                                        itemInView = item.id
-                                        if (item.isActiveLoadMarker) {
-                                            item.deactivateLoadMarker()
-                                            model.loadNextPagePosts(target: target.getCode())
+                                }.onChange(of: filter) { _ in
+                                    model.loadCommunity(community: model.pages[target.getCode()]!.selectedCommunity, filter: filter)
+                                }
+                                .foregroundColor(.secondary)
+                                .listRowSeparator(.hidden)
+                            }
+                            ForEach(model.pages[target.getCode()]!.items) { item in
+                                if !item.isComment {
+                                    PostRow(post: item.post!, target: $target)
+                                        .contextMenu{ PostRowMenu(post: item.post!, target: $target) }
+                                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                            Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
+                                                Image(systemName: "arrow.up")
+                                            }
+                                            .tint(.upvoteOrange)
+                                            Button { model.toggleDownvotePost(target: target.getCode(), post: item.post!) } label: {
+                                                Image(systemName: "arrow.down")
+                                            }
+                                            .tint(.downvoteBlue)
                                         }
-                                    })
-                                    .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                                    .listRowSeparator(.hidden)
-                                    .overlay(
-                                        NavigationLink(destination: CommentsView(post: item.post!, restorePostsScroll: $restoreScroll, postsTarget: $target),
-                                                       label: { EmptyView() })
-                                        .opacity(0)
-                                    )
-                            } else {
-                                PostCommentRow(comment: item.comment!)
-                                    .onAppear(perform: {
-                                        itemInView = item.id
-                                        if (item.isActiveLoadMarker) {
-                                            item.deactivateLoadMarker()
-                                            model.loadNextPagePosts(target: target.getCode())
-                                        }
-                                    })
-                                    .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                                    .listRowSeparator(.hidden)
+                                        .onAppear(perform: {
+                                            itemInView = item.id
+                                            if (item.isActiveLoadMarker) {
+                                                item.deactivateLoadMarker()
+                                                model.loadNextPagePosts(target: target.getCode())
+                                            }
+                                        })
+                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                        .listRowSeparator(.hidden)
+                                        .overlay(
+                                            NavigationLink(destination: CommentsView(post: item.post!, restorePostsScroll: $restoreScroll, postsTarget: $target),
+                                                           label: { EmptyView() })
+                                            .opacity(0)
+                                        )
+                                } else {
+                                    PostCommentRow(comment: item.comment!)
+                                        .onAppear(perform: {
+                                            itemInView = item.id
+                                            if (item.isActiveLoadMarker) {
+                                                item.deactivateLoadMarker()
+                                                model.loadNextPagePosts(target: target.getCode())
+                                            }
+                                        })
+                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                        .listRowSeparator(.hidden)
+                                }
+                            }
+                        }
+                        .listStyle(PlainListStyle())
+                        .navigationTitle(model.pages[target.getCode()]!.title)
+                        .navigationBarTitleDisplayMode(.inline)
+                        //                    .navigationBarBackButtonHidden(true)
+                        .navigationBarHidden(isPostCreatorShowing)
+                        .toolbar {
+                            //                        ToolbarItem(placement: .navigationBarLeading) {
+                            //                            Button {
+                            //                                model.dismissPage(target: target)
+                            //                                dismiss()
+                            //                            } label: {
+                            //                                HStack {
+                            //                                    Image(systemName: "chevron.backward")
+                            //                                    Text("Back")
+                            //                                }
+                            //                            }
+                            //                        }
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                HStack {
+                                    SortMenu(target: $target, currentSortBy: $sortBy, currentSortTime: $sortTime)
+                                    ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing, target: $target)
+                                }
+                            }
+                        }
+                        .onAppear(perform: {
+                            if restoreScroll {
+                                proxy.scrollTo(itemInView)
+                            }
+                        })
+                        .toolbarBackground(.visible, for: .navigationBar)
+                        .refreshable {
+                            model.loadCommunity(community: target, sortBy: sortBy, sortTime: sortTime)
+                        }
+                    }
+                    if isPostCreatorShowing {
+                        CreatePostForm(community: model.pages[target.getCode()]!.selectedCommunity.community!, isShowing: $isPostCreatorShowing)
+                    }
+                } else {
+                    VStack(spacing: 20) {
+                        Text(model.pages[target.getCode()]!.interstitialTitle!)
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                        if model.pages[target.getCode()]!.interstitialNsfw {
+                            Text("You must be at least eighteen years old to view this content. Are you over eighteen and willing to see adult content?")
+                                .padding(EdgeInsets(top: 0, leading: 20, bottom: 10, trailing: 20))
+                            HStack(spacing: 20) {
+                                Button(action: {
+                                    self.presentation.wrappedValue.dismiss()
+                                }) {
+                                    Text("No thank you")
+                                        .padding()
+                                        .background(Color(UIColor.systemBlue))
+                                        .foregroundColor(.primary)
+                                        .clipShape(Capsule())
+                                }
+                                Button(action: {
+                                    model.unlockNsfw(target: target)
+                                }) {
+                                    Text("Continue")
+                                        .padding()
+                                        .background(.secondary)
+                                        .clipShape(Capsule())
+                                }
+                            }
+                        } else {
+                            Button(action: {
+                                self.presentation.wrappedValue.dismiss()
+                            }) {
+                                Text("Go back")
+                                    .padding()
+                                    .background(Color(UIColor.systemBlue))
+                                    .foregroundColor(.primary)
+                                    .clipShape(Capsule())
                             }
                         }
                     }
-                    .listStyle(PlainListStyle())
-                    .navigationTitle(model.pages[target.getCode()]!.title)
-                    .navigationBarTitleDisplayMode(.inline)
-//                    .navigationBarBackButtonHidden(true)
-                    .navigationBarHidden(isPostCreatorShowing)
-                    .toolbar {
-//                        ToolbarItem(placement: .navigationBarLeading) {
-//                            Button {
-//                                model.dismissPage(target: target)
-//                                dismiss()
-//                            } label: {
-//                                HStack {
-//                                    Image(systemName: "chevron.backward")
-//                                    Text("Back")
-//                                }
-//                            }
-//                        }
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            HStack {
-                                SortMenu(target: $target, currentSortBy: $sortBy, currentSortTime: $sortTime)
-                                ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing, target: $target)
-                            }
-                        }
-                    }
-                    .onAppear(perform: {
-                        if restoreScroll {
-                            proxy.scrollTo(itemInView)
-                        }
-                    })
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .refreshable {
-                        model.loadCommunity(community: target, sortBy: sortBy, sortTime: sortTime)
-                    }
-                }
-                if isPostCreatorShowing {
-                    CreatePostForm(community: model.pages[target.getCode()]!.selectedCommunity.community!, isShowing: $isPostCreatorShowing)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .padding(EdgeInsets(top: 50, leading: 0, bottom: 0, trailing: 0))
                 }
             }
         }

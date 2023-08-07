@@ -132,11 +132,17 @@ class Model: ObservableObject {
         page.browser.visit(url: components.url! ) { object, error in
             let defaultTitle = community.isUser ? community.user!.name : community.community!.name
             if let doc = object {
-                if let nsfwButton = doc.querySelector(".interstitial form button[value=\"yes\"]") {
-                    nsfwButton.click()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                        self.updateModel(community.getCode(), doc: doc, defaultTitle: defaultTitle)
+                if let interstitialTitle = doc.querySelector(".interstitial .interstitial-message .md h3")?.text {
+                    self.pages[community.getCode()]!.interstitialTitle = interstitialTitle
+                    if let nsfwButton = doc.querySelector(".interstitial form button[value=\"yes\"]") {
+                        self.pages[community.getCode()]!.interstitialNsfw = true
                     }
+                    self.pages[community.getCode()]!.document = doc
+//                if let nsfwButton = doc.querySelector(".interstitial form button[value=\"yes\"]") {
+//                    nsfwButton.click()
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+//                        self.updateModel(community.getCode(), doc: doc, defaultTitle: defaultTitle)
+//                    }
                 } else {
                     self.updateModel(community.getCode(), doc: doc, defaultTitle: defaultTitle)
                 }
@@ -347,6 +353,22 @@ class Model: ObservableObject {
         userSessionManager.setFavoriteCommunities(favoriteCommunities.map{ $0.name.lowercased() })
     }
     
+    func unlockNsfw(target: CommunityOrUser) {
+        let page = pages[target.getCode()]!
+        page.interstitialTitle = nil
+        page.interstitialNsfw = false
+        if let nsfwButton = page.document!.querySelector(".interstitial form button[value=\"yes\"]") {
+            nsfwButton.click()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                page.browser.currentContent { (obj, err) -> Void in
+                    if obj != nil {
+                        self.updateModel(target.getCode(), doc: obj!, defaultTitle: "")
+                    }
+                }
+            }
+        }
+    }
+    
     private func updateModel(_ target: String, doc: Document, defaultTitle: String) {
         if let page = self.pages[target] {
             page.document = doc
@@ -451,6 +473,8 @@ class Page: ObservableObject {
     @Published var selectedSorting: String = ""
     @Published var selectedSortTime: String?
     @Published var after: String?
+    @Published var interstitialTitle: String?
+    @Published var interstitialNsfw: Bool = false
     
     let webView: WKWebView
     var browser: Erik
