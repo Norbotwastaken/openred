@@ -38,8 +38,8 @@ class CommentsModel: ObservableObject {
 //        webView
     }
     
-    func loadComments(linkToThread: String, sortBy: String? = nil) {
-        if currentLink == linkToThread && sortBy == nil {
+    func loadComments(linkToThread: String, sortBy: String? = nil, forceLoad: Bool = false) {
+        if !forceLoad && currentLink == linkToThread && sortBy == nil {
             return
             // returning to the same post comments again (may not be needed)
         }

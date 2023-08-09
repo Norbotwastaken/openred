@@ -11,22 +11,42 @@ class CommunityOrUser: Identifiable, ObservableObject {
     var id: String
     @Published var community: Community?
     @Published var user: User?
-    var isUser: Bool = false
+//    var isUser: Bool = false
     var isMultiCommunity: Bool = false
+//    private var explicitURL: URL?
     
-    init(community: Community? = nil, user: User? = nil) {
+    init(community: Community? = nil, user: User? = nil, explicitURL: URL? = nil) {
+        self.id = ""
+        self.isMultiCommunity = false
         if community != nil {
             self.community = community
             self.id = community!.id
-            self.isUser = false
+//            self.isUser = false
             self.isMultiCommunity = community!.isMultiCommunity
-        } else {
+        } else if user != nil {
             self.user = user
             self.id = user!.id
-            self.isUser = true
+//            self.isUser = true
             self.isMultiCommunity = true
+        } else if explicitURL != nil && explicitURL!.pathComponents.count > 2 {
+            let typeComponent = explicitURL!.pathComponents[1]
+            let nameComponent = explicitURL!.pathComponents[2]
+            self.id = nameComponent
+            if typeComponent == "r" {
+                self.community = Community(nameComponent)
+            } else if typeComponent == "user" || typeComponent == "u" {
+                self.user = User(nameComponent)
+            }
         }
     }
+    
+    var isUser: Bool {
+        user != nil
+    }
+    
+//    func getLinkPath() -> String? {
+//        explicitURL?.pathExtension
+//    }
     
     func getCode() -> String {
         isUser ? "user/" + user!.name.lowercased() : "r/" + community!.name.lowercased()

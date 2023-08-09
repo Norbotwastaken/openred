@@ -127,6 +127,7 @@ class Model: ObservableObject {
         } else {
             page.items = []
         }
+        
         self.pages[community.getCode()] = page
         
         page.browser.visit(url: components.url! ) { object, error in

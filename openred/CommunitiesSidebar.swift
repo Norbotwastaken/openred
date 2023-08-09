@@ -152,18 +152,21 @@ struct CommunityRow: View {
                     }
                 }
                 Text(community.displayName ?? community.name.prefix(1).capitalized + community.name.dropFirst())
+                    .lineLimit(1)
+//                    .frame(maxWidth: .infinity, alignment: .leading)
                 if isFavoritable {
+                    Spacer()
                     if community.isFavorite {
                         Image(systemName: "star.fill")
                             .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .frame(alignment: .trailing)
                             .onTapGesture {
                                 model.toggleAsFavoriteCommunity(community: community)
                             }
                     } else {
                         Image(systemName: "star")
                             .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .frame(alignment: .trailing)
                             .onTapGesture {
                                 model.toggleAsFavoriteCommunity(community: community)
                             }

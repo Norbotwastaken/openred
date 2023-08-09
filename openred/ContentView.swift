@@ -341,6 +341,17 @@ struct SFSafariViewWrapper: UIViewControllerRepresentable {
 }
 
 extension URL {
+    var isPost: Bool {
+        self.absoluteString.contains("reddit.com/r/") &&
+        self.absoluteString.contains("/comments/")
+    }
+    // community or user
+    var isCommunity: Bool {
+        (self.absoluteString.contains("reddit.com/user/") ||
+            self.absoluteString.contains("reddit.com/u/")) ||
+        (self.absoluteString.contains("reddit.com/r/") &&
+            !self.absoluteString.contains("/comments/"))
+    }
     var isImage: Bool {
         [".jpg", ".jpeg", ".png", ".svg"]
             .filter{ self.lastPathComponent.hasSuffix($0) }.first != nil

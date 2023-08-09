@@ -221,7 +221,7 @@ struct CommentsView: View {
                     }
                 }
                 .refreshable {
-                    commentsModel.loadComments(linkToThread: post.linkToThread, sortBy: selectedSort)
+                    commentsModel.loadComments(linkToThread: post.linkToThread, sortBy: selectedSort, forceLoad: true)
                 }
 //                .onAppear(perform: {
 //                    proxy.scrollTo(commentInView)
@@ -248,6 +248,13 @@ struct CommentView: View {
     @Binding var scrollTarget: String?
     @State var showSafari: Bool = false
     @State var safariLink: URL?
+    @State var isInternalPresented: Bool = false
+    @State var internalIsPost: Bool = false
+    
+    @State var internalRestoreScrollPlaceholder: Bool = true
+    @State var internalNewTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
+    @State var internalLoadPosts: Bool = true
+    @State var internalItemInView: String = ""
     
     var body: some View {
         VStack {
@@ -344,12 +351,24 @@ struct CommentView: View {
                                         popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
                                         popupViewModel.contentType = .image
                                         popupViewModel.isShowing = true
-                                    }  else {
+                                    } else if url.isPost {
+                                        internalIsPost = true
+                                    } else if url.isCommunity {
+                                        internalNewTarget = CommunityOrUser(explicitURL: url)
+                                        internalIsPost = false
+                                        isInternalPresented = true
+                                    } else {
                                         safariLink = url
                                         showSafari = true
                                     }
                                     return .handled
                                 })
+                                .navigationDestination(isPresented: $isInternalPresented) {
+                                    if !internalIsPost { // internal is community
+                                        PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
+                                                  target: $internalNewTarget, loadPosts: $internalLoadPosts)
+                                    }
+                                }
                         }
 //                            .padding(EdgeInsets(top: 6, leading: 0, bottom: 0, trailing: 0))
                     }

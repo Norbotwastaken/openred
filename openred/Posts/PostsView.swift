@@ -10,7 +10,6 @@ import AVKit
 
 struct PostsView: View {
     @EnvironmentObject var model: Model
-//    @Environment(\.dismiss) var dismiss
     @Environment(\.presentationMode) var presentation
     @Binding var itemInView: String
     @Binding var restoreScroll: Bool
