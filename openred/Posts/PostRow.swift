@@ -36,7 +36,7 @@ struct PostRow: View {
             .fixedSize(horizontal: false, vertical: true)
             .padding(EdgeInsets(top: 8, leading: 10, bottom: 4, trailing: 10))
             .disabled(true)
-            PostRowContent(post: post, target: $target)
+            PostRowContent(post: post)
                 .frame(maxWidth: .infinity, maxHeight: 650, alignment: .leading)
             PostRowFooter(post: post, target: $target)
             Rectangle()

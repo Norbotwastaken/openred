@@ -37,6 +37,7 @@ class Post: Identifiable, ObservableObject {
     var title: String
     var flair: String?
     var community: String?
+    var communityCode: String
     var commentCount: String
     var userName: String?
     var displayAge: String
@@ -78,6 +79,7 @@ class Post: Identifiable, ObservableObject {
         self.isSaved = jsonPost.saved
         self.flair = jsonPost.flair
         self.community = jsonPost.subreddit
+        self.communityCode = jsonPost.subreddit_name_prefixed!
         self.commentCount = String(jsonPost.num_comments)
         self.userName = jsonPost.author
         self.linkToThread = jsonPost.permalink

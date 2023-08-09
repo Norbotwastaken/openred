@@ -17,6 +17,7 @@ class CommentsModel: ObservableObject {
     var jsonLoader: JSONDataLoader
     
     @Published var comments: [Comment] = []
+    @Published var post: Post?
     @Published var flatCommentsList: [Comment] = []
     @Published var commentsCollapsed: [String:Bool] = [:]
     @Published var title: String = ""
@@ -46,6 +47,7 @@ class CommentsModel: ObservableObject {
         self.currentLink = linkToThread
         self.selectedSorting = ""
         self.comments = []
+        self.post = nil
         self.flatCommentsList = []
         self.commentsCollapsed = [:]
         
@@ -74,9 +76,10 @@ class CommentsModel: ObservableObject {
         }
         
         components.path = components.path + "/.json"
-        jsonLoader.loadComments(url: components.url!) { (comments, error) in
+        jsonLoader.loadComments(url: components.url!) { (comments, post, error) in
             DispatchQueue.main.async {
                 if let comments = comments {
+                    self.post = post
                     for comment in comments {
                         self.comments.append(comment)
                     }

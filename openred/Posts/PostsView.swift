@@ -83,7 +83,8 @@ struct PostsView: View {
                                         .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                                         .listRowSeparator(.hidden)
                                         .overlay(
-                                            NavigationLink(destination: CommentsView(post: item.post!, restorePostsScroll: $restoreScroll, postsTarget: $target),
+                                            NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScroll,
+                                                                                     link: item.post!.linkToThread),
                                                            label: { EmptyView() })
                                             .opacity(0)
                                         )

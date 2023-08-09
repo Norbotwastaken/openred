@@ -69,18 +69,19 @@ class JSONDataLoader {
         urlSession.resume()
     }
     
-    func loadComments(url: URL, completion: @escaping ([Comment]?, Error?) -> Void) {
+    func loadComments(url: URL, completion: @escaping ([Comment]?, Post?, Error?) -> Void) {
         let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             do {
                 if let data = data {
                     let wrapper: [JSONEntityWrapper] = try JSONDecoder().decode([JSONEntityWrapper].self, from: data)
+                    let post: Post? = wrapper[0].data!.children[0].postData.map{ Post(jsonPost: $0) }
                     let comments: [Comment] = wrapper[1].data!.children
                         .filter{$0.commentData != nil}
                         .map{ Comment(jsonComment: $0.commentData!) }
                     if comments.count > 0 && comments[0].stickied && comments[0].isMod {
                         comments[0].isCollapsed = true
                     }
-                    completion(comments, error)
+                    completion(comments, post, error)
                 }
             } catch let error {
                 print(error)

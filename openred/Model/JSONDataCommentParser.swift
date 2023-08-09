@@ -11,6 +11,7 @@ class JSONEntityWrapper: Codable {
     var kind: String
     var data: JSONEntityData?
     var commentData: JSONCommentData?
+    var postData: JSONPost?
     
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
@@ -18,15 +19,7 @@ class JSONEntityWrapper: Codable {
         try self.kind = container.decode(String.self, forKey: .kind)
         try? self.data = container.decode(JSONEntityData.self, forKey: .data)
         try? self.commentData = container.decode(JSONCommentData.self, forKey: .data)
-//        do {
-//            data = try container.decode(JSONEntityData.self, forKey: .data)
-//            commentData = nil
-//        } catch {
-//            do {
-//                commentData = try container.decode(JSONCommentData.self, forKey: .data)
-//                data = nil
-//            } catch { }
-//        }
+        try? self.postData = container.decode(JSONPost.self, forKey: .data)
     }
 }
 

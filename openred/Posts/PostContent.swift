@@ -19,7 +19,7 @@ struct PostRowContent: View {
     @State var showSafari: Bool = false
     @State var safariLink: URL?
     var post: Post
-    @Binding var target: CommunityOrUser
+//    @Binding var target: CommunityOrUser
     var isPostOpen: Bool = false
     
 //    func isImage(_ url: URL) -> Bool {
@@ -273,7 +273,7 @@ struct PostRowContent: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5))
-                    PostRowContent(post: crosspost, target: $target)
+                    PostRowContent(post: crosspost)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     HStack {
                         HStack(spacing: 3) {
@@ -297,9 +297,9 @@ struct PostRowContent: View {
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
                 .overlay(
-                    NavigationLink(destination: CommentsView(post: crosspost,
-                                                             restorePostsScroll: $restorePostsPlaceholder,
-                                                             postsTarget: $target), label: { EmptyView() })
+                    NavigationLink(destination: CommentsView(
+                        restorePostsScroll: $restorePostsPlaceholder, link: crosspost.linkToThread
+                    ), label: { EmptyView() })
                     .opacity(0))
             }
             .padding(SwiftUI.EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
