@@ -11,43 +11,23 @@ import WebKit
 import SwiftUI
 
 class CommentsModel: ObservableObject {
-//    var browser: Erik = Erik()
-//    var document: Document? = nil
-//    var currentLink: String = "" // /r/something/comments
+    @Published var pages: [String:CommentPage] = [:]
+    let userSessionManager: UserSessionManager
     var jsonLoader: JSONDataLoader
     
-    @Published var pages: [String:CommentPage] = [:]
-//    @Published var comments: [Comment] = []
-//    @Published var post: Post?
-//    @Published var flatCommentsList: [Comment] = []
-//    @Published var commentsCollapsed: [String:Bool] = [:]
-//    @Published var title: String = ""
-//    @Published var commentCount: String = ""
-//    @Published var selectedSorting: String = ""
-//    private let webViewKey = "comments"
-    
-//    let webView: WKWebView
-    let userSessionManager: UserSessionManager
-    
     init(userSessionManager: UserSessionManager) {
-//        userSessionManager.createWebViewFor(viewName: webViewKey)
-//        self.webView = userSessionManager.getWebViewFor(viewName: webViewKey)
-//        userSessionManager.loadLastLoggedInUser(webView: self.webView)
         self.jsonLoader = JSONDataLoader()
-//        self.browser = Erik(webView: webView)
         self.userSessionManager = userSessionManager
-//        UserSessionManager().loadLastLoggedInUser(webView: webView)
-//        webView
     }
     
     func loadComments(linkToThread: String, sortBy: String? = nil, forceLoad: Bool = false) {
-        if pages[linkToThread] == nil {
+        if pages[linkToThread] == nil || userSessionManager.getWebViewFor(viewName: linkToThread) == nil {
             userSessionManager.createWebViewFor(viewName: linkToThread)
         } else if !forceLoad && sortBy == nil {
             return
         }
         let page = pages[linkToThread] ?? CommentPage(link: linkToThread, webView: userSessionManager
-            .getWebViewFor(viewName: linkToThread))
+            .getWebViewFor(viewName: linkToThread)!)
         page.selectedSorting = ""
         
         var components = URLComponents()
@@ -65,8 +45,6 @@ class CommentsModel: ObservableObject {
             if let doc = object {
                 page.document = doc
                 page.title = doc.title!
-                // TODO: get comment count some other way
-                page.commentCount = doc.querySelector("#siteTable .thing")?["data-comments-count"] ?? ""
                 // Expand first layer of collapsed comments (DOM needs refreshing)
                 for expandButton in doc.querySelectorAll(".thing.collapsed .expand") {
                     expandButton.click()
@@ -291,7 +269,6 @@ class CommentPage: ObservableObject {
     @Published var flatCommentsList: [Comment] = []
     @Published var commentsCollapsed: [String:Bool] = [:]
     @Published var title: String = ""
-    @Published var commentCount: String = ""
     @Published var selectedSorting: String = ""
     
     let webView: WKWebView

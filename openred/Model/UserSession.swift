@@ -28,8 +28,8 @@ class UserSessionManager: ObservableObject {
         webViews[viewName] = webView
     }
     
-    func getWebViewFor(viewName: String) -> WKWebView {
-        webViews[viewName]!
+    func getWebViewFor(viewName: String) -> WKWebView? {
+        webViews[viewName]
     }
     
     func saveUserSession(webViewKey: String, userName: String) {

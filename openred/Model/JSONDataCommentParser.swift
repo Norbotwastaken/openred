@@ -102,6 +102,7 @@ class JSONCommentData: Codable {
 //    var ups: Int
     var replies: JSONEntityWrapper? // ="" when empty
     var link_title: String?
+    var link_permalink: String?
     
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
@@ -119,6 +120,7 @@ class JSONCommentData: Codable {
         try? self.parent_id = container.decode(String?.self, forKey: .parent_id)
         try self.score = container.decode(Int.self, forKey: .score)
         try? self.author_fullname = container.decode(String?.self, forKey: .author_fullname)
+        try? self.link_permalink = container.decode(String?.self, forKey: .link_permalink)
         try self.all_awardings = container.decode([JSONPostAwarding].self, forKey: .all_awardings)
         try self.collapsed = container.decode(Bool.self, forKey: .collapsed)
 
@@ -164,6 +166,7 @@ class Comment: Identifiable, ObservableObject {
     var communityName: String
     var archived: Bool
     var linkTitle: String?
+    var postLink: String?
     
     var isOP: Bool
     var isMod: Bool
@@ -203,6 +206,9 @@ class Comment: Identifiable, ObservableObject {
         self.linkTitle = jsonComment.link_title
         self.isMod = jsonComment.distinguished == "moderator"
         self.nsfw = jsonComment.over_18 ?? false
+        if jsonComment.link_permalink != nil {
+            self.postLink = URL(string: jsonComment.link_permalink!)?.path
+        }
         
         self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }

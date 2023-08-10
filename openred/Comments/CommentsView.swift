@@ -32,6 +32,11 @@ struct CommentsView: View {
     
     var body: some View {
         ZStack {
+            if commentsModel.pages[link]?.post == nil {
+                ProgressView()
+                    .padding()
+                    .frame(maxHeight: .infinity, alignment: .top)
+            }
             if commentsModel.pages[link]?.post != nil {
                 ScrollViewReader { proxy in
                     List {
@@ -192,7 +197,7 @@ struct CommentsView: View {
                         }
                     }
                     .listStyle(PlainListStyle())
-                    .navigationTitle(commentsModel.pages[link]!.commentCount + " comments")
+                    .navigationTitle(commentsModel.pages[link]!.post!.commentCount + " comments")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationBarHidden(isEditorShowing)
                     .toolbar {

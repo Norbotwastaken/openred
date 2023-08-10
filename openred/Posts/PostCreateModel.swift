@@ -23,7 +23,7 @@ class PostCreateModel: ObservableObject {
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
         userSessionManager.createWebViewFor(viewName: webViewKey)
-        self.webView = userSessionManager.getWebViewFor(viewName: webViewKey)
+        self.webView = userSessionManager.getWebViewFor(viewName: webViewKey)!
         self.browser = Erik(webView: webView)
     }
     

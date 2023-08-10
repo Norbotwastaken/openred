@@ -26,7 +26,7 @@ class Model: ObservableObject {
         self.userSessionManager = userSessionManager
         userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
         pages["r/all"] = Page(target: starterCommunity, webView: userSessionManager
-            .getWebViewFor(viewName: starterCommunity.getCode()))
+            .getWebViewFor(viewName: starterCommunity.getCode())!)
         loadCommunity(community: pages["r/all"]!.selectedCommunity)
         loadCommunitiesData()
     }
@@ -64,37 +64,29 @@ class Model: ObservableObject {
         userSessionManager.logOut()
         userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
         pages["r/all"] = Page(target: starterCommunity, webView: userSessionManager
-            .getWebViewFor(viewName: starterCommunity.getCode()))
+            .getWebViewFor(viewName: starterCommunity.getCode())!)
         loadCommunity(community: pages["r/all"]!.selectedCommunity)
         resetPagesTo(target: pages["r/all"]!.selectedCommunity)
-//        pages = [:]
         communities = []
         favoriteCommunities = []
     }
     
     func switchAccountTo(userName: String) {
         userSessionManager.switchToAccount(userName: userName)
-//        userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
-//        pages["r/all"] = Page(target: starterCommunity, webView: userSessionManager
-//            .getWebViewFor(viewName: starterCommunity.getCode()))
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-//            self.loadCommunity(community: self.pages["r/all"]!.selectedCommunity)
         pages = [:]
         self.loadCommunitiesData()
-//            self.resetPagesTo(target: self.pages["r/all"]!.selectedCommunity)
-//        }
     }
     
     // 'sortBy': top
     // 'sortTime': month
     // 'after': t3_14c4ene
     //  old.reddit.com/r/something/top/.json?sort=top&t=month&count=25&after=t3_14c4ene
-    func loadCommunity(community: CommunityOrUser, filter: String = "", sortBy: String? = nil, sortTime: String? = nil, after: String? = nil) {
+    func loadCommunity(community: CommunityOrUser, filter: String = "", sortBy: String? = nil, sortTime: String? = nil, loadAfter: String? = nil) {
         if pages[community.getCode()] == nil {
             userSessionManager.createWebViewFor(viewName: community.getCode())
         }
         let page = pages[community.getCode()] ?? Page(target: community, webView: userSessionManager
-            .getWebViewFor(viewName: community.getCode()))
+            .getWebViewFor(viewName: community.getCode())!)
         page.selectedSortTime = sortTime
         page.selectedSorting = ""
         
@@ -122,8 +114,8 @@ class Model: ObservableObject {
             }
         }
         
-        if after != nil {
-            components.queryItems?.append(URLQueryItem(name: "after", value: after!))
+        if loadAfter != nil {
+            components.queryItems?.append(URLQueryItem(name: "after", value: loadAfter!))
         } else {
             page.items = []
         }
@@ -139,11 +131,6 @@ class Model: ObservableObject {
                         self.pages[community.getCode()]!.interstitialNsfw = true
                     }
                     self.pages[community.getCode()]!.document = doc
-//                if let nsfwButton = doc.querySelector(".interstitial form button[value=\"yes\"]") {
-//                    nsfwButton.click()
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-//                        self.updateModel(community.getCode(), doc: doc, defaultTitle: defaultTitle)
-//                    }
                 } else {
                     self.updateModel(community.getCode(), doc: doc, defaultTitle: defaultTitle)
                 }
@@ -154,8 +141,12 @@ class Model: ObservableObject {
         jsonLoader.loadItems(url: components.url!) { (items, after, error) in
             DispatchQueue.main.async {
                 if let items = items {
-                    for i in items.indices {
-                        page.items.append(items[i])
+                    if loadAfter == nil {
+                        page.items = items
+                    } else {
+                        for item in items {
+                            page.items.append(item)
+                        }
                     }
                 }
                 page.after = after
@@ -208,7 +199,7 @@ class Model: ObservableObject {
         let page = self.pages[target]!
         if page.after != nil {
             loadCommunity(community: page.selectedCommunity, sortBy: page.selectedSorting,
-                          sortTime: page.selectedSortTime, after: page.after)
+                          sortTime: page.selectedSortTime, loadAfter: page.after)
         }
     }
     
@@ -379,8 +370,6 @@ class Model: ObservableObject {
                 page.title = defaultTitle
             }
             self.pages[target] = page
-            
-//            self.updateCommunitiesList(doc: doc)
             self.loadUsername(doc: doc)
             self.updateMessageCount(doc: doc)
         }

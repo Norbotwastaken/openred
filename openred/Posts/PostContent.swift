@@ -18,6 +18,13 @@ struct PostRowContent: View {
     @State var imageContainerSize: CGSize = CGSize(width: 1, height: 400)
     @State var showSafari: Bool = false
     @State var safariLink: URL?
+    @State var isInternalPresented: Bool = false
+    @State var internalIsPost: Bool = false
+    @State var internalRestoreScrollPlaceholder: Bool = true
+    @State var internalCommunityTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
+    @State var internalLoadPosts: Bool = true
+    @State var internalItemInView: String = ""
+    
     var post: Post
 //    @Binding var target: CommunityOrUser
     var isPostOpen: Bool = false
@@ -47,12 +54,28 @@ struct PostRowContent: View {
                             popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
                             popupViewModel.contentType = .image
                             popupViewModel.isShowing = true
-                        }  else {
+                        } else if url.isPost {
+                            internalIsPost = true
+                            safariLink = url
+                            isInternalPresented = true
+                        } else if url.isCommunity {
+                            internalCommunityTarget = CommunityOrUser(explicitURL: url)
+                            internalIsPost = false
+                            isInternalPresented = true
+                        } else {
                             safariLink = url
                             showSafari = true
                         }
                         return .handled
                     })
+                    .navigationDestination(isPresented: $isInternalPresented) {
+                        if !internalIsPost { // internal is community
+                            PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
+                                      target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
+                        } else {
+                            CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
+                        }
+                    }
             }
         }
         if post.contentType == .image {
