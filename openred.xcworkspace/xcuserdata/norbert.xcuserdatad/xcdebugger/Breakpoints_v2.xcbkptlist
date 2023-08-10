@@ -190,8 +190,8 @@
             filePath = "openred/Model/UserSession.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "144"
-            endingLineNumber = "144"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
             landmarkName = "setFavoriteCommunities(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -351,7 +351,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "138"
             endingLineNumber = "138"
-            landmarkName = "removeWebViews(keys:)"
+            landmarkName = "removeWebViews(keys:removeCommentViews:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -367,7 +367,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "140"
             endingLineNumber = "140"
-            landmarkName = "removeWebViews(keys:)"
+            landmarkName = "removeWebViews(keys:removeCommentViews:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -397,8 +397,8 @@
             filePath = "openred/Comments/CommentsView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "229"
-            endingLineNumber = "229"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -406,16 +406,64 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "68F2D1E4-B7DA-4BC2-925F-315E5E0523AE"
+            uuid = "F5AF9266-60C4-4420-BD67-D324EC2B78C5"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "openred/Comments/Comments.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
             landmarkName = "loadComments(linkToThread:sortBy:forceLoad:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F5AF9266-60C4-4420-BD67-D324EC2B78C5 - 742342122a9aef13"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "openred.CommentsModel.loadComments(linkToThread: Swift.String, sortBy: Swift.Optional&lt;Swift.String&gt;, forceLoad: Swift.Bool) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65"
+                  offsetFromSymbolStart = "3088">
+               </Location>
+               <Location
+                  uuid = "F5AF9266-60C4-4420-BD67-D324EC2B78C5 - b0c8c19470278043"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Erik.Document&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in openred.CommentsModel.loadComments(linkToThread: Swift.String, sortBy: Swift.Optional&lt;Swift.String&gt;, forceLoad: Swift.Bool) -&gt; ()"
+                  moduleName = "openred"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Comments/Comments.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66"
+                  offsetFromSymbolStart = "100">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DFB64B03-7562-400F-A7D6-20543C69C8FA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Model/UserSession.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "removeWebViews(keys:removeCommentViews:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -134,9 +134,14 @@ class UserSessionManager: ObservableObject {
         self.favoriteCommunities = []
     }
     
-    func removeWebViews(keys: [String]) {
+    func removeWebViews(keys: [String], removeCommentViews: Bool = true) {
         for key in keys {
             webViews.removeValue(forKey: key)
+        }
+        if removeCommentViews {
+            for key in (webViews.keys.filter{ $0.contains("/comments/") }) {
+                webViews.removeValue(forKey: key)
+            }
         }
     }
     

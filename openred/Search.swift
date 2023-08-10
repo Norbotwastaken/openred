@@ -21,8 +21,8 @@ struct SearchView: View {
                 .textFieldStyle(.roundedBorder)
                 .focused($isFieldFocused)
                 .textFieldStyle(.roundedBorder)
-                .preferredColorScheme(.dark)
-                .colorInvert()
+//                .preferredColorScheme(.dark)
+//                .colorInvert()
                 .frame(alignment: .top)
                 .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
                 .onTapGesture {} // override other onTap

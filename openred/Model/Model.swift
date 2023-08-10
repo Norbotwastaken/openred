@@ -432,11 +432,7 @@ class Model: ObservableObject {
     }
     
     func selectedSortingIcon(target: String) -> String {
-//        if pages[target] != nil {
-            return ViewModelAttributes.sortModifierIcons[pages[target]!.selectedSorting]!
-//        } else {
-//            return ViewModelAttributes.sortModifierIcons[""]!
-//        }
+        return ViewModelAttributes.sortModifierIcons[pages[target]!.selectedSorting]!
     }
     
     var userName: String? {
