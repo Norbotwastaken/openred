@@ -131,22 +131,21 @@ struct PostRowFooter: View {
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(alignment: .leading)
                     .navigationDestination(isPresented: $isPresented) {
                         PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
                     }
                     .onTapGesture {
                         if model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity {
                             newTarget = CommunityOrUser(community: Community(post.community!))
-                            //                            model.loadCommunity(community: newTarget)
-                        } else {
-                            if post.userName != "[deleted]" {
-                                newTarget = CommunityOrUser(user: User(post.userName!))
-                                //                                model.loadCommunity(community: newTarget)
-                            }
+                            isPresented = true
                         }
-                        isPresented = true
+                        // TODO: navigate to user turned off, inconsistent behavior
+//                        else if post.userName != "[deleted]" {
+//                            newTarget = CommunityOrUser(user: User(post.userName!))
+//                        }
                     }
+                    Spacer().frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
                 

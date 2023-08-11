@@ -19,6 +19,7 @@ struct MediaPopupContent: View {
     @State private var mute: Bool = false
     @State private var stateText: String = ""
     @State private var totalDuration: Double = 0
+    @State private var showingSaveDialog = false
     
     var body: some View {
         ZStack {
@@ -171,17 +172,41 @@ struct MediaPopupContent: View {
                     ZStack {
                         Rectangle()
                             .fill(Color.black)
-                            .opacity(0.8)
-                            .frame(maxWidth: .infinity, maxHeight: 65, alignment: .top)
-                        Image(systemName: "xmark")
-                            .font(.system(size: 30))
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .foregroundColor(Color.white)
                             .opacity(0.6)
-                            .padding(EdgeInsets(top: 30, leading: 22, bottom: 0, trailing: 0))
-                            .onTapGesture {
-                                popupViewModel.isShowing = false
-                            }
+                            .frame(maxWidth: .infinity, maxHeight: 80, alignment: .top)
+                        HStack {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 30))
+                                .frame(maxWidth: .infinity, alignment: .topLeading)
+                                .foregroundColor(Color.white)
+                                .opacity(0.6)
+                                .padding(EdgeInsets(top: 40, leading: 22, bottom: 0, trailing: 0))
+                                .onTapGesture {
+                                    popupViewModel.isShowing = false
+                                }
+                            Image(systemName: "arrow.down.square")
+                                .font(.system(size: 30))
+                                .frame(maxWidth: .infinity, alignment: .topTrailing)
+                                .foregroundColor(Color.white)
+                                .opacity(0.6)
+                                .padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 22))
+                                .onTapGesture {
+                                    showingSaveDialog = true
+                                }
+                                .alert("Save to photo library?", isPresented: $showingSaveDialog) {
+                                    Button("Cancel", role: .destructive) { showingSaveDialog = false }
+                                    Button("Save", role: .cancel) {
+                                        DispatchQueue.global().async {
+                                            if let data = try? Data(contentsOf: URL(string: popupViewModel.fullImageLink!)!) {
+                                                DispatchQueue.main.async {
+                                                    ImageSaver().writeToPhotoAlbum(image: UIImage(data: data)!)
+                                                }
+                                            }
+                                        }
+                                        showingSaveDialog = false
+                                    }
+                                }
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     ZStack {
