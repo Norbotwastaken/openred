@@ -116,6 +116,7 @@ struct PostRowFooter: View {
     @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community("")) // placeholder value
     @State var loadPosts: Bool = true
     @State var itemInView: String = ""
+    @State private var showingSaveDialog = false
     
     var body: some View {
         HStack {
@@ -186,7 +187,7 @@ struct PostRowFooter: View {
             .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 12) {
                 Menu {
-                    PostRowMenu(post: post, target: $target)
+                    PostRowMenu(post: post, target: $target, showingSaveDialog: $showingSaveDialog)
                 } label: {
                     ZStack {
                         Spacer()
@@ -195,6 +196,9 @@ struct PostRowFooter: View {
                             .foregroundColor(.secondary)
                     }
                     .frame(width: 20, height: 20)
+                }
+                .alert("Save image to library?", isPresented: $showingSaveDialog) {
+                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.imageLink)
                 }
                 Image(systemName: "arrow.up")
                     .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
@@ -255,6 +259,7 @@ struct PostRowMenu: View {
     @EnvironmentObject var overlayModel: MessageOverlayModel
     @ObservedObject var post: Post
     @Binding var target: CommunityOrUser
+    @Binding var showingSaveDialog: Bool
 //    @State var isPresented: Bool = false
     @State var restoreScrollPlaceholder: Bool = true
     @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
@@ -279,6 +284,11 @@ struct PostRowMenu: View {
             NavigationLink(destination: PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {
                 Button(action: {}) {
                     Label("User Profile", systemImage: "person")
+                }
+            }
+            if post.contentType == .image {
+                Button(action: { showingSaveDialog = true }) {
+                    Label("Download image", systemImage: "arrow.down.square")
                 }
             }
         }

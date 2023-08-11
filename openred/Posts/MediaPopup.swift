@@ -20,6 +20,8 @@ struct MediaPopupContent: View {
     @State private var stateText: String = ""
     @State private var totalDuration: Double = 0
     @State private var showingSaveDialog = false
+    @State private var currentImageLink: String?
+    @State private var activeGalleryTab: Int = 0
     
     var body: some View {
         ZStack {
@@ -193,18 +195,8 @@ struct MediaPopupContent: View {
                                 .onTapGesture {
                                     showingSaveDialog = true
                                 }
-                                .alert("Save to photo library?", isPresented: $showingSaveDialog) {
-                                    Button("Cancel", role: .destructive) { showingSaveDialog = false }
-                                    Button("Save", role: .cancel) {
-                                        DispatchQueue.global().async {
-                                            if let data = try? Data(contentsOf: URL(string: popupViewModel.fullImageLink!)!) {
-                                                DispatchQueue.main.async {
-                                                    ImageSaver().writeToPhotoAlbum(image: UIImage(data: data)!)
-                                                }
-                                            }
-                                        }
-                                        showingSaveDialog = false
-                                    }
+                                .alert("Save image to library?", isPresented: $showingSaveDialog) {
+                                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: popupViewModel.fullImageLink)
                                 }
                         }
                     }
@@ -222,10 +214,10 @@ struct MediaPopupContent: View {
                     Rectangle()
                         .fill(Color.black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    TabView {
-                        ForEach(popupViewModel.gallery!.items) { galleryItem in
+                    TabView(selection: $activeGalleryTab) {
+                        ForEach(popupViewModel.gallery!.items.indices) { i in
                             ZStack {
-                                AsyncImage(url: URL(string: galleryItem.fullLink )) { image in
+                                AsyncImage(url: URL(string: popupViewModel.gallery!.items[i].fullLink )) { image in
                                     GeometryReader { proxy in
                                         image.image?
                                             .resizable()
@@ -236,8 +228,8 @@ struct MediaPopupContent: View {
                                     }
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 }
-                                if toolbarVisible && galleryItem.caption != nil {
-                                    Text(galleryItem.caption!)
+                                if toolbarVisible && popupViewModel.gallery!.items[i].caption != nil {
+                                    Text(popupViewModel.gallery!.items[i].caption!)
                                         .padding(SwiftUI.EdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6))
                                         .background(.black.opacity(0.6))
                                         .cornerRadius(8)
@@ -246,36 +238,49 @@ struct MediaPopupContent: View {
                                         .ignoresSafeArea()
                                 }
                             }
+                            .tag(i)
                         }
                     }
+                    .onChange(of: activeGalleryTab, perform: { i in
+                        currentImageLink = popupViewModel.gallery!.items[i].fullLink
+                    })
                     .tabViewStyle(PageTabViewStyle())
+                    .onAppear {
+                        currentImageLink = popupViewModel.gallery!.items[0].fullLink
+                    }
                 }
                 if toolbarVisible {
                     ZStack {
                         Rectangle()
                             .fill(Color.black)
-                            .opacity(0.8)
-                            .frame(maxWidth: .infinity, maxHeight: 65, alignment: .top)
-                        Image(systemName: "xmark")
-                            .font(.system(size: 30))
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .foregroundColor(Color.white)
                             .opacity(0.6)
-                            .padding(EdgeInsets(top: 30, leading: 22, bottom: 0, trailing: 0))
-                            .onTapGesture {
-                                popupViewModel.isShowing = false
-                            }
+                            .frame(maxWidth: .infinity, maxHeight: 80, alignment: .top)
+                        HStack {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 30))
+                                .frame(maxWidth: .infinity, alignment: .topLeading)
+                                .foregroundColor(Color.white)
+                                .opacity(0.6)
+                                .padding(EdgeInsets(top: 40, leading: 22, bottom: 0, trailing: 0))
+                                .onTapGesture {
+                                    popupViewModel.isShowing = false
+                                }
+                            Image(systemName: "arrow.down.square")
+                                .font(.system(size: 30))
+                                .frame(maxWidth: .infinity, alignment: .topTrailing)
+                                .foregroundColor(Color.white)
+                                .opacity(0.6)
+                                .padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 22))
+                                .onTapGesture {
+                                    showingSaveDialog = true
+                                }
+                                .alert("Save image to library?", isPresented: $showingSaveDialog) {
+                                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: currentImageLink,
+                                                   links: popupViewModel.gallery!.items.map{ $0.fullLink })
+                                }
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-//                    ZStack {
-//                        Rectangle()
-//                            .fill(Color.black)
-//                            .opacity(0.8)
-//                            .frame(maxWidth: .infinity, maxHeight: 50, alignment: .bottom)
-//                        Text(galleryCaptions ?? "")
-//                            .background(.black.opacity(0.6))
-//                    }
-//                    .frame(maxWidth: .infinity, maxHeight: 300, alignment: .bottomLeading)
                 }
             }
         }

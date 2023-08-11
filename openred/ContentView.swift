@@ -130,6 +130,40 @@ class MessageOverlayModel: ObservableObject {
     }
 }
 
+struct SaveImageAlert: View {
+    @Binding var showingSaveDialog: Bool
+    var link: String?
+    var links: [String] = []
+    
+    var body: some View {
+        Button("Cancel", role: .cancel) { showingSaveDialog = false }
+        Button("Save") {
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: URL(string: link!)!) {
+                    DispatchQueue.main.async {
+                        ImageSaver().writeToPhotoAlbum(image: UIImage(data: data)!)
+                    }
+                }
+            }
+            showingSaveDialog = false
+        }.keyboardShortcut(.defaultAction)
+        if links.count > 0 {
+            Button("Save all in album") {
+                DispatchQueue.global().async {
+                    for imageLink in links {
+                        if let data = try? Data(contentsOf: URL(string: imageLink)!) {
+                            DispatchQueue.main.async {
+                                ImageSaver().writeToPhotoAlbum(image: UIImage(data: data)!)
+                            }
+                        }
+                    }
+                }
+                showingSaveDialog = false
+            }
+        }
+    }
+}
+
 struct SizeCalculator: ViewModifier {
     @Binding var size: CGSize
     

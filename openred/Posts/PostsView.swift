@@ -20,6 +20,7 @@ struct PostsView: View {
     @State var isPostCreatorShowing: Bool = false
     @State var sortBy: String?
     @State var sortTime: String?
+    @State private var showingSaveDialog = false
     var filters: KeyValuePairs<String, String> {
         if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
@@ -62,7 +63,7 @@ struct PostsView: View {
                             ForEach(model.pages[target.getCode()]!.items) { item in
                                 if !item.isComment {
                                     PostRow(post: item.post!, target: $target)
-                                        .contextMenu{ PostRowMenu(post: item.post!, target: $target) }
+                                        .contextMenu{ PostRowMenu(post: item.post!, target: $target, showingSaveDialog: $showingSaveDialog) }
                                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                             Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
                                                 Image(systemName: "arrow.up")
@@ -88,6 +89,9 @@ struct PostsView: View {
                                                            label: { EmptyView() })
                                             .opacity(0)
                                         )
+                                        .alert("Save image to library?", isPresented: $showingSaveDialog) {
+                                            SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: item.post!.imageLink)
+                                        }
                                 } else {
                                     PostCommentRow(comment: item.comment!)
                                         .onAppear(perform: {

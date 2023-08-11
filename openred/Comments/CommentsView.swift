@@ -29,6 +29,7 @@ struct CommentsView: View {
     @State var loadPosts: Bool = true
     @State var itemInView: String = ""
     @State var selectedSort: String?
+    @State var showingSaveDialog = false
     
     var body: some View {
         ZStack {
@@ -204,25 +205,20 @@ struct CommentsView: View {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             HStack {
                                 CommentSortMenu(selectedSort: $selectedSort, postLink: link)
-                                Button {
-                                    // Perform an action
-                                    print("Add Item Tapped")
-                                } label: {
-                                    Image(systemName: "ellipsis")
-                                }
+                                CommentActionsMenu(showingSaveDialog: $showingSaveDialog, link: link)
+                            }
+                            .alert("Save image to library?", isPresented: $showingSaveDialog) {
+                                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.imageLink)
                             }
                         }
                     }
                     .onChange(of: scrollTarget) { target in
                         if let target = target {
                             scrollTarget = nil
-                            
-                            //                        withAnimation {
                             proxy.scrollTo(target, anchor: .top)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                 proxy.scrollTo(target, anchor: .top)
                             }
-                            //                        }
                         }
                     }
                     .refreshable {
@@ -606,5 +602,23 @@ struct CommentEditor: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct CommentActionsMenu: View {
+    @EnvironmentObject var commentsModel: CommentsModel
+    @Binding var showingSaveDialog: Bool
+    var link: String
+    
+    var body: some View {
+        Menu {
+            if commentsModel.pages[link]!.post!.contentType == .image {
+                Button(action: { showingSaveDialog = true }) {
+                    Label("Download image", systemImage: "arrow.down.square")
+                }
+            }
+        } label: {
+            Label("Actions", systemImage: "ellipsis")
+        }
     }
 }
