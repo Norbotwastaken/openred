@@ -565,22 +565,6 @@ struct UserAboutView: View {
             ScrollView {
                 VStack {
                     Spacer().frame(height: 20)
-//                    if user.about!.icon_img != nil {
-//                        HStack {
-//                            AsyncImage(url: URL(string: user.about!.icon_img!)) { image in
-//                                image.image?
-//                                    .resizable()
-//                                    .scaledToFill()
-//                                    .frame(maxWidth: 80, maxHeight: 80)
-//                            }
-//                            VStack {
-//                                Text(user.name).font(.headline)
-//                                Text(user.about!.public_description)
-//                                    .foregroundColor(.secondary)
-//                                    .font(.system(size: 14))
-//                            }
-//                        }
-//                    }
                     HStack {
                         VStack {
                             Text("Post karma")

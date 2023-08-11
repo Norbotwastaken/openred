@@ -290,6 +290,13 @@ struct PostRowMenu: View {
                 Button(action: { showingSaveDialog = true }) {
                     Label("Download image", systemImage: "arrow.down.square")
                 }
+            } else if post.contentType == .text {
+                Button(action: {
+                    UIPasteboard.general.string = String(post.text!.characters[...])
+                    overlayModel.show("Copied to clipboard")
+                }) {
+                    Label("Copy text", systemImage: "list.clipboard")
+                }
             }
         }
         .onAppear { newTarget = CommunityOrUser(community: nil, user: User(post.userName!)) }

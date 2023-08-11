@@ -26,13 +26,7 @@ struct PostRowContent: View {
     @State var internalItemInView: String = ""
     
     var post: Post
-//    @Binding var target: CommunityOrUser
     var isPostOpen: Bool = false
-    
-//    func isImage(_ url: URL) -> Bool {
-//        [".jpg", ".jpeg", ".png", ".svg"]
-//            .filter{ url.lastPathComponent.hasSuffix($0) }.first != nil
-//    }
     
     var body: some View {
         if post.contentType == .text {

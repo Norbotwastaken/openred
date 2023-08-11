@@ -238,12 +238,12 @@ struct UserSection: View {
                 }
                 .listRowBackground(Color.clear)
                 .alert("Log out", isPresented: $showingExitAlert) {
-                    Button("Log out", role: .destructive) {
+                    Button("Cancel", role: .cancel) { showingExitAlert = false }
+                    Button("Log out") {
                         model.logOut()
                         showingExitAlert = false
                         loginPopupShowing = true
-                    }
-                    Button("Cancel", role: .cancel) { showingExitAlert = false }
+                    }.keyboardShortcut(.defaultAction)
                 } message: {
                     Text("To add a new account you first need to log out of your current session.")
                 }

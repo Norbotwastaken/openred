@@ -476,6 +476,12 @@ struct CommentActions: View {
                     }
                 }
             }
+            Button(action: {
+                UIPasteboard.general.string = String(comment.content!.characters[...])
+                overlayModel.show("Copied to clipboard", loading: false)
+            }) {
+                Label("Copy text", systemImage: "list.clipboard")
+            }
         }
         .onAppear { newTarget = CommunityOrUser(community: nil, user: User(comment.user!)) }
     }
@@ -607,6 +613,7 @@ struct CommentEditor: View {
 
 struct CommentActionsMenu: View {
     @EnvironmentObject var commentsModel: CommentsModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @Binding var showingSaveDialog: Bool
     var link: String
     
@@ -615,6 +622,13 @@ struct CommentActionsMenu: View {
             if commentsModel.pages[link]!.post!.contentType == .image {
                 Button(action: { showingSaveDialog = true }) {
                     Label("Download image", systemImage: "arrow.down.square")
+                }
+            } else if commentsModel.pages[link]!.post!.contentType == .text {
+                Button(action: {
+                    UIPasteboard.general.string = String(commentsModel.pages[link]!.post!.text!.characters[...])
+                    overlayModel.show("Copied to clipboard")
+                }) {
+                    Label("Copy text", systemImage: "list.clipboard")
                 }
             }
         } label: {

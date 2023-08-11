@@ -123,10 +123,10 @@ class MessageOverlayModel: ObservableObject {
     }
     
     func show(_ text: String? = nil, duration: Double = 3.0, loading: Bool = false) {
-        self.showing = true
         self.text = text
         self.duration = duration
         self.loading = loading
+        self.showing = true
     }
 }
 
