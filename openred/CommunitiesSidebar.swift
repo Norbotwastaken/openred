@@ -154,7 +154,7 @@ struct CommunityRow: View {
                 Text(community.displayName ?? community.name.prefix(1).capitalized + community.name.dropFirst())
                     .lineLimit(1)
 //                    .frame(maxWidth: .infinity, alignment: .leading)
-                if isFavoritable {
+                if isFavoritable && model.userName != nil {
                     Spacer()
                     if community.isFavorite {
                         Image(systemName: "star.fill")

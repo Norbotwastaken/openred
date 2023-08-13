@@ -266,6 +266,7 @@ struct ContentFormatter {
         var result: AttributedString = AttributedString()
         var formatted: String = text
         
+        formatted = formatted.replacingOccurrences(of: "&amp;nbsp;", with: "") // == &nbsp; in text
         formatted = formatted.replacingOccurrences(of: "&amp;#x200B;", with: "")
         try? result = AttributedString(markdown: formatted, options: AttributedString
             .MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))

@@ -198,7 +198,12 @@ struct PostRowFooter: View {
                     .frame(width: 20, height: 20)
                 }
                 .alert("Save image to library?", isPresented: $showingSaveDialog) {
-                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.imageLink)
+                    if post.contentType == .image {
+                        SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.imageLink)
+                    } else if post.contentType == .gallery {
+                        SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.gallery!.items[0].fullLink,
+                                       links: post.gallery!.items.map{ $0.fullLink })
+                    }
                 }
                 Image(systemName: "arrow.up")
                     .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
@@ -286,7 +291,17 @@ struct PostRowMenu: View {
                     Label("User Profile", systemImage: "person")
                 }
             }
+            ShareLink(item: URL(string: "https://reddit.com\(post.linkToThread.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)")!) {
+                Label("Share post", systemImage: "square.and.arrow.up")
+            }
             if post.contentType == .image {
+                ShareLink(item: URL(string: post.imageLink!)!) {
+                    Label("Share image", systemImage: "square.and.arrow.up.circle")
+                }
+                Button(action: { showingSaveDialog = true }) {
+                    Label("Download image", systemImage: "arrow.down.square")
+                }
+            } else if post.contentType == .gallery {
                 Button(action: { showingSaveDialog = true }) {
                     Label("Download image", systemImage: "arrow.down.square")
                 }
@@ -296,6 +311,16 @@ struct PostRowMenu: View {
                     overlayModel.show("Copied to clipboard")
                 }) {
                     Label("Copy text", systemImage: "list.clipboard")
+                }
+            } else if post.contentType == .link {
+                ShareLink(item: URL(string: post.externalLink!)!) {
+                    Label("Share link", systemImage: "square.and.arrow.up.circle")
+                }
+                Button(action: {
+                    UIPasteboard.general.string = post.externalLink!
+                    overlayModel.show("Copied to clipboard")
+                }) {
+                    Label("Copy link", systemImage: "list.clipboard")
                 }
             }
         }

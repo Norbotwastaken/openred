@@ -27,6 +27,7 @@ struct PostRowContent: View {
     
     var post: Post
     var isPostOpen: Bool = false
+    var enableCrosspostLink: Bool = false
     
     var body: some View {
         if post.contentType == .text {
@@ -314,10 +315,15 @@ struct PostRowContent: View {
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
                 .overlay(
-                    NavigationLink(destination: CommentsView(
-                        restorePostsScroll: $restorePostsPlaceholder, link: crosspost.linkToThread
-                    ), label: { EmptyView() })
-                    .opacity(0))
+                    ZStack {
+                        if enableCrosspostLink {
+                            NavigationLink(destination: CommentsView(
+                                restorePostsScroll: $restorePostsPlaceholder, link: crosspost.linkToThread
+                            ), label: { EmptyView() })
+                            .opacity(0)
+                        }
+                    }
+                )
             }
             .padding(SwiftUI.EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
         } else if post.contentType == .link {

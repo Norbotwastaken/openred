@@ -133,10 +133,20 @@ struct InboxView: View {
 
 struct MessageView: View {
     @EnvironmentObject var messageModel: MessageModel
+    @EnvironmentObject var popupViewModel: PopupViewModel
     @ObservedObject var message: Message
     @Binding var isEditorShowing: Bool
     @Binding var replyToMessage: Message?
     @Binding var showingBlockAlert: Bool
+    
+    @State var showSafari: Bool = false
+    @State var safariLink: URL?
+    @State var isInternalPresented: Bool = false
+    @State var internalIsPost: Bool = false
+    @State var internalRestoreScrollPlaceholder: Bool = true
+    @State var internalCommunityTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
+    @State var internalLoadPosts: Bool = true
+    @State var internalItemInView: String = ""
     
     var body: some View {
         HStack(spacing: 10) {
@@ -181,8 +191,43 @@ struct MessageView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                Text(message.body)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                ZStack {
+                    if showSafari {
+                        Spacer()
+                            .fullScreenCover(isPresented: $showSafari, content: {
+                                SFSafariViewWrapper(url: safariLink!)
+                            })
+                    }
+                    Text(message.body)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .environment(\.openURL, OpenURLAction { url in
+                            if url.isImage {
+                                popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
+                                popupViewModel.contentType = .image
+                                popupViewModel.isShowing = true
+                            } else if url.isPost {
+                                internalIsPost = true
+                                safariLink = url
+                                isInternalPresented = true
+                            } else if url.isCommunity {
+                                internalCommunityTarget = CommunityOrUser(explicitURL: url)
+                                internalIsPost = false
+                                isInternalPresented = true
+                            } else {
+                                safariLink = url
+                                showSafari = true
+                            }
+                            return .handled
+                        })
+                        .navigationDestination(isPresented: $isInternalPresented) {
+                            if !internalIsPost { // internal is community
+                                PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
+                                          target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
+                            } else {
+                                CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
+                            }
+                        }
+                }
             }
             .font(.system(size: 14))
         }

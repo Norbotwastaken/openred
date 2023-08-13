@@ -30,12 +30,13 @@ struct CommentsView: View {
     @State var itemInView: String = ""
     @State var selectedSort: String?
     @State var showingSaveDialog = false
+    @State var crosspostRestorePostsPlaceholder: Bool = false
     
     var body: some View {
         ZStack {
             if commentsModel.pages[link]?.post == nil {
                 ProgressView()
-                    .padding()
+                    .padding(EdgeInsets(top: 80, leading: 0, bottom: 0, trailing: 0))
                     .frame(maxHeight: .infinity, alignment: .top)
             }
             if commentsModel.pages[link]?.post != nil {
@@ -52,9 +53,18 @@ struct CommentsView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
-                            PostRowContent(post: commentsModel.pages[link]!.post!, isPostOpen: true)
+                            PostRowContent(post: commentsModel.pages[link]!.post!, isPostOpen: true, enableCrosspostLink: true)
                                 .padding(EdgeInsets(top: 0, leading: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0, bottom: 0, trailing: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0))
                                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: commentsModel.pages[link]!.post!.contentType == .text ? .leading : .center)
+//                                .overlay(
+//                                    if commentsModel.pages[link]!.post!.contentType == .crosspost {
+//                                        NavigationLink(destination: CommentsView(
+//                                            restorePostsScroll: $crosspostRestorePostsPlaceholder,
+//                                            link: commentsModel.pages[link]!.post!.crosspost!.linkToThread),
+//                                                       label: { EmptyView() }
+//                                        ).opacity(0)
+//                                    }
+//                                )
                             VStack(spacing: 6) {
                                 HStack(spacing: 3) {
                                     if commentsModel.pages[link]!.post!.stickied {
@@ -208,7 +218,12 @@ struct CommentsView: View {
                                 CommentActionsMenu(showingSaveDialog: $showingSaveDialog, link: link)
                             }
                             .alert("Save image to library?", isPresented: $showingSaveDialog) {
-                                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.imageLink)
+                                if commentsModel.pages[link]!.post!.contentType == .image {
+                                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.imageLink)
+                                } else if commentsModel.pages[link]!.post!.contentType == .gallery {
+                                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.gallery!.items[0].fullLink,
+                                                   links: commentsModel.pages[link]!.post!.gallery!.items.map{ $0.fullLink })
+                                }
                             }
                         }
                     }
@@ -619,7 +634,13 @@ struct CommentActionsMenu: View {
     
     var body: some View {
         Menu {
+            ShareLink(item: URL(string: "https://reddit.com\(link.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)")!) {
+                Label("Share post", systemImage: "square.and.arrow.up")
+            }
             if commentsModel.pages[link]!.post!.contentType == .image {
+                ShareLink(item: URL(string: commentsModel.pages[link]!.post!.imageLink!)!) {
+                    Label("Share image", systemImage: "square.and.arrow.up.circle")
+                }
                 Button(action: { showingSaveDialog = true }) {
                     Label("Download image", systemImage: "arrow.down.square")
                 }
@@ -629,6 +650,20 @@ struct CommentActionsMenu: View {
                     overlayModel.show("Copied to clipboard")
                 }) {
                     Label("Copy text", systemImage: "list.clipboard")
+                }
+            } else if commentsModel.pages[link]!.post!.contentType == .gallery {
+                Button(action: { showingSaveDialog = true }) {
+                    Label("Download image", systemImage: "arrow.down.square")
+                }
+            } else if commentsModel.pages[link]!.post!.contentType == .link {
+                ShareLink(item: URL(string: commentsModel.pages[link]!.post!.externalLink!)!) {
+                    Label("Share link", systemImage: "square.and.arrow.up.circle")
+                }
+                Button(action: {
+                    UIPasteboard.general.string = commentsModel.pages[link]!.post!.externalLink!
+                    overlayModel.show("Copied to clipboard")
+                }) {
+                    Label("Copy link", systemImage: "list.clipboard")
                 }
             }
         } label: {

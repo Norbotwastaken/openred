@@ -16,6 +16,7 @@ class openredApp: App {
     @StateObject var commentsModel: CommentsModel
     @StateObject var postCreateModel: PostCreateModel
     @StateObject var messageModel: MessageModel
+    @StateObject var searchModel: SearchModel = SearchModel()
     
     required init() {
         userSessionManager = UserSessionManager()
@@ -33,6 +34,7 @@ class openredApp: App {
                 .environmentObject(commentsModel)
                 .environmentObject(postCreateModel)
                 .environmentObject(messageModel)
+                .environmentObject(searchModel)
         }
     }
 }

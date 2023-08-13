@@ -16,7 +16,6 @@ struct ContentView: View {
     @State var loginPopupShowing = false
     @State var showPosts = true
     @State var target: CommunityOrUser = CommunityOrUser(community: Community("all", isMultiCommunity: true))
-    @State private var sidebarOffset = CGSize(width: -300, height: 0)
     @State private var tabSelection = 1
     
     var body: some View {

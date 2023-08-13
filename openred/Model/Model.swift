@@ -16,10 +16,8 @@ class Model: ObservableObject {
     @Published var messageCount: Int = 0
     var resetPagesToCommunity: String?
     
-    let defaults = UserDefaults.standard
     let userSessionManager: UserSessionManager
-    let redditBaseURL: String = "https://old.reddit.com"
-    let jsonLoader: JSONDataLoader = JSONDataLoader()
+    private let jsonLoader: JSONDataLoader = JSONDataLoader()
     private let starterCommunity = CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true))
     
     init(userSessionManager: UserSessionManager) {
@@ -69,6 +67,7 @@ class Model: ObservableObject {
         resetPagesTo(target: pages["r/all"]!.selectedCommunity)
         communities = []
         favoriteCommunities = []
+        self.loadCommunitiesData()
     }
     
     func switchAccountTo(userName: String) {
@@ -317,6 +316,10 @@ class Model: ObservableObject {
         components.host = "old.reddit.com"
         components.queryItems = []
         components.path = "/subreddits/mine/.json"
+        if userSessionManager.userName == nil {
+            components.path = "/subreddits/default.json"
+            components.queryItems!.append(URLQueryItem(name: "limit", value: "50"))
+        }
         jsonLoader.loadAboutCommunities(url: components.url!) { (abouts, error) in
             DispatchQueue.main.async {
                 if let abouts = abouts {
@@ -416,7 +419,7 @@ class Model: ObservableObject {
     var userFunctionCommunities: [Community] {
         var communities: [Community] = []
         communities.append(Community("Saved", iconName: "heart.text.square", isMultiCommunity: true, displayName: "Saved", path: "saved"))
-        communities.append(Community("Mod", iconName: "shield", isMultiCommunity: true, displayName: "Moderator Posts"))
+//        communities.append(Community("Mod", iconName: "shield", isMultiCommunity: true, displayName: "Moderator Posts"))
         return communities
     }
     

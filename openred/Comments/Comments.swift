@@ -56,6 +56,9 @@ class CommentsModel: ObservableObject {
         jsonLoader.loadComments(url: components.url!) { (comments, post, error) in
             DispatchQueue.main.async {
                 if let comments = comments {
+                    page.comments = []
+                    page.commentsCollapsed = [:]
+                    page.flatCommentsList = []
                     page.post = post
                     for comment in comments {
                         page.comments.append(comment)
@@ -157,6 +160,7 @@ class CommentsModel: ObservableObject {
                                                 }
                                                 page!.flatCommentsList.insert(newComment, at: i + 1)
                                                 page!.commentsCollapsed[newComment.id] = false
+                                                self.objectWillChange.send()
                                                 // TODO: update other model collections
                                             }
                                         }
@@ -185,6 +189,7 @@ class CommentsModel: ObservableObject {
                                             page!.comments.insert(newComment, at: 0)
                                             page!.flatCommentsList.insert(newComment, at: 0)
                                             page!.commentsCollapsed[newComment.id] = false
+                                            self.objectWillChange.send()
                                         }
                                     }
                                 }
@@ -211,6 +216,7 @@ class CommentsModel: ObservableObject {
                     self.pages[link]!.document = document
                 }
             }
+            objectWillChange.send()
             return true
         }
         return false
@@ -230,8 +236,10 @@ class CommentsModel: ObservableObject {
                     self.pages[link]!.document = document
                 }
             }
+            objectWillChange.send()
+            return true
         }
-        return true
+        return false
     }
     
     func toggleSavePost(link: String, post: Post) -> Bool {
@@ -241,8 +249,10 @@ class CommentsModel: ObservableObject {
         if let saveButton = pages[link]?.document?.querySelector("#siteTable .buttons .save-button a") {
             saveButton.click()
             post.isSaved.toggle()
+            objectWillChange.send()
+            return true
         }
-        return true
+        return false
     }
     
     func selectedSortingIcon(link: String) -> String {

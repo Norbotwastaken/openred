@@ -43,6 +43,7 @@
 		AE89D4DF2A2CCB3600889B3E /* openredUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4DE2A2CCB3600889B3E /* openredUITests.swift */; };
 		AE89D4E12A2CCB3600889B3E /* openredUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */; };
 		AEBA65B02A791BE900431529 /* JSONAboutParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */; };
+		AEBA65B22A881F8B00431529 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B12A881F8B00431529 /* SearchModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +102,7 @@
 		AE89D4DE2A2CCB3600889B3E /* openredUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITests.swift; sourceTree = "<group>"; };
 		AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAboutParser.swift; sourceTree = "<group>"; };
+		AEBA65B12A881F8B00431529 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +178,7 @@
 				AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */,
 				AE4A96942A60620300BA96CF /* MessageModel.swift */,
 				AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */,
+				AEBA65B12A881F8B00431529 /* SearchModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -459,6 +462,7 @@
 				AE4A965F2A37829700BA96CF /* MediaPopup.swift in Sources */,
 				AE4A96592A33A27100BA96CF /* Community.swift in Sources */,
 				AE4A967C2A3F5F7100BA96CF /* Comments.swift in Sources */,
+				AEBA65B22A881F8B00431529 /* SearchModel.swift in Sources */,
 				AE4A968D2A5DF5CE00BA96CF /* PostCreateModel.swift in Sources */,
 				AE4A96892A48DEBD00BA96CF /* Search.swift in Sources */,
 				AE4A96772A3D112700BA96CF /* RedditParser.swift in Sources */,

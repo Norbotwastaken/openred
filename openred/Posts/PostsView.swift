@@ -90,7 +90,12 @@ struct PostsView: View {
                                             .opacity(0)
                                         )
                                         .alert("Save image to library?", isPresented: $showingSaveDialog) {
-                                            SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: item.post!.imageLink)
+                                            if item.post!.contentType == .image {
+                                                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: item.post!.imageLink)
+                                            } else if item.post!.contentType == .gallery {
+                                                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: item.post!.gallery!.items[0].fullLink,
+                                                               links: item.post!.gallery!.items.map{ $0.fullLink })
+                                            }
                                         }
                                 } else {
                                     PostCommentRow(comment: item.comment!)
@@ -479,7 +484,7 @@ struct CommunityAboutView: View {
                                     .lineLimit(1)
                                     .font(.system(size: 14))
                                     .fontWeight(.bold)
-                                Text(formatScore(score: String(community.about!.subscribers)))
+                                Text(formatScore(score: String(community.about!.subscribers ?? 0)))
                                     .font(.system(size: 28))
                             }
                             .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 0))

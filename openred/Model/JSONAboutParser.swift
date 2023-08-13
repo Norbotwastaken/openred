@@ -41,7 +41,7 @@ class JSONAbout: Codable {
 //    var display_name_prefixed: String
 //    var accounts_active: String
 //    var public_traffic: String
-    var subscribers: Int
+    var subscribers: Int?
 //    var user_flair_richtext: String
 //    var name: String
 //    var quarantine: String
@@ -107,7 +107,7 @@ class JSONAbout: Codable {
 //    var show_media: String
 //    var id: String
 //    var user_is_moderator: String
-    var over18: Bool
+    var over18: Bool?
     var header_title: String?
     var description: AttributedString?
 //    var is_chat_post_feature_enabled: String
@@ -131,22 +131,30 @@ class JSONAbout: Codable {
         do { try self.advertiser_category = container.decode(String?.self, forKey: .advertiser_category) } catch {}
         do { try self.header_title = container.decode(String?.self, forKey: .header_title) } catch {}
         do { try self.active_user_count = container.decode(Int?.self, forKey: .active_user_count) } catch {}
+        do { try self.subscribers = container.decode(Int?.self, forKey: .subscribers) } catch {}
         do {
             var text: String = ""
-            try text = String(container.decode(AttributedString?.self, forKey: .description)!.characters[...])
-            self.description = ContentFormatter().format(text: text)
-        } catch {}
+            var attributedText: AttributedString?
+            try? attributedText = container.decode(AttributedString?.self, forKey: .description)
+            if attributedText != nil {
+                text = String(attributedText!.characters[...])
+                self.description = ContentFormatter().format(text: text)
+            }
+        }
         do {
             var text: String = ""
-            try text = String(container.decode(AttributedString?.self, forKey: .submit_text)!.characters[...])
-            self.submit_text = ContentFormatter().format(text: text)
-        } catch {}
+            var attributedText: AttributedString?
+            try? attributedText = container.decode(AttributedString?.self, forKey: .submit_text)
+            if attributedText != nil {
+                text = String(attributedText!.characters[...])
+                self.submit_text = ContentFormatter().format(text: text)
+            }
+        }
         do { try self.community_icon = String(htmlEncodedString: container.decode( String?.self, forKey: .community_icon)!) } catch {}
         
         try self.title = container.decode(String.self, forKey: .title)
         try self.display_name = container.decode(String.self, forKey: .display_name)
-        try self.subscribers = container.decode(Int.self, forKey: .subscribers)
-        try self.over18 = container.decode(Bool.self, forKey: .over18)
+        try? self.over18 = container.decode(Bool?.self, forKey: .over18)
         try self.created = container.decode(Double.self, forKey: .created)
 //        try self.whitelist_status = container.decode(String.self, forKey: .whitelist_status)
     }
@@ -156,13 +164,13 @@ class AboutCommunity: ObservableObject {
     var title: String
     var displayName: String
     var activeUserCount: Int
-    var subscribers: Int
+    var subscribers: Int?
     var advertiserCategory: String?
     var publicDescription: String?
     var communityIcon: String?
     var bannerBackgroundImage: String?
     var submitText: AttributedString?
-    var over18: Bool
+    var over18: Bool?
     var headerTitle: String?
     var description: AttributedString?
 //    var whitelistStatus: String
