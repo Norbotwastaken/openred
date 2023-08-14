@@ -44,6 +44,8 @@
 		AE89D4E12A2CCB3600889B3E /* openredUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */; };
 		AEBA65B02A791BE900431529 /* JSONAboutParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */; };
 		AEBA65B22A881F8B00431529 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B12A881F8B00431529 /* SearchModel.swift */; };
+		AEBA65B42A8A1AD000431529 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B32A8A1AD000431529 /* SettingsView.swift */; };
+		AEBA65B62A8A236B00431529 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B52A8A236B00431529 /* SettingsModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +105,8 @@
 		AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAboutParser.swift; sourceTree = "<group>"; };
 		AEBA65B12A881F8B00431529 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
+		AEBA65B32A8A1AD000431529 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AEBA65B52A8A236B00431529 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +183,7 @@
 				AE4A96942A60620300BA96CF /* MessageModel.swift */,
 				AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */,
 				AEBA65B12A881F8B00431529 /* SearchModel.swift */,
+				AEBA65B52A8A236B00431529 /* SettingsModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -238,6 +243,7 @@
 				AE4A966B2A38F1B400BA96CF /* InboxView.swift */,
 				AE4A96702A39ED3200BA96CF /* GifView.swift */,
 				AE4A96882A48DEBD00BA96CF /* Search.swift */,
+				AEBA65B32A8A1AD000431529 /* SettingsView.swift */,
 			);
 			path = openred;
 			sourceTree = "<group>";
@@ -457,6 +463,7 @@
 				AE4A96712A39ED3200BA96CF /* GifView.swift in Sources */,
 				AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */,
 				AE4A96612A37832800BA96CF /* PostRow.swift in Sources */,
+				AEBA65B62A8A236B00431529 /* SettingsModel.swift in Sources */,
 				AE4A96852A43424D00BA96CF /* PostContent.swift in Sources */,
 				AE4A96312A2F974C00BA96CF /* Post.swift in Sources */,
 				AE4A965F2A37829700BA96CF /* MediaPopup.swift in Sources */,
@@ -469,6 +476,7 @@
 				AE4A966A2A387ECB00BA96CF /* LoginPopup.swift in Sources */,
 				AE4A96562A337B4000BA96CF /* CommunitiesSidebar.swift in Sources */,
 				AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */,
+				AEBA65B42A8A1AD000431529 /* SettingsView.swift in Sources */,
 				AE4A966C2A38F1B400BA96CF /* InboxView.swift in Sources */,
 				AE4A96832A422BBE00BA96CF /* JSONDataLoader.swift in Sources */,
 				AE4A96952A60620300BA96CF /* MessageModel.swift in Sources */,

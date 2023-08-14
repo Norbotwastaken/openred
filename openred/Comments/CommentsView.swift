@@ -56,15 +56,6 @@ struct CommentsView: View {
                             PostRowContent(post: commentsModel.pages[link]!.post!, isPostOpen: true, enableCrosspostLink: true)
                                 .padding(EdgeInsets(top: 0, leading: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0, bottom: 0, trailing: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0))
                                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: commentsModel.pages[link]!.post!.contentType == .text ? .leading : .center)
-//                                .overlay(
-//                                    if commentsModel.pages[link]!.post!.contentType == .crosspost {
-//                                        NavigationLink(destination: CommentsView(
-//                                            restorePostsScroll: $crosspostRestorePostsPlaceholder,
-//                                            link: commentsModel.pages[link]!.post!.crosspost!.linkToThread),
-//                                                       label: { EmptyView() }
-//                                        ).opacity(0)
-//                                    }
-//                                )
                             VStack(spacing: 6) {
                                 HStack(spacing: 3) {
                                     if commentsModel.pages[link]!.post!.stickied {
@@ -364,7 +355,7 @@ struct CommentView: View {
                             Text(comment.content ?? "")
                                 .fixedSize(horizontal: false, vertical: true)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .font(.system(size: 15))
+                                .font(.system(size: 15 + CGFloat(commentsModel.textSizeInrease)))
                                 .environment(\.openURL, OpenURLAction { url in
                                     if url.isImage {
                                         popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
@@ -402,13 +393,12 @@ struct CommentView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .padding(EdgeInsets(top: 0, leading: indentSize, bottom: 0, trailing: 10))
             .onTapGesture {
-                comment.isCollapsed.toggle()
-                commentsModel.pages[postLink]!.commentsCollapsed[comment.id]!.toggle()
+                commentsModel.collapseComment(link: postLink, comment: comment)
                 scrollTarget = comment.id
             }
             .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment,
                                          isEditorShowing: $isEditorShowing, postLink: postLink) }
-            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            .swipeActions(edge: commentsModel.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
                 Button { commentsModel.toggleUpvoteComment(link: postLink, comment: comment) } label: {
                     Image(systemName: "arrow.up")
                 }
@@ -417,6 +407,14 @@ struct CommentView: View {
                     Image(systemName: "arrow.down")
                 }
                 .tint(.downvoteBlue)
+            }
+            .swipeActions(edge: commentsModel.reverseSwipeControls ? .leading : .trailing, allowsFullSwipe: true) {
+                Button {
+                    scrollTarget = commentsModel.collapseCommentThread(link: postLink, comment: comment)
+                } label: {
+                    Image(systemName: "arrow.up.to.line")
+                }
+                .tint(Color(UIColor.systemBlue))
             }
         }
     }

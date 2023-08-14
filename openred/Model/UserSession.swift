@@ -15,6 +15,10 @@ class UserSessionManager: ObservableObject {
     @Published var userNames: [String] = []
     var favoriteCommunities: [String] = []
     
+    var upvoteOnSave: Bool = false
+    var reverseSwipeControls: Bool = false
+    var textSize: Int = 0
+    
     func createWebViewFor(viewName: String) {
         let webView = WKWebView()
         for (_, cookieProperties) in self.currentCookies {
@@ -132,6 +136,17 @@ class UserSessionManager: ObservableObject {
 //        }
         self.userName = nil
         self.favoriteCommunities = []
+    }
+    
+    func removeAccount(_ userName: String) {
+        var users: [String] = []
+        if let savedUsers = UserDefaults.standard.object(forKey: "users") as? [String] {
+            users = savedUsers.filter{ $0 != userName }
+            userNames = users
+            UserDefaults.standard.set(users, forKey: "users")
+        }
+        UserDefaults.standard.removeObject(forKey: "cookies_" + userName)
+        UserDefaults.standard.removeObject(forKey: "favorites_" + userName)
     }
     
     func removeWebViews(keys: [String], removeCommentViews: Bool = true) {

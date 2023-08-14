@@ -17,6 +17,7 @@ class openredApp: App {
     @StateObject var postCreateModel: PostCreateModel
     @StateObject var messageModel: MessageModel
     @StateObject var searchModel: SearchModel = SearchModel()
+    @StateObject var settingsModel: SettingsModel
     
     required init() {
         userSessionManager = UserSessionManager()
@@ -24,6 +25,7 @@ class openredApp: App {
         _commentsModel = StateObject(wrappedValue: CommentsModel(userSessionManager: self.userSessionManager))
         _postCreateModel = StateObject(wrappedValue: PostCreateModel(userSessionManager: self.userSessionManager))
         _messageModel = StateObject(wrappedValue: MessageModel(userSessionManager: self.userSessionManager))
+        _settingsModel = StateObject(wrappedValue: SettingsModel(userSessionManager: self.userSessionManager))
     }
     
     var body: some Scene {
@@ -35,6 +37,7 @@ class openredApp: App {
                 .environmentObject(postCreateModel)
                 .environmentObject(messageModel)
                 .environmentObject(searchModel)
+                .environmentObject(settingsModel)
         }
     }
 }

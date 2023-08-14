@@ -248,6 +248,9 @@ class Model: ObservableObject {
         if let saveButton = self.pages[target]!.document?.querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] .buttons .save-button a") {
             saveButton.click()
             post.isSaved.toggle()
+            if post.isSaved && userSessionManager.upvoteOnSave && !post.isUpvoted {
+                toggleUpvotePost(target: target, post: post)
+            }
         }
         return true
     }
@@ -262,7 +265,7 @@ class Model: ObservableObject {
             if community != nil {
                 self.communities = self.communities.filter { $0.id.lowercased() != target.id.lowercased() }
             } else {
-                self.communities.append(target.community!)
+                self.communities.insert(target.community!, at: 0)
             }
         }
         return true
@@ -435,6 +438,14 @@ class Model: ObservableObject {
         self.userSessionManager.userNames
             .filter{ $0.lowercased() != userName?.lowercased() }
             .sorted { $0.lowercased() < $1.lowercased() }
+    }
+    
+    var reverseSwipeControls: Bool {
+        userSessionManager.reverseSwipeControls
+    }
+    
+    var textSizeInrease: Int {
+        userSessionManager.textSize * 2
     }
 }
 

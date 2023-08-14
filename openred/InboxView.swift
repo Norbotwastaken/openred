@@ -229,18 +229,20 @@ struct MessageView: View {
                         }
                 }
             }
-            .font(.system(size: 14))
+            .font(.system(size: 14 + CGFloat(messageModel.textSizeInrease)))
         }
     }
 }
 
 struct MessageActions: View {
     @EnvironmentObject var messageModel: MessageModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @ObservedObject var message: Message
 //    @Binding var editorParentComment: Comment?
     @Binding var isEditorShowing: Bool
     @Binding var replyToMessage: Message?
     @Binding var showingBlockAlert: Bool
+    @State var restoreScrollPlaceholder: Bool = false
     
     var body: some View {
         Group {
@@ -250,20 +252,22 @@ struct MessageActions: View {
             }) {
                 Label("Reply", systemImage: "arrow.uturn.left")
             }
-            Button(action: {  }) {
-                Label("View Post", systemImage: "text.bubble")
+            if message.context != nil {
+                NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScrollPlaceholder, link: message.context!)) {
+                    Button(action: {}) {
+                        Label("View Post", systemImage: "text.bubble")
+                    }
+                }
             }
 //            Button(action: {  }) {
 //                Label("Spam", systemImage: "exclamationmark.octagon")
 //            }
-            Button(action: { showingBlockAlert = true }) {
-                Label("Block User", systemImage: "xmark")
-            }
-//            .alert("Block user", isPresented: $showingBlockAlert) {
-//                Button("Cancel", role: .cancel) {}
-//                Button("Block", role: .destructive) { messageModel.blockUser(message: message) }
-//            } message: {
-//                Text("\(message.author) will be blocked")
+            
+//            Button(action: {
+//                messageModel.blockUser(message: message)
+//                overlayModel.show("User blocked")
+//            }) {
+//                Label("Block user", systemImage: "xmark")
 //            }
         }
     }

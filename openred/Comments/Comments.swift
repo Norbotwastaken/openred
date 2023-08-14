@@ -113,6 +113,9 @@ class CommentsModel: ObservableObject {
         if let saveButton = pages[link]?.document?.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + comment.id + "\"] .buttons .save-button a").first {
             saveButton.click()
             comment.isSaved.toggle()
+            if comment.isSaved && userSessionManager.upvoteOnSave && !comment.isUpvoted {
+                toggleUpvoteComment(link: link, comment: comment)
+            }
             return true
         }
         return false
@@ -249,14 +252,35 @@ class CommentsModel: ObservableObject {
         if let saveButton = pages[link]?.document?.querySelector("#siteTable .buttons .save-button a") {
             saveButton.click()
             post.isSaved.toggle()
+            if post.isSaved && userSessionManager.upvoteOnSave && !post.isUpvoted {
+                toggleUpvotePost(link: link, post: post)
+            }
             objectWillChange.send()
             return true
         }
         return false
     }
     
+    func collapseComment(link: String, comment: Comment) {
+        pages[link]?.collapseComment(comment)
+    }
+    
+    func collapseCommentThread(link: String, comment: Comment) -> String {
+        let id = pages[link]!.collapseCommentThread(comment)
+        objectWillChange.send()
+        return id
+    }
+    
     func selectedSortingIcon(link: String) -> String {
         return CommentsModelAttributes.sortModifierIcons[pages[link]!.selectedSorting]!
+    }
+    
+    var reverseSwipeControls: Bool {
+        userSessionManager.reverseSwipeControls
+    }
+    
+    var textSizeInrease: Int {
+        userSessionManager.textSize * 2
     }
 }
 
@@ -306,5 +330,23 @@ class CommentPage: ObservableObject {
     
     func anyParentsCollapsed(comment: Comment) -> Bool {
         !comment.allParents.map{ commentsCollapsed[$0] }.filter{ $0 == true }.isEmpty
+    }
+    
+    func collapseComment(_ comment: Comment) {
+        comment.isCollapsed.toggle()
+        commentsCollapsed[comment.id]!.toggle()
+    }
+    
+    func collapseCommentThread(_ comment: Comment) -> String {
+        if comment.allParents.isEmpty {
+            comment.isCollapsed.toggle()
+            commentsCollapsed[comment.id]!.toggle()
+            return comment.id
+        } else {
+            let topLevelParent = comments.filter{ $0.id == comment.allParents[0] }.first!
+            topLevelParent.isCollapsed = true
+            commentsCollapsed[topLevelParent.id]! = true
+            return topLevelParent.id
+        }
     }
 }

@@ -39,7 +39,7 @@ struct PostRowContent: View {
                         })
                 }
                 Text(post.text!)
-                    .font(.system(size: 15))
+                    .font(.system(size: 15 + CGFloat(model.textSizeInrease)))
                     .padding(EdgeInsets(top: 0, leading: isPostOpen ? 0 : 10, bottom: 0,
                                         trailing: isPostOpen ? 0 : 10))
                     .frame(maxHeight: isPostOpen ? .infinity : 60, alignment: .leading)
@@ -95,12 +95,14 @@ struct PostRowContent: View {
                             VStack {
                                 Text("NSFW")
                                     .font(.system(size: 24))
+                                    .foregroundColor(.white)
                                     .fontWeight(.semibold)
                                     .opacity(0.8)
                                     .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
                                     .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
                                     .cornerRadius(5)
                                 Text("Sensitive content")
+                                    .foregroundColor(.white)
                                     .opacity(0.7)
                             }
                         }
@@ -132,6 +134,7 @@ struct PostRowContent: View {
                     if post.nsfw {
                         VStack {
                             Text("NSFW")
+                                .foregroundColor(.white)
                                 .font(.system(size: 24))
                                 .fontWeight(.semibold)
                                 .opacity(0.8)
@@ -139,6 +142,7 @@ struct PostRowContent: View {
                                 .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
                                 .cornerRadius(5)
                             Text("Sensitive content")
+                                .foregroundColor(.white)
                                 .opacity(0.7)
                         }
                     } else {
@@ -150,6 +154,7 @@ struct PostRowContent: View {
                     Text("VIDEO")
                         .font(.system(size: 15))
                         .fontWeight(.semibold)
+                        .foregroundColor(.white)
                         .opacity(0.6)
                         .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
                         .background(.red.opacity(0.5))
@@ -191,6 +196,7 @@ struct PostRowContent: View {
                         VStack {
                             Text("NSFW")
                                 .font(.system(size: 24))
+                                .foregroundColor(.white)
                                 .fontWeight(.semibold)
                                 .opacity(0.8)
                                 .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
@@ -240,12 +246,14 @@ struct PostRowContent: View {
                             VStack {
                                 Text("NSFW")
                                     .font(.system(size: 24))
+                                    .foregroundColor(.white)
                                     .fontWeight(.semibold)
                                     .opacity(0.8)
                                     .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
                                     .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
                                     .cornerRadius(5)
                                 Text("Sensitive content")
+                                    .foregroundColor(.white)
                                     .opacity(0.7)
                             }
                         }
@@ -271,6 +279,7 @@ struct PostRowContent: View {
                 Text("ALBUM")
                     .font(.system(size: 15))
                     .fontWeight(.semibold)
+                    .foregroundColor(.white)
                     .opacity(0.7)
                     .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
                     .background(.green.opacity(0.4))

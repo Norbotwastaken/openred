@@ -24,7 +24,8 @@ struct PostRow: View {
                     .font(.system(size: 12))
                 if post.nsfw {
                     Text("NSFW")
-                        .font(.system(size: 14))
+                        .foregroundColor(.white)
+                        .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
                         .fontWeight(.semibold)
                         .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
                         .background(Color(red: 1, green: 0, blue: 93 / 255))
@@ -64,6 +65,7 @@ struct PostCommentRow: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if comment.nsfw {
                     Text("NSFW")
+                        .foregroundColor(.white)
                         .font(.system(size: 14))
                         .fontWeight(.semibold)
                         .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
@@ -132,7 +134,7 @@ struct PostRowFooter: View {
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
-                    .frame(alignment: .leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .navigationDestination(isPresented: $isPresented) {
                         PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
                     }

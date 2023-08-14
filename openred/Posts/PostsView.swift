@@ -64,7 +64,7 @@ struct PostsView: View {
                                 if !item.isComment {
                                     PostRow(post: item.post!, target: $target)
                                         .contextMenu{ PostRowMenu(post: item.post!, target: $target, showingSaveDialog: $showingSaveDialog) }
-                                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                        .swipeActions(edge: model.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
                                             Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
                                                 Image(systemName: "arrow.up")
                                             }
@@ -198,6 +198,10 @@ struct PostsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .padding(EdgeInsets(top: 50, leading: 0, bottom: 0, trailing: 0))
                 }
+            } else {
+                ProgressView()
+                    .padding(EdgeInsets(top: 80, leading: 0, bottom: 0, trailing: 0))
+                    .frame(maxHeight: .infinity, alignment: .top)
             }
         }
     }

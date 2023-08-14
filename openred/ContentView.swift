@@ -12,6 +12,7 @@ import SafariServices
 struct ContentView: View {
     @EnvironmentObject var popupViewModel: PopupViewModel
     @EnvironmentObject var model: Model
+    @EnvironmentObject var settingsModel: SettingsModel
     @State var communitiesSidebarVisible = true
     @State var loginPopupShowing = false
     @State var showPosts = true
@@ -22,26 +23,26 @@ struct ContentView: View {
         ZStack {
             TabView(selection: $tabSelection) {
                 CommunitiesStack(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts, target: $target)
-                .tabItem {
-                    Label("Feed", systemImage: "newspaper")
-                }
-                .tag(1)
+                    .tabItem {
+                        Label("Feed", systemImage: "newspaper")
+                    }
+                    .tag(1)
                 InboxView()
-                .tabItem {
-                    Label("Inbox", systemImage: "envelope")
-                }
-                .badge(model.messageCount)
-                .tag(2)
+                    .tabItem {
+                        Label("Inbox", systemImage: "envelope")
+                    }
+                    .badge(model.messageCount)
+                    .tag(2)
                 SearchView(tabSelection: $tabSelection, showPosts: $showPosts, target: $target)
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                }
-                .tag(3)
-                Text("Settings")
-                .tabItem {
-                    Label("Settings", systemImage: "gear")
-                }
-                .tag(4)
+                    .tabItem {
+                        Label("Search", systemImage: "magnifyingglass")
+                    }
+                    .tag(3)
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gear")
+                    }
+                    .tag(4)
             }
             
             if popupViewModel.isShowing {
@@ -64,6 +65,8 @@ struct ContentView: View {
             }
             MessageOverlay()
         }
+        .preferredColorScheme(settingsModel.theme == "dark" ? .dark :
+            settingsModel.theme == "light" ? .light : .none)
     }
     
     private func dismissPopup() {

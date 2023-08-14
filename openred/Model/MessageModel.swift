@@ -117,4 +117,8 @@ class MessageModel: ObservableObject {
             }
         }
     }
+    
+    var textSizeInrease: Int {
+        userSessionManager.textSize * 2
+    }
 }
