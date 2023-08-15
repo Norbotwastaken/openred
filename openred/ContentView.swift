@@ -18,6 +18,7 @@ struct ContentView: View {
     @State var showPosts = true
     @State var target: CommunityOrUser = CommunityOrUser(community: Community("all", isMultiCommunity: true))
     @State private var tabSelection = 1
+    @State private var firstUnlock: Bool = true
     
     var body: some View {
         ZStack {
@@ -44,26 +45,62 @@ struct ContentView: View {
                     }
                     .tag(4)
             }
+            .onAppear {
+                // correct the transparency bug for Tab bars
+                let tabBarAppearance = UITabBarAppearance()
+                tabBarAppearance.configureWithOpaqueBackground()
+                UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+                // correct the transparency bug for Navigation bars
+                let navigationBarAppearance = UINavigationBarAppearance()
+                navigationBarAppearance.configureWithOpaqueBackground()
+                UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+            }
             
             if popupViewModel.isShowing {
                 MediaPopupContent()
-                .ignoresSafeArea()
-                .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
-                    .onEnded { value in
-                        switch(value.translation.width, value.translation.height) {
-                        case (...0, -30...30): print("left swipe")
-                        case (0..., -30...30): print("right swipe")
-                        case (-100...100, ...0): dismissPopup() // up swipe
-                        case (-100...100, 0...): dismissPopup() // down swipe
-                        default: print("no clue")
+                    .ignoresSafeArea()
+                    .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
+                        .onEnded { value in
+                            switch(value.translation.width, value.translation.height) {
+                            case (...0, -30...30): print("left swipe")
+                            case (0..., -30...30): print("right swipe")
+                            case (-100...100, ...0): dismissPopup() // up swipe
+                            case (-100...100, 0...): dismissPopup() // down swipe
+                            default: print("no clue")
+                            }
                         }
-                    }
-                )
+                    )
             }
             if loginPopupShowing {
                 LoginPopup(loginPopupShowing: $loginPopupShowing)
             }
             MessageOverlay()
+            if settingsModel.lockApp && !settingsModel.isUnlocked {
+                ZStack {
+                    Rectangle()
+                        .fill(Color(UIColor.systemGray6))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .ignoresSafeArea()
+                        .onAppear {
+                            if firstUnlock {
+                                settingsModel.authenticate()
+                                firstUnlock = false
+                            } else {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                                    settingsModel.authenticate()
+                                }
+                            }
+                        }
+                    Button(action: { settingsModel.authenticate() }) {
+                        Label("Unlock", systemImage: "key.horizontal")
+                    }
+                }
+            }
+//            } else {
+//                Spacer().onAppear() {
+//                    settingsModel.authenticate()
+//                }
+//            }
         }
         .preferredColorScheme(settingsModel.theme == "dark" ? .dark :
             settingsModel.theme == "light" ? .light : .none)

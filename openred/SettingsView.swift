@@ -15,6 +15,7 @@ struct SettingsView: View {
     @State private var profileViewIsActive = false
     @State private var upvoteOnSave = false
     @State private var reverseSwipeControls = false
+    @State private var lockApp = false
     @State private var textSizeSliderValue : Float = 0.0
     
     var body: some View {
@@ -32,7 +33,7 @@ struct SettingsView: View {
                                 .onChange(of: upvoteOnSave) { _ in
                                     settingsModel.setUpvoteOnSave(upvoteOnSave)
                                 }
-                            Toggle("Reverse swipe actions", isOn: $reverseSwipeControls)
+                            Toggle("Invert swipe actions", isOn: $reverseSwipeControls)
                                 .onChange(of: reverseSwipeControls) { _ in
                                     settingsModel.setReverseSwipeControls(reverseSwipeControls)
                                 }
@@ -62,6 +63,14 @@ struct SettingsView: View {
                                 }
                             }
                         }
+                    Section(header: Label("Privacy".uppercased(), systemImage: "faceid").font(.system(size: 16)),
+                            footer: Text("If Face ID, Touch ID or system passcode " +
+                                         "is set, you will be requested to unlock the app when opening.")) {
+                            Toggle("Application lock", isOn: $lockApp)
+                                .onChange(of: lockApp) { _ in
+                                    settingsModel.setLockApp(lockApp)
+                                }
+                        }
                     Section(header: Label("Accounts".uppercased(), systemImage: "person.2")
                         .font(.system(size: 16))) {
                             ForEach(settingsModel.userNames, id: \.self) { userName in
@@ -79,6 +88,7 @@ struct SettingsView: View {
                 selectedTheme = settingsModel.theme
                 upvoteOnSave = settingsModel.upvoteOnSave
                 reverseSwipeControls = settingsModel.reverseSwipeControls
+                lockApp = settingsModel.lockApp
                 textSizeSliderValue = Float(settingsModel.textSize)
             }
         }

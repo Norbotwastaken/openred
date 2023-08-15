@@ -107,6 +107,7 @@
 		AEBA65B12A881F8B00431529 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		AEBA65B32A8A1AD000431529 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AEBA65B52A8A236B00431529 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
+		AEC4BB6A2A8B865B005149B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,6 +231,7 @@
 		AE89D4C22A2CCB3300889B3E /* openred */ = {
 			isa = PBXGroup;
 			children = (
+				AEC4BB6A2A8B865B005149B3 /* Info.plist */,
 				AE4A96782A3F4AA100BA96CF /* Comments */,
 				AE4A96572A33A25500BA96CF /* Communities */,
 				AE4A962D2A2F96A100BA96CF /* Posts */,
@@ -650,6 +652,8 @@
 				DEVELOPMENT_TEAM = KUMFMTRJ3C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = openred/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate with FaceID";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save images to your photo library";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -684,6 +688,8 @@
 				DEVELOPMENT_TEAM = KUMFMTRJ3C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = openred/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate with FaceID";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save images to your photo library";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

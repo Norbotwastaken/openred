@@ -18,6 +18,7 @@ class UserSessionManager: ObservableObject {
     var upvoteOnSave: Bool = false
     var reverseSwipeControls: Bool = false
     var textSize: Int = 0
+    var lockApp: Bool = false
     
     func createWebViewFor(viewName: String) {
         let webView = WKWebView()

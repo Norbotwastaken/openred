@@ -6,14 +6,21 @@
 //
 
 import Foundation
+import LocalAuthentication
+import NotificationCenter
 
 class SettingsModel: ObservableObject {
+    @Published var isUnlocked: Bool = false
     @Published var theme: String = "automatic"
     private var userSessionManager: UserSessionManager
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
         loadDefaults()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.lock(notification:)),
+                                               name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.unlock(notification:)),
+                                               name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     func loadDefaults() {
@@ -40,6 +47,12 @@ class SettingsModel: ObservableObject {
         } else {
             UserDefaults.standard.set(userSessionManager.textSize, forKey: "textSize")
         }
+        
+        if let savedLockApp = UserDefaults.standard.object(forKey: "lockApp") as? Bool {
+            userSessionManager.lockApp = savedLockApp
+        } else {
+            UserDefaults.standard.set(userSessionManager.lockApp, forKey: "lockApp")
+        }
     }
     
     func setTheme(_ newTheme: String) {
@@ -62,9 +75,49 @@ class SettingsModel: ObservableObject {
         UserDefaults.standard.set(Int(newValue) - 1, forKey: "textSize")
     }
     
+    func setLockApp(_ newValue: Bool) {
+        userSessionManager.lockApp = newValue
+        UserDefaults.standard.set(newValue, forKey: "lockApp")
+    }
+    
     func removeUser(_ userName: String) {
         userSessionManager.removeAccount(userName)
         objectWillChange.send()
+    }
+    
+    func authenticate() {
+        let context = LAContext()
+        var error: NSError?
+
+        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
+            let reason = "Authenticate to unlock the app."
+
+            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, authenticationError in
+
+                if success {
+                    Task { @MainActor in
+                        self.isUnlocked = true
+                    }
+                } else {
+                    // error
+                }
+            }
+        } else {
+            // no unlock
+        }
+    }
+    
+    @objc private func lock(notification: Notification) {
+        if lockApp {
+            self.isUnlocked = false
+            objectWillChange.send()
+        }
+    }
+    
+    @objc private func unlock(notification: Notification) {
+        if lockApp {
+            authenticate()
+        }
     }
     
     var userNames: [String] {
@@ -81,5 +134,9 @@ class SettingsModel: ObservableObject {
     
     var textSize: Int {
         self.userSessionManager.textSize + 1
+    }
+    
+    var lockApp: Bool {
+        self.userSessionManager.lockApp
     }
 }
