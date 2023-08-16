@@ -130,6 +130,11 @@ class Post: Identifiable, ObservableObject {
         else if (jsonPost.post_hint != nil && jsonPost.post_hint! == "rich:video") {
             self.contentType = ContentType.video
             self.videoLink = jsonPost.url
+            
+            let specialHosts = ["youtu.be", "youtube.com", "redgifs.com"]
+            if jsonPost.url != nil && (specialHosts.filter{ jsonPost.url!.contains($0) }.first != nil) {
+                self.contentType = .link
+            }
         }
         else if (jsonPost.post_hint == nil || jsonPost.post_hint == "link") {
             if jsonPost.url!.contains("imgur.com") && jsonPost.url!.contains(".gifv") {

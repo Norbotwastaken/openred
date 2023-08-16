@@ -96,11 +96,6 @@ struct ContentView: View {
                     }
                 }
             }
-//            } else {
-//                Spacer().onAppear() {
-//                    settingsModel.authenticate()
-//                }
-//            }
         }
         .preferredColorScheme(settingsModel.theme == "dark" ? .dark :
             settingsModel.theme == "light" ? .light : .none)

@@ -282,6 +282,10 @@ class CommentsModel: ObservableObject {
     var textSizeInrease: Int {
         userSessionManager.textSize * 2
     }
+    
+    var commentTheme: String {
+        userSessionManager.commentTheme
+    }
 }
 
 struct CommentsModelAttributes {

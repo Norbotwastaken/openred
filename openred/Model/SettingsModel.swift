@@ -8,6 +8,7 @@
 import Foundation
 import LocalAuthentication
 import NotificationCenter
+import StoreKit
 
 class SettingsModel: ObservableObject {
     @Published var isUnlocked: Bool = false
@@ -53,6 +54,12 @@ class SettingsModel: ObservableObject {
         } else {
             UserDefaults.standard.set(userSessionManager.lockApp, forKey: "lockApp")
         }
+        
+        if let savedCommentTheme = UserDefaults.standard.object(forKey: "commentTheme") as? String {
+            userSessionManager.commentTheme = savedCommentTheme
+        } else {
+            UserDefaults.standard.set(userSessionManager.commentTheme, forKey: "commentTheme")
+        }
     }
     
     func setTheme(_ newTheme: String) {
@@ -78,6 +85,11 @@ class SettingsModel: ObservableObject {
     func setLockApp(_ newValue: Bool) {
         userSessionManager.lockApp = newValue
         UserDefaults.standard.set(newValue, forKey: "lockApp")
+    }
+    
+    func setCommentTheme(_ newValue: String) {
+        userSessionManager.commentTheme = newValue
+        UserDefaults.standard.set(newValue, forKey: "commentTheme")
     }
     
     func removeUser(_ userName: String) {
@@ -138,5 +150,9 @@ class SettingsModel: ObservableObject {
     
     var lockApp: Bool {
         self.userSessionManager.lockApp
+    }
+    
+    var commentTheme: String {
+        self.userSessionManager.commentTheme
     }
 }

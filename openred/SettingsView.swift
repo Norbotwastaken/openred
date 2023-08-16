@@ -11,7 +11,9 @@ struct SettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var popupViewModel: PopupViewModel
     var themes = ["automatic", "light", "dark"]
+    var commentThemes = ["default", "fields"]
     @State private var selectedTheme = "automatic"
+    @State private var selectedCommentTheme = "default"
     @State private var profileViewIsActive = false
     @State private var upvoteOnSave = false
     @State private var reverseSwipeControls = false
@@ -62,6 +64,14 @@ struct SettingsView: View {
                                     settingsModel.setTextSize(textSizeSliderValue)
                                 }
                             }
+                            Picker("Comment color theme", selection: $selectedCommentTheme) {
+                                ForEach(commentThemes, id: \.self) {
+                                    Text($0.capitalized)
+                                }
+                            }.onChange(of: selectedCommentTheme) { _ in
+                                settingsModel.setCommentTheme(selectedCommentTheme)
+                            }
+                            .pickerStyle(.inline)
                         }
                     Section(header: Label("Privacy".uppercased(), systemImage: "faceid").font(.system(size: 16)),
                             footer: Text("If Face ID, Touch ID or system passcode " +
@@ -90,6 +100,7 @@ struct SettingsView: View {
                 reverseSwipeControls = settingsModel.reverseSwipeControls
                 lockApp = settingsModel.lockApp
                 textSizeSliderValue = Float(settingsModel.textSize)
+                selectedCommentTheme = settingsModel.commentTheme
             }
         }
     }

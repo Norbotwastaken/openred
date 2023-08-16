@@ -19,6 +19,7 @@ class UserSessionManager: ObservableObject {
     var reverseSwipeControls: Bool = false
     var textSize: Int = 0
     var lockApp: Bool = false
+    var commentTheme: String = "default"
     
     func createWebViewFor(viewName: String) {
         let webView = WKWebView()

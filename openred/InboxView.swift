@@ -164,7 +164,9 @@ struct MessageView: View {
                     Spacer()
                     Menu {
                         MessageActions(message: message, isEditorShowing: $isEditorShowing,
-                                       replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert)
+                                       replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert,
+                                       isInternalPostPresented: $isInternalPresented, safariLink: $safariLink,
+                                       internalIsPost: $internalIsPost)
                     } label: {
                         ZStack {
                             Spacer()
@@ -231,6 +233,11 @@ struct MessageView: View {
             }
             .font(.system(size: 14 + CGFloat(messageModel.textSizeInrease)))
         }
+        .contextMenu {
+            MessageActions(message: message, isEditorShowing: $isEditorShowing,
+                           replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert,
+                           isInternalPostPresented: $isInternalPresented, safariLink: $safariLink,
+                           internalIsPost: $internalIsPost)}
     }
 }
 
@@ -242,33 +249,48 @@ struct MessageActions: View {
     @Binding var isEditorShowing: Bool
     @Binding var replyToMessage: Message?
     @Binding var showingBlockAlert: Bool
+    @Binding var isInternalPostPresented: Bool
+    @Binding var safariLink: URL?
+    @Binding var internalIsPost: Bool
     @State var restoreScrollPlaceholder: Bool = false
     
     var body: some View {
         Group {
-            Button(action: {
-                replyToMessage = message
-                isEditorShowing = true
-            }) {
-                Label("Reply", systemImage: "arrow.uturn.left")
+            if !message.isAdminMessage {
+                Button(action: {
+                    replyToMessage = message
+                    isEditorShowing = true
+                }) {
+                    Label("Reply", systemImage: "arrow.uturn.left")
+                }
             }
-            if message.context != nil {
-                NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScrollPlaceholder, link: message.context!)) {
-                    Button(action: {}) {
+            if message.context != "" {
+//                NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScrollPlaceholder, link: message.context!)) {
+                    Button(action: {
+//                        safariLink
+                        var link: String = "http://old.reddit.com"
+                        var pathComponents = message.context.components(separatedBy: "/")
+                        for i in 1...4 {
+                            link = link + "/" + pathComponents[i]
+                        }
+                        safariLink = URL(string: link)!
+                        internalIsPost = true
+                        isInternalPostPresented = true
+                    }) {
                         Label("View Post", systemImage: "text.bubble")
                     }
-                }
+//                }
             }
 //            Button(action: {  }) {
 //                Label("Spam", systemImage: "exclamationmark.octagon")
 //            }
             
-//            Button(action: {
-//                messageModel.blockUser(message: message)
-//                overlayModel.show("User blocked")
-//            }) {
-//                Label("Block user", systemImage: "xmark")
-//            }
+            Button(action: {
+                messageModel.blockUser(message: message)
+                overlayModel.show("User blocked")
+            }) {
+                Label("Block user", systemImage: "xmark")
+            }
         }
     }
 }

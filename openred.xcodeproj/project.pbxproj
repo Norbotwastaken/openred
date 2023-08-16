@@ -46,6 +46,7 @@
 		AEBA65B22A881F8B00431529 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B12A881F8B00431529 /* SearchModel.swift */; };
 		AEBA65B42A8A1AD000431529 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B32A8A1AD000431529 /* SettingsView.swift */; };
 		AEBA65B62A8A236B00431529 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B52A8A236B00431529 /* SettingsModel.swift */; };
+		AEC4BB6C2A8CD382005149B3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEC4BB6B2A8CD382005149B3 /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,8 @@
 		AEBA65B32A8A1AD000431529 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AEBA65B52A8A236B00431529 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		AEC4BB6A2A8B865B005149B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		AEC4BB6B2A8CD382005149B3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		AEC4BB6D2A8CD519005149B3 /* subscription.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = subscription.storekit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +120,7 @@
 			files = (
 				5D287CB7879D0BE7B9C2EAC0 /* Pods_openred.framework in Frameworks */,
 				AE4A966F2A39DEF400BA96CF /* SwiftUIGIF in Frameworks */,
+				AEC4BB6C2A8CD382005149B3 /* StoreKit.framework in Frameworks */,
 				AE4A96662A37BDE100BA96CF /* VideoPlayer in Frameworks */,
 				AE4A967F2A405D1600BA96CF /* RichText in Frameworks */,
 			);
@@ -142,6 +146,7 @@
 		04A98D6259E2AAD57AEE14EF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AEC4BB6B2A8CD382005149B3 /* StoreKit.framework */,
 				7D1A39B277A0211F201F088F /* Pods_openred.framework */,
 			);
 			name = Frameworks;
@@ -246,6 +251,7 @@
 				AE4A96702A39ED3200BA96CF /* GifView.swift */,
 				AE4A96882A48DEBD00BA96CF /* Search.swift */,
 				AEBA65B32A8A1AD000431529 /* SettingsView.swift */,
+				AEC4BB6D2A8CD519005149B3 /* subscription.storekit */,
 			);
 			path = openred;
 			sourceTree = "<group>";

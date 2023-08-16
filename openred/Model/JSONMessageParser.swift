@@ -52,8 +52,8 @@ class JSONMessage: Codable {
 //    var name: String
     var created: Int
 //    var created_utc: String
-    var context: String? // link
-//    var distinguished: String?
+    var context: String // link
+    var distinguished: String?
     
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
@@ -61,7 +61,7 @@ class JSONMessage: Codable {
         do { try self.parent_id = container.decode(String?.self, forKey: .parent_id) } catch {}
         do { try self.num_comments = container.decode(Int?.self, forKey: .num_comments) } catch {}
         do { try self.link_title = container.decode(String?.self, forKey: .link_title) } catch {}
-        do { try self.context = container.decode(String?.self, forKey: .context) } catch {}
+        do { try self.distinguished = container.decode(String?.self, forKey: .distinguished) } catch {}
         do {
             var text: String = ""
             try text = String(container.decode(AttributedString?.self, forKey: .body)!.characters[...])
@@ -69,6 +69,7 @@ class JSONMessage: Codable {
         } catch {}
         
         try self.id = container.decode(String.self, forKey: .id)
+        try self.context = container.decode(String.self, forKey: .context)
         try self.subject = container.decode(String.self, forKey: .subject)
         try self.author = container.decode(String.self, forKey: .author)
         try self.new = container.decode(Bool.self, forKey: .new)
@@ -89,9 +90,10 @@ class Message: Identifiable, ObservableObject {
     var link_title: String?
     var dest: String
     var created: Int
-    var context: String?
+    var context: String
     var age: String = ""
     var type: String
+    var isAdminMessage: Bool = false
     
     init(json: JSONMessage, type: String) {
         self.subreddit = json.subreddit
@@ -107,6 +109,9 @@ class Message: Identifiable, ObservableObject {
         self.created = json.created
         self.context = json.context
         self.type = type
+        if json.distinguished == "admin" {
+            self.isAdminMessage = true
+        }
         
         self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(json.created)).timeAgoDisplay())
     }
