@@ -117,7 +117,7 @@ class JSONAbout: Codable {
 //    var user_flair_css_class: String
 //    var allow_images: String
 //    var lang: String
-//    var whitelist_status: String
+    var whitelist_status: String?
 //    var url: String
 //    var created_utc: String
 //    var banner_size: String
@@ -132,6 +132,7 @@ class JSONAbout: Codable {
         do { try self.header_title = container.decode(String?.self, forKey: .header_title) } catch {}
         do { try self.active_user_count = container.decode(Int?.self, forKey: .active_user_count) } catch {}
         do { try self.subscribers = container.decode(Int?.self, forKey: .subscribers) } catch {}
+        do { try self.whitelist_status = container.decode(String?.self, forKey: .whitelist_status) } catch {}
         do {
             var text: String = ""
             var attributedText: AttributedString?
@@ -174,6 +175,7 @@ class AboutCommunity: ObservableObject {
     var headerTitle: String?
     var description: AttributedString?
 //    var whitelistStatus: String
+    var isAdFriendly: Bool
     var created: String
     
     init(json: JSONAbout) {
@@ -189,6 +191,7 @@ class AboutCommunity: ObservableObject {
         self.over18 = json.over18
         self.headerTitle = json.header_title
         self.description = json.description
+        self.isAdFriendly = json.whitelist_status == "all_ads"
 //        self.whitelistStatus = json.whitelist_status
         self.created = ""
         self.created = displayAge(Date(timeIntervalSince1970: TimeInterval(json.created)).timeAgoDisplay())

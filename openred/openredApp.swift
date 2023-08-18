@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 class openredApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var userSessionManager: UserSessionManager
     @StateObject private var model: Model
     @StateObject var popupViewModel = PopupViewModel()

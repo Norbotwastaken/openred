@@ -17,6 +17,7 @@ struct PostsView: View {
     @Binding var loadPosts: Bool
 //    @State var showComments = false
 //    @State var commentInView = ""
+    @StateObject private var nativeViewModel = NativeAdViewModel()
     @State var isPostCreatorShowing: Bool = false
     @State var sortBy: String?
     @State var sortTime: String?
@@ -115,6 +116,17 @@ struct PostsView: View {
                                             .opacity(0)
                                         )
                                 }
+                                if item.isAdMarker && target.isAdFriendly {
+                                    NativeAdView(nativeViewModel: nativeViewModel)
+                                        .frame(height: 310)
+                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                        .listRowSeparator(.hidden)
+                                    Rectangle()
+                                        .fill(Color(UIColor.systemGray5)
+                                            .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
+                                        .frame(maxWidth: .infinity, maxHeight: 5)
+                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                }
                             }
                         }
                         .listStyle(PlainListStyle())
@@ -150,6 +162,9 @@ struct PostsView: View {
                         .refreshable {
                             model.loadCommunity(community: target, sortBy: sortBy, sortTime: sortTime)
                         }
+                    }
+                    .onAppear {
+                        nativeViewModel.refreshAd()
                     }
                     if isPostCreatorShowing {
                         CreatePostForm(community: model.pages[target.getCode()]!.selectedCommunity.community!, isShowing: $isPostCreatorShowing)

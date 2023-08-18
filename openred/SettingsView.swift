@@ -29,6 +29,13 @@ struct SettingsView: View {
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
                 List {
+                    Section() {
+                        NavigationLink {
+                            BuyPremiumView()
+                        } label: {
+                            Text("Upgrade to premium")
+                        }
+                    }
                     Section(header: Label("General".uppercased(), systemImage: "gear")
                         .font(.system(size: 16))) {
                             Toggle("Upvote items on save", isOn: $upvoteOnSave)
@@ -102,6 +109,39 @@ struct SettingsView: View {
                 textSizeSliderValue = Float(settingsModel.textSize)
                 selectedCommentTheme = settingsModel.commentTheme
             }
+        }
+    }
+}
+
+struct BuyPremiumView: View {
+    @EnvironmentObject var model: Model
+    @EnvironmentObject var settingsModel: SettingsModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        ZStack {
+            List {
+                Text("No more ads for you")
+            }
+            VStack {
+                ZStack {
+                    Rectangle()
+                        .fill(Color(UIColor.systemBackground))
+                        .frame(maxWidth: .infinity, maxHeight: 200, alignment: .bottom)
+                    VStack {
+//                        Text(settingsModel.products[0].displayPrice)
+                        Button {
+                            
+                        } label: {
+                            Text("Upgrade to premium")
+                        }
+                    }
+                    .padding()
+                    .frame(alignment: .bottom)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
     }
 }

@@ -50,13 +50,14 @@ class JSONDataLoader {
                     var items: [PostOrComment] = []
                     for i in postsWrapper.data.children.indices {
                         let wrapper = postsWrapper.data.children[i]
+                        let isAdMarker = (i == 5)
                         let isActiveLoadMarker = (i == postsWrapper.data.children.count - 7)
                         if wrapper.data != nil {
                             items.append(PostOrComment(post: Post(jsonPost: wrapper.data!),
-                                                       isActiveLoadMarker: isActiveLoadMarker))
+                                                       isActiveLoadMarker: isActiveLoadMarker, isAdMarker: isAdMarker))
                         } else if wrapper.commentData != nil {
                             items.append(PostOrComment(comment: Comment(jsonComment: wrapper.commentData!),
-                                                       isActiveLoadMarker: isActiveLoadMarker))
+                                                       isActiveLoadMarker: isActiveLoadMarker, isAdMarker: isAdMarker))
                         }
                         
                     }

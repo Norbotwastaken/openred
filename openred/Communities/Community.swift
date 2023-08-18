@@ -44,9 +44,9 @@ class CommunityOrUser: Identifiable, ObservableObject {
         user != nil
     }
     
-//    func getLinkPath() -> String? {
-//        explicitURL?.pathExtension
-//    }
+    var isAdFriendly: Bool {
+        community != nil && community!.isAdFriendly
+    }
     
     func getCode() -> String {
         isUser ? "user/" + user!.name.lowercased() : "r/" + community!.name.lowercased()
@@ -73,6 +73,10 @@ class Community: Identifiable, ObservableObject {
         self.isMultiCommunity = isMultiCommunity
         self.displayName = displayName
         self.path = path
+    }
+    
+    var isAdFriendly: Bool {
+        about != nil && about!.isAdFriendly
     }
 }
 
