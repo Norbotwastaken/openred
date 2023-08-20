@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ApphudSDK
 
 struct SettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
@@ -29,11 +30,13 @@ struct SettingsView: View {
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
                 List {
-                    Section() {
-                        NavigationLink {
-                            BuyPremiumView()
-                        } label: {
-                            Text("Upgrade to premium")
+                    if !settingsModel.hasPremium {
+                        Section() {
+                            NavigationLink {
+                                BuyPremiumView()
+                            } label: {
+                                Text("Upgrade to premium")
+                            }
                         }
                     }
                     Section(header: Label("General".uppercased(), systemImage: "gear")
@@ -80,24 +83,26 @@ struct SettingsView: View {
                             }
                             .pickerStyle(.inline)
                         }
-                    Section(header: Label("Privacy".uppercased(), systemImage: "faceid").font(.system(size: 16)),
-                            footer: Text("If Face ID, Touch ID or system passcode " +
-                                         "is set, you will be requested to unlock the app when opening.")) {
+                    if settingsModel.hasPremium {
+                        Section(header: Label("Privacy".uppercased(), systemImage: "faceid").font(.system(size: 16)),
+                                footer: Text("If Face ID, Touch ID or system passcode " +
+                                             "is set, you will be requested to unlock the app when opening.")) {
                             Toggle("Application lock", isOn: $lockApp)
                                 .onChange(of: lockApp) { _ in
                                     settingsModel.setLockApp(lockApp)
                                 }
                         }
-                    Section(header: Label("Accounts".uppercased(), systemImage: "person.2")
-                        .font(.system(size: 16))) {
-                            ForEach(settingsModel.userNames, id: \.self) { userName in
-                                NavigationLink {
-                                    UserSettingsView(userName: userName)
-                                } label: {
-                                    Text(userName)
+                        Section(header: Label("Accounts".uppercased(), systemImage: "person.2")
+                            .font(.system(size: 16))) {
+                                ForEach(settingsModel.userNames, id: \.self) { userName in
+                                    NavigationLink {
+                                        UserSettingsView(userName: userName)
+                                    } label: {
+                                        Text(userName)
+                                    }
                                 }
                             }
-                        }
+                    }
                 }
                 .listStyle(.sidebar)
             }
@@ -118,31 +123,103 @@ struct BuyPremiumView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
     @Environment(\.dismiss) var dismiss
+    @State var isPurchasing = false
     
     var body: some View {
         ZStack {
             List {
-                Text("No more ads for you")
+                PremiumFeatureView(iconName: "square.text.square",
+                                   color: Color(UIColor.systemRed),
+                                   title: "Ad-free Experience",
+                                   dedscription: "Enjoy browsing without interruptions from advertisements.")
+                PremiumFeatureView(iconName: "person",
+                                   color: Color(UIColor.systemGreen),
+                                   title: "Multiple Accounts",
+                                   dedscription: "Add multiple accounts to browse and comment from.")
+                PremiumFeatureView(iconName: "faceid",
+                                   color: Color(UIColor.systemBlue),
+                                   title: "FaceID & Passcode",
+                                   dedscription: "For added security, require passcode or FaceID scan to unlock OpenRed.")
+                PremiumFeatureView(iconName: "app.gift",
+                                   color: Color(UIColor.systemGray2),
+                                   title: "Custom App Icons",
+                                   dedscription: "Choose one of our custom atrwork designs to personalise" +
+                                   " the app icon on your home screen.")
             }
             VStack {
                 ZStack {
                     Rectangle()
                         .fill(Color(UIColor.systemBackground))
-                        .frame(maxWidth: .infinity, maxHeight: 200, alignment: .bottom)
+                        .frame(maxWidth: .infinity, maxHeight: 150, alignment: .bottom)
                     VStack {
-//                        Text(settingsModel.products[0].displayPrice)
+                        Divider()
+                        Text(settingsModel.premiumProduct!.displayPrice + " / month")
+//                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                         Button {
-                            
+                            purchasePremium()
                         } label: {
                             Text("Upgrade to premium")
+                                .padding()
+                                .background(Color(UIColor.systemBlue))
+                                .cornerRadius(20)
+                                .foregroundColor(.white)
+                                .font(.system(size: 18))
+                                .fontWeight(.semibold)
+                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
                         }
                     }
-                    .padding()
+                    .background(Color(UIColor.systemBackground))
+//                    .padding()
                     .frame(alignment: .bottom)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
+    }
+    
+    func purchasePremium() {
+        if settingsModel.premiumProduct != nil {
+            Task { @MainActor in
+                let result = await Apphud.purchase(settingsModel.premiumProduct!, isPurchasing: $isPurchasing)
+                if result.success {
+                    print("successful purchase.")
+                    settingsModel.hasPremium = true
+                    dismiss()
+                }
+            }
+        }
+    }
+}
+
+struct PremiumFeatureView: View {
+    var iconName: String
+    var color: Color
+    var title: String
+    var dedscription: String
+    var fontSize: Int?
+    
+    var body: some View {
+        HStack(spacing: 20) {
+            Image(systemName: iconName)
+                .foregroundColor(.white)
+                .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+                .background(color)
+                .cornerRadius(12)
+                .font(.system(size: CGFloat(integerLiteral: fontSize ?? 40)))
+            VStack(spacing: 8) {
+                Text(title)
+                    .fontWeight(.bold)
+                    .font(.system(size: 18))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(dedscription)
+                    .font(.system(size: 14))
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        }
+        .padding(EdgeInsets(top: 8, leading: 5, bottom: 8, trailing: 5))
     }
 }
 

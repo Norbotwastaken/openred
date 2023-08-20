@@ -281,6 +281,7 @@ class JSONAboutUser: Codable {
 //    var snoovatar_img: String
     var comment_karma: Int
     var accept_followers: Bool
+    var has_subscribed_to_premium: Bool?
 //    var has_subscribed: Bool
 //    var accept_pms: Bool
 }
@@ -359,6 +360,7 @@ class AboutUser: Identifiable, ObservableObject {
     var display_name_prefixed: String
 //    var user_is_moderator: Bool
     var public_description: String
+    var hasPremium: Bool = false
     
     init(json: JSONAboutUser) {
         self.is_friend = json.is_friend
@@ -376,6 +378,9 @@ class AboutUser: Identifiable, ObservableObject {
         self.created = json.created
         self.comment_karma = json.comment_karma
         self.accept_followers = json.accept_followers
+        if json.has_subscribed_to_premium == true {
+            self.hasPremium = true
+        }
 //        self.has_subscribed = json.has_subscribed
 //        self.accept_pms = json.accept_pms
 //        self.user_is_contributor = json.subreddit.user_is_contributor

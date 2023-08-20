@@ -15,7 +15,8 @@ import StoreKit
 class SettingsModel: ObservableObject {
     @Published var isUnlocked: Bool = false
     @Published var theme: String = "automatic"
-    @Published var products: [Product] = []
+    var products: [Product] = []
+    @Published var premiumProduct: Product?
     @Published var hasPremium: Bool = false
     private var userSessionManager: UserSessionManager
     
@@ -27,9 +28,17 @@ class SettingsModel: ObservableObject {
         NotificationCenter.default.addObserver(self, selector: #selector(self.unlock(notification:)),
                                                name: UIApplication.willEnterForegroundNotification, object: nil)
         Task { @MainActor in
-            products = try await Apphud.fetchProducts()
+//            products = try await Apphud.fetchProducts()
+            products = try await Product.products(for: ["premium"])
+            if !products.isEmpty {
+                premiumProduct = products[0]
+            }
         }
-        hasPremium = Apphud.hasActiveSubscription()
+//        if Apphud.hasPremiumAccess() {
+//            hasPremium = true
+//        } else {
+            resetPremiumFeatures()
+//        }
     }
     
     func loadDefaults() {
@@ -140,16 +149,10 @@ class SettingsModel: ObservableObject {
         }
     }
     
-//    func purchasePremium() {
-//        Task {
-//               // productStruct is Product struct model from StoreKit2
-//             // $isPurchasing should be used only in SwiftUI apps, otherwise don't use this parameter
-//            let result = await Apphud.purchase(productStruct, isPurchasing: $isPurchasing)
-//            if result.success {
-//              // handle successful purchase
-//            }
-//        }
-//    }
+    func resetPremiumFeatures() {
+        setLockApp(false)
+        setCommentTheme("default")
+    }
     
     var userNames: [String] {
         self.userSessionManager.userNames

@@ -1,5 +1,5 @@
 {
-  "identifier" : "679B6899",
+  "identifier" : "8BB145A7",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -7,17 +7,18 @@
 
   ],
   "settings" : {
-    "_applicationInternalID" : "6462210178",
-    "_developerTeamID" : "KUMFMTRJ3C",
-    "_lastSynchronizedDate" : 714155764.79669297
+    "_compatibilityTimeRate" : {
+      "3" : 6
+    },
+    "_timeRate" : 13
   },
   "subscriptionGroups" : [
     {
-      "id" : "21373803",
+      "id" : "EFF43A44",
       "localizations" : [
 
       ],
-      "name" : "Premium",
+      "name" : "premium",
       "subscriptions" : [
         {
           "adHocOffers" : [
@@ -29,19 +30,19 @@
           "displayPrice" : "4.99",
           "familyShareable" : false,
           "groupNumber" : 1,
-          "internalID" : "6462232548",
+          "internalID" : "688D7418",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Unlock premium features and remove all ads",
-              "displayName" : "Premium",
+              "description" : "",
+              "displayName" : "",
               "locale" : "en_US"
             }
           ],
-          "productID" : "Premium",
+          "productID" : "premium",
           "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "Premium",
-          "subscriptionGroupID" : "21373803",
+          "referenceName" : "premium",
+          "subscriptionGroupID" : "EFF43A44",
           "type" : "RecurringSubscription"
         }
       ]

@@ -107,13 +107,14 @@
 		AE89D4DA2A2CCB3600889B3E /* openredUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = openredUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4DE2A2CCB3600889B3E /* openredUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITests.swift; sourceTree = "<group>"; };
 		AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		AEB87A582A90B45C00BB9051 /* subscription.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = subscription.storekit; sourceTree = "<group>"; };
+		AEB87A592A91518D00BB9051 /* local.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = local.storekit; sourceTree = "<group>"; };
 		AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAboutParser.swift; sourceTree = "<group>"; };
 		AEBA65B12A881F8B00431529 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		AEBA65B32A8A1AD000431529 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AEBA65B52A8A236B00431529 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		AEC4BB6A2A8B865B005149B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AEC4BB6B2A8CD382005149B3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		AEC4BB6D2A8CD519005149B3 /* subscription.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = subscription.storekit; sourceTree = "<group>"; };
 		AEC4BB702A8E8031005149B3 /* Ads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ads.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -255,9 +256,10 @@
 				AE4A96702A39ED3200BA96CF /* GifView.swift */,
 				AE4A96882A48DEBD00BA96CF /* Search.swift */,
 				AEBA65B32A8A1AD000431529 /* SettingsView.swift */,
-				AEC4BB6D2A8CD519005149B3 /* subscription.storekit */,
 				AEC4BB702A8E8031005149B3 /* Ads.swift */,
 				AE3F322A2A8E8B580041E5B8 /* NativeAdView.xib */,
+				AEB87A582A90B45C00BB9051 /* subscription.storekit */,
+				AEB87A592A91518D00BB9051 /* local.storekit */,
 			);
 			path = openred;
 			sourceTree = "<group>";

@@ -120,7 +120,8 @@ class JSONCommentData: Codable {
         try? self.parent_id = container.decode(String?.self, forKey: .parent_id)
         try self.score = container.decode(Int.self, forKey: .score)
         try? self.author_fullname = container.decode(String?.self, forKey: .author_fullname)
-        try? self.link_permalink = container.decode(String?.self, forKey: .link_permalink)
+//        try? self.link_permalink = container.decode(String?.self, forKey: .link_permalink)
+        do { try self.link_permalink = String(htmlEncodedString: container.decode( String?.self, forKey: .link_permalink)!) } catch {}
         try self.all_awardings = container.decode([JSONPostAwarding].self, forKey: .all_awardings)
         try self.collapsed = container.decode(Bool.self, forKey: .collapsed)
 
@@ -207,7 +208,8 @@ class Comment: Identifiable, ObservableObject {
         self.isMod = jsonComment.distinguished == "moderator"
         self.nsfw = jsonComment.over_18 ?? false
         if jsonComment.link_permalink != nil {
-            self.postLink = URL(string: jsonComment.link_permalink!)?.path
+            self.postLink = URL(string: jsonComment.link_permalink!
+                .addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)!.path
         }
         
         self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
