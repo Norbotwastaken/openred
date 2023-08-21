@@ -428,7 +428,7 @@ struct CommentView: View {
     }
     
     var color: [Color] {
-        var defaultTheme = [
+        let defaultTheme = [
             Color(red: 192 / 255, green: 57 / 255, blue: 43 / 255),
             Color(red: 230 / 255, green: 126 / 255, blue: 34 / 255),
             Color(red: 241 / 255, green: 196 / 255, blue: 15 / 255),
@@ -437,7 +437,7 @@ struct CommentView: View {
             Color(red: 13 / 255, green: 71 / 255, blue: 161 / 255),
             Color(red: 142 / 255, green: 68 / 255, blue: 173 / 255)
         ]
-        var fieldsTheme = [
+        let fieldsTheme = [
             Color(red: 63 / 255, green: 153 / 255, blue: 252 / 255),
             Color(red: 0 / 255, green: 87 / 255, blue: 183 / 255),
             Color(red: 225 / 255, green: 221 / 255, blue: 0 / 255),
@@ -446,7 +446,27 @@ struct CommentView: View {
             Color(red: 0 / 255, green: 66 / 255, blue: 37 / 255),
             Color(red: 2 / 255, green: 60 / 255, blue: 110 / 255)
         ]
-        var amphibianTheme = [
+        let vibrantTheme = [
+            Color(red: 1, green: 0, blue: 24 / 255),
+            Color(red: 1, green: 165 / 255, blue: 44 / 255),
+            Color(red: 1, green: 1, blue: 65 / 255),
+            Color(red: 0, green: 128 / 255, blue: 24 / 255),
+            Color(red: 0, green: 0, blue: 249 / 255),
+            Color(red: 134 / 255, green: 0, blue: 125 / 255),
+            Color(red: 91 / 255, green: 206 / 255, blue: 250 / 255),
+            Color(red: 245 / 255, green: 169 / 255, blue: 184 / 255)
+        ]
+        let vibrant2Theme = [
+            Color(red: 91 / 255, green: 206 / 255, blue: 250 / 255),
+            Color(red: 245 / 255, green: 169 / 255, blue: 184 / 255),
+            Color(red: 1, green: 1, blue: 1),
+            Color(red: 245 / 255, green: 169 / 255, blue: 184 / 255),
+            Color(red: 91 / 255, green: 206 / 255, blue: 250 / 255),
+            Color(red: 245 / 255, green: 169 / 255, blue: 184 / 255),
+            Color(red: 1, green: 1, blue: 1),
+            Color(red: 245 / 255, green: 169 / 255, blue: 184 / 255),
+        ]
+        let amphibianTheme = [
             Color(red: 116 / 255, green: 237 / 255, blue: 202 / 255),
             Color(red: 79 / 255, green: 224 / 255, blue: 182 / 255),
             Color(red: 61 / 255, green: 245 / 255, blue: 242 / 255),
@@ -459,6 +479,8 @@ struct CommentView: View {
         themes["default"] = defaultTheme
         themes["amphibian"] = amphibianTheme
         themes["fields"] = fieldsTheme
+        themes["vibrant"] = vibrantTheme
+        themes["vibrant_2"] = vibrant2Theme
         for key in themes.keys {
             var theme = themes[key]!
             theme.append(contentsOf: theme)

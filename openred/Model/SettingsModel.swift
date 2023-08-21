@@ -34,11 +34,11 @@ class SettingsModel: ObservableObject {
                 premiumProduct = products[0]
             }
         }
-//        if Apphud.hasPremiumAccess() {
-//            hasPremium = true
-//        } else {
+        if Apphud.hasActiveSubscription() {
+            hasPremium = true
+        } else {
             resetPremiumFeatures()
-//        }
+        }
     }
     
     func loadDefaults() {
@@ -77,6 +77,12 @@ class SettingsModel: ObservableObject {
         } else {
             UserDefaults.standard.set(userSessionManager.commentTheme, forKey: "commentTheme")
         }
+        
+        if let savedUnmuteVideos = UserDefaults.standard.object(forKey: "unmuteVideos") as? Bool {
+            userSessionManager.unmuteVideos = savedUnmuteVideos
+        } else {
+            UserDefaults.standard.set(userSessionManager.unmuteVideos, forKey: "unmuteVideos")
+        }
     }
     
     func setTheme(_ newTheme: String) {
@@ -107,6 +113,11 @@ class SettingsModel: ObservableObject {
     func setCommentTheme(_ newValue: String) {
         userSessionManager.commentTheme = newValue
         UserDefaults.standard.set(newValue, forKey: "commentTheme")
+    }
+    
+    func setUnmuteVideos(_ newValue: Bool) {
+        userSessionManager.unmuteVideos = newValue
+        UserDefaults.standard.set(newValue, forKey: "unmuteVideos")
     }
     
     func removeUser(_ userName: String) {
@@ -177,6 +188,10 @@ class SettingsModel: ObservableObject {
     var commentTheme: String {
         self.userSessionManager.commentTheme
     }
+    
+    var unmuteVideos: Bool {
+        self.userSessionManager.unmuteVideos
+    }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -185,10 +200,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if Apphud.hasActiveSubscription() {
             
         }
-            // else {
+        else {
             GADMobileAds.sharedInstance().start(completionHandler: nil)
             // ca-app-pub-3940256099942544/3986624511
-//        }
+        }
         return true
     }
 }

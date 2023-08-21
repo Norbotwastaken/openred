@@ -181,6 +181,7 @@ struct CommunityRow: View {
 
 struct UserSection: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var messageModel: MessageModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
     @Binding var loginPopupShowing: Bool
@@ -206,19 +207,21 @@ struct UserSection: View {
                 }) {
                     Label("Add account", systemImage: "plus")
                 }
-                Menu {
-                    ForEach(model.savedUserNames, id: \.self) { userName in
-                        Button(userName, action: {
-                            model.switchAccountTo(userName: userName)
-                            if !messageModel.messages.isEmpty {
-                                // reload only if previously loaded
-                                messageModel.openInbox(forceLoad: true)
-                            }
-                            overlayModel.show(duration: 3, loading: true)
-                        })
+                if settingsModel.hasPremium {
+                    Menu {
+                        ForEach(model.savedUserNames, id: \.self) { userName in
+                            Button(userName, action: {
+                                model.switchAccountTo(userName: userName)
+                                if !messageModel.messages.isEmpty {
+                                    // reload only if previously loaded
+                                    messageModel.openInbox(forceLoad: true)
+                                }
+                                overlayModel.show(duration: 3, loading: true)
+                            })
+                        }
+                    } label: {
+                        Label("Switch account", systemImage: "person.2")
                     }
-                } label: {
-                    Label("Switch account", systemImage: "person.2")
                 }
                 Button(action: {
                     model.logOut()

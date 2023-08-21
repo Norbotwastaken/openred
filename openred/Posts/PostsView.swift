@@ -10,6 +10,7 @@ import AVKit
 
 struct PostsView: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var settingsModel: SettingsModel
     @Environment(\.presentationMode) var presentation
     @Binding var itemInView: String
     @Binding var restoreScroll: Bool
@@ -116,7 +117,7 @@ struct PostsView: View {
                                             .opacity(0)
                                         )
                                 }
-                                if item.isAdMarker && target.isAdFriendly {
+                                if item.isAdMarker && target.isAdFriendly && !settingsModel.hasPremium && !model.hasRedditPremium {
                                     NativeAdView(nativeViewModel: nativeViewModel)
                                         .frame(height: 310)
                                         .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))

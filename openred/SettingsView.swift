@@ -11,15 +11,7 @@ import ApphudSDK
 struct SettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var popupViewModel: PopupViewModel
-    var themes = ["automatic", "light", "dark"]
-    var commentThemes = ["default", "fields"]
-    @State private var selectedTheme = "automatic"
-    @State private var selectedCommentTheme = "default"
-    @State private var profileViewIsActive = false
-    @State private var upvoteOnSave = false
-    @State private var reverseSwipeControls = false
     @State private var lockApp = false
-    @State private var textSizeSliderValue : Float = 0.0
     
     var body: some View {
         NavigationView {
@@ -31,88 +23,91 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 List {
                     if !settingsModel.hasPremium {
-                        Section() {
-                            NavigationLink {
-                                BuyPremiumView()
-                            } label: {
-                                Text("Upgrade to premium")
+                        NavigationLink {
+                            BuyPremiumView()
+                        } label: {
+                            HStack(spacing: 15) {
+                                Image(systemName: "star.square")
+                                    .foregroundColor(.white)
+                                    .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                                    .background(Color(UIColor.systemRed))
+                                    .cornerRadius(8)
+                                    .font(.system(size: 26))
+                                    Text("Upgrade to premium")
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                
                             }
+                            .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
                         }
                     }
-                    Section(header: Label("General".uppercased(), systemImage: "gear")
-                        .font(.system(size: 16))) {
-                            Toggle("Upvote items on save", isOn: $upvoteOnSave)
-                                .onChange(of: upvoteOnSave) { _ in
-                                    settingsModel.setUpvoteOnSave(upvoteOnSave)
-                                }
-                            Toggle("Invert swipe actions", isOn: $reverseSwipeControls)
-                                .onChange(of: reverseSwipeControls) { _ in
-                                    settingsModel.setReverseSwipeControls(reverseSwipeControls)
-                                }
-                        }
-                    Section(header: Label("Appearence".uppercased(), systemImage: "eye")
-                        .font(.system(size: 16))) {
-                            Picker("Theme", selection: $selectedTheme) {
-                                ForEach(themes, id: \.self) {
-                                    Text($0.capitalized)
-                                }
-                            }.onChange(of: selectedTheme) { _ in
-                                settingsModel.setTheme(selectedTheme)
-                            }
-                            .pickerStyle(.inline)
-                            VStack {
-                                Text("Text size")
+                    NavigationLink {
+                        GeneralSettingsView()
+                    } label: {
+                        HStack(spacing: 15) {
+                            Image(systemName: "gear")
+                                .foregroundColor(.white)
+                                .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                                .background(Color(red: 87 / 255, green: 95 / 255, blue: 115 / 255))
+                                .cornerRadius(8)
+                                .font(.system(size: 26))
+                                Text("General")
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                Slider(value: $textSizeSliderValue, in: 1...5) {
-                                    Text("Text size")
-                                } minimumValueLabel: {
-                                    Text("Small").fontWeight(.thin)
-                                } maximumValueLabel: {
-                                    Text("Large").fontWeight(.thin)
-                                }
-                                .onChange(of: textSizeSliderValue) { _ in
-                                    settingsModel.setTextSize(textSizeSliderValue)
-                                }
-                            }
-                            Picker("Comment color theme", selection: $selectedCommentTheme) {
-                                ForEach(commentThemes, id: \.self) {
-                                    Text($0.capitalized)
-                                }
-                            }.onChange(of: selectedCommentTheme) { _ in
-                                settingsModel.setCommentTheme(selectedCommentTheme)
-                            }
-                            .pickerStyle(.inline)
+                            
                         }
-                    if settingsModel.hasPremium {
-                        Section(header: Label("Privacy".uppercased(), systemImage: "faceid").font(.system(size: 16)),
-                                footer: Text("If Face ID, Touch ID or system passcode " +
-                                             "is set, you will be requested to unlock the app when opening.")) {
-                            Toggle("Application lock", isOn: $lockApp)
-                                .onChange(of: lockApp) { _ in
-                                    settingsModel.setLockApp(lockApp)
-                                }
+                        .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
+                    }
+                    NavigationLink {
+                        AppearenceSettingsView()
+                    } label: {
+                        HStack(spacing: 15) {
+                            Image(systemName: "eye.square")
+                                .foregroundColor(.white)
+                                .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                                .background(Color(red: 55 / 255, green: 91 / 255, blue: 184 / 255))
+                                .cornerRadius(8)
+                                .font(.system(size: 26))
+                                Text("Appearence")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            
                         }
-                        Section(header: Label("Accounts".uppercased(), systemImage: "person.2")
-                            .font(.system(size: 16))) {
-                                ForEach(settingsModel.userNames, id: \.self) { userName in
-                                    NavigationLink {
-                                        UserSettingsView(userName: userName)
-                                    } label: {
-                                        Text(userName)
-                                    }
-                                }
+                        .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
+                    }
+                    Section(header:
+                        HStack {
+                            Label("Privacy".uppercased(), systemImage: "faceid").font(.system(size: 16))
+                            if !settingsModel.hasPremium {
+                                Spacer()
+                                    .frame(maxWidth: .infinity)
+                                Text("Premium".uppercased())
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.white)
+                                    .fontWeight(.semibold)
+                                    .padding(EdgeInsets(top: 1, leading: 4, bottom: 1, trailing: 4))
+                                    .background(Color(UIColor.systemRed).opacity(0.8))
+                                    .cornerRadius(5)
                             }
+                        }, footer: Text("If Face ID, Touch ID or system passcode " +
+                                        "is set, you will be requested to unlock the app when opening.")) {
+                        Toggle("Application lock", isOn: $lockApp)
+                            .onChange(of: lockApp) { _ in
+                                settingsModel.setLockApp(lockApp)
+                            }
+                            .disabled(!settingsModel.hasPremium)
+                    }
+                    Section(header: Label("Accounts".uppercased(), systemImage: "person.2")) {
+                        ForEach(settingsModel.userNames, id: \.self) { userName in
+                            NavigationLink {
+                                UserSettingsView(userName: userName)
+                            } label: {
+                                Text(userName)
+                            }
+                        }
                     }
                 }
-                .listStyle(.sidebar)
+                .listStyle(.insetGrouped)
             }
             .task {
-                selectedTheme = settingsModel.theme
-                upvoteOnSave = settingsModel.upvoteOnSave
-                reverseSwipeControls = settingsModel.reverseSwipeControls
                 lockApp = settingsModel.lockApp
-                textSizeSliderValue = Float(settingsModel.textSize)
-                selectedCommentTheme = settingsModel.commentTheme
             }
         }
     }
@@ -126,12 +121,12 @@ struct BuyPremiumView: View {
     @State var isPurchasing = false
     
     var body: some View {
-        ZStack {
+        VStack {
             List {
                 PremiumFeatureView(iconName: "square.text.square",
                                    color: Color(UIColor.systemRed),
                                    title: "Ad-free Experience",
-                                   dedscription: "Enjoy browsing without interruptions from advertisements.")
+                                   dedscription: "Browse without interruptions from ads within the OpenRed app.")
                 PremiumFeatureView(iconName: "person",
                                    color: Color(UIColor.systemGreen),
                                    title: "Multiple Accounts",
@@ -143,39 +138,33 @@ struct BuyPremiumView: View {
                 PremiumFeatureView(iconName: "app.gift",
                                    color: Color(UIColor.systemGray2),
                                    title: "Custom App Icons",
-                                   dedscription: "Choose one of our custom atrwork designs to personalise" +
+                                   dedscription: "Choose one of our custom artwork designs to personalise" +
                                    " the app icon on your home screen.")
             }
-            VStack {
-                ZStack {
-                    Rectangle()
-                        .fill(Color(UIColor.systemBackground))
-                        .frame(maxWidth: .infinity, maxHeight: 150, alignment: .bottom)
-                    VStack {
-                        Divider()
-                        Text(settingsModel.premiumProduct!.displayPrice + " / month")
-//                            .fontWeight(.semibold)
-                            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                        Button {
-                            purchasePremium()
-                        } label: {
-                            Text("Upgrade to premium")
-                                .padding()
-                                .background(Color(UIColor.systemBlue))
-                                .cornerRadius(20)
-                                .foregroundColor(.white)
-                                .font(.system(size: 18))
-                                .fontWeight(.semibold)
-                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
-                        }
+            ZStack {
+                VStack {
+                    Divider()
+                    Text(settingsModel.premiumProduct!.displayPrice + " / month")
+                        .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                    Button {
+                        purchasePremium()
+                    } label: {
+                        Text("Upgrade to premium")
+                            .padding()
+                            .background(Color(UIColor.systemBlue))
+                            .cornerRadius(20)
+                            .foregroundColor(.white)
+                            .font(.system(size: 18))
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
                     }
-                    .background(Color(UIColor.systemBackground))
-//                    .padding()
-                    .frame(alignment: .bottom)
                 }
+                .background(Color(UIColor.systemBackground))
+                .frame(maxWidth: .infinity, maxHeight: 120, alignment: .top)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            .frame(maxWidth: .infinity, maxHeight: 120, alignment: .bottom)
         }
+        .navigationTitle("OpenRed Premium")
     }
     
     func purchasePremium() {
@@ -240,15 +229,31 @@ struct UserSettingsView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             List {
                 Section(content: {
-                    Text("Switch to this account")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .onTapGesture {
+                    HStack {
+                        Text("Switch to this account")
+                            .lineLimit(1)
+                            .foregroundColor(settingsModel.hasPremium ? .primary : .secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        if !settingsModel.hasPremium {
+                            Text("Premium".uppercased())
+                                .font(.system(size: 14))
+                                .foregroundColor(.white)
+                                .fontWeight(.semibold)
+                                .padding(EdgeInsets(top: 1, leading: 4, bottom: 1, trailing: 4))
+                                .background(Color(UIColor.systemRed).opacity(0.8))
+                                .cornerRadius(5)
+                                .frame(alignment: .trailing)
+                        }
+                    }
+                    .onTapGesture {
+                        if settingsModel.hasPremium {
                             model.switchAccountTo(userName: userName)
                             overlayModel.show(duration: 3, loading: true)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                                 dismiss()
                             }
                         }
+                    }
                 })
                 Section(content: {
                     Text("Remove account")
@@ -283,6 +288,97 @@ struct UserSettingsView: View {
                          "OpenRed does not store your login credentials.")
                 })
             }
+        }
+    }
+}
+
+struct GeneralSettingsView: View {
+    @EnvironmentObject var settingsModel: SettingsModel
+    @State private var upvoteOnSave = false
+    @State private var reverseSwipeControls = false
+    @State private var unmuteVideos = false
+    
+    var body: some View {
+        List {
+            Section(content: {
+                Toggle("Upvote items on save", isOn: $upvoteOnSave)
+                    .onChange(of: upvoteOnSave) { _ in
+                        settingsModel.setUpvoteOnSave(upvoteOnSave)
+                    }} , footer: {
+                        Text("Automatically upvote posts and comments when saving them.")
+                    })
+            Section(content: {
+                Toggle("Unmute videos", isOn: $unmuteVideos)
+                    .onChange(of: unmuteVideos) { _ in
+                        settingsModel.setUnmuteVideos(unmuteVideos)
+                    }} , footer: {
+                        Text("Play videos with the sound on by default.")
+                    })
+            Section(content: {
+                Toggle("Invert swipe actions", isOn: $reverseSwipeControls)
+                    .onChange(of: reverseSwipeControls) { _ in
+                        settingsModel.setReverseSwipeControls(reverseSwipeControls)
+                    }} , footer: {
+                        Text("Invert left and right swipe actions when " +
+                             "interacting with comments and posts.")
+                    })
+        }
+        .listStyle(.insetGrouped)
+        .navigationTitle("General")
+        .task {
+            upvoteOnSave = settingsModel.upvoteOnSave
+            reverseSwipeControls = settingsModel.reverseSwipeControls
+            unmuteVideos = settingsModel.unmuteVideos
+        }
+    }
+}
+
+struct AppearenceSettingsView: View {
+    @EnvironmentObject var settingsModel: SettingsModel
+    var themes = ["automatic", "light", "dark"]
+    var commentThemes = ["default", "fields", "vibrant", "vibrant_2"]
+    @State private var selectedTheme = "automatic"
+    @State private var selectedCommentTheme = "default"
+    @State private var textSizeSliderValue : Float = 0.0
+    
+    var body: some View {
+        List {
+            Picker("Theme", selection: $selectedTheme) {
+                ForEach(themes, id: \.self) {
+                    Text($0.capitalized)
+                }
+            }.onChange(of: selectedTheme) { _ in
+                settingsModel.setTheme(selectedTheme)
+            }
+            .pickerStyle(.inline)
+            Section(header: Text("Text size")) {
+                Slider(value: $textSizeSliderValue, in: 1...5) {
+                    Text("Text size")
+                } minimumValueLabel: {
+                    Text("Small").fontWeight(.thin)
+                } maximumValueLabel: {
+                    Text("Large").fontWeight(.thin)
+                }
+                .onChange(of: textSizeSliderValue) { _ in
+                    settingsModel.setTextSize(textSizeSliderValue)
+                }
+            }
+            Picker("Comment color theme", selection: $selectedCommentTheme) {
+                ForEach(commentThemes, id: \.self) {
+                    Text($0.replacingOccurrences(of: "_", with: " ").capitalized)
+                }
+            }.onChange(of: selectedCommentTheme) { _ in
+                settingsModel.setCommentTheme(selectedCommentTheme)
+            }
+            .pickerStyle(.inline)
+            .disabled(!settingsModel.hasPremium)
+        }
+        .listStyle(.insetGrouped)
+        .navigationTitle("Appearence")
+        .task {
+            selectedTheme = settingsModel.theme
+            textSizeSliderValue = Float(settingsModel.textSize)
+            selectedCommentTheme = settingsModel.commentTheme
         }
     }
 }

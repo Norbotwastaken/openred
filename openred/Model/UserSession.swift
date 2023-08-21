@@ -20,6 +20,7 @@ class UserSessionManager: ObservableObject {
     var textSize: Int = 0
     var lockApp: Bool = false
     var commentTheme: String = "default"
+    var unmuteVideos: Bool = false
     
     func createWebViewFor(viewName: String) {
         let webView = WKWebView()

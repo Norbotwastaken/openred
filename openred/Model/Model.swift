@@ -14,6 +14,7 @@ class Model: ObservableObject {
     @Published var favoriteCommunities: [Community] = []
     @Published var loginAttempt: LoginAttempt = .undecided
     @Published var messageCount: Int = 0
+    @Published var hasRedditPremium: Bool = false
     var resetPagesToCommunity: String?
     
     let userSessionManager: UserSessionManager
@@ -27,6 +28,7 @@ class Model: ObservableObject {
             .getWebViewFor(viewName: starterCommunity.getCode())!)
         loadCommunity(community: pages["r/all"]!.selectedCommunity)
         loadCommunitiesData()
+        loadCurrentUserData()
     }
     
     func login(username: String, password: String) {
@@ -50,6 +52,7 @@ class Model: ObservableObject {
                                 self.userSessionManager.saveUserSession(webViewKey: page.selectedCommunity.getCode(), userName: username)
                                 self.loadCommunitiesDataFromDoc(doc: document)
                                 self.loadCommunitiesData() // doesn't work here for some reason
+                                self.loadCurrentUserData()
                             }
                         }
                     }
@@ -67,13 +70,16 @@ class Model: ObservableObject {
         resetPagesTo(target: pages["r/all"]!.selectedCommunity)
         communities = []
         favoriteCommunities = []
-        self.loadCommunitiesData()
+        loadCommunitiesData()
+        hasRedditPremium = false
     }
     
     func switchAccountTo(userName: String) {
         userSessionManager.switchToAccount(userName: userName)
         pages = [:]
-        self.loadCommunitiesData()
+        loadCommunitiesData()
+        hasRedditPremium = false
+        loadCurrentUserData()
     }
     
     // 'sortBy': top
@@ -189,6 +195,23 @@ class Model: ObservableObject {
                     if let trophies = trophies {
                         self.pages[community.getCode()]?.selectedCommunity.user!.trophies = trophies
                     }
+                }
+            }
+        }
+    }
+    
+    func loadCurrentUserData() {
+        if userName == nil {
+            return
+        }
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "old.reddit.com"
+        components.path = "/user/" + self.userName! + "/about.json"
+        jsonLoader.loadAboutUser(url: components.url!) { (about, error) in
+            DispatchQueue.main.async {
+                if let about = about {
+                    self.hasRedditPremium = about.hasPremium
                 }
             }
         }

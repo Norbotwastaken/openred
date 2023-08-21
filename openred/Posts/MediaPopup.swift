@@ -12,6 +12,7 @@ import VideoPlayer
 
 struct MediaPopupContent: View {
     @EnvironmentObject var popupViewModel: PopupViewModel
+    @EnvironmentObject var settingsModel: SettingsModel
     @State var toolbarVisible = false
     @State private var play: Bool = true
     @State private var time: CMTime = .zero
@@ -133,6 +134,9 @@ struct MediaPopupContent: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .task {
+                    mute = !settingsModel.unmuteVideos
+                }
                 if toolbarVisible {
                     ZStack {
                         Rectangle()
