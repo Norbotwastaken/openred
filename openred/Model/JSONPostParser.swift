@@ -324,12 +324,13 @@ class JSONPostMediaMetaDataItem: Codable {
 
 class JSONPostMediaMetaDataItemImage: Codable {
     var u: String? // url of gallery image
-//    var gif: String? // url if animated image
+    var gif: String? // url if animated image
     var mp4: String? // url if animated image
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
         try? self.u = String(htmlEncodedString: container.decode(String?.self, forKey: .u)!)
         try? self.mp4 = String(htmlEncodedString: container.decode(String?.self, forKey: .mp4)!)
+        try? self.gif = String(htmlEncodedString: container.decode(String?.self, forKey: .gif)!)
     }
 }
 

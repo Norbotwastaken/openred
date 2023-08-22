@@ -287,6 +287,42 @@ struct MediaPopupContent: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
             }
+            else if (popupViewModel.contentType == ContentType.gif) {
+                ZStack {
+                    Rectangle()
+                        .fill(Color.black)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    if popupViewModel.videoLink != nil {
+                        GIFView(url: URL(string: popupViewModel.videoLink!)!)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                }
+                if toolbarVisible {
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.black)
+                            .opacity(0.6)
+                            .frame(maxWidth: .infinity, maxHeight: 80, alignment: .top)
+                        Image(systemName: "xmark")
+                            .font(.system(size: 30))
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .foregroundColor(Color.white)
+                            .opacity(0.6)
+                            .padding(EdgeInsets(top: 40, leading: 22, bottom: 0, trailing: 0))
+                            .onTapGesture {
+                                popupViewModel.isShowing = false
+                            }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.black)
+                            .opacity(0.8)
+                            .frame(maxWidth: .infinity, maxHeight: 50, alignment: .bottom)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                }
+            }
         }
         .onTapGesture {
             toolbarVisible.toggle()

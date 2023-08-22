@@ -386,6 +386,7 @@ struct CommentView: View {
                                     }
                                 if comment.media_metadata != nil {
                                     CommentGifView(comment: comment)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                             }
                         }
@@ -497,6 +498,7 @@ struct CommentView: View {
 
 struct CommentGifView: View {
     var comment: Comment
+    @EnvironmentObject var popupViewModel: PopupViewModel
     
     var body: some View {
         ForEach(Array(comment.media_metadata!.elements.keys
@@ -547,13 +549,14 @@ struct CommentGifView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
             }
-            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+//            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
             .onTapGesture {
-//                showSafari.toggle()
+                if let videoLink = comment.media_metadata!.elements[key]!.s {
+                    popupViewModel.videoLink = String(htmlEncodedString: videoLink.gif ?? "")
+                    popupViewModel.contentType = .gif
+                    popupViewModel.isShowing = true
+                }
             }
-//            .fullScreenCover(isPresented: $showSafari, content: {
-//                SFSafariViewWrapper(url: URL(string: post.externalLink!)!)
-//            })
         }
     }
 }
