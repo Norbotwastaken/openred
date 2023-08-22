@@ -8,6 +8,7 @@
 import SwiftUI
 import AVKit
 import SafariServices
+import StoreKit
 
 struct ContentView: View {
     @EnvironmentObject var popupViewModel: PopupViewModel
@@ -39,7 +40,7 @@ struct ContentView: View {
                         Label("Search", systemImage: "magnifyingglass")
                     }
                     .tag(3)
-                SettingsView()
+                SettingsView(showPosts: $showPosts)
                     .tabItem {
                         Label("Settings", systemImage: "gear")
                     }
@@ -445,3 +446,13 @@ extension UIImageView {
         }
     }
 }
+
+//extension SKStoreReviewController {
+//    public static func requestReviewInCurrentScene() {
+//        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+//            DispatchQueue.main.async {
+//                requestReview(in: scene)
+//            }
+//        }
+//    }
+//}

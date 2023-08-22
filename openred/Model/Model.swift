@@ -15,6 +15,7 @@ class Model: ObservableObject {
     @Published var loginAttempt: LoginAttempt = .undecided
     @Published var messageCount: Int = 0
     @Published var hasRedditPremium: Bool = false
+    @Published var askReview: Bool = false
     var resetPagesToCommunity: String?
     
     let userSessionManager: UserSessionManager
@@ -29,6 +30,7 @@ class Model: ObservableObject {
         loadCommunity(community: pages["r/all"]!.selectedCommunity)
         loadCommunitiesData()
         loadCurrentUserData()
+//        countLaunch()
     }
     
     func login(username: String, password: String) {
@@ -119,10 +121,12 @@ class Model: ObservableObject {
             }
         }
         
+        var markForAds: Bool = false
         if loadAfter != nil {
             components.queryItems?.append(URLQueryItem(name: "after", value: loadAfter!))
         } else {
             page.items = []
+            markForAds = true
         }
         
         self.pages[community.getCode()] = page
@@ -143,7 +147,7 @@ class Model: ObservableObject {
         }
         
         components.path = components.path + "/.json"
-        jsonLoader.loadItems(url: components.url!) { (items, after, error) in
+        jsonLoader.loadItems(url: components.url!, markForAds: markForAds) { (items, after, error) in
             DispatchQueue.main.async {
                 if let items = items {
                     if loadAfter == nil {
@@ -417,6 +421,20 @@ class Model: ObservableObject {
             self.userSessionManager.userName = doc.querySelector("#header .user a")!.text
         }
     }
+    
+//    private func countLaunch() {
+//        if let launchCounter = UserDefaults.standard.object(forKey: "launchCounter") as? Int {
+//            if launchCounter > 100 {
+//                return
+//            }
+//            if launchCounter == 20 || launchCounter == 50 || launchCounter == 100 {
+//                askReview = true
+//            }
+//            UserDefaults.standard.set(launchCounter + 1, forKey: "launchCounter")
+//        } else {
+//            UserDefaults.standard.set(1, forKey: "launchCounter")
+//        }
+//    }
     
     private func loadCommunitiesDataFromDoc(doc: Document) {
         var unsortedCommunities: [Community] = []

@@ -16,8 +16,6 @@ struct PostsView: View {
     @Binding var restoreScroll: Bool
     @Binding var target: CommunityOrUser
     @Binding var loadPosts: Bool
-//    @State var showComments = false
-//    @State var commentInView = ""
     @StateObject private var nativeViewModel = NativeAdViewModel()
     @State var isPostCreatorShowing: Bool = false
     @State var sortBy: String?

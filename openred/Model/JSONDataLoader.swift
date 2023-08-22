@@ -42,7 +42,7 @@ class JSONDataLoader {
 //        urlSession.resume()
 //    }
     
-    func loadItems(url: URL, completion: @escaping ([PostOrComment]?, String?, Error?) -> Void) {
+    func loadItems(url: URL, markForAds: Bool = false, completion: @escaping ([PostOrComment]?, String?, Error?) -> Void) {
         let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             do {
                 if let data = data {
@@ -50,14 +50,14 @@ class JSONDataLoader {
                     var items: [PostOrComment] = []
                     for i in postsWrapper.data.children.indices {
                         let wrapper = postsWrapper.data.children[i]
-                        let isAdMarker = (i == 5)
+                        let isAdMarker = (i == 5) || (i == 12) || (i == 24)
                         let isActiveLoadMarker = (i == postsWrapper.data.children.count - 7)
                         if wrapper.data != nil {
                             items.append(PostOrComment(post: Post(jsonPost: wrapper.data!),
-                                                       isActiveLoadMarker: isActiveLoadMarker, isAdMarker: isAdMarker))
+                                                       isActiveLoadMarker: isActiveLoadMarker, isAdMarker: markForAds && isAdMarker))
                         } else if wrapper.commentData != nil {
                             items.append(PostOrComment(comment: Comment(jsonComment: wrapper.commentData!),
-                                                       isActiveLoadMarker: isActiveLoadMarker, isAdMarker: isAdMarker))
+                                                       isActiveLoadMarker: isActiveLoadMarker, isAdMarker: markForAds && isAdMarker))
                         }
                         
                     }

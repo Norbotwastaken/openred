@@ -315,6 +315,7 @@ class JSONPostMediaMetaData: Codable {
 class JSONPostMediaMetaDataItem: Codable {
     var status: String?
     var e: String?
+    var ext: String?
 //    var m: String?
     var p: [JSONPostMediaMetaDataItemImage] // preview data
     var s: JSONPostMediaMetaDataItemImage?

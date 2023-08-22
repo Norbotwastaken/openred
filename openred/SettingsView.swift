@@ -11,6 +11,7 @@ import ApphudSDK
 struct SettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var popupViewModel: PopupViewModel
+    @Binding var showPosts: Bool
     @State private var lockApp = false
     
     var body: some View {
@@ -97,7 +98,7 @@ struct SettingsView: View {
                     Section(header: Label("Accounts".uppercased(), systemImage: "person.2")) {
                         ForEach(settingsModel.userNames, id: \.self) { userName in
                             NavigationLink {
-                                UserSettingsView(userName: userName)
+                                UserSettingsView(userName: userName, showPosts: $showPosts)
                             } label: {
                                 Text(userName)
                             }
@@ -117,7 +118,7 @@ struct BuyPremiumView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
-    @Environment(\.dismiss) var dismiss
+//    @Environment(\.dismiss) var dismiss
     @State var isPurchasing = false
     
     var body: some View {
@@ -174,7 +175,7 @@ struct BuyPremiumView: View {
                 if result.success {
                     print("successful purchase.")
                     settingsModel.hasPremium = true
-                    dismiss()
+//                    dismiss()
                 }
             }
         }
@@ -218,6 +219,7 @@ struct UserSettingsView: View {
     @EnvironmentObject var overlayModel: MessageOverlayModel
     @Environment(\.dismiss) var dismiss
     var userName: String
+    @Binding var showPosts: Bool
     @State private var showingExitAlert = false
     
     var body: some View {
@@ -245,8 +247,10 @@ struct UserSettingsView: View {
                                 .frame(alignment: .trailing)
                         }
                     }
+                    .frame(maxWidth: .infinity)
                     .onTapGesture {
                         if settingsModel.hasPremium {
+                            showPosts = false
                             model.switchAccountTo(userName: userName)
                             overlayModel.show(duration: 3, loading: true)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {

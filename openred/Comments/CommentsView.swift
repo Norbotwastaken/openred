@@ -352,37 +352,42 @@ struct CommentView: View {
                                         SFSafariViewWrapper(url: safariLink!)
                                     })
                             }
-                            Text(comment.content ?? "")
-                                .fixedSize(horizontal: false, vertical: true)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .font(.system(size: 15 + CGFloat(commentsModel.textSizeInrease)))
-                                .environment(\.openURL, OpenURLAction { url in
-                                    if url.isImage {
-                                        popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
-                                        popupViewModel.contentType = .image
-                                        popupViewModel.isShowing = true
-                                    } else if url.isPost {
-                                        internalIsPost = true
-                                        safariLink = url
-                                        isInternalPresented = true
-                                    } else if url.isCommunity {
-                                        internalCommunityTarget = CommunityOrUser(explicitURL: url)
-                                        internalIsPost = false
-                                        isInternalPresented = true
-                                    } else {
-                                        safariLink = url
-                                        showSafari = true
+                            VStack {
+                                Text(comment.content ?? "")
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size: 15 + CGFloat(commentsModel.textSizeInrease)))
+                                    .environment(\.openURL, OpenURLAction { url in
+                                        if url.isImage {
+                                            popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
+                                            popupViewModel.contentType = .image
+                                            popupViewModel.isShowing = true
+                                        } else if url.isPost {
+                                            internalIsPost = true
+                                            safariLink = url
+                                            isInternalPresented = true
+                                        } else if url.isCommunity {
+                                            internalCommunityTarget = CommunityOrUser(explicitURL: url)
+                                            internalIsPost = false
+                                            isInternalPresented = true
+                                        } else {
+                                            safariLink = url
+                                            showSafari = true
+                                        }
+                                        return .handled
+                                    })
+                                    .navigationDestination(isPresented: $isInternalPresented) {
+                                        if !internalIsPost { // internal is community
+                                            PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
+                                                      target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
+                                        } else {
+                                            CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
+                                        }
                                     }
-                                    return .handled
-                                })
-                                .navigationDestination(isPresented: $isInternalPresented) {
-                                    if !internalIsPost { // internal is community
-                                        PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
-                                                  target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
-                                    } else {
-                                        CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
-                                    }
+                                if comment.media_metadata != nil {
+                                    CommentGifView(comment: comment)
                                 }
+                            }
                         }
 //                            .padding(EdgeInsets(top: 6, leading: 0, bottom: 0, trailing: 0))
                     }
@@ -487,6 +492,69 @@ struct CommentView: View {
             themes[key] = theme
         }
         return themes[commentsModel.commentTheme]!
+    }
+}
+
+struct CommentGifView: View {
+    var comment: Comment
+    
+    var body: some View {
+        ForEach(Array(comment.media_metadata!.elements.keys
+            .filter{ comment.media_metadata!.elements[$0]!.e?.lowercased() == "animatedimage" }), id: \.self) { key in
+            ZStack {
+                Rectangle()
+                    .fill(Color(UIColor.systemGray6))
+                    .cornerRadius(10)
+                HStack {
+                    AsyncImage(url: URL(string: comment.media_metadata!.elements[key]!.p[0].u ?? "")) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .roundedCorner(10, corners: [.topLeft, .bottomLeft])
+                            .frame(maxWidth: 60, maxHeight: 60, alignment: .leading)
+                        //                            .blur(radius: post.nsfw ? 20 : 0, opaque: true)
+                            .clipped()
+                    } placeholder: {
+                        ZStack {
+                            Rectangle()
+                                .fill(Color(UIColor.systemGray5))
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .roundedCorner(10, corners: [.topLeft, .bottomLeft])
+                            Image(systemName: "safari")
+                                .font(.system(size: 30))
+                                .foregroundColor(Color.white)
+                                .opacity(0.8)
+                        }
+                        .frame(maxWidth: 60, maxHeight: 60, alignment: .leading)
+                    }
+                    VStack(spacing: 5) {
+                        Text("Open GIF")
+                            .font(.system(size: 16))
+                            .foregroundStyle(.secondary)
+                            .fontWeight(.semibold)
+                            .padding(SwiftUI.EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                        Text(comment.media_metadata!.elements[key]!.ext ?? "")
+                            .lineLimit(1)
+                            .font(.system(size: 13))
+                            .fontWeight(.thin)
+                            .fixedSize(horizontal: false, vertical: false)
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .padding(SwiftUI.EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 60, alignment: .topLeading)
+                }
+                .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
+            }
+            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+            .onTapGesture {
+//                showSafari.toggle()
+            }
+//            .fullScreenCover(isPresented: $showSafari, content: {
+//                SFSafariViewWrapper(url: URL(string: post.externalLink!)!)
+//            })
+        }
     }
 }
 

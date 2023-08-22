@@ -8,65 +8,6 @@
 import GoogleMobileAds
 import SwiftUI
 
-//struct NativeContentView: View {
-//  @StateObject private var nativeViewModel = NativeAdViewModel()
-//  let navigationTitle: String
-//
-//  var body: some View {
-//    ScrollView {
-//      VStack(spacing: 20) {
-//        NativeAdView(nativeViewModel: nativeViewModel)
-//          .frame(height: 300)
-//
-//        Text(
-//          nativeViewModel.nativeAd?.mediaContent.hasVideoContent == true
-//            ? "Ad contains a video asset." : "Ad does not contain a video."
-//        )
-//        .frame(maxWidth: .infinity)
-//        .foregroundColor(.gray)
-//        .opacity(nativeViewModel.nativeAd == nil ? 0 : 1)
-//
-//        Button("Refresh Ad") {
-//          refreshAd()
-//        }
-//
-//        Text(
-//          "SDK Version:"
-//            + "\(GADGetStringFromVersionNumber(GADMobileAds.sharedInstance().versionNumber))")
-//      }
-//      .padding()
-//    }
-//    .onAppear {
-//      refreshAd()
-//    }
-//    .navigationTitle(navigationTitle)
-//  }
-//
-//  private func refreshAd() {
-//    nativeViewModel.refreshAd()
-//  }
-//}
-//
-//struct NativeContentView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    NativeContentView(navigationTitle: "Native")
-//  }
-//}
-
-//struct NativeAdView: View {
-//    @ObservedObject var nativeViewModel: NativeAdViewModel
-//
-//    var body: some View {
-//        VStack {
-//
-//        }
-//        .frame(maxWidth: .infinity, maxHeight: 500, alignment: .leading)
-//        .fixedSize(horizontal: false, vertical: true)
-//        .padding(EdgeInsets(top: 8, leading: 10, bottom: 4, trailing: 10))
-//        .disabled(true)
-//    }
-//}
-
 struct NativeAdView: UIViewRepresentable {
   typealias UIViewType = GADNativeAdView
     @Environment(\.colorScheme) var colorScheme: ColorScheme

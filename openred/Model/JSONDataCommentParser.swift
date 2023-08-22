@@ -103,10 +103,12 @@ class JSONCommentData: Codable {
     var replies: JSONEntityWrapper? // ="" when empty
     var link_title: String?
     var link_permalink: String?
+    var media_metadata: DecodedMediaMetaDataArray?
     
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
         
+        do { try media_metadata = container.decode(DecodedMediaMetaDataArray?.self, forKey: .media_metadata) } catch {}
         try self.author_is_blocked = container.decode(Bool.self, forKey: .author_is_blocked)
         try? self.author_flair_type = container.decode(String?.self, forKey: .author_flair_type)
         try? self.total_awards_received = container.decode(Int?.self, forKey: .total_awards_received)
@@ -155,6 +157,7 @@ class Comment: Identifiable, ObservableObject {
     var depth: Int
     var score: Int
     var content: AttributedString?
+    var media_metadata: DecodedMediaMetaDataArray?
     var user: String?
     var age: String?
     @Published var isUpvoted: Bool
@@ -184,6 +187,7 @@ class Comment: Identifiable, ObservableObject {
         self.depth = jsonComment.depth
         self.score = jsonComment.score
         self.content = jsonComment.body
+        self.media_metadata = jsonComment.media_metadata
         self.user = jsonComment.author
         self.isUpvoted = jsonComment.likes != nil ? jsonComment.likes! : false
         self.isDownvoted = jsonComment.likes != nil ? !jsonComment.likes! : false
