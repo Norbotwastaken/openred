@@ -330,7 +330,7 @@ class Model: ObservableObject {
     
     func resetPagesTo(target: CommunityOrUser) {
         resetPagesToCommunity = target.getCode()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let keysToDelete: [String] = self.pages.keys.filter{ $0 != self.resetPagesToCommunity! }
             let community = self.pages[self.resetPagesToCommunity!]
             var newPages: [String:Page] = [:]

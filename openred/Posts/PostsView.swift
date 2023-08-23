@@ -153,7 +153,7 @@ struct PostsView: View {
                             }
                         }
                         .onAppear(perform: {
-                            if restoreScroll {
+                            if (restoreScroll && model.pages[target.getCode()]!.items.filter{ $0.id == itemInView }.first != nil) {
                                 proxy.scrollTo(itemInView)
                             }
                         })

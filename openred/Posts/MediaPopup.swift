@@ -13,6 +13,7 @@ import VideoPlayer
 struct MediaPopupContent: View {
     @EnvironmentObject var popupViewModel: PopupViewModel
     @EnvironmentObject var settingsModel: SettingsModel
+    @Environment(\.dismiss) var dismiss
     @State var toolbarVisible = false
     @State private var play: Bool = true
     @State private var time: CMTime = .zero
@@ -152,6 +153,7 @@ struct MediaPopupContent: View {
                             .onTapGesture {
                                 popupViewModel.isShowing = false
                                 popupViewModel.player.pause()
+                                dismiss()
                             }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -189,6 +191,7 @@ struct MediaPopupContent: View {
                                 .padding(EdgeInsets(top: 40, leading: 22, bottom: 0, trailing: 0))
                                 .onTapGesture {
                                     popupViewModel.isShowing = false
+                                    dismiss()
                                 }
                             Image(systemName: "arrow.down.square")
                                 .font(.system(size: 30))
@@ -268,6 +271,7 @@ struct MediaPopupContent: View {
                                 .padding(EdgeInsets(top: 40, leading: 22, bottom: 0, trailing: 0))
                                 .onTapGesture {
                                     popupViewModel.isShowing = false
+                                    dismiss()
                                 }
                             Image(systemName: "arrow.down.square")
                                 .font(.system(size: 30))
@@ -311,6 +315,7 @@ struct MediaPopupContent: View {
                             .padding(EdgeInsets(top: 40, leading: 22, bottom: 0, trailing: 0))
                             .onTapGesture {
                                 popupViewModel.isShowing = false
+                                dismiss()
                             }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)

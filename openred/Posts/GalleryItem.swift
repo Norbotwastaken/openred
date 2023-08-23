@@ -23,7 +23,7 @@ struct Gallery: Codable {
 struct GalleryItem: Identifiable, Codable {
     var id: String
     var type: String
-    var previewLink: String
+    var previewLink: String = ""
     var fullLink: String
     var caption: String?
     var url: String?
@@ -39,7 +39,9 @@ struct GalleryItem: Identifiable, Codable {
         self.id = String(galleryData.id)
         self.type = galleryItem.e!
         // preview is second to last preview item or full sized image
-        self.previewLink = galleryItem.p[max(galleryItem.p.count - 2, 0)].u ?? galleryItem.s!.u!
+        if !galleryItem.p.isEmpty {
+            self.previewLink = galleryItem.p[max(galleryItem.p.count - 2, 0)].u ?? galleryItem.s!.u!
+        }
         if self.type == "AnimatedImage" {
             self.fullLink = galleryItem.s!.mp4!
         } else {

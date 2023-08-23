@@ -205,6 +205,34 @@ class CommentsModel: ObservableObject {
         return true
     }
     
+    func deleteComment(link: String, comment: Comment) {
+        if userSessionManager.userName == nil {
+            return
+        }
+        let page = pages[link]
+        if page == nil {
+            return
+        }
+        page!.browser.currentContent { (obj, err) -> Void in
+            page!.document = obj
+            if let deleteButton = page!.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(comment.id)\"]>.entry .buttons form.del-button a.yes").first {
+                deleteButton.click()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    page!.browser.currentContent { (obj, err) -> Void in
+                        page!.document = obj
+                        if let deleteFormText = page!.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(comment.id)\"]>.entry .buttons form.del-button").first?.text {
+                            if deleteFormText == "deleted" {
+                                comment.content = nil
+                                comment.isCollapsed = true
+                                self.objectWillChange.send()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func toggleUpvotePost(link: String, post: Post) -> Bool {
         if self.userSessionManager.userName == nil {
             return false

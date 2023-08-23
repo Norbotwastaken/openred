@@ -52,6 +52,7 @@ class Post: Identifiable, ObservableObject {
     var imagePreviewLink: String?
     var imageLink: String?
     var videoLink: String?
+    var embeddedMediaHtml: String?
     
     var thumbnailLink: String?
     var externalLink: String?
@@ -134,8 +135,14 @@ class Post: Identifiable, ObservableObject {
             self.contentType = ContentType.video
             self.videoLink = jsonPost.url
             
-            let specialHosts = ["youtu.be", "youtube.com", "redgifs.com"]
+            if jsonPost.media_embed != nil && jsonPost.media_embed!.content != nil &&
+                jsonPost.media_embed!.content!.contains("redgifs.com") {
+                // Display in a WKWebview
+                self.embeddedMediaHtml = jsonPost.media_embed!.content!
+            }
+            let specialHosts = ["youtu.be", "youtube.com"]
             if jsonPost.url != nil && (specialHosts.filter{ jsonPost.url!.contains($0) }.first != nil) {
+                // Display in an in-app Safari tab
                 self.contentType = .link
             }
         }
@@ -156,7 +163,7 @@ class Post: Identifiable, ObservableObject {
     }
     
     func displayAge(_ formattedTime: String) -> String {
-        var timeSections = formattedTime.components(separatedBy: " ")
+        let timeSections = formattedTime.components(separatedBy: " ")
         return timeSections[0] + timeSections[1].prefix(1)
     }
 }

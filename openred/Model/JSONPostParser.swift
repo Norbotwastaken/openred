@@ -66,7 +66,7 @@ class JSONPost: Codable {
     //    var author_flair_background_color: String?
     //    var ups: Int
     var total_awards_received: Int
-    //    var media_embed: String?
+    var media_embed: JSONPostEmbeddedMedia?
     //    var thumbnail_width: Int
     //    var author_flair_template_id: String?
     //    var is_original_content: Bool
@@ -162,6 +162,7 @@ class JSONPost: Codable {
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
         do { try media_metadata = container.decode(DecodedMediaMetaDataArray?.self, forKey: .media_metadata) } catch {}
+        do { try media_embed = container.decode(JSONPostEmbeddedMedia?.self, forKey: .media_embed) } catch {}
         do { try self.media = container.decode( JSONPostMedia?.self, forKey: .media) } catch {}
         do { try self.is_video = container.decode( Bool?.self, forKey: .is_video) } catch {}
         do { try self.is_gallery = container.decode( Bool?.self, forKey: .is_gallery) } catch {}
@@ -251,6 +252,16 @@ class JSONPost: Codable {
 
 class JSONPostMedia: Codable {
     var reddit_video: JSONPostRedditVideo?
+}
+
+class JSONPostEmbeddedMedia: Codable {
+    var content: String?
+    
+    required init(from decoder: Decoder) throws {
+        let container =  try decoder.container(keyedBy: CodingKeys.self)
+        do { try self.content = String(htmlEncodedString: container
+            .decode( String?.self, forKey: .content)!) } catch {}
+    }
 }
 
 class JSONPostRedditVideo: Codable {

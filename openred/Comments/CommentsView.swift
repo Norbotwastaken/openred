@@ -264,6 +264,7 @@ struct CommentView: View {
     @State var internalCommunityTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
     @State var internalLoadPosts: Bool = true
     @State var internalItemInView: String = ""
+    @State private var showingDeleteAlert = false
     
     var body: some View {
         VStack {
@@ -321,7 +322,7 @@ struct CommentView: View {
                         }
                         Menu {
                             CommentActions(comment: comment, editorParentComment: $editorParentComment,
-                                           isEditorShowing: $isEditorShowing, postLink: postLink)
+                                           isEditorShowing: $isEditorShowing, showingDeleteAlert: $showingDeleteAlert, postLink: postLink)
                         } label: {
                             ZStack {
                                 Spacer()
@@ -407,7 +408,7 @@ struct CommentView: View {
                 scrollTarget = comment.id
             }
             .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment,
-                                         isEditorShowing: $isEditorShowing, postLink: postLink) }
+                                         isEditorShowing: $isEditorShowing, showingDeleteAlert: $showingDeleteAlert, postLink: postLink) }
             .swipeActions(edge: commentsModel.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
                 Button { commentsModel.toggleUpvoteComment(link: postLink, comment: comment) } label: {
                     Image(systemName: "arrow.up")
@@ -426,6 +427,15 @@ struct CommentView: View {
                 }
                 .tint(Color(UIColor.systemBlue))
             }
+        }
+        .alert("Delete comment", isPresented: $showingDeleteAlert) {
+            Button("Cancel", role: .cancel) { showingDeleteAlert = false }
+            Button("Delete", role: .destructive) {
+                commentsModel.deleteComment(link: postLink, comment: comment)
+                showingDeleteAlert = false
+            }
+        } message: {
+            Text("Are you sure you want to delete this comment?")
         }
     }
     
@@ -506,7 +516,9 @@ struct CommentGifView: View {
     
     var body: some View {
         ForEach(Array(comment.media_metadata!.elements.keys
-            .filter{ comment.media_metadata!.elements[$0]!.e?.lowercased() == "animatedimage" }), id: \.self) { key in
+            .filter{ comment.media_metadata!.elements[$0]!.e?.lowercased() == "animatedimage" }
+            .filter{ !comment.media_metadata!.elements[$0]!.p.isEmpty }
+        ), id: \.self) { key in
             ZStack {
                 Rectangle()
                     .fill(Color(UIColor.systemGray6))
@@ -572,6 +584,7 @@ struct CommentActions: View {
     @ObservedObject var comment: Comment
     @Binding var editorParentComment: Comment?
     @Binding var isEditorShowing: Bool
+    @Binding var showingDeleteAlert: Bool
     var postLink: String
     
     @State var restoreScrollPlaceholder: Bool = true
@@ -599,6 +612,14 @@ struct CommentActions: View {
                 isEditorShowing = true
             }) {
                 Label("Reply", systemImage: "arrow.uturn.left")
+            }
+            
+            if comment.user?.lowercased() == model.userName?.lowercased() {
+                Button(action: {
+                    showingDeleteAlert = true
+                }) {
+                    Label("Delete comment", systemImage: "trash")
+                }
             }
             
             if comment.user != nil {

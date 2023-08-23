@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import AVKit
 import SwiftUIGIF
+import WebKit
 
 struct PostRowContent: View {
     @EnvironmentObject var model: Model
@@ -181,9 +182,16 @@ struct PostRowContent: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .onTapGesture {
-                popupViewModel.videoLink = post.videoLink!
-                popupViewModel.contentType = post.contentType
-                popupViewModel.isShowing = true
+                if post.embeddedMediaHtml == nil {
+                    popupViewModel.videoLink = post.videoLink!
+                    popupViewModel.contentType = post.contentType
+                    popupViewModel.isShowing = true
+                } else {
+                    showSafari.toggle()
+                }
+            }
+            .fullScreenCover(isPresented: $showSafari) {
+                CustomHTMLWebView(htmlContent: post.embeddedMediaHtml!, isPresented: $showSafari)
             }
         } else if post.contentType == .gif {
             ZStack {
@@ -349,9 +357,10 @@ struct PostRowContent: View {
                         image
                             .resizable()
                             .scaledToFill()
-                            .roundedCorner(10, corners: [.topLeft, .bottomLeft])
+//                            .roundedCorner(10, corners: [.topLeft, .bottomLeft])
                             .frame(maxWidth: 140, maxHeight: 140, alignment: .leading)
                             .blur(radius: post.nsfw ? 20 : 0, opaque: true)
+                            .roundedCorner(10, corners: [.topLeft, .bottomLeft])
                             .clipped()
                     } placeholder: {
                         ZStack {
@@ -389,9 +398,52 @@ struct PostRowContent: View {
             .onTapGesture {
                 showSafari.toggle()
             }
-            .fullScreenCover(isPresented: $showSafari, content: {
+            .fullScreenCover(isPresented: $showSafari) {
                 SFSafariViewWrapper(url: URL(string: post.externalLink!)!)
-            })
+            }
         }
     }
+}
+
+struct CustomHTMLWebView: View {
+    @Environment(\.dismiss) var dismiss
+    var htmlContent: String
+    @Binding var isPresented: Bool
+    
+    var body: some View {
+        VStack {
+            ZStack {
+                Rectangle()
+                    .fill(Color.black)
+                    .frame(maxWidth: .infinity, maxHeight: 40, alignment: .top)
+                Text("Done")
+                    .font(.system(size: 18))
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .foregroundColor(Color(UIColor.systemBlue))
+                    .padding(EdgeInsets(top: 50, leading: 22, bottom: 0, trailing: 0))
+                    .onTapGesture {
+                        isPresented = false
+                        dismiss()
+                    }
+            }
+            .frame(maxWidth: .infinity, maxHeight: 40, alignment: .topLeading)
+            .ignoresSafeArea()
+            WebView(html: "<html><body style=\"background-color:black;\">\(htmlContent)</body></html>")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct WebView : UIViewRepresentable {
+    var html: String
+
+    func makeUIView(context: Context) -> WKWebView  {
+        return WKWebView()
+    }
+
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        webView.loadHTMLString(html, baseURL:  nil)
+    }
+
 }
