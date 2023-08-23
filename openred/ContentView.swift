@@ -425,6 +425,9 @@ extension URL {
         [".jpg", ".jpeg", ".png", ".svg"]
             .filter{ self.lastPathComponent.hasSuffix($0) }.first != nil
     }
+    var isGif: Bool {
+        self.lastPathComponent.hasSuffix(".gif")
+    }
 }
 
 class ImageSaver: NSObject {

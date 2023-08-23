@@ -49,6 +49,10 @@ struct PostRowContent: View {
                             popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
                             popupViewModel.contentType = .image
                             popupViewModel.isShowing = true
+                        } else if url.isGif {
+                            popupViewModel.videoLink = String(htmlEncodedString: url.absoluteString)
+                            popupViewModel.contentType = .gif
+                            popupViewModel.isShowing = true
                         } else if url.isPost {
                             internalIsPost = true
                             safariLink = url
