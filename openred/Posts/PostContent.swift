@@ -128,19 +128,18 @@ struct PostRowContent: View {
             }
         }
         else if post.contentType == .video {
-            AsyncImage(url: URL(string: post.thumbnailLink ?? "")) { image in
+            AsyncImage(url: URL(string: post.nsfw ? post.imageLink ?? "" : post.imagePreviewLink ?? "")) { image in
                 ZStack {
-                    image.resizable()
-                        .frame(maxWidth: .infinity, maxHeight: 140)
-                        .blur(radius: post.nsfw ? 20 : 10, opaque: true)
-                    if !post.nsfw {
-                        image.frame(maxWidth: .infinity, maxHeight: 140)
-                    }
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: 650)
+                        .blur(radius: post.nsfw ? 30 : 0, opaque: true)
                     if post.nsfw {
                         VStack {
                             Text("NSFW")
-                                .foregroundColor(.white)
                                 .font(.system(size: 24))
+                                .foregroundColor(.white)
                                 .fontWeight(.semibold)
                                 .opacity(0.8)
                                 .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
@@ -152,7 +151,7 @@ struct PostRowContent: View {
                         }
                     } else {
                         Image(systemName: "play.fill")
-                            .font(.system(size: 45))
+                            .font(.system(size: 60))
                             .opacity(0.4)
                             .foregroundColor(Color.white)
                     }
@@ -172,7 +171,7 @@ struct PostRowContent: View {
                 ZStack {
                     Rectangle()
                         .fill(Color(UIColor.systemGray5))
-                        .frame(height: 140)
+                        .frame(height: imageContainerSize.height)
                         .scaledToFill()
                     Image(systemName: "video")
                         .font(.system(size: 30))

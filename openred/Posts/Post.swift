@@ -96,6 +96,13 @@ class Post: Identifiable, ObservableObject {
         }
         self.awardCount = jsonPost.total_awards_received
         
+        if jsonPost.preview?.images.isEmpty == false {
+            let jsonImage = jsonPost.preview?.images[0]
+            self.imageLink = jsonImage!.source.url
+            self.imagePreviewLink = !jsonImage!.resolutions.isEmpty ?
+            jsonImage!.resolutions[jsonImage!.resolutions.count - 1].url : jsonImage!.source.url
+        }
+        
         self.contentType = ContentType.text
         if (jsonPost.is_self) {
             self.contentType = ContentType.text
@@ -117,7 +124,7 @@ class Post: Identifiable, ObservableObject {
             self.contentType = ContentType.video
             self.videoLink = jsonPost.media?.reddit_video!.hls_url
         }
-        else if (jsonPost.post_hint != nil && jsonPost.post_hint! == "image") {
+        else if (jsonPost.post_hint == "image") {
             self.contentType = ContentType.image
             if (jsonPost.preview?.images[0].variants?.mp4 != nil) {
                 self.contentType = ContentType.gif // or gif?
@@ -126,12 +133,8 @@ class Post: Identifiable, ObservableObject {
                     self.videoLink = gifResolutions![max(gifResolutions!.count - 2, 0)].url
                 }
             }
-            let jsonImage = jsonPost.preview?.images[0]
-            self.imageLink = jsonImage!.source.url
-            self.imagePreviewLink = !jsonImage!.resolutions.isEmpty ?
-                jsonImage!.resolutions[jsonImage!.resolutions.count - 1].url : jsonImage!.source.url
         }
-        else if (jsonPost.post_hint != nil && jsonPost.post_hint! == "rich:video") {
+        else if (jsonPost.post_hint == "rich:video") {
             self.contentType = ContentType.video
             self.videoLink = jsonPost.url
             
