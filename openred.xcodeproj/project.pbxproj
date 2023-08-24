@@ -97,7 +97,7 @@
 		AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateModel.swift; sourceTree = "<group>"; };
 		AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMessageParser.swift; sourceTree = "<group>"; };
 		AE4A96942A60620300BA96CF /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
-		AE89D4C02A2CCB3300889B3E /* openred.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openred.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE89D4C02A2CCB3300889B3E /* OpenRed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenRed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4C32A2CCB3300889B3E /* openredApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredApp.swift; sourceTree = "<group>"; };
 		AE89D4C52A2CCB3300889B3E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AE89D4C72A2CCB3600889B3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -231,7 +231,7 @@
 		AE89D4C12A2CCB3300889B3E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AE89D4C02A2CCB3300889B3E /* openred.app */,
+				AE89D4C02A2CCB3300889B3E /* OpenRed.app */,
 				AE89D4D02A2CCB3600889B3E /* openredTests.xctest */,
 				AE89D4DA2A2CCB3600889B3E /* openredUITests.xctest */,
 			);
@@ -313,7 +313,7 @@
 				AE4A967E2A405D1600BA96CF /* RichText */,
 			);
 			productName = openred;
-			productReference = AE89D4C02A2CCB3300889B3E /* openred.app */;
+			productReference = AE89D4C02A2CCB3300889B3E /* OpenRed.app */;
 			productType = "com.apple.product-type.application";
 		};
 		AE89D4CF2A2CCB3600889B3E /* openredTests */ = {
@@ -683,7 +683,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openredinc.openred;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = OpenRed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -719,7 +719,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openredinc.openred;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = OpenRed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

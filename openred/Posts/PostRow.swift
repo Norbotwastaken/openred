@@ -97,6 +97,10 @@ struct PostCommentRow: View {
                 Text(comment.content ?? "")
                     .font(.system(size: 15))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                if comment.media_metadata != nil {
+                    CommentGifView(comment: comment)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
             Rectangle()
                 .fill(Color(UIColor.systemGray5)

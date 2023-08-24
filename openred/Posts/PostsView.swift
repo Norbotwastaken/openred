@@ -43,6 +43,9 @@ struct PostsView: View {
                     if loadPosts {
                         model.loadCommunity(community: target)
                         loadPosts = false
+                        if !settingsModel.hasPremium {
+                            nativeViewModel.refreshAd()
+                        }
                     }
                 }
             if model.pages[target.getCode()] != nil {
@@ -161,9 +164,6 @@ struct PostsView: View {
                         .refreshable {
                             model.loadCommunity(community: target, sortBy: sortBy, sortTime: sortTime)
                         }
-                    }
-                    .onAppear {
-                        nativeViewModel.refreshAd()
                     }
                     if isPostCreatorShowing {
                         CreatePostForm(community: model.pages[target.getCode()]!.selectedCommunity.community!, isShowing: $isPostCreatorShowing)

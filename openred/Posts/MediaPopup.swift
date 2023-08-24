@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import AVFoundation
+import AVKit
 import VideoPlayer
 
 struct MediaPopupContent: View {
@@ -25,6 +26,7 @@ struct MediaPopupContent: View {
     @State private var currentImageLink: String?
     @State private var activeGalleryTab: Int = 0
     
+    @State var player = AVPlayer()
     var body: some View {
         ZStack {
             if (popupViewModel.contentType == ContentType.video) {
@@ -37,9 +39,6 @@ struct MediaPopupContent: View {
                         .contentMode(.scaleAspectFit)
                         .autoReplay(autoReplay)
                         .mute(mute)
-//                        .onBufferChanged { progress in print("onBufferChanged \(progress)") }
-//                        .onPlayToEndTime { print("onPlayToEndTime") }
-//                        .onReplay { print("onReplay") }
                         .onStateChanged { state in
                             switch state {
                             case .loading:
@@ -68,7 +67,7 @@ struct MediaPopupContent: View {
                                 .background(VisualEffect(style: .systemUltraThinMaterial).opacity(0.6))
                                 .cornerRadius(8)
                                 .frame(width: 340, height: 80)
-                            
+
                             HStack {
                                 Button() {
                                     self.autoReplay.toggle()
