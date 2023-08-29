@@ -77,19 +77,6 @@ struct InboxView: View {
                     .navigationTitle("Inbox")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationBarHidden(isEditorShowing)
-                    //            .navigationBarHidden(isEditorShowing)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            HStack {
-                                Button {
-                                    // Perform an action
-                                    print("Add Item Tapped")
-                                } label: {
-                                    Image(systemName: "ellipsis")
-                                }
-                            }
-                        }
-                    }
                     .refreshable {
                         messageModel.openInbox(filter: type, forceLoad: true)
                     }
@@ -301,9 +288,13 @@ struct MessageActions: View {
 
 struct MessageEditor: View {
     @EnvironmentObject var messageModel: MessageModel
+    @EnvironmentObject var messageCreateModel: MessageCreateModel
     @Binding var isShowing: Bool
     @Binding var replyToMessage: Message?
+    var userName: String?
+    @State private var subject: String = ""
     @State private var content: String = ""
+    @State private var showingUnsupportedAlert = false
     @FocusState private var isFieldFocused: Bool
     @State private var loading: Bool = false
     
@@ -313,7 +304,25 @@ struct MessageEditor: View {
                 .fill(Color(UIColor.systemBackground))
                 .ignoresSafeArea()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .onAppear { isFieldFocused = true }
+                .onAppear {
+                    isFieldFocused = true
+                    if userName != nil {
+                        messageCreateModel.openComposePage(userName: userName!)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                            if messageCreateModel.requiresCaptcha {
+                                showingUnsupportedAlert = true
+                            }
+                        }
+                    }
+                }
+                .alert("Not supported", isPresented: $showingUnsupportedAlert) {
+                    Button("OK") {
+                        showingUnsupportedAlert = false
+                        isShowing = false
+                    }.keyboardShortcut(.defaultAction)
+                } message: {
+                    Text("This action is not supported on your account in OpenRed.")
+                }
             VStack(spacing: 30) {
                 HStack {
                     Image(systemName: "xmark")
@@ -335,7 +344,11 @@ struct MessageEditor: View {
                         .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
                         .onTapGesture {
                             if content != "" {
-                                messageModel.sendReply(message: replyToMessage!, content: content)
+                                if userName != nil {
+                                    messageCreateModel.sendMessage(subject: subject, message: content)
+                                } else {
+                                    messageModel.sendReply(message: replyToMessage!, content: content)
+                                }
                                 loading = true
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                                     isShowing = false
@@ -345,19 +358,25 @@ struct MessageEditor: View {
                 }
                 .frame(maxWidth: .infinity)
                 VStack {
-                    ScrollView {
-                        Group {
-                            Text(replyToMessage!.author).bold() +
-                            Text("\n" + replyToMessage!.body)
+                    if replyToMessage != nil {
+                        ScrollView {
+                            Group {
+                                Text(replyToMessage!.author).bold() +
+                                Text("\n" + replyToMessage!.body)
+                            }
+                            .font(.system(size: 15))
+                            .padding(EdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6))
+                            .foregroundStyle(.opacity(0.8))
+                            .background(Color(UIColor.systemGray5))
+                            .cornerRadius(10)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
                         }
-                        .font(.system(size: 15))
-                        .padding(EdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6))
-                        .foregroundStyle(.opacity(0.8))
-                        .background(Color(UIColor.systemGray5))
-                        .cornerRadius(10)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .frame(maxWidth: .infinity, maxHeight: 200, alignment: .topLeading)
+                    } else {
+                        TextField("Subject", text: $subject)
+                            .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
+                            .frame(alignment: .topLeading)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 200, alignment: .topLeading)
                     TextField("Reply", text: $content, axis: .vertical)
                         .focused($isFieldFocused)
                         .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))

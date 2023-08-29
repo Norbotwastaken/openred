@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5D287CB7879D0BE7B9C2EAC0 /* Pods_openred.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D1A39B277A0211F201F088F /* Pods_openred.framework */; };
 		AE3F322B2A8E8B580041E5B8 /* NativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE3F322A2A8E8B580041E5B8 /* NativeAdView.xib */; };
+		AE3FF7172A9B56250079A877 /* MessageCreateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3FF7162A9B56250079A877 /* MessageCreateModel.swift */; };
 		AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A962E2A2F96E400BA96CF /* PostsView.swift */; };
 		AE4A96312A2F974C00BA96CF /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96302A2F974C00BA96CF /* Post.swift */; };
 		AE4A96342A2FBBE300BA96CF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96332A2FBBE300BA96CF /* Model.swift */; };
@@ -43,6 +44,7 @@
 		AE89D4D52A2CCB3600889B3E /* openredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4D42A2CCB3600889B3E /* openredTests.swift */; };
 		AE89D4DF2A2CCB3600889B3E /* openredUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4DE2A2CCB3600889B3E /* openredUITests.swift */; };
 		AE89D4E12A2CCB3600889B3E /* openredUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */; };
+		AEB87A5B2A990D1700BB9051 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEB87A5A2A990D1700BB9051 /* LaunchScreen.storyboard */; };
 		AEBA65B02A791BE900431529 /* JSONAboutParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */; };
 		AEBA65B22A881F8B00431529 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B12A881F8B00431529 /* SearchModel.swift */; };
 		AEBA65B42A8A1AD000431529 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B32A8A1AD000431529 /* SettingsView.swift */; };
@@ -73,6 +75,7 @@
 		579CACBF4281721F39F837B7 /* Pods-openred.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-openred.release.xcconfig"; path = "Target Support Files/Pods-openred/Pods-openred.release.xcconfig"; sourceTree = "<group>"; };
 		7D1A39B277A0211F201F088F /* Pods_openred.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_openred.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE3F322A2A8E8B580041E5B8 /* NativeAdView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NativeAdView.xib; sourceTree = "<group>"; };
+		AE3FF7162A9B56250079A877 /* MessageCreateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCreateModel.swift; sourceTree = "<group>"; };
 		AE4A962E2A2F96E400BA96CF /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
 		AE4A96302A2F974C00BA96CF /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		AE4A96332A2FBBE300BA96CF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -109,6 +112,7 @@
 		AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		AEB87A582A90B45C00BB9051 /* subscription.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = subscription.storekit; sourceTree = "<group>"; };
 		AEB87A592A91518D00BB9051 /* local.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = local.storekit; sourceTree = "<group>"; };
+		AEB87A5A2A990D1700BB9051 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAboutParser.swift; sourceTree = "<group>"; };
 		AEBA65B12A881F8B00431529 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		AEBA65B32A8A1AD000431529 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -183,10 +187,10 @@
 		AE4A96322A2FBBD000BA96CF /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				AE3FF7162A9B56250079A877 /* MessageCreateModel.swift */,
 				AE4A96332A2FBBE300BA96CF /* Model.swift */,
 				AE4A96742A3B5DA500BA96CF /* PopupViewModel.swift */,
 				AE4A96762A3D112700BA96CF /* RedditParser.swift */,
-				AE4A96802A418B3900BA96CF /* UserSession.swift */,
 				AE4A96822A422BBE00BA96CF /* JSONDataLoader.swift */,
 				AE4A96862A4450A200BA96CF /* JSONPostParser.swift */,
 				AE4A968A2A49A02600BA96CF /* JSONDataCommentParser.swift */,
@@ -248,7 +252,9 @@
 				AE89D4C32A2CCB3300889B3E /* openredApp.swift */,
 				AE4A96322A2FBBD000BA96CF /* Model */,
 				AE89D4C52A2CCB3300889B3E /* ContentView.swift */,
+				AE4A96802A418B3900BA96CF /* UserSession.swift */,
 				AE89D4C72A2CCB3600889B3E /* Assets.xcassets */,
+				AEB87A5A2A990D1700BB9051 /* LaunchScreen.storyboard */,
 				AE89D4C92A2CCB3600889B3E /* Preview Content */,
 				AE4A96552A337B4000BA96CF /* CommunitiesSidebar.swift */,
 				AE4A96692A387ECB00BA96CF /* LoginPopup.swift */,
@@ -406,6 +412,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE89D4CB2A2CCB3600889B3E /* Preview Assets.xcassets in Resources */,
+				AEB87A5B2A990D1700BB9051 /* LaunchScreen.storyboard in Resources */,
 				AE3F322B2A8E8B580041E5B8 /* NativeAdView.xib in Resources */,
 				AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */,
 			);
@@ -503,6 +510,7 @@
 				AE4A967A2A3F4AC900BA96CF /* CommentsView.swift in Sources */,
 				AE4A968B2A49A02600BA96CF /* JSONDataCommentParser.swift in Sources */,
 				AE4A96932A604D2000BA96CF /* JSONMessageParser.swift in Sources */,
+				AE3FF7172A9B56250079A877 /* MessageCreateModel.swift in Sources */,
 				AEBA65B02A791BE900431529 /* JSONAboutParser.swift in Sources */,
 				AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */,
 			);
@@ -674,6 +682,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -710,6 +719,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;

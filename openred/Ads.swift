@@ -22,41 +22,44 @@ struct NativeAdView: UIViewRepresentable {
   }
 
   func updateUIView(_ nativeAdView: GADNativeAdView, context: Context) {
-    guard let nativeAd = nativeViewModel.nativeAd else { return }
+      guard let nativeAd = nativeViewModel.nativeAd else {
+          return
+      }
+      nativeAdView.isHidden = false
       nativeAdView.backgroundColor = UIColor.systemBackground
 
-    (nativeAdView.headlineView as? UILabel)?.text = nativeAd.headline
+      (nativeAdView.headlineView as? UILabel)?.text = nativeAd.headline
       (nativeAdView.headlineView as? UILabel)?.textColor = fontColor
 
-    nativeAdView.mediaView?.mediaContent = nativeAd.mediaContent
+      nativeAdView.mediaView?.mediaContent = nativeAd.mediaContent
 
-    (nativeAdView.bodyView as? UILabel)?.text = nativeAd.body
+      (nativeAdView.bodyView as? UILabel)?.text = nativeAd.body
       (nativeAdView.bodyView as? UILabel)?.textColor = fontColor
 
-    (nativeAdView.iconView as? UIImageView)?.image = nativeAd.icon?.image
+      (nativeAdView.iconView as? UIImageView)?.image = nativeAd.icon?.image
 
-    (nativeAdView.starRatingView as? UIImageView)?.image = imageOfStars(from: nativeAd.starRating)
+      (nativeAdView.starRatingView as? UIImageView)?.image = imageOfStars(from: nativeAd.starRating)
 
-    (nativeAdView.storeView as? UILabel)?.text = nativeAd.store
+      (nativeAdView.storeView as? UILabel)?.text = nativeAd.store
       (nativeAdView.storeView as? UILabel)?.textColor = fontColor
 
-    (nativeAdView.priceView as? UILabel)?.text = nativeAd.price
+      (nativeAdView.priceView as? UILabel)?.text = nativeAd.price
       (nativeAdView.priceView as? UILabel)?.textColor = fontColor
 
-    (nativeAdView.advertiserView as? UILabel)?.text = nativeAd.advertiser
+      (nativeAdView.advertiserView as? UILabel)?.text = nativeAd.advertiser
       (nativeAdView.advertiserView as? UILabel)?.textColor = fontColor
 
-    (nativeAdView.callToActionView as? UIButton)?.setTitle(nativeAd.callToAction, for: .normal)
+      (nativeAdView.callToActionView as? UIButton)?.setTitle(nativeAd.callToAction, for: .normal)
       (nativeAdView.callToActionView as? UILabel)?.textColor = fontColor
       
 //      (nativeAdView. as? UILabel)?.textColor = fontColor
 
     // In order for the SDK to process touch events properly, user interaction should be disabled.
-    nativeAdView.callToActionView?.isUserInteractionEnabled = false
+      nativeAdView.callToActionView?.isUserInteractionEnabled = false
 
     // Associate the native ad view with the native ad object. This is required to make the ad clickable.
     // Note: this should always be done after populating the ad views.
-    nativeAdView.nativeAd = nativeAd
+      nativeAdView.nativeAd = nativeAd
   }
     
     private var fontColor: UIColor {
@@ -101,7 +104,8 @@ class NativeAdViewModel: NSObject, ObservableObject, GADNativeAdLoaderDelegate {
   }
 
   func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: Error) {
-    print("\(adLoader) failed with error: \(error.localizedDescription)")
+      print("\(adLoader) failed with error: \(error.localizedDescription)")
+      self.nativeAd = nil
   }
 }
 

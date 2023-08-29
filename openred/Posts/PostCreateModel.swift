@@ -27,7 +27,6 @@ class PostCreateModel: ObservableObject {
         self.browser = Erik(webView: webView)
     }
     
-    // 'communityCode': r/something
     func openCreatePage(community: Community) {
         var components = URLComponents()
         components.scheme = "https"

@@ -11,6 +11,7 @@ import ApphudSDK
 struct SettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var popupViewModel: PopupViewModel
+    @Binding var tabSelection: Int
     @Binding var showPosts: Bool
     @State private var lockApp = false
     
@@ -98,7 +99,7 @@ struct SettingsView: View {
                     Section(header: Label("Accounts".uppercased(), systemImage: "person.2")) {
                         ForEach(settingsModel.userNames, id: \.self) { userName in
                             NavigationLink {
-                                UserSettingsView(userName: userName, showPosts: $showPosts)
+                                UserSettingsView(userName: userName, tabSelection: $tabSelection, showPosts: $showPosts)
                             } label: {
                                 Text(userName)
                             }
@@ -219,6 +220,7 @@ struct UserSettingsView: View {
     @EnvironmentObject var overlayModel: MessageOverlayModel
     @Environment(\.dismiss) var dismiss
     var userName: String
+    @Binding var tabSelection: Int
     @Binding var showPosts: Bool
     @State private var showingExitAlert = false
     
@@ -231,59 +233,64 @@ struct UserSettingsView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             List {
                 Section(content: {
-                    HStack {
-                        Text("Switch to this account")
-                            .lineLimit(1)
-                            .foregroundColor(settingsModel.hasPremium ? .primary : .secondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        if !settingsModel.hasPremium {
-                            Text("Premium".uppercased())
-                                .font(.system(size: 14))
-                                .foregroundColor(.white)
-                                .fontWeight(.semibold)
-                                .padding(EdgeInsets(top: 1, leading: 4, bottom: 1, trailing: 4))
-                                .background(Color(UIColor.systemRed).opacity(0.8))
-                                .cornerRadius(5)
-                                .frame(alignment: .trailing)
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .onTapGesture {
+                    Button(action: {
                         if settingsModel.hasPremium {
+                            tabSelection = 1
                             showPosts = false
-                            model.switchAccountTo(userName: userName)
-                            overlayModel.show(duration: 3, loading: true)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            overlayModel.show(duration: 4, loading: true)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                model.switchAccountTo(userName: userName)
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                                 dismiss()
                             }
                         }
+                    }) {
+                        HStack {
+                            Text("Switch to this account")
+                                .lineLimit(1)
+                                .foregroundColor(settingsModel.hasPremium ? .primary : .secondary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            if !settingsModel.hasPremium {
+                                Text("Premium".uppercased())
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.white)
+                                    .fontWeight(.semibold)
+                                    .padding(EdgeInsets(top: 1, leading: 4, bottom: 1, trailing: 4))
+                                    .background(Color(UIColor.systemRed).opacity(0.8))
+                                    .cornerRadius(5)
+                                    .frame(alignment: .trailing)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                 })
                 Section(content: {
-                    Text("Remove account")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(Color(UIColor.red))
-                        .onTapGesture {
-                            showingExitAlert = true
-                        }
-                        .alert("Remove account", isPresented: $showingExitAlert) {
-                            Button("Cancel", role: .cancel) { showingExitAlert = false }
-                            Button("Remove", role: .destructive) {
-                                overlayModel.show(loading: true)
-                                if model.userName != nil &&
-                                    userName.lowercased() == model.userName!.lowercased() {
-                                    model.logOut()
+                    Button(action: {
+                        showingExitAlert = true
+                    }) {
+                        Text("Remove account")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundColor(Color(UIColor.red))
+                            .alert("Remove account", isPresented: $showingExitAlert) {
+                                Button("Cancel", role: .cancel) { showingExitAlert = false }
+                                Button("Remove", role: .destructive) {
+                                    overlayModel.show(loading: true)
+                                    if model.userName != nil &&
+                                        userName.lowercased() == model.userName!.lowercased() {
+                                        model.logOut()
+                                    }
+                                    settingsModel.removeUser(userName)
+                                    showingExitAlert = false
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                        dismiss()
+                                    }
                                 }
-                                settingsModel.removeUser(userName)
-                                showingExitAlert = false
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                    dismiss()
-                                }
+                            } message: {
+                                Text("Your account will be removed from OpenRed. " +
+                                     "You can log in again using your credentials.")
                             }
-                        } message: {
-                            Text("Your account will be removed from OpenRed. " +
-                                 "You can log in again using your credentials.")
-                        }
+                    }
                 }, footer: {
                     Text("Remove your account from the OpenRed app. " +
                          "Your session with this account within the app will be " +

@@ -18,7 +18,7 @@ struct ContentView: View {
     @State var loginPopupShowing = false
     @State var showPosts = true
     @State var target: CommunityOrUser = CommunityOrUser(community: Community("all", isMultiCommunity: true))
-    @State private var tabSelection = 1
+    @State private var tabSelection: Int = 1
     @State private var firstUnlock: Bool = true
     
     var body: some View {
@@ -40,7 +40,7 @@ struct ContentView: View {
                         Label("Search", systemImage: "magnifyingglass")
                     }
                     .tag(3)
-                SettingsView(showPosts: $showPosts)
+                SettingsView(tabSelection: $tabSelection, showPosts: $showPosts)
                     .tabItem {
                         Label("Settings", systemImage: "gear")
                     }

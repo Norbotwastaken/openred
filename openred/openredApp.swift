@@ -20,6 +20,7 @@ class openredApp: App {
     @StateObject var messageModel: MessageModel
     @StateObject var searchModel: SearchModel = SearchModel()
     @StateObject var settingsModel: SettingsModel
+    @StateObject var messageCreateModel: MessageCreateModel
     
     required init() {
         userSessionManager = UserSessionManager()
@@ -28,6 +29,7 @@ class openredApp: App {
         _postCreateModel = StateObject(wrappedValue: PostCreateModel(userSessionManager: self.userSessionManager))
         _messageModel = StateObject(wrappedValue: MessageModel(userSessionManager: self.userSessionManager))
         _settingsModel = StateObject(wrappedValue: SettingsModel(userSessionManager: self.userSessionManager))
+        _messageCreateModel = StateObject(wrappedValue: MessageCreateModel(userSessionManager: self.userSessionManager))
     }
     
     var body: some Scene {
@@ -40,6 +42,7 @@ class openredApp: App {
                 .environmentObject(messageModel)
                 .environmentObject(searchModel)
                 .environmentObject(settingsModel)
+                .environmentObject(messageCreateModel)
         }
     }
 }

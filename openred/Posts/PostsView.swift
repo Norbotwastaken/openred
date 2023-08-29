@@ -18,6 +18,7 @@ struct PostsView: View {
     @Binding var loadPosts: Bool
     @StateObject private var nativeViewModel = NativeAdViewModel()
     @State var isPostCreatorShowing: Bool = false
+    @State var isMessageEditorShowing: Bool = false
     @State var sortBy: String?
     @State var sortTime: String?
     @State private var showingSaveDialog = false
@@ -118,7 +119,9 @@ struct PostsView: View {
                                             .opacity(0)
                                         )
                                 }
-                                if item.isAdMarker && target.isAdFriendly && !settingsModel.hasPremium && !model.hasRedditPremium {
+                                if item.isAdMarker && target.isAdFriendly &&
+                                    !settingsModel.hasPremium && !model.hasRedditPremium &&
+                                    nativeViewModel.nativeAd != nil {
                                     NativeAdView(nativeViewModel: nativeViewModel)
                                         .frame(height: 310)
                                         .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
@@ -135,7 +138,7 @@ struct PostsView: View {
                         .navigationTitle(model.pages[target.getCode()]!.title)
                         .navigationBarTitleDisplayMode(.inline)
                         //                    .navigationBarBackButtonHidden(true)
-                        .navigationBarHidden(isPostCreatorShowing)
+                        .navigationBarHidden(isPostCreatorShowing || isMessageEditorShowing)
                         .toolbar {
                             //                        ToolbarItem(placement: .navigationBarLeading) {
                             //                            Button {
@@ -151,7 +154,8 @@ struct PostsView: View {
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 HStack {
                                     SortMenu(target: $target, currentSortBy: $sortBy, currentSortTime: $sortTime)
-                                    ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing, target: $target)
+                                    ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing,
+                                                isMessageEditorShowing: $isMessageEditorShowing, target: $target)
                                 }
                             }
                         }
@@ -167,6 +171,9 @@ struct PostsView: View {
                     }
                     if isPostCreatorShowing {
                         CreatePostForm(community: model.pages[target.getCode()]!.selectedCommunity.community!, isShowing: $isPostCreatorShowing)
+                    }
+                    if isMessageEditorShowing && target.isUser {
+                        MessageEditor(isShowing: $isMessageEditorShowing, replyToMessage: Binding.constant(nil), userName: target.user!.name)
                     }
                 } else {
                     VStack(spacing: 20) {
@@ -224,7 +231,9 @@ struct PostsView: View {
 struct ActionsMenu: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var overlayModel: MessageOverlayModel
+    @EnvironmentObject var messageCreateModel: MessageCreateModel
     @Binding var isPostCreatorShowing: Bool
+    @Binding var isMessageEditorShowing: Bool
     @Binding var target: CommunityOrUser
     
     var body: some View {
@@ -254,6 +263,13 @@ struct ActionsMenu: View {
                 NavigationLink(destination: UserAboutView(user: model.pages[target.getCode()]!.selectedCommunity.user!)) {
                     Button(action: { }) {
                         Label("About user", systemImage: "person")
+                    }
+                }
+                if model.userName != nil {
+                    Button(action: {
+                        isMessageEditorShowing = true
+                    }) {
+                        Label("Private message", systemImage: "envelope")
                     }
                 }
                 if model.pages[target.getCode()]!.selectedCommunity.user!.about != nil &&
@@ -353,6 +369,7 @@ struct CreatePostForm: View {
     @State private var showingFailedAlert = false
     @State private var showingSuccessAlert = false
     @State private var awaitingResponse: Bool = false
+    @State private var showingUnsupportedAlert = false
     
     var body: some View {
         ZStack {
@@ -363,6 +380,19 @@ struct CreatePostForm: View {
                 .onAppear {
                     isFieldFocused = true
                     postCreateModel.openCreatePage(community: community)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        if postCreateModel.requiresCaptcha {
+                            showingUnsupportedAlert = true
+                        }
+                    }
+                }
+                .alert("Not supported", isPresented: $showingUnsupportedAlert) {
+                    Button("OK") {
+                        showingUnsupportedAlert = false
+                        isShowing = false
+                    }.keyboardShortcut(.defaultAction)
+                } message: {
+                    Text("This action is not supported on your account in OpenRed.")
                 }
             VStack(spacing: 5) {
                 HStack {

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AE89D4BF2A2CCB3300889B3E"
-               BuildableName = "openred.app"
+               BuildableName = "OpenRed.app"
                BlueprintName = "openred"
                ReferencedContainer = "container:openred.xcodeproj">
             </BuildableReference>
@@ -68,7 +68,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE89D4BF2A2CCB3300889B3E"
-            BuildableName = "openred.app"
+            BuildableName = "OpenRed.app"
             BlueprintName = "openred"
             ReferencedContainer = "container:openred.xcodeproj">
          </BuildableReference>
@@ -88,7 +88,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE89D4BF2A2CCB3300889B3E"
-            BuildableName = "openred.app"
+            BuildableName = "OpenRed.app"
             BlueprintName = "openred"
             ReferencedContainer = "container:openred.xcodeproj">
          </BuildableReference>
