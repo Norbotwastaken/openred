@@ -83,6 +83,12 @@ class SettingsModel: ObservableObject {
         } else {
             UserDefaults.standard.set(userSessionManager.unmuteVideos, forKey: "unmuteVideos")
         }
+        
+        if let savedAppIcon = UserDefaults.standard.object(forKey: "appIcon") as? String {
+            userSessionManager.appIcon = savedAppIcon
+        } else {
+            UserDefaults.standard.set(userSessionManager.appIcon, forKey: "appIcon")
+        }
     }
     
     func setTheme(_ newTheme: String) {
@@ -118,6 +124,11 @@ class SettingsModel: ObservableObject {
     func setUnmuteVideos(_ newValue: Bool) {
         userSessionManager.unmuteVideos = newValue
         UserDefaults.standard.set(newValue, forKey: "unmuteVideos")
+    }
+    
+    func setAppIcon(_ newAppIcon: String) {
+        userSessionManager.appIcon = newAppIcon
+        UserDefaults.standard.set(newAppIcon, forKey: "appIcon")
     }
     
     func removeUser(_ userName: String) {
@@ -191,6 +202,10 @@ class SettingsModel: ObservableObject {
     
     var unmuteVideos: Bool {
         self.userSessionManager.unmuteVideos
+    }
+    
+    var appIcon: String {
+        self.userSessionManager.appIcon
     }
 }
 

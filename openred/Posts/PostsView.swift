@@ -154,8 +154,10 @@ struct PostsView: View {
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 HStack {
                                     SortMenu(target: $target, currentSortBy: $sortBy, currentSortTime: $sortTime)
-                                    ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing,
-                                                isMessageEditorShowing: $isMessageEditorShowing, target: $target)
+                                    if target.isUser || !target.isMultiCommunity {
+                                        ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing,
+                                                    isMessageEditorShowing: $isMessageEditorShowing, target: $target)
+                                    }
                                 }
                             }
                         }

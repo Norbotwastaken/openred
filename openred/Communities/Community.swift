@@ -49,7 +49,8 @@ class CommunityOrUser: Identifiable, ObservableObject {
     }
     
     func getCode() -> String {
-        isUser ? "user/" + user!.name.lowercased() : "r/" + community!.name.lowercased()
+        isUser ? "user/" + user!.name.lowercased() : community!.path == nil ?
+        "r/" + community!.name.lowercased() : community!.path!
     }
 }
 

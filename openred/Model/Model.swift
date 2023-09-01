@@ -146,7 +146,7 @@ class Model: ObservableObject {
             }
         }
         
-        components.path = components.path + "/.json"
+        components.path = components.path + ".json"
         jsonLoader.loadItems(url: components.url!, markForAds: markForAds) { (items, after, error) in
             DispatchQueue.main.async {
                 if let items = items {
