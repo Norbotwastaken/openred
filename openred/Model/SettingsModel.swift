@@ -234,13 +234,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         Bugsnag.start()
         Apphud.start(apiKey: "app_NPZii7qKMuWaBpkuhtixcSqYNL4rND")
-        if Apphud.hasActiveSubscription() {
-            
-        }
-        else {
-            GADMobileAds.sharedInstance().start(completionHandler: nil)
+//        if Apphud.hasActiveSubscription() {
+//
+//        }
+//        else {
+//            GADMobileAds.sharedInstance().start(completionHandler: nil)
             // ca-app-pub-3940256099942544/3986624511
-        }
+//        }
         return true
     }
 }
