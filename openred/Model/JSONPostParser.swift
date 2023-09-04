@@ -258,9 +258,9 @@ class JSONPostEmbeddedMedia: Codable {
     var content: String?
     
     required init(from decoder: Decoder) throws {
-        let container =  try decoder.container(keyedBy: CodingKeys.self)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
         do { try self.content = String(htmlEncodedString: container
-            .decode( String?.self, forKey: .content)!) } catch {}
+            .decode( String?.self, forKey: .content) ?? "") } catch {}
     }
 }
 

@@ -2,8 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleIconName</key>
-        <string>AppIcon</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
+	<key>bugsnag</key>
+	<dict>
+		<key>apiKey</key>
+		<string>38b942031f61af3cb69037c819860cfb</string>
+	</dict>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

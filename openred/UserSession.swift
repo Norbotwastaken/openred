@@ -22,6 +22,7 @@ class UserSessionManager: ObservableObject {
     var commentTheme: String = "default"
     var unmuteVideos: Bool = false
     var appIcon: String = "default"
+    var sendCrashReports: Bool = true
     
     func createWebViewFor(viewName: String) {
         let webView = WKWebView()

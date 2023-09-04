@@ -170,8 +170,10 @@ struct CommentsView: View {
                                 Image(systemName: "arrow.uturn.left")
                                 //                                .foregroundColor(.secondary)
                                     .onTapGesture {
-                                        editorParentComment = nil
-                                        isEditorShowing = true
+                                        if model.userName != nil {
+                                            editorParentComment = nil
+                                            isEditorShowing = true
+                                        }
                                     }
                                     .frame(maxWidth: .infinity, alignment: .center)
                             }

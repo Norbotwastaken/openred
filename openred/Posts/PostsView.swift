@@ -119,19 +119,19 @@ struct PostsView: View {
                                             .opacity(0)
                                         )
                                 }
-                                if item.isAdMarker && target.isAdFriendly &&
-                                    !settingsModel.hasPremium && !model.hasRedditPremium &&
-                                    nativeViewModel.nativeAd != nil {
-                                    NativeAdView(nativeViewModel: nativeViewModel)
-                                        .frame(height: 310)
-                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                                        .listRowSeparator(.hidden)
-                                    Rectangle()
-                                        .fill(Color(UIColor.systemGray5)
-                                            .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
-                                        .frame(maxWidth: .infinity, maxHeight: 5)
-                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                                }
+//                                if item.isAdMarker && target.isAdFriendly &&
+//                                    !settingsModel.hasPremium && !model.hasRedditPremium &&
+//                                    nativeViewModel.nativeAd != nil {
+//                                    NativeAdView(nativeViewModel: nativeViewModel)
+//                                        .frame(height: 310)
+//                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+//                                        .listRowSeparator(.hidden)
+//                                    Rectangle()
+//                                        .fill(Color(UIColor.systemGray5)
+//                                            .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
+//                                        .frame(maxWidth: .infinity, maxHeight: 5)
+//                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+//                                }
                             }
                         }
                         .listStyle(PlainListStyle())

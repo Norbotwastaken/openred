@@ -4,5 +4,6 @@ target 'openred' do
   pod 'FLAnimatedImage', '~> 1.0'
   pod 'ApphudSDK'
   pod 'Google-Mobile-Ads-SDK'
+  pod 'Bugsnag'
 end
   

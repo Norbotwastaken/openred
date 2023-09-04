@@ -56,21 +56,23 @@ struct SettingsView: View {
                         }
                         .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
                     }
-                    NavigationLink {
-                        BuyPremiumView()
-                    } label: {
-                        HStack(spacing: 15) {
-                            Image(systemName: "star.square")
-                                .foregroundColor(.white)
-                                .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
-                                .background(Color(UIColor.systemRed))
-                                .cornerRadius(8)
-                                .font(.system(size: 26))
-                            Text("OpenRed Premium")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
+                    if settingsModel.premiumProduct != nil {
+                        NavigationLink {
+                            BuyPremiumView()
+                        } label: {
+                            HStack(spacing: 15) {
+                                Image(systemName: "star.square")
+                                    .foregroundColor(.white)
+                                    .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                                    .background(Color(UIColor.systemRed))
+                                    .cornerRadius(8)
+                                    .font(.system(size: 26))
+                                Text("OpenRed Premium")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                            }
+                            .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
                         }
-                        .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
                     }
                     Section(header:
                         HStack {
@@ -103,6 +105,11 @@ struct SettingsView: View {
                             }
                         }
                     }
+                    NavigationLink {
+                        AboutSettingsView()
+                    } label: {
+                        Text("About")
+                    }
                 }
                 .listStyle(.insetGrouped)
             }
@@ -127,7 +134,7 @@ struct BuyPremiumView: View {
                                    color: Color(UIColor.systemRed),
                                    title: "Ad-free Experience",
                                    dedscription: "Browse without interruptions from ads within the OpenRed app.")
-                PremiumFeatureView(iconName: "person",
+                PremiumFeatureView(iconName: "person.2",
                                    color: Color(UIColor.systemGreen),
                                    title: "Multiple Accounts",
                                    dedscription: "Add multiple accounts to browse and comment from.")
@@ -365,6 +372,52 @@ struct GeneralSettingsView: View {
     }
 }
 
+struct AboutSettingsView: View {
+    @EnvironmentObject var settingsModel: SettingsModel
+    @State private var sendCrashLogs = false
+    @State private var showPrivacyPolicyAlert = false
+    
+    var body: some View {
+        VStack {
+            List {
+                Section(content: {
+                    Text("Privacy Policy")
+                        .font(.system(size: 18))
+                        .onTapGesture {
+                            showPrivacyPolicyAlert = true
+                        }
+                        .alert("Privacy Policy", isPresented: $showPrivacyPolicyAlert) {
+                            Button("Done") { showPrivacyPolicyAlert = false }
+                                .keyboardShortcut(.defaultAction)
+                        } message: {
+                            Text("""
+All personal data used by OpenRed is stored on your device only and is never synced to a cloud service or remote server. OpenRed does not store your passwords for any of your reddit accounts. The app does not collect your browsing activity or any other metadata for advertising or other purposes. The app may send crash reports to help improve your user experience. Data in crash reports are anonymized and are only sent with your explicit permission. OpenRed uses reddit.com to serve content. Policies and rules maintained by reddit also apply within the OpenRed app and are available at https://www.redditinc.com/policies/all.
+""")
+                        }
+                }, footer: {
+                    Text("With any questions or feature requests please contact contact@openredinc.com")
+                })
+                Section(content: {
+                    Toggle("Send crash logs", isOn: $sendCrashLogs)
+                        .onChange(of: sendCrashLogs) { _ in
+                            settingsModel.setSendCrashReports(sendCrashLogs)
+                        }} , footer: {
+                            Text("Help improve OpenRed by sending anonymous error logs.")
+                        })
+            }
+            .listStyle(.insetGrouped)
+            .navigationTitle("About")
+            .task {
+                sendCrashLogs = settingsModel.sendCrashReports
+            }
+            Text("OpenRed version \(settingsModel.appVersion)")
+                .font(.system(size: 15))
+                .foregroundColor(.secondary)
+                .padding()
+        }
+    }
+}
+
 struct AppearenceSettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     var themes = ["automatic", "light", "dark"]
@@ -430,8 +483,7 @@ struct AppearenceSettingsView: View {
                 }
             }.onChange(of: selectedAppIcon) { _ in
                 if initialized {
-                    UIApplication.shared.setAlternateIconName(AppIcons.appIcons[selectedAppIcon]!.iconName)
-                    settingsModel.setAppIcon(selectedAppIcon)
+                    settingsModel.setAppIcon(AppIcons.appIcons[selectedAppIcon]!)
                 }
             }
             .pickerStyle(.inline)

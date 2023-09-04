@@ -11,6 +11,7 @@ import NotificationCenter
 import ApphudSDK
 import GoogleMobileAds
 import StoreKit
+import Bugsnag
 
 class SettingsModel: ObservableObject {
     @Published var isUnlocked: Bool = false
@@ -18,10 +19,12 @@ class SettingsModel: ObservableObject {
     var products: [Product] = []
     @Published var premiumProduct: Product?
     @Published var hasPremium: Bool = false
+    @Published var appVersion: String
     private var userSessionManager: UserSessionManager
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
+        appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
         loadDefaults()
         NotificationCenter.default.addObserver(self, selector: #selector(self.lock(notification:)),
                                                name: UIApplication.willResignActiveNotification, object: nil)
@@ -29,7 +32,7 @@ class SettingsModel: ObservableObject {
                                                name: UIApplication.willEnterForegroundNotification, object: nil)
         Task { @MainActor in
 //            products = try await Apphud.fetchProducts()
-            products = try await Product.products(for: ["premium"])
+            products = try await Product.products(for: ["Premium"])
             if !products.isEmpty {
                 premiumProduct = products[0]
             }
@@ -38,6 +41,9 @@ class SettingsModel: ObservableObject {
             hasPremium = true
         } else {
             resetPremiumFeatures()
+        }
+        if !sendCrashReports {
+            Bugsnag.pauseSession()
         }
     }
     
@@ -89,6 +95,12 @@ class SettingsModel: ObservableObject {
         } else {
             UserDefaults.standard.set(userSessionManager.appIcon, forKey: "appIcon")
         }
+        
+        if let savedSendCrashReports = UserDefaults.standard.object(forKey: "sendCrashReports") as? Bool {
+            userSessionManager.sendCrashReports = savedSendCrashReports
+        } else {
+            UserDefaults.standard.set(userSessionManager.sendCrashReports, forKey: "sendCrashReports")
+        }
     }
     
     func setTheme(_ newTheme: String) {
@@ -126,9 +138,15 @@ class SettingsModel: ObservableObject {
         UserDefaults.standard.set(newValue, forKey: "unmuteVideos")
     }
     
-    func setAppIcon(_ newAppIcon: String) {
-        userSessionManager.appIcon = newAppIcon
-        UserDefaults.standard.set(newAppIcon, forKey: "appIcon")
+    func setSendCrashReports(_ newValue: Bool) {
+        userSessionManager.sendCrashReports = newValue
+        UserDefaults.standard.set(newValue, forKey: "sendCrashReports")
+    }
+    
+    func setAppIcon(_ newAppIcon: AppIcons.AppIcon) {
+        userSessionManager.appIcon = newAppIcon.id
+        UserDefaults.standard.set(newAppIcon.id, forKey: "appIcon")
+        UIApplication.shared.setAlternateIconName(newAppIcon.iconName)
     }
     
     func removeUser(_ userName: String) {
@@ -142,9 +160,7 @@ class SettingsModel: ObservableObject {
 
         if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
             let reason = "Authenticate to unlock the app."
-
             context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, authenticationError in
-
                 if success {
                     Task { @MainActor in
                         self.isUnlocked = true
@@ -174,6 +190,7 @@ class SettingsModel: ObservableObject {
     func resetPremiumFeatures() {
         setLockApp(false)
         setCommentTheme("default")
+        setAppIcon(AppIcons.appIcons["default"]!)
     }
     
     var userNames: [String] {
@@ -207,10 +224,15 @@ class SettingsModel: ObservableObject {
     var appIcon: String {
         self.userSessionManager.appIcon
     }
+    
+    var sendCrashReports: Bool {
+        self.userSessionManager.sendCrashReports
+    }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        Bugsnag.start()
         Apphud.start(apiKey: "app_NPZii7qKMuWaBpkuhtixcSqYNL4rND")
         if Apphud.hasActiveSubscription() {
             

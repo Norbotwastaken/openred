@@ -51,6 +51,7 @@
 		AEBA65B62A8A236B00431529 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA65B52A8A236B00431529 /* SettingsModel.swift */; };
 		AEC4BB6C2A8CD382005149B3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEC4BB6B2A8CD382005149B3 /* StoreKit.framework */; };
 		AEC4BB712A8E8031005149B3 /* Ads.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC4BB702A8E8031005149B3 /* Ads.swift */; };
+		AED069DC2AA22A9400B5D9A8 /* subscription.storekit in Resources */ = {isa = PBXBuildFile; fileRef = AEB87A582A90B45C00BB9051 /* subscription.storekit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,7 +112,6 @@
 		AE89D4DE2A2CCB3600889B3E /* openredUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITests.swift; sourceTree = "<group>"; };
 		AE89D4E02A2CCB3600889B3E /* openredUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		AEB87A582A90B45C00BB9051 /* subscription.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = subscription.storekit; sourceTree = "<group>"; };
-		AEB87A592A91518D00BB9051 /* local.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = local.storekit; sourceTree = "<group>"; };
 		AEB87A5A2A990D1700BB9051 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AEBA65AF2A791BE900431529 /* JSONAboutParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAboutParser.swift; sourceTree = "<group>"; };
 		AEBA65B12A881F8B00431529 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
@@ -265,7 +265,6 @@
 				AEC4BB702A8E8031005149B3 /* Ads.swift */,
 				AE3F322A2A8E8B580041E5B8 /* NativeAdView.xib */,
 				AEB87A582A90B45C00BB9051 /* subscription.storekit */,
-				AEB87A592A91518D00BB9051 /* local.storekit */,
 			);
 			path = openred;
 			sourceTree = "<group>";
@@ -413,6 +412,7 @@
 			files = (
 				AE89D4CB2A2CCB3600889B3E /* Preview Assets.xcassets in Resources */,
 				AEB87A5B2A990D1700BB9051 /* LaunchScreen.storyboard in Resources */,
+				AED069DC2AA22A9400B5D9A8 /* subscription.storekit in Resources */,
 				AE3F322B2A8E8B580041E5B8 /* NativeAdView.xib in Resources */,
 				AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */,
 			);

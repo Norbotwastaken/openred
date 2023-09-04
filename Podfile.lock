@@ -1,5 +1,6 @@
 PODS:
   - ApphudSDK (3.0.1)
+  - Bugsnag (6.27.2)
   - Erik (5.0.0):
     - Erik/Core (= 5.0.0)
     - Kanna
@@ -57,6 +58,7 @@ PODS:
 
 DEPENDENCIES:
   - ApphudSDK
+  - Bugsnag
   - Erik
   - FLAnimatedImage (~> 1.0)
   - Google-Mobile-Ads-SDK
@@ -64,6 +66,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - ApphudSDK
+    - Bugsnag
     - Erik
     - FLAnimatedImage
     - Google-Mobile-Ads-SDK
@@ -76,6 +79,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   ApphudSDK: ca4114f00eedd45fe9eb0afbb01559c8db2aa703
+  Bugsnag: d7b2e5e78eaf66246d635240c61a6c8a18e3922c
   Erik: 660e6bc7fe68a0c17e0f50142ae2d8168426c22e
   FLAnimatedImage: bbf914596368867157cc71b38a8ec834b3eeb32b
   Google-Mobile-Ads-SDK: e81e8b009a182dc8dd14951782efdbb30a5e4510
@@ -86,6 +90,6 @@ SPEC CHECKSUMS:
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
 
-PODFILE CHECKSUM: 830ea8c2e7e4bfdd02308a7c7497fdfa3c45f852
+PODFILE CHECKSUM: b13f64b15c296ff93039652460002bff5369d1b8
 
 COCOAPODS: 1.12.1

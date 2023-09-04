@@ -81,7 +81,6 @@ struct MediaPopupContent: View {
                                         .frame(width: 30, height: 30)
                                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                                 }
-                                .foregroundColor(Color.gray)
                                 Button() {
                                     self.time = CMTimeMakeWithSeconds(max(0, self.time.seconds - 10), preferredTimescale: self.time.timescale)
                                 } label: {
@@ -90,7 +89,6 @@ struct MediaPopupContent: View {
                                         .frame(width: 30, height: 30)
                                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                                 }
-                                .foregroundColor(Color.gray)
                                 Button() {
                                     self.play.toggle()
                                 } label: {
@@ -103,7 +101,6 @@ struct MediaPopupContent: View {
                                         .frame(width: 40, height: 40)
                                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                                 }
-                                .foregroundColor(Color.gray)
                                 Button() {
                                     self.time = CMTimeMakeWithSeconds(min(self.totalDuration, self.time.seconds + 10), preferredTimescale: self.time.timescale)
                                 } label: {
@@ -112,7 +109,6 @@ struct MediaPopupContent: View {
                                         .frame(width: 30, height: 30)
                                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                                 }
-                                .foregroundColor(Color.gray)
                                 Button() {
                                     self.mute.toggle()
                                 } label: {
@@ -125,8 +121,9 @@ struct MediaPopupContent: View {
                                         .frame(width: 30, height: 30)
                                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                                 }
-                                .foregroundColor(Color.gray)
                             }
+                            .foregroundColor(.primary)
+                            .opacity(0.8)
                             .frame(width: 340, height: 80)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)

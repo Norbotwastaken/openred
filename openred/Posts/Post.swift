@@ -138,8 +138,9 @@ class Post: Identifiable, ObservableObject {
             self.contentType = ContentType.video
             self.videoLink = jsonPost.url
             
+            let iframeHosts = ["redgifs.com"]
             if jsonPost.media_embed != nil && jsonPost.media_embed!.content != nil &&
-                jsonPost.media_embed!.content!.contains("redgifs.com") {
+                (iframeHosts.filter{ jsonPost.media_embed!.content!.contains($0) }.first != nil) {
                 // Display in a WKWebview
                 self.embeddedMediaHtml = jsonPost.media_embed!.content!
             }
