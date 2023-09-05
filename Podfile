@@ -5,5 +5,6 @@ target 'openred' do
   pod 'ApphudSDK'
   pod 'Google-Mobile-Ads-SDK'
   pod 'Bugsnag'
+  plugin 'cocoapods-bugsnag'
 end
   
