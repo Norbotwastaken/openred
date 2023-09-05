@@ -126,6 +126,7 @@ struct BuyPremiumView: View {
     @EnvironmentObject var overlayModel: MessageOverlayModel
 //    @Environment(\.dismiss) var dismiss
     @State var isPurchasing = false
+    @State private var showSubscriptionAlert = false
     
     var body: some View {
         VStack {
@@ -173,7 +174,7 @@ struct BuyPremiumView: View {
                         Text(settingsModel.premiumProduct!.displayPrice + " / month")
                             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                         Button {
-                            purchasePremium()
+                            showSubscriptionAlert = true
                         } label: {
                             Text("Upgrade to premium")
                                 .padding()
@@ -183,6 +184,17 @@ struct BuyPremiumView: View {
                                 .font(.system(size: 18))
                                 .fontWeight(.semibold)
                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
+                        }
+                        .alert("OpenRed Premium", isPresented: $showSubscriptionAlert) {
+                            Button("Cancel", role: .cancel) { showSubscriptionAlert = false }
+                            Button("Subcribe") {
+                                showSubscriptionAlert = false
+                                purchasePremium()
+                            }.keyboardShortcut(.defaultAction)
+                        } message: {
+                            Text("""
+                            OpenRed Premium Subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period (and charged to your iTunes account). You can turn off auto-renew/manage subscriptions in your iTunes Account Settings after purchase. Price of subscription is \(settingsModel.premiumProduct!.displayPrice) monthly.\nTerms of Use can be found at https://www.apple.com/legal/internet-services/itunes/dev/stdeula/ and Privacy Policy can be found at https://www.openredinc.com/privacy-policy.html
+                            """)
                         }
                     }
                     .background(Color(UIColor.systemBackground))

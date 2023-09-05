@@ -132,6 +132,7 @@ struct LoginPopup: View {
     }
     private func submitForm() {
         guard username.isEmpty == false && password.isEmpty == false else { return }
+        isFieldFocused = false
         waitingLoginResponse = true
         model.login(username: username, password: password)
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
@@ -141,6 +142,7 @@ struct LoginPopup: View {
             } else if model.loginAttempt == .failed {
                 failedAttemptIndicatorShowing = true
                 waitingLoginResponse = false
+                isFieldFocused = true
             }
         }
     }

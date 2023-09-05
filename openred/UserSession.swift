@@ -43,6 +43,18 @@ class UserSessionManager: ObservableObject {
     
     func saveUserSession(webViewKey: String, userName: String) {
         var cookieDict = [String : AnyObject]()
+        self.userName = userName
+        UserDefaults.standard.set(userName, forKey: "currentUserName")
+        var users: [String] = []
+        if let savedUsers = UserDefaults.standard.object(forKey: "users") as? [String] {
+            users = savedUsers
+        }
+        if !users.contains(userName) {
+            users.append(userName)
+            UserDefaults.standard.set([String](), forKey: "favorites_" + userName)
+        }
+        UserDefaults.standard.set(users, forKey: "users")
+        self.userNames = users
         
         let webView = webViews[webViewKey]!
         webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
@@ -57,23 +69,11 @@ class UserSessionManager: ObservableObject {
             }
             self.currentCookies = cookieDict
             UserDefaults.standard.set(cookieDict, forKey: "cookies_" + userName)
-            UserDefaults.standard.set(userName, forKey: "currentUserName")
-            UserDefaults.standard.set([String](), forKey: "favorites_" + userName)
-            self.userName = userName
-            
-            var users: [String] = []
-            if let savedUsers = UserDefaults.standard.object(forKey: "users") as? [String] {
-                users = savedUsers
-            }
-            if !users.contains(userName) {
-                users.append(userName)
-            }
-            UserDefaults.standard.set(users, forKey: "users")
-            self.userNames = users
         }
     }
 
     func loadLastLoggedInUser(webView: WKWebView) {
+        URLCache.shared.removeAllCachedResponses()
         if self.currentCookies.isEmpty {
             if let userName = UserDefaults.standard.object(forKey: "currentUserName") as? String {
                 self.userName = userName
@@ -118,11 +118,13 @@ class UserSessionManager: ObservableObject {
                     HTTPCookieStorage.shared.setCookie(cookie)
                 }
             }
+            URLCache.shared.removeAllCachedResponses()
             UserDefaults.standard.set(userName, forKey: "currentUserName")
         }
     }
     
     func logOut() {
+        URLCache.shared.removeAllCachedResponses()
         UserDefaults.standard.removeObject(forKey: "currentUserName")
 //        for viewKey in webViews.keys {
 //            webViews[viewKey] = WKWebView()

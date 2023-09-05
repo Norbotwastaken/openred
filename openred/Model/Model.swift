@@ -52,8 +52,8 @@ class Model: ObservableObject {
                                 self.loginAttempt = .successful
                                 page.document = document
                                 self.userSessionManager.saveUserSession(webViewKey: page.selectedCommunity.getCode(), userName: username)
-                                self.loadCommunitiesDataFromDoc(doc: document)
-                                self.loadCommunitiesData() // doesn't work here for some reason
+//                                self.loadCommunitiesDataFromDoc(doc: document)
+                                self.loadCommunitiesData()
                                 self.loadCurrentUserData()
                             }
                         }
@@ -356,6 +356,7 @@ class Model: ObservableObject {
                     self.communities = abouts
                         .map{ Community($0.displayName, iconURL: $0.communityIcon!, isMultiCommunity: false) }
                         .sorted { $0.name.lowercased() < $1.name.lowercased() }
+                    self.objectWillChange.send()
                     self.favoriteCommunities = []
                     for name in self.userSessionManager.favoriteCommunities {
                         let c = self.communities.filter{ $0.name.lowercased() == name.lowercased() }.first
