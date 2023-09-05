@@ -140,6 +140,7 @@ class Model: ObservableObject {
                         self.pages[community.getCode()]!.interstitialNsfw = true
                     }
                     self.pages[community.getCode()]!.document = doc
+                    self.objectWillChange.send()
                 } else {
                     self.updateModel(community.getCode(), doc: doc, defaultTitle: defaultTitle)
                 }
@@ -349,6 +350,8 @@ class Model: ObservableObject {
         if userSessionManager.userName == nil {
             components.path = "/subreddits/default.json"
             components.queryItems!.append(URLQueryItem(name: "limit", value: "50"))
+        } else {
+            components.queryItems!.append(URLQueryItem(name: "limit", value: "200"))
         }
         jsonLoader.loadAboutCommunities(url: components.url!) { (abouts, error) in
             DispatchQueue.main.async {
