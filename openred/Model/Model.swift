@@ -283,6 +283,18 @@ class Model: ObservableObject {
         return true
     }
     
+    func deletePost(target: String, post: Post) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if let deleteButton = self.pages[target]!.document?.querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] form.del-button a.yes") {
+            deleteButton.click()
+            self.pages[target]!.items = self.pages[target]!.items.filter{ $0.id != post.id }
+            objectWillChange.send()
+        }
+        return true
+    }
+    
     func toggleSubscribe(target: CommunityOrUser) -> Bool {
         if self.userSessionManager.userName == nil {
             return false

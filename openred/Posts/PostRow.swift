@@ -115,6 +115,7 @@ struct PostCommentRow: View {
 
 struct PostRowFooter: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @ObservedObject var post: Post
     @Binding var target: CommunityOrUser
     @State var isPresented: Bool = false
@@ -123,6 +124,7 @@ struct PostRowFooter: View {
     @State var loadPosts: Bool = true
     @State var itemInView: String = ""
     @State private var showingSaveDialog = false
+    @State private var showingDeleteDialog = false
     
     var body: some View {
         HStack {
@@ -193,7 +195,8 @@ struct PostRowFooter: View {
             .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 12) {
                 Menu {
-                    PostRowMenu(post: post, target: $target, showingSaveDialog: $showingSaveDialog)
+                    PostRowMenu(post: post, target: $target, showingSaveDialog: $showingSaveDialog,
+                                showingDeleteDialog: $showingDeleteDialog)
                 } label: {
                     ZStack {
                         Spacer()
@@ -210,6 +213,17 @@ struct PostRowFooter: View {
                         SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.gallery!.items[0].fullLink,
                                        links: post.gallery!.items.map{ $0.fullLink })
                     }
+                }
+                .alert("Delete post?", isPresented: $showingDeleteDialog) {
+                    Button("Cancel", role: .cancel) { showingDeleteDialog = false }
+                    Button("Delete", role: .destructive) {
+                        if model.deletePost(target: target.getCode(), post: post) {
+                            overlayModel.show("Successfully deleted")
+                        }
+                        showingDeleteDialog = false
+                    }
+                } message: {
+                    Text("Are you sure you want to delete your post?")
                 }
                 Image(systemName: "arrow.up")
                     .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
@@ -271,6 +285,7 @@ struct PostRowMenu: View {
     @ObservedObject var post: Post
     @Binding var target: CommunityOrUser
     @Binding var showingSaveDialog: Bool
+    @Binding var showingDeleteDialog: Bool
 //    @State var isPresented: Bool = false
     @State var restoreScrollPlaceholder: Bool = true
     @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
@@ -327,6 +342,11 @@ struct PostRowMenu: View {
                     overlayModel.show("Copied to clipboard")
                 }) {
                     Label("Copy link", systemImage: "list.clipboard")
+                }
+            }
+            if post.userName == model.userName {
+                Button(action: { showingDeleteDialog = true }) {
+                    Label("Delete", systemImage: "xmark")
                 }
             }
         }

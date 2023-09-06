@@ -121,6 +121,17 @@ class CommentsModel: ObservableObject {
         return false
     }
     
+    func deletePost(link: String) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if let deleteButton = self.pages[link]!.document?.querySelector("#siteTable form.del-button a.yes") {
+            deleteButton.click()
+            return true
+        }
+        return false
+    }
+    
     func sendReply(link: String, parent: Comment?, content: String) -> Bool {
         if userSessionManager.userName == nil {
             return false

@@ -12,6 +12,7 @@ struct CommentsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
+    @Environment(\.dismiss) var dismiss
 //    @EnvironmentObject var popupViewModel: PopupViewModel
 //    @ObservedObject var post: Post
 //    @Binding var commentInView: String
@@ -30,6 +31,7 @@ struct CommentsView: View {
     @State var itemInView: String = ""
     @State var selectedSort: String?
     @State var showingSaveDialog = false
+    @State var showingDeleteDialog = false
     @State var crosspostRestorePostsPlaceholder: Bool = false
     
     var body: some View {
@@ -208,7 +210,8 @@ struct CommentsView: View {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             HStack {
                                 CommentSortMenu(selectedSort: $selectedSort, postLink: link)
-                                CommentActionsMenu(showingSaveDialog: $showingSaveDialog, link: link)
+                                CommentActionsMenu(showingSaveDialog: $showingSaveDialog,
+                                                   showingDeleteDialog: $showingDeleteDialog, link: link)
                             }
                             .alert("Save image to library?", isPresented: $showingSaveDialog) {
                                 if commentsModel.pages[link]!.post!.contentType == .image {
@@ -217,6 +220,20 @@ struct CommentsView: View {
                                     SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.gallery!.items[0].fullLink,
                                                    links: commentsModel.pages[link]!.post!.gallery!.items.map{ $0.fullLink })
                                 }
+                            }
+                            .alert("Delete post?", isPresented: $showingDeleteDialog) {
+                                Button("Cancel", role: .cancel) { showingDeleteDialog = false }
+                                Button("Delete", role: .destructive) {
+                                    if commentsModel.deletePost(link: link) {
+                                        overlayModel.show("Post successfully deleted")
+                                    }
+                                    showingDeleteDialog = false
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                                    }
+                                }
+                            } message: {
+                                Text("Are you sure you want to delete your post?")
                             }
                         }
                     }
@@ -770,6 +787,7 @@ struct CommentActionsMenu: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
     @Binding var showingSaveDialog: Bool
+    @Binding var showingDeleteDialog: Bool
     var link: String
     
     var body: some View {
@@ -795,7 +813,8 @@ struct CommentActionsMenu: View {
                 Button(action: { showingSaveDialog = true }) {
                     Label("Download image", systemImage: "arrow.down.square")
                 }
-            } else if commentsModel.pages[link]!.post!.contentType == .link {
+            } else if commentsModel.pages[link]!.post!.contentType == .link
+                        && commentsModel.pages[link]!.post!.externalLink != "" {
                 ShareLink(item: URL(string: commentsModel.pages[link]!.post!.externalLink!)!) {
                     Label("Share link", systemImage: "square.and.arrow.up.circle")
                 }
@@ -804,6 +823,11 @@ struct CommentActionsMenu: View {
                     overlayModel.show("Copied to clipboard")
                 }) {
                     Label("Copy link", systemImage: "list.clipboard")
+                }
+            }
+            if commentsModel.pages[link]!.post!.userName == commentsModel.userSessionManager.userName {
+                Button(action: { showingDeleteDialog = true }) {
+                    Label("Delete post", systemImage: "xmark")
                 }
             }
         } label: {

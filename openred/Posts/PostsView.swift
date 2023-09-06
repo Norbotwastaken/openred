@@ -11,6 +11,7 @@ import AVKit
 struct PostsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var settingsModel: SettingsModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @Environment(\.presentationMode) var presentation
     @Binding var itemInView: String
     @Binding var restoreScroll: Bool
@@ -22,6 +23,7 @@ struct PostsView: View {
     @State var sortBy: String?
     @State var sortTime: String?
     @State private var showingSaveDialog = false
+    @State private var showingDeleteDialog = false
     var filters: KeyValuePairs<String, String> {
         if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
@@ -67,7 +69,8 @@ struct PostsView: View {
                             ForEach(model.pages[target.getCode()]!.items) { item in
                                 if !item.isComment {
                                     PostRow(post: item.post!, target: $target)
-                                        .contextMenu{ PostRowMenu(post: item.post!, target: $target, showingSaveDialog: $showingSaveDialog) }
+                                        .contextMenu{ PostRowMenu(post: item.post!, target: $target, showingSaveDialog: $showingSaveDialog,
+                                                                  showingDeleteDialog: $showingDeleteDialog) }
                                         .swipeActions(edge: model.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
                                             Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
                                                 Image(systemName: "arrow.up")
@@ -100,6 +103,17 @@ struct PostsView: View {
                                                 SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: item.post!.gallery!.items[0].fullLink,
                                                                links: item.post!.gallery!.items.map{ $0.fullLink })
                                             }
+                                        }
+                                        .alert("Delete post?", isPresented: $showingDeleteDialog) {
+                                            Button("Cancel", role: .cancel) { showingDeleteDialog = false }
+                                            Button("Delete", role: .destructive) {
+                                                if model.deletePost(target: target.getCode(), post: item.post!) {
+                                                    overlayModel.show("Successfully deleted")
+                                                }
+                                                showingDeleteDialog = false
+                                            }
+                                        } message: {
+                                            Text("Are you sure you want to delete your post?")
                                         }
                                 } else {
                                     PostCommentRow(comment: item.comment!)
