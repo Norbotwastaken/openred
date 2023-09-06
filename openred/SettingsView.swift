@@ -56,23 +56,21 @@ struct SettingsView: View {
                         }
                         .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
                     }
-                    if settingsModel.premiumProduct != nil {
-                        NavigationLink {
-                            BuyPremiumView()
-                        } label: {
-                            HStack(spacing: 15) {
-                                Image(systemName: "star.square")
-                                    .foregroundColor(.white)
-                                    .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
-                                    .background(Color(UIColor.systemRed))
-                                    .cornerRadius(8)
-                                    .font(.system(size: 26))
-                                Text("OpenRed Premium")
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                            }
-                            .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
+                    NavigationLink {
+                        BuyPremiumView()
+                    } label: {
+                        HStack(spacing: 15) {
+                            Image(systemName: "star.square")
+                                .foregroundColor(.white)
+                                .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                                .background(Color(UIColor.systemRed))
+                                .cornerRadius(8)
+                                .font(.system(size: 26))
+                            Text("OpenRed Premium")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
                         }
+                        .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
                     }
                     Section(header:
                         HStack {
@@ -171,7 +169,7 @@ struct BuyPremiumView: View {
                 ZStack {
                     VStack {
                         Divider()
-                        Text(settingsModel.premiumProduct!.displayPrice + " / month")
+                        Text(settingsModel.premiumPrice + " / month")
                             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                         Button {
                             showSubscriptionAlert = true
@@ -193,7 +191,7 @@ struct BuyPremiumView: View {
                             }.keyboardShortcut(.defaultAction)
                         } message: {
                             Text("""
-                            OpenRed Premium Subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period (and charged to your iTunes account). You can turn off auto-renew/manage subscriptions in your iTunes Account Settings after purchase. Price of subscription is \(settingsModel.premiumProduct!.displayPrice) monthly.\nTerms of Use can be found at https://www.apple.com/legal/internet-services/itunes/dev/stdeula/ and Privacy Policy can be found at https://www.openredinc.com/privacy-policy.html
+                            OpenRed Premium Subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period (and charged to your iTunes account). You can turn off auto-renew/manage subscriptions in your iTunes Account Settings after purchase. Price of subscription is \(settingsModel.premiumPrice) monthly.\nTerms of Use can be found at https://www.apple.com/legal/internet-services/itunes/dev/stdeula/ and Privacy Policy can be found at https://www.openredinc.com/privacy-policy.html
                             """)
                         }
                     }

@@ -31,8 +31,8 @@ class SettingsModel: ObservableObject {
         NotificationCenter.default.addObserver(self, selector: #selector(self.unlock(notification:)),
                                                name: UIApplication.willEnterForegroundNotification, object: nil)
         Task { @MainActor in
-//            products = try await Apphud.fetchProducts()
-            products = try await Product.products(for: ["Premium"])
+            products = try await Apphud.fetchProducts()
+//            products = try await Product.products(for: ["Premium"])
             if !products.isEmpty {
                 premiumProduct = products[0]
             }
@@ -227,6 +227,10 @@ class SettingsModel: ObservableObject {
     
     var sendCrashReports: Bool {
         self.userSessionManager.sendCrashReports
+    }
+    
+    var premiumPrice: String {
+        self.premiumProduct?.displayPrice ?? "$4.99"
     }
 }
 
