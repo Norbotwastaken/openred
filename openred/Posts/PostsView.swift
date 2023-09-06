@@ -22,8 +22,10 @@ struct PostsView: View {
     @State var isMessageEditorShowing: Bool = false
     @State var sortBy: String?
     @State var sortTime: String?
-    @State private var showingSaveDialog = false
-    @State private var showingDeleteDialog = false
+    @State var showingSaveDialog = false
+    @State var showingDeleteDialog = false
+    @State var showingNsfwDialog = false
+    @State var showingSpoilerDialog = false
     var filters: KeyValuePairs<String, String> {
         if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
@@ -70,7 +72,8 @@ struct PostsView: View {
                                 if !item.isComment {
                                     PostRow(post: item.post!, target: $target)
                                         .contextMenu{ PostRowMenu(post: item.post!, target: $target, showingSaveDialog: $showingSaveDialog,
-                                                                  showingDeleteDialog: $showingDeleteDialog) }
+                                                                  showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
+                                                                  showingSpoilerDialog: $showingSpoilerDialog) }
                                         .swipeActions(edge: model.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
                                             Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
                                                 Image(systemName: "arrow.up")
@@ -114,6 +117,30 @@ struct PostsView: View {
                                             }
                                         } message: {
                                             Text("Are you sure you want to delete your post?")
+                                        }
+                                        .alert(item.post!.nsfw ? "Remove NSFW mark?" : "Mark as NSFW?", isPresented: $showingNsfwDialog) {
+                                            Button("Cancel", role: .cancel) { showingNsfwDialog = false }
+                                            Button("Continue") {
+                                                if model.togglePostNsfw(target: target.getCode(), post: item.post!) {
+                                                    overlayModel.show("Post updated")
+                                                }
+                                                showingNsfwDialog = false
+                                            }.keyboardShortcut(.defaultAction)
+                                        } message: {
+                                            Text(item.post!.nsfw ? "Are you sure you want to mark your post as safe for work?"
+                                                 : "Are you sure you want to mark your post as NSFW?")
+                                        }
+                                        .alert(item.post!.spoiler ? "Remove spoiler mark?" : "Mark as spoiler?", isPresented: $showingSpoilerDialog) {
+                                            Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
+                                            Button("Continue") {
+                                                if model.togglePostSpoiler(target: target.getCode(), post: item.post!) {
+                                                    overlayModel.show("Post updated")
+                                                }
+                                                showingSpoilerDialog = false
+                                            }.keyboardShortcut(.defaultAction)
+                                        } message: {
+                                            Text(item.post!.spoiler ? "Are you sure you want to mark your post as spoiler free?"
+                                                 : "Are you sure you want to mark your post for spoilers?")
                                         }
                                 } else {
                                     PostCommentRow(comment: item.comment!)

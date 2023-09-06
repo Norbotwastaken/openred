@@ -125,6 +125,8 @@ struct PostRowFooter: View {
     @State var itemInView: String = ""
     @State private var showingSaveDialog = false
     @State private var showingDeleteDialog = false
+    @State private var showingNsfwDialog = false
+    @State private var showingSpoilerDialog = false
     
     var body: some View {
         HStack {
@@ -196,7 +198,8 @@ struct PostRowFooter: View {
             HStack(spacing: 12) {
                 Menu {
                     PostRowMenu(post: post, target: $target, showingSaveDialog: $showingSaveDialog,
-                                showingDeleteDialog: $showingDeleteDialog)
+                                showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
+                                showingSpoilerDialog: $showingSpoilerDialog)
                 } label: {
                     ZStack {
                         Spacer()
@@ -224,6 +227,30 @@ struct PostRowFooter: View {
                     }
                 } message: {
                     Text("Are you sure you want to delete your post?")
+                }
+                .alert(post.nsfw ? "Remove NSFW mark?" : "Mark as NSFW?", isPresented: $showingNsfwDialog) {
+                    Button("Cancel", role: .cancel) { showingNsfwDialog = false }
+                    Button("Continue") {
+                        if model.togglePostNsfw(target: target.getCode(), post: post) {
+                            overlayModel.show("Post updated")
+                        }
+                        showingNsfwDialog = false
+                    }.keyboardShortcut(.defaultAction)
+                } message: {
+                    Text(post.nsfw ? "Are you sure you want to mark your post as safe for work?"
+                         : "Are you sure you want to mark your post as NSFW?")
+                }
+                .alert(post.spoiler ? "Remove spoiler mark?" : "Mark as spoiler?", isPresented: $showingSpoilerDialog) {
+                    Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
+                    Button("Continue") {
+                        if model.togglePostSpoiler(target: target.getCode(), post: post) {
+                            overlayModel.show("Post updated")
+                        }
+                        showingSpoilerDialog = false
+                    }.keyboardShortcut(.defaultAction)
+                } message: {
+                    Text(post.spoiler ? "Are you sure you want to mark your post as spoiler free?"
+                         : "Are you sure you want to mark your post for spoilers?")
                 }
                 Image(systemName: "arrow.up")
                     .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
@@ -286,6 +313,8 @@ struct PostRowMenu: View {
     @Binding var target: CommunityOrUser
     @Binding var showingSaveDialog: Bool
     @Binding var showingDeleteDialog: Bool
+    @Binding var showingNsfwDialog: Bool
+    @Binding var showingSpoilerDialog: Bool
 //    @State var isPresented: Bool = false
     @State var restoreScrollPlaceholder: Bool = true
     @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
@@ -345,6 +374,12 @@ struct PostRowMenu: View {
                 }
             }
             if post.userName == model.userName {
+                Button(action: { showingNsfwDialog = true }) {
+                    Label(post.nsfw ? "Remove NSFW mark" : "Mark as NSFW", systemImage: "18.circle")
+                }
+                Button(action: { showingSpoilerDialog = true }) {
+                    Label(post.spoiler ? "Remove spoiler mark" : "Mark as spoiler", systemImage: "car.side.rear.open")
+                }
                 Button(action: { showingDeleteDialog = true }) {
                     Label("Delete", systemImage: "xmark")
                 }

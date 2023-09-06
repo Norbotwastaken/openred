@@ -32,6 +32,8 @@ struct CommentsView: View {
     @State var selectedSort: String?
     @State var showingSaveDialog = false
     @State var showingDeleteDialog = false
+    @State var showingNsfwDialog = false
+    @State var showingSpoilerDialog = false
     @State var crosspostRestorePostsPlaceholder: Bool = false
     
     var body: some View {
@@ -211,7 +213,8 @@ struct CommentsView: View {
                             HStack {
                                 CommentSortMenu(selectedSort: $selectedSort, postLink: link)
                                 CommentActionsMenu(showingSaveDialog: $showingSaveDialog,
-                                                   showingDeleteDialog: $showingDeleteDialog, link: link)
+                                                   showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
+                                                   showingSpoilerDialog: $showingSpoilerDialog, link: link)
                             }
                             .alert("Save image to library?", isPresented: $showingSaveDialog) {
                                 if commentsModel.pages[link]!.post!.contentType == .image {
@@ -228,12 +231,42 @@ struct CommentsView: View {
                                         overlayModel.show("Post successfully deleted")
                                     }
                                     showingDeleteDialog = false
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                         commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
                                     }
                                 }
                             } message: {
                                 Text("Are you sure you want to delete your post?")
+                            }
+                            .alert(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark?" : "Mark post as NSFW?", isPresented: $showingNsfwDialog) {
+                                Button("Cancel", role: .cancel) { showingNsfwDialog = false }
+                                Button("Continue") {
+                                    if commentsModel.togglePostNsfw(link: link) {
+                                        overlayModel.show("Post updated")
+                                    }
+                                    showingNsfwDialog = false
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                                    }
+                                }.keyboardShortcut(.defaultAction)
+                            } message: {
+                                Text(commentsModel.pages[link]!.post!.nsfw ? "Are you sure you want to mark your post as safe for work?"
+                                     : "Are you sure you want to mark your post as NSFW?")
+                            }
+                            .alert(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark?" : "Mark post as spoiler?", isPresented: $showingSpoilerDialog) {
+                                Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
+                                Button("Continue") {
+                                    if commentsModel.togglePostSpoiler(link: link) {
+                                        overlayModel.show("Post updated")
+                                    }
+                                    showingSpoilerDialog = false
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                                    }
+                                }.keyboardShortcut(.defaultAction)
+                            } message: {
+                                Text(commentsModel.pages[link]!.post!.spoiler ? "Are you sure you want to mark your post as spoiler free?"
+                                     : "Are you sure you want to mark your post for spoilers?")
                             }
                         }
                     }
@@ -788,6 +821,8 @@ struct CommentActionsMenu: View {
     @EnvironmentObject var overlayModel: MessageOverlayModel
     @Binding var showingSaveDialog: Bool
     @Binding var showingDeleteDialog: Bool
+    @Binding var showingNsfwDialog: Bool
+    @Binding var showingSpoilerDialog: Bool
     var link: String
     
     var body: some View {
@@ -826,6 +861,12 @@ struct CommentActionsMenu: View {
                 }
             }
             if commentsModel.pages[link]!.post!.userName == commentsModel.userSessionManager.userName {
+                Button(action: { showingNsfwDialog = true }) {
+                    Label(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark" : "Mark as NSFW", systemImage: "18.circle")
+                }
+                Button(action: { showingSpoilerDialog = true }) {
+                    Label(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark" : "Mark as spoiler", systemImage: "car.side.rear.open")
+                }
                 Button(action: { showingDeleteDialog = true }) {
                     Label("Delete post", systemImage: "xmark")
                 }

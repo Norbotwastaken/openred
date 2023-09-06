@@ -295,6 +295,38 @@ class Model: ObservableObject {
         return true
     }
     
+    func togglePostNsfw(target: String, post: Post) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if let nsfwButton = self.pages[target]!.document?
+            .querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] form.marknsfw-button a.yes") {
+            nsfwButton.click()
+            return true
+        } else if let nsfwButton = self.pages[target]!.document?
+            .querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] form.unmarknsfw-button a.yes") {
+            nsfwButton.click()
+            return true
+        }
+        return false
+    }
+    
+    func togglePostSpoiler(target: String, post: Post) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if let spoilerButton = self.pages[target]!.document?
+            .querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] form.spoiler-button a.yes") {
+            spoilerButton.click()
+            return true
+        } else if let spoilerButton = self.pages[target]!.document?
+            .querySelector("#siteTable div.thing[data-permalink=\"" + post.linkToThread + "\"] form.unspoiler-button a.yes") {
+            spoilerButton.click()
+            return true
+        }
+        return false
+    }
+    
     func toggleSubscribe(target: CommunityOrUser) -> Bool {
         if self.userSessionManager.userName == nil {
             return false

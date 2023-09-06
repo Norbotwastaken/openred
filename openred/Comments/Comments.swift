@@ -132,6 +132,34 @@ class CommentsModel: ObservableObject {
         return false
     }
     
+    func togglePostNsfw(link: String) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if let nsfwButton = self.pages[link]!.document?.querySelector("#siteTable form.marknsfw-button a.yes") {
+            nsfwButton.click()
+            return true
+        } else if let nsfwButton = self.pages[link]!.document?.querySelector("#siteTable form.unmarknsfw-button a.yes") {
+            nsfwButton.click()
+            return true
+        }
+        return false
+    }
+    
+    func togglePostSpoiler(link: String) -> Bool {
+        if self.userSessionManager.userName == nil {
+            return false
+        }
+        if let spoilerButton = self.pages[link]!.document?.querySelector("#siteTable form.spoiler-button a.yes") {
+            spoilerButton.click()
+            return true
+        } else if let spoilerButton = self.pages[link]!.document?.querySelector("#siteTable form.unspoiler-button a.yes") {
+            spoilerButton.click()
+            return true
+        }
+        return false
+    }
+    
     func sendReply(link: String, parent: Comment?, content: String) -> Bool {
         if userSessionManager.userName == nil {
             return false
