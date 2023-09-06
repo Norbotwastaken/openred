@@ -22,18 +22,30 @@ struct PostRow: View {
                 Text(post.flair != nil ? LocalizedStringKey("  [" +  post.flair! + "]") : "")
                     .foregroundColor(.secondary)
                     .font(.system(size: 12))
-                if post.nsfw {
-                    Text("NSFW")
-                        .foregroundColor(.white)
-                        .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
-                        .fontWeight(.semibold)
-                        .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-                        .background(Color(red: 1, green: 0, blue: 93 / 255))
-                        .cornerRadius(5)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                HStack {
+                    if post.nsfw {
+                        Text("NSFW")
+                            .foregroundColor(.white)
+                            .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                            .background(Color.nsfwPink)
+                            .cornerRadius(5)
+                            .frame(alignment: .leading)
+                    }
+                    if post.spoiler {
+                        Text("Spoiler".uppercased())
+                            .foregroundColor(.white)
+                            .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                            .background(Color(UIColor.systemGray))
+                            .cornerRadius(5)
+                            .frame(alignment: .leading)
+                    }
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(alignment: .leading)
             .fixedSize(horizontal: false, vertical: true)
             .padding(EdgeInsets(top: 8, leading: 10, bottom: 4, trailing: 10))
             .disabled(true)
@@ -156,7 +168,6 @@ struct PostRowFooter: View {
 //                            newTarget = CommunityOrUser(user: User(post.userName!))
 //                        }
                     }
-                    Spacer().frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
                 
@@ -380,9 +391,9 @@ struct PostRowMenu: View {
                 Button(action: { showingSpoilerDialog = true }) {
                     Label(post.spoiler ? "Remove spoiler mark" : "Mark as spoiler", systemImage: "car.side.rear.open")
                 }
-                Button(action: { showingDeleteDialog = true }) {
-                    Label("Delete", systemImage: "xmark")
-                }
+                Button(role: .destructive, action: { showingDeleteDialog = true }, label: {
+                    Label("Delete", systemImage: "trash")
+                })
             }
         }
         .onAppear { newTarget = CommunityOrUser(community: nil, user: User(post.userName!)) }

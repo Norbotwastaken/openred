@@ -359,6 +359,7 @@ extension View {
 extension Color {
     public static let upvoteOrange: Color = Color(red: 1, green: 112 / 255, blue: 51 / 225)
     public static let downvoteBlue: Color = Color(red: 102 / 255, green: 102 / 255, blue: 1)
+    public static let nsfwPink: Color = Color(red: 1, green: 0, blue: 93 / 255)
 }
 
 extension String {

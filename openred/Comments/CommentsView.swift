@@ -48,11 +48,37 @@ struct CommentsView: View {
                     List {
                         VStack {
                             VStack {
-                                Text(commentsModel.pages[link]!.post!.title)
-                                    .font(.headline) +
-                                Text(commentsModel.pages[link]!.post!.flair != nil ? "  [" + commentsModel.pages[link]!.post!.flair! + "]" : "")
-                                    .foregroundColor(.secondary)
-                                    .font(.system(size: 12))
+                                HStack {
+                                    Text(commentsModel.pages[link]!.post!.title)
+                                        .font(.headline) +
+                                    Text(commentsModel.pages[link]!.post!.flair != nil ? "  [" + commentsModel.pages[link]!.post!.flair! + "]" : "")
+                                        .foregroundColor(.secondary)
+                                        .font(.system(size: 12))
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                HStack {
+                                    if commentsModel.pages[link]!.post!.nsfw {
+                                        Text("NSFW")
+                                            .foregroundColor(.white)
+                                            .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
+                                            .fontWeight(.semibold)
+                                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                            .background(Color.nsfwPink)
+                                            .cornerRadius(5)
+                                            .frame(alignment: .leading)
+                                    }
+                                    if commentsModel.pages[link]!.post!.spoiler {
+                                        Text("Spoiler".uppercased())
+                                            .foregroundColor(.white)
+                                            .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
+                                            .fontWeight(.semibold)
+                                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                            .background(Color(UIColor.systemGray))
+                                            .cornerRadius(5)
+                                            .frame(alignment: .leading)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .fixedSize(horizontal: false, vertical: true)
@@ -301,6 +327,7 @@ struct CommentsView: View {
 struct CommentView: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var popupViewModel: PopupViewModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @ObservedObject var comment: Comment
     var postLink: String
     @Binding var editorParentComment: Comment?
@@ -484,6 +511,7 @@ struct CommentView: View {
             Button("Cancel", role: .cancel) { showingDeleteAlert = false }
             Button("Delete", role: .destructive) {
                 commentsModel.deleteComment(link: postLink, comment: comment)
+                overlayModel.show("Comment successfully deleted")
                 showingDeleteAlert = false
             }
         } message: {
@@ -665,15 +693,6 @@ struct CommentActions: View {
             }) {
                 Label("Reply", systemImage: "arrow.uturn.left")
             }
-            
-            if comment.user?.lowercased() == model.userName?.lowercased() {
-                Button(action: {
-                    showingDeleteAlert = true
-                }) {
-                    Label("Delete comment", systemImage: "trash")
-                }
-            }
-            
             if comment.user != nil {
                 NavigationLink(destination: PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {
                     Button(action: {}) {
@@ -686,6 +705,11 @@ struct CommentActions: View {
                 overlayModel.show("Copied to clipboard", loading: false)
             }) {
                 Label("Copy text", systemImage: "list.clipboard")
+            }
+            if comment.user?.lowercased() == model.userName?.lowercased() {
+                Button(role: .destructive, action: { showingDeleteAlert = true }, label: {
+                    Label("Delete comment", systemImage: "trash")
+                })
             }
         }
         .onAppear { newTarget = CommunityOrUser(community: nil, user: User(comment.user!)) }
@@ -867,9 +891,9 @@ struct CommentActionsMenu: View {
                 Button(action: { showingSpoilerDialog = true }) {
                     Label(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark" : "Mark as spoiler", systemImage: "car.side.rear.open")
                 }
-                Button(action: { showingDeleteDialog = true }) {
-                    Label("Delete post", systemImage: "xmark")
-                }
+                Button(role: .destructive, action: { showingDeleteDialog = true }, label: {
+                    Label("Delete post", systemImage: "trash")
+                })
             }
         } label: {
             Label("Actions", systemImage: "ellipsis")
