@@ -11,8 +11,13 @@ import SwiftUI
 struct PostRow: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var popupViewModel: PopupViewModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     var post: Post
     @Binding var target: CommunityOrUser
+    @State var showingSaveDialog = false
+    @State var showingDeleteDialog = false
+    @State var showingNsfwDialog = false
+    @State var showingSpoilerDialog = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -56,6 +61,52 @@ struct PostRow: View {
                 .fill(Color(UIColor.systemGray5)
                     .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
                 .frame(maxWidth: .infinity, maxHeight: 5)
+        }
+        .contextMenu{ PostRowMenu(post: post, target: $target, showingSaveDialog: $showingSaveDialog,
+                                  showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
+                                  showingSpoilerDialog: $showingSpoilerDialog) }
+        .alert("Save image to library?", isPresented: $showingSaveDialog) {
+            if post.contentType == .image {
+                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.imageLink)
+            } else if post.contentType == .gallery {
+                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.gallery!.items[0].fullLink,
+                               links: post.gallery!.items.map{ $0.fullLink })
+            }
+        }
+        .alert("Delete post?", isPresented: $showingDeleteDialog) {
+            Button("Cancel", role: .cancel) { showingDeleteDialog = false }
+            Button("Delete", role: .destructive) {
+                if model.deletePost(target: target.getCode(), post: post) {
+                    overlayModel.show("Successfully deleted")
+                }
+                showingDeleteDialog = false
+            }
+        } message: {
+            Text("Are you sure you want to delete your post?")
+        }
+        .alert(post.nsfw ? "Remove NSFW mark?" : "Mark as NSFW?", isPresented: $showingNsfwDialog) {
+            Button("Cancel", role: .cancel) { showingNsfwDialog = false }
+            Button("Continue") {
+                if model.togglePostNsfw(target: target.getCode(), post: post) {
+                    overlayModel.show("Post updated")
+                }
+                showingNsfwDialog = false
+            }.keyboardShortcut(.defaultAction)
+        } message: {
+            Text(post.nsfw ? "Are you sure you want to mark your post as safe for work?"
+                 : "Are you sure you want to mark your post as NSFW?")
+        }
+        .alert(post.spoiler ? "Remove spoiler mark?" : "Mark as spoiler?", isPresented: $showingSpoilerDialog) {
+            Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
+            Button("Continue") {
+                if model.togglePostSpoiler(target: target.getCode(), post: post) {
+                    overlayModel.show("Post updated")
+                }
+                showingSpoilerDialog = false
+            }.keyboardShortcut(.defaultAction)
+        } message: {
+            Text(post.spoiler ? "Are you sure you want to mark your post as spoiler free?"
+                 : "Are you sure you want to mark your post for spoilers?")
         }
     }
 }
@@ -320,7 +371,7 @@ func formatScore(score: String) -> String {
 struct PostRowMenu: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var overlayModel: MessageOverlayModel
-    @ObservedObject var post: Post
+    @StateObject var post: Post
     @Binding var target: CommunityOrUser
     @Binding var showingSaveDialog: Bool
     @Binding var showingDeleteDialog: Bool

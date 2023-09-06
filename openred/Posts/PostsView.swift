@@ -11,7 +11,6 @@ import AVKit
 struct PostsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var settingsModel: SettingsModel
-    @EnvironmentObject var overlayModel: MessageOverlayModel
     @Environment(\.presentationMode) var presentation
     @Binding var itemInView: String
     @Binding var restoreScroll: Bool
@@ -22,10 +21,6 @@ struct PostsView: View {
     @State var isMessageEditorShowing: Bool = false
     @State var sortBy: String?
     @State var sortTime: String?
-    @State var showingSaveDialog = false
-    @State var showingDeleteDialog = false
-    @State var showingNsfwDialog = false
-    @State var showingSpoilerDialog = false
     var filters: KeyValuePairs<String, String> {
         if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
@@ -71,9 +66,6 @@ struct PostsView: View {
                             ForEach(model.pages[target.getCode()]!.items) { item in
                                 if !item.isComment {
                                     PostRow(post: item.post!, target: $target)
-                                        .contextMenu{ PostRowMenu(post: item.post!, target: $target, showingSaveDialog: $showingSaveDialog,
-                                                                  showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
-                                                                  showingSpoilerDialog: $showingSpoilerDialog) }
                                         .swipeActions(edge: model.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
                                             Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
                                                 Image(systemName: "arrow.up")
@@ -99,49 +91,7 @@ struct PostsView: View {
                                                            label: { EmptyView() })
                                             .opacity(0)
                                         )
-                                        .alert("Save image to library?", isPresented: $showingSaveDialog) {
-                                            if item.post!.contentType == .image {
-                                                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: item.post!.imageLink)
-                                            } else if item.post!.contentType == .gallery {
-                                                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: item.post!.gallery!.items[0].fullLink,
-                                                               links: item.post!.gallery!.items.map{ $0.fullLink })
-                                            }
-                                        }
-                                        .alert("Delete post?", isPresented: $showingDeleteDialog) {
-                                            Button("Cancel", role: .cancel) { showingDeleteDialog = false }
-                                            Button("Delete", role: .destructive) {
-                                                if model.deletePost(target: target.getCode(), post: item.post!) {
-                                                    overlayModel.show("Successfully deleted")
-                                                }
-                                                showingDeleteDialog = false
-                                            }
-                                        } message: {
-                                            Text("Are you sure you want to delete your post?")
-                                        }
-                                        .alert(item.post!.nsfw ? "Remove NSFW mark?" : "Mark as NSFW?", isPresented: $showingNsfwDialog) {
-                                            Button("Cancel", role: .cancel) { showingNsfwDialog = false }
-                                            Button("Continue") {
-                                                if model.togglePostNsfw(target: target.getCode(), post: item.post!) {
-                                                    overlayModel.show("Post updated")
-                                                }
-                                                showingNsfwDialog = false
-                                            }.keyboardShortcut(.defaultAction)
-                                        } message: {
-                                            Text(item.post!.nsfw ? "Are you sure you want to mark your post as safe for work?"
-                                                 : "Are you sure you want to mark your post as NSFW?")
-                                        }
-                                        .alert(item.post!.spoiler ? "Remove spoiler mark?" : "Mark as spoiler?", isPresented: $showingSpoilerDialog) {
-                                            Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
-                                            Button("Continue") {
-                                                if model.togglePostSpoiler(target: target.getCode(), post: item.post!) {
-                                                    overlayModel.show("Post updated")
-                                                }
-                                                showingSpoilerDialog = false
-                                            }.keyboardShortcut(.defaultAction)
-                                        } message: {
-                                            Text(item.post!.spoiler ? "Are you sure you want to mark your post as spoiler free?"
-                                                 : "Are you sure you want to mark your post for spoilers?")
-                                        }
+                                        
                                 } else {
                                     PostCommentRow(comment: item.comment!)
                                         .onAppear(perform: {
@@ -178,20 +128,8 @@ struct PostsView: View {
                         .listStyle(PlainListStyle())
                         .navigationTitle(model.pages[target.getCode()]!.title)
                         .navigationBarTitleDisplayMode(.inline)
-                        //                    .navigationBarBackButtonHidden(true)
                         .navigationBarHidden(isPostCreatorShowing || isMessageEditorShowing)
                         .toolbar {
-                            //                        ToolbarItem(placement: .navigationBarLeading) {
-                            //                            Button {
-                            //                                model.dismissPage(target: target)
-                            //                                dismiss()
-                            //                            } label: {
-                            //                                HStack {
-                            //                                    Image(systemName: "chevron.backward")
-                            //                                    Text("Back")
-                            //                                }
-                            //                            }
-                            //                        }
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 HStack {
                                     SortMenu(target: $target, currentSortBy: $sortBy, currentSortTime: $sortTime)
