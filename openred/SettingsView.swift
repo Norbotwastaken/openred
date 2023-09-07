@@ -386,13 +386,21 @@ struct AboutSettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @State private var sendCrashLogs = false
     @State private var showPrivacyPolicyAlert = false
+    @State var showSafari: Bool = false
     
     var body: some View {
         VStack {
             List {
                 Section(content: {
+                    Text("Terms of Use")
+                        .font(.system(size: 18))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture {
+                            showSafari = true
+                        }
                     Text("Privacy Policy")
                         .font(.system(size: 18))
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .onTapGesture {
                             showPrivacyPolicyAlert = true
                         }
@@ -407,6 +415,9 @@ All personal data used by OpenRed is stored on your device only and is never syn
                 }, footer: {
                     Text("With any questions or feature requests please contact contact@openredinc.com")
                 })
+                .fullScreenCover(isPresented: $showSafari) {
+                    SFSafariViewWrapper(url: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                }
                 Section(content: {
                     Toggle("Send crash logs", isOn: $sendCrashLogs)
                         .onChange(of: sendCrashLogs) { _ in
