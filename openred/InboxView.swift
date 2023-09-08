@@ -22,11 +22,38 @@ struct InboxView: View {
                 "comments": "Comment Replies", "selfreply": "Post Replies", "mentions": "Mentions"]
     }
     @State private var type = "inbox"
+    @State private var isLoggedIn: Bool = false
     
     var body: some View {
-        if messageModel.userSessionManager.userName != nil {
-            NavigationStack() {
-                ZStack {
+        NavigationStack() {
+            ZStack {
+                if !isLoggedIn {
+                    ZStack {
+                        VStack {
+                            Text("Log in to access your inbox.")
+                            Button( action: {
+                                loginPopupShowing.toggle()
+                            }) {
+                                ZStack {
+                                    Rectangle()
+                                        .fill(Color(UIColor.systemBlue))
+                                        .cornerRadius(10)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    
+                                    Text("Log In")
+                                        .font(.system(size: 18) .bold())
+                                }
+                            }
+                            .foregroundColor(.white)
+                            .frame(width: 150, height: 40, alignment: .top)
+                            .padding(EdgeInsets(top: 20, leading: 45, bottom: 0, trailing: 45))
+                        }
+                        if loginPopupShowing {
+                            LoginPopup(loginPopupShowing: $loginPopupShowing)
+                        }
+                    }
+                }
+                if messageModel.userSessionManager.userName != nil {
                     List {
                         VStack {
                             Picker("Filter Messages", selection: $type) {
@@ -42,13 +69,13 @@ struct InboxView: View {
                         ForEach(messageModel.messages) { message in
                             MessageView(message: message, isEditorShowing: $isEditorShowing,
                                         replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert)
-                                .listRowInsets(EdgeInsets(top: 8, leading: message.new ? 3 : 15, bottom: 8, trailing: 15))
-                                .alert("Block user", isPresented: $showingBlockAlert) {
-                                    Button("Cancel", role: .cancel) {}
-                                    Button("Block", role: .destructive) { messageModel.blockUser(message: message) }
-                                } message: {
-                                    Text("\(message.author) will be blocked")
-                                }
+                            .listRowInsets(EdgeInsets(top: 8, leading: message.new ? 3 : 15, bottom: 8, trailing: 15))
+                            .alert("Block user", isPresented: $showingBlockAlert) {
+                                Button("Cancel", role: .cancel) {}
+                                Button("Block", role: .destructive) { messageModel.blockUser(message: message) }
+                            } message: {
+                                Text("\(message.author) will be blocked")
+                            }
                         }
                         HStack(spacing: 30) {
                             if messageModel.prevLink != nil {
@@ -84,36 +111,13 @@ struct InboxView: View {
                         MessageEditor(isShowing: $isEditorShowing, replyToMessage: $replyToMessage)
                     }
                 }
-                .onAppear {
-                    messageModel.openInbox(filter: type)
-                    model.messageCount = 0
-                }
             }
-        } else {
-            ZStack {
-                VStack {
-                    Text("Log in to access your inbox.")
-                    Button( action: {
-                        loginPopupShowing.toggle()
-                    }) {
-                        ZStack {
-                            Rectangle()
-                                .fill(Color(UIColor.systemBlue))
-                                .cornerRadius(10)
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            
-                            Text("Log In")
-                                .font(.system(size: 18) .bold())
-                        }
-                    }
-                    .foregroundColor(.white)
-                    .frame(width: 150, height: 40, alignment: .top)
-                    .padding(EdgeInsets(top: 20, leading: 45, bottom: 0, trailing: 45))
-                }
-                if loginPopupShowing {
-                    LoginPopup(loginPopupShowing: $loginPopupShowing)
-                }
+            .onAppear {
+                messageModel.openInbox(filter: type)
+                model.messageCount = 0
             }
+        }.task {
+            isLoggedIn = model.userName != nil
         }
     }
 }

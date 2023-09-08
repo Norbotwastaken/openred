@@ -84,7 +84,7 @@ struct PostRow: View {
         } message: {
             Text("Are you sure you want to delete your post?")
         }
-        .alert(post.nsfw ? "Remove NSFW mark?" : "Mark as NSFW?", isPresented: $showingNsfwDialog) {
+        .alert(post.nsfw ? "Remove NSFW mark" : "Mark as NSFW", isPresented: $showingNsfwDialog) {
             Button("Cancel", role: .cancel) { showingNsfwDialog = false }
             Button("Continue") {
                 if model.togglePostNsfw(target: target.getCode(), post: post) {
@@ -96,7 +96,7 @@ struct PostRow: View {
             Text(post.nsfw ? "Are you sure you want to mark your post as safe for work?"
                  : "Are you sure you want to mark your post as NSFW?")
         }
-        .alert(post.spoiler ? "Remove spoiler mark?" : "Mark as spoiler?", isPresented: $showingSpoilerDialog) {
+        .alert(post.spoiler ? "Remove spoiler mark" : "Mark as spoiler", isPresented: $showingSpoilerDialog) {
             Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
             Button("Continue") {
                 if model.togglePostSpoiler(target: target.getCode(), post: post) {
@@ -290,7 +290,7 @@ struct PostRowFooter: View {
                 } message: {
                     Text("Are you sure you want to delete your post?")
                 }
-                .alert(post.nsfw ? "Remove NSFW mark?" : "Mark as NSFW?", isPresented: $showingNsfwDialog) {
+                .alert(post.nsfw ? "Remove NSFW mark" : "Mark as NSFW", isPresented: $showingNsfwDialog) {
                     Button("Cancel", role: .cancel) { showingNsfwDialog = false }
                     Button("Continue") {
                         if model.togglePostNsfw(target: target.getCode(), post: post) {
@@ -302,7 +302,7 @@ struct PostRowFooter: View {
                     Text(post.nsfw ? "Are you sure you want to mark your post as safe for work?"
                          : "Are you sure you want to mark your post as NSFW?")
                 }
-                .alert(post.spoiler ? "Remove spoiler mark?" : "Mark as spoiler?", isPresented: $showingSpoilerDialog) {
+                .alert(post.spoiler ? "Remove spoiler mark" : "Mark as spoiler", isPresented: $showingSpoilerDialog) {
                     Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
                     Button("Continue") {
                         if model.togglePostSpoiler(target: target.getCode(), post: post) {

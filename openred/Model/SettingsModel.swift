@@ -21,6 +21,7 @@ class SettingsModel: ObservableObject {
     @Published var hasPremium: Bool = false
     @Published var appVersion: String
     private var userSessionManager: UserSessionManager
+    var askTrackingConsent: Bool = false
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
@@ -101,6 +102,13 @@ class SettingsModel: ObservableObject {
         } else {
             UserDefaults.standard.set(userSessionManager.sendCrashReports, forKey: "sendCrashReports")
         }
+        
+        if let askTrackingConsent = UserDefaults.standard.object(forKey: "askTrackingConsent") as? Bool {
+            self.askTrackingConsent = askTrackingConsent
+        } else {
+            UserDefaults.standard.set(true, forKey: "askTrackingConsent")
+            self.askTrackingConsent = true
+        }
     }
     
     func setTheme(_ newTheme: String) {
@@ -152,6 +160,11 @@ class SettingsModel: ObservableObject {
     func removeUser(_ userName: String) {
         userSessionManager.removeAccount(userName)
         objectWillChange.send()
+    }
+    
+    func disableUserConsent() {
+        UserDefaults.standard.set(false, forKey: "askTrackingConsent")
+        self.askTrackingConsent = false
     }
     
     func authenticate() {
@@ -242,8 +255,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 //
 //        }
 //        else {
-//            GADMobileAds.sharedInstance().start(completionHandler: nil)
-            // ca-app-pub-3940256099942544/3986624511
+            GADMobileAds.sharedInstance().start(completionHandler: nil)
 //        }
         return true
     }

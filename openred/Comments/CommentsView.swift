@@ -62,7 +62,7 @@ struct CommentsView: View {
                                             .foregroundColor(.white)
                                             .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
                                             .fontWeight(.semibold)
-                                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 0, trailing: 4))
                                             .background(Color.nsfwPink)
                                             .cornerRadius(5)
                                             .frame(alignment: .leading)
@@ -72,7 +72,7 @@ struct CommentsView: View {
                                             .foregroundColor(.white)
                                             .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
                                             .fontWeight(.semibold)
-                                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 0, trailing: 4))
                                             .background(Color(UIColor.systemGray))
                                             .cornerRadius(5)
                                             .frame(alignment: .leading)
@@ -82,7 +82,7 @@ struct CommentsView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .fixedSize(horizontal: false, vertical: true)
-                            .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
+                            .padding(EdgeInsets(top: 8, leading: 10, bottom: 3, trailing: 10))
                             PostRowContent(post: commentsModel.pages[link]!.post!, isPostOpen: true, enableCrosspostLink: true)
                                 .padding(EdgeInsets(top: 0, leading: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0, bottom: 0, trailing: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0))
                                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: commentsModel.pages[link]!.post!.contentType == .text ? .leading : .center)
@@ -264,7 +264,7 @@ struct CommentsView: View {
                             } message: {
                                 Text("Are you sure you want to delete your post?")
                             }
-                            .alert(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark?" : "Mark post as NSFW?", isPresented: $showingNsfwDialog) {
+                            .alert(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark" : "Mark post as NSFW", isPresented: $showingNsfwDialog) {
                                 Button("Cancel", role: .cancel) { showingNsfwDialog = false }
                                 Button("Continue") {
                                     if commentsModel.togglePostNsfw(link: link) {
@@ -279,7 +279,7 @@ struct CommentsView: View {
                                 Text(commentsModel.pages[link]!.post!.nsfw ? "Are you sure you want to mark your post as safe for work?"
                                      : "Are you sure you want to mark your post as NSFW?")
                             }
-                            .alert(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark?" : "Mark post as spoiler?", isPresented: $showingSpoilerDialog) {
+                            .alert(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark" : "Mark post as spoiler", isPresented: $showingSpoilerDialog) {
                                 Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
                                 Button("Continue") {
                                     if commentsModel.togglePostSpoiler(link: link) {

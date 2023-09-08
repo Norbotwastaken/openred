@@ -7,13 +7,16 @@
 
 import Foundation
 import SwiftUI
+import AppTrackingTransparency
 
 struct LoginPopup: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var settingsModel: SettingsModel
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var waitingLoginResponse: Bool = false
     @State private var failedAttemptIndicatorShowing: Bool = false
+    @State private var privacyPromptShowing: Bool = false
     @Binding var loginPopupShowing: Bool
     @FocusState private var isFieldFocused: Bool
     
@@ -127,6 +130,9 @@ struct LoginPopup: View {
             }
             .frame(width: 340, height: 360)
         }
+        .fullScreenCover(isPresented: $privacyPromptShowing) {
+            TrackingConsentView(loginPopupShowing: $loginPopupShowing, waitingLoginResponse: $waitingLoginResponse)
+        }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
     }
@@ -137,13 +143,73 @@ struct LoginPopup: View {
         model.login(username: username, password: password)
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             if model.loginAttempt == .successful {
-                loginPopupShowing = false
-                waitingLoginResponse = false
+                if settingsModel.askTrackingConsent {
+                    privacyPromptShowing = true
+                } else {
+                    loginPopupShowing = false
+                    waitingLoginResponse = false
+                }
             } else if model.loginAttempt == .failed {
                 failedAttemptIndicatorShowing = true
                 waitingLoginResponse = false
                 isFieldFocused = true
             }
         }
+    }
+}
+
+struct TrackingConsentView: View {
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var settingsModel: SettingsModel
+    @Binding var loginPopupShowing: Bool
+    @Binding var waitingLoginResponse: Bool
+    
+    var body: some View {
+        ZStack {
+            VStack(spacing: 18) {
+                Spacer().frame(height: 60)
+                Text("""
+Help us keep OpenRed free and see ads relevant to your interests by allowing us to use your online activity and share it with partners.
+""")
+                .font(.system(size: 30) .bold())
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                Text("""
+Choose 'allow tracking' to see ads that are more interesting and relevant to you. This does not affect the number of ads presented to you and can be changed at any time in your system settings. App tracking data does not include information about your identity.
+""")
+                .font(.system(size: 18))
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                Text("Continue")
+                    .font(.system(size: 22))
+                    .padding(EdgeInsets(top: 10, leading: 70, bottom: 10, trailing: 70))
+                    .foregroundColor(.white)
+                    .background(Color.openRed)
+//                    .background(Color(UIColor.systemBlue))
+                    .cornerRadius(8)
+                    .padding()
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                    .onTapGesture {
+                        ATTrackingManager.requestTrackingAuthorization { status in
+                            switch status {
+                            case .authorized:
+                                print("enable tracking")
+                            case .denied:
+                                print("disable tracking")
+                            default:
+                                print("disable tracking")
+                            }
+                            settingsModel.disableUserConsent()
+                            loginPopupShowing = false
+                            waitingLoginResponse = false
+                            dismiss()
+                        }
+                    }
+            }
+            .frame(maxHeight: .infinity, alignment: .topLeading)
+            .padding()
+        }
+        .ignoresSafeArea()
+        .frame(maxHeight: .infinity)
+        .background(Color(UIColor.systemGray6))
     }
 }

@@ -393,7 +393,7 @@
 			packageReferences = (
 				AE4A96642A37BDE100BA96CF /* XCRemoteSwiftPackageReference "VideoPlayer" */,
 				AE4A966D2A39DEF400BA96CF /* XCRemoteSwiftPackageReference "swiftui-gif" */,
-				AE4A967D2A405D1600BA96CF /* XCRemoteSwiftPackageReference "RichText.git" */,
+				AE4A967D2A405D1600BA96CF /* XCRemoteSwiftPackageReference "RichText" */,
 			);
 			productRefGroup = AE89D4C12A2CCB3300889B3E /* Products */;
 			projectDirPath = "";
@@ -899,7 +899,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		AE4A967D2A405D1600BA96CF /* XCRemoteSwiftPackageReference "RichText.git" */ = {
+		AE4A967D2A405D1600BA96CF /* XCRemoteSwiftPackageReference "RichText" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/NuPlay/RichText.git";
 			requirement = {
@@ -922,7 +922,7 @@
 		};
 		AE4A967E2A405D1600BA96CF /* RichText */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AE4A967D2A405D1600BA96CF /* XCRemoteSwiftPackageReference "RichText.git" */;
+			package = AE4A967D2A405D1600BA96CF /* XCRemoteSwiftPackageReference "RichText" */;
 			productName = RichText;
 		};
 /* End XCSwiftPackageProductDependency section */
