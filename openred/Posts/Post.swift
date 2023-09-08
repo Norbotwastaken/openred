@@ -14,20 +14,25 @@ class PostOrComment: Identifiable, ObservableObject {
     var isComment: Bool
     var isActiveLoadMarker: Bool
     var isAdMarker: Bool
+    var adUnit: Int? // 1,2,3
     
-    init(post: Post, isActiveLoadMarker: Bool = false, isAdMarker: Bool = false) {
+    init(post: Post, isActiveLoadMarker: Bool = false,
+         isAdMarker: Bool = false, adUnit: Int? = nil) {
         self.post = post
         self.isComment = false
         self.id = post.id
         self.isActiveLoadMarker = isActiveLoadMarker
         self.isAdMarker = isAdMarker
+        self.adUnit = adUnit
     }
-    init(comment: Comment, isActiveLoadMarker: Bool = false, isAdMarker: Bool = false) {
+    init(comment: Comment, isActiveLoadMarker: Bool = false,
+         isAdMarker: Bool = false, adUnit: Int? = nil) {
         self.comment = comment
         self.isComment = true
         self.id = comment.id
         self.isActiveLoadMarker = isActiveLoadMarker
         self.isAdMarker = isAdMarker
+        self.adUnit = adUnit
     }
     
     func deactivateLoadMarker() {

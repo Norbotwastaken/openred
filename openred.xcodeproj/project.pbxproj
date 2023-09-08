@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5D287CB7879D0BE7B9C2EAC0 /* Pods_openred.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D1A39B277A0211F201F088F /* Pods_openred.framework */; };
-		AE3F322B2A8E8B580041E5B8 /* NativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE3F322A2A8E8B580041E5B8 /* NativeAdView.xib */; };
 		AE3FF7172A9B56250079A877 /* MessageCreateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3FF7162A9B56250079A877 /* MessageCreateModel.swift */; };
 		AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A962E2A2F96E400BA96CF /* PostsView.swift */; };
 		AE4A96312A2F974C00BA96CF /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96302A2F974C00BA96CF /* Post.swift */; };
@@ -52,6 +51,7 @@
 		AEC4BB6C2A8CD382005149B3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEC4BB6B2A8CD382005149B3 /* StoreKit.framework */; };
 		AEC4BB712A8E8031005149B3 /* Ads.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC4BB702A8E8031005149B3 /* Ads.swift */; };
 		AED069DC2AA22A9400B5D9A8 /* subscription.storekit in Resources */ = {isa = PBXBuildFile; fileRef = AEB87A582A90B45C00BB9051 /* subscription.storekit */; };
+		AED069E42AABD61B00B5D9A8 /* NativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AED069E32AABD61B00B5D9A8 /* NativeAdView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,7 +75,6 @@
 		08EC055C6F51377EF0A3CBDB /* Pods-openred.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-openred.debug.xcconfig"; path = "Target Support Files/Pods-openred/Pods-openred.debug.xcconfig"; sourceTree = "<group>"; };
 		579CACBF4281721F39F837B7 /* Pods-openred.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-openred.release.xcconfig"; path = "Target Support Files/Pods-openred/Pods-openred.release.xcconfig"; sourceTree = "<group>"; };
 		7D1A39B277A0211F201F088F /* Pods_openred.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_openred.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE3F322A2A8E8B580041E5B8 /* NativeAdView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NativeAdView.xib; sourceTree = "<group>"; };
 		AE3FF7162A9B56250079A877 /* MessageCreateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCreateModel.swift; sourceTree = "<group>"; };
 		AE4A962E2A2F96E400BA96CF /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
 		AE4A96302A2F974C00BA96CF /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -120,6 +119,7 @@
 		AEC4BB6A2A8B865B005149B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AEC4BB6B2A8CD382005149B3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		AEC4BB702A8E8031005149B3 /* Ads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ads.swift; sourceTree = "<group>"; };
+		AED069E32AABD61B00B5D9A8 /* NativeAdView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NativeAdView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,6 +245,7 @@
 		AE89D4C22A2CCB3300889B3E /* openred */ = {
 			isa = PBXGroup;
 			children = (
+				AED069E32AABD61B00B5D9A8 /* NativeAdView.xib */,
 				AEC4BB6A2A8B865B005149B3 /* Info.plist */,
 				AE4A96782A3F4AA100BA96CF /* Comments */,
 				AE4A96572A33A25500BA96CF /* Communities */,
@@ -263,7 +264,6 @@
 				AE4A96882A48DEBD00BA96CF /* Search.swift */,
 				AEBA65B32A8A1AD000431529 /* SettingsView.swift */,
 				AEC4BB702A8E8031005149B3 /* Ads.swift */,
-				AE3F322A2A8E8B580041E5B8 /* NativeAdView.xib */,
 				AEB87A582A90B45C00BB9051 /* subscription.storekit */,
 			);
 			path = openred;
@@ -413,8 +413,8 @@
 			files = (
 				AE89D4CB2A2CCB3600889B3E /* Preview Assets.xcassets in Resources */,
 				AEB87A5B2A990D1700BB9051 /* LaunchScreen.storyboard in Resources */,
+				AED069E42AABD61B00B5D9A8 /* NativeAdView.xib in Resources */,
 				AED069DC2AA22A9400B5D9A8 /* subscription.storekit in Resources */,
-				AE3F322B2A8E8B580041E5B8 /* NativeAdView.xib in Resources */,
 				AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

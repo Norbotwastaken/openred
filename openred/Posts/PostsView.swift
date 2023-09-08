@@ -16,7 +16,7 @@ struct PostsView: View {
     @Binding var restoreScroll: Bool
     @Binding var target: CommunityOrUser
     @Binding var loadPosts: Bool
-    @StateObject private var nativeViewModel = NativeAdViewModel()
+    @StateObject private var nativeAdViewModel = NativeAdViewModel()
     @State var isPostCreatorShowing: Bool = false
     @State var isMessageEditorShowing: Bool = false
     @State var sortBy: String?
@@ -43,9 +43,9 @@ struct PostsView: View {
                     if loadPosts {
                         model.loadCommunity(community: target)
                         loadPosts = false
-                        if !settingsModel.hasPremium {
-                            nativeViewModel.refreshAd()
-                        }
+//                        if !settingsModel.hasPremium && !model.hasRedditPremium {
+                            nativeAdViewModel.refreshAd()
+//                        }
                     }
                 }
             if model.pages[target.getCode()] != nil {
@@ -110,19 +110,19 @@ struct PostsView: View {
                                             .opacity(0)
                                         )
                                 }
-//                                if item.isAdMarker && target.isAdFriendly &&
+                                if item.isAdMarker && target.isAdFriendly &&
 //                                    !settingsModel.hasPremium && !model.hasRedditPremium &&
-//                                    nativeViewModel.nativeAd != nil {
-//                                    NativeAdView(nativeViewModel: nativeViewModel)
-//                                        .frame(height: 310)
-//                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-//                                        .listRowSeparator(.hidden)
-//                                    Rectangle()
-//                                        .fill(Color(UIColor.systemGray5)
-//                                            .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
-//                                        .frame(maxWidth: .infinity, maxHeight: 5)
-//                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-//                                }
+                                    nativeAdViewModel.ads[item.adUnit ?? 1] != nil {
+                                    NativeAdView(nativeAdViewModel: nativeAdViewModel, adUnit: item.adUnit ?? 1)
+                                        .frame(height: 310)
+                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                        .listRowSeparator(.hidden)
+                                    Rectangle()
+                                        .fill(Color(UIColor.systemGray5)
+                                            .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
+                                        .frame(maxWidth: .infinity, maxHeight: 5)
+                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                }
                             }
                         }
                         .listStyle(PlainListStyle())

@@ -12,6 +12,7 @@ import AppTrackingTransparency
 struct LoginPopup: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var settingsModel: SettingsModel
+    @EnvironmentObject var messageModel: MessageModel
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var waitingLoginResponse: Bool = false
@@ -148,6 +149,7 @@ struct LoginPopup: View {
                 } else {
                     loginPopupShowing = false
                     waitingLoginResponse = false
+                    messageModel.openInbox(filter: "inbox", forceLoad: true)
                 }
             } else if model.loginAttempt == .failed {
                 failedAttemptIndicatorShowing = true
@@ -161,6 +163,7 @@ struct LoginPopup: View {
 struct TrackingConsentView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var settingsModel: SettingsModel
+    @EnvironmentObject var messageModel: MessageModel
     @Binding var loginPopupShowing: Bool
     @Binding var waitingLoginResponse: Bool
     
@@ -202,6 +205,7 @@ Choose 'allow tracking' to see ads that are more interesting and relevant to you
                             loginPopupShowing = false
                             waitingLoginResponse = false
                             dismiss()
+                            messageModel.openInbox(filter: "inbox", forceLoad: true)
                         }
                     }
             }

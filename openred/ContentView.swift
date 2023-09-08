@@ -29,7 +29,7 @@ struct ContentView: View {
                         Label("Feed", systemImage: "newspaper")
                     }
                     .tag(1)
-                InboxView()
+                InboxView(loginPopupShowing: $loginPopupShowing)
                     .tabItem {
                         Label("Inbox", systemImage: "envelope")
                     }

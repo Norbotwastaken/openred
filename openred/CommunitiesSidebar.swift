@@ -191,7 +191,7 @@ struct UserSection: View {
     @State private var showingExitAlert = false
     
     var body: some View {
-        if model.userName != nil {
+        if model.userSessionManager.userName != nil {
             Menu {
                 Button(action: {
                     loadPosts = true
@@ -252,7 +252,7 @@ struct UserSection: View {
                 }
             }
         } else {
-            if model.savedUserNames.isEmpty {
+            if model.savedUserNames.isEmpty || !settingsModel.hasPremium {
                 Button(action: {
                     loginPopupShowing.toggle()
                 }) {

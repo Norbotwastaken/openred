@@ -11,7 +11,7 @@ import SwiftUI
 struct InboxView: View {
     @EnvironmentObject var messageModel: MessageModel
     @EnvironmentObject var model: Model
-    @State var loginPopupShowing: Bool = true
+    @Binding var loginPopupShowing: Bool
     @State var isEditorShowing: Bool = false
     @State var replyToMessage: Message?
     @State var showingBlockAlert: Bool = false
@@ -47,9 +47,6 @@ struct InboxView: View {
                             .foregroundColor(.white)
                             .frame(width: 150, height: 40, alignment: .top)
                             .padding(EdgeInsets(top: 20, leading: 45, bottom: 0, trailing: 45))
-                        }
-                        if loginPopupShowing {
-                            LoginPopup(loginPopupShowing: $loginPopupShowing)
                         }
                     }
                 }
@@ -117,6 +114,7 @@ struct InboxView: View {
                 model.messageCount = 0
             }
         }.task {
+            loginPopupShowing = true
             isLoggedIn = model.userName != nil
         }
     }

@@ -48,16 +48,20 @@ class JSONDataLoader {
                 if let data = data {
                     let postsWrapper: JSONPostsWrapper = try JSONDecoder().decode(JSONPostsWrapper.self, from: data)
                     var items: [PostOrComment] = []
+                    var adUnit: Int = 0
                     for i in postsWrapper.data.children.indices {
                         let wrapper = postsWrapper.data.children[i]
                         let isAdMarker = (i == 5) || (i == 12) || (i == 24)
+                        if isAdMarker {
+                            adUnit = adUnit + 1
+                        }
                         let isActiveLoadMarker = (i == postsWrapper.data.children.count - 7)
                         if wrapper.data != nil {
-                            items.append(PostOrComment(post: Post(jsonPost: wrapper.data!),
-                                                       isActiveLoadMarker: isActiveLoadMarker, isAdMarker: markForAds && isAdMarker))
+                            items.append(PostOrComment(post: Post(jsonPost: wrapper.data!), isActiveLoadMarker: isActiveLoadMarker,
+                                                       isAdMarker: markForAds && isAdMarker, adUnit: isAdMarker ? adUnit : nil))
                         } else if wrapper.commentData != nil {
-                            items.append(PostOrComment(comment: Comment(jsonComment: wrapper.commentData!),
-                                                       isActiveLoadMarker: isActiveLoadMarker, isAdMarker: markForAds && isAdMarker))
+                            items.append(PostOrComment(comment: Comment(jsonComment: wrapper.commentData!), isActiveLoadMarker: isActiveLoadMarker,
+                                                       isAdMarker: markForAds && isAdMarker, adUnit: isAdMarker ? adUnit : nil))
                         }
                         
                     }
