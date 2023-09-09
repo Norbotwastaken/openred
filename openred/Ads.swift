@@ -130,8 +130,11 @@ class NativeAdViewModel: NSObject, ObservableObject, GADNativeAdLoaderDelegate {
     
     func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: Error) {
         let adPosition = adUnits.firstIndex{ $0 == adLoader.adUnitID }
+        if adPosition == nil {
+            return
+        }
         print("\(adLoader) failed with error: \(error.localizedDescription)")
-        self.ads[(adPosition ?? 0)] = nil
+        self.ads[(adPosition!)] = nil
         
         if adPosition! < adUnits.count {
             refreshAd(adPosition: adPosition! + 1)

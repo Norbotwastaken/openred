@@ -168,6 +168,8 @@ class CommentsModel: ObservableObject {
         if page == nil {
             return false
         }
+        // TODO: format content string for JS. Newlines.
+        let formattedContent = formatCommentForJS(content)
         page!.browser.currentContent { (obj, err) -> Void in
             page!.document = obj
             if parent != nil {
@@ -178,7 +180,7 @@ class CommentsModel: ObservableObject {
                             page!.document = obj
                             let stub = "document.getElementById(\"commentreply_t1_" + parent!.id +
                             "\").getElementsByClassName(\"usertext-edit\")[0].getElementsByTagName(\"textarea\")[0].value"
-                            let js = stub + " = \"" + content + "\"; " //+ "var resultErik = " + stub + ";"
+                            let js = stub + " = \"" + formattedContent + "\"; " + "var resultErik = " + stub + ";"
                             page!.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
                                 page!.browser.currentContent { (obj2, err2) -> Void in
                                     page!.document = obj2
@@ -203,7 +205,6 @@ class CommentsModel: ObservableObject {
                                                 page!.flatCommentsList.insert(newComment, at: i + 1)
                                                 page!.commentsCollapsed[newComment.id] = false
                                                 self.objectWillChange.send()
-                                                // TODO: update other model collections
                                             }
                                         }
                                     }
@@ -215,7 +216,7 @@ class CommentsModel: ObservableObject {
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     let stub = "document.getElementsByClassName(\"commentarea\")[0].getElementsByClassName(\"usertext\")[0].getElementsByTagName(\"textarea\")[0].value"
-                    let js = stub + " = \"" + content + "\"; " // + "var resultErik = " + stub + ";"
+                    let js = stub + " = \"" + formattedContent + "\"; " // + "var resultErik = " + stub + ";"
                     page!.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
                         page!.browser.currentContent { (obj2, err2) -> Void in
                             page!.document = obj2
@@ -352,6 +353,10 @@ class CommentsModel: ObservableObject {
     
     var commentTheme: String {
         userSessionManager.commentTheme
+    }
+    
+    private func formatCommentForJS(_ content: String) -> String {
+        content.replacingOccurrences(of: "\n", with: "\\n")
     }
 }
 

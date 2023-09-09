@@ -110,12 +110,15 @@ struct InboxView: View {
                 }
             }
             .onAppear {
+                if model.messageCount > 0 {
+                    messageModel.openInbox(filter: type, forceLoad: true)
+                }
                 messageModel.openInbox(filter: type)
                 model.messageCount = 0
             }
         }.task {
-            loginPopupShowing = true
             isLoggedIn = model.userName != nil
+            loginPopupShowing = !isLoggedIn
         }
     }
 }
@@ -143,7 +146,7 @@ struct MessageView: View {
                 Rectangle()
                     .frame(maxWidth: 2, maxHeight: .infinity, alignment: .leading)
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .foregroundColor(Color(red: 192 / 255, green: 57 / 255, blue: 43 / 255))
+                    .foregroundColor(Themes.themes[messageModel.userSessionManager.commentTheme]!.colors[0])
                     .opacity(0.8)
             }
             VStack(spacing: 10) {
@@ -170,8 +173,10 @@ struct MessageView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 HStack {
                     Text(message.author)
+                        .lineLimit(1)
                     if message.subreddit != nil {
                         Text("via " + message.subreddit!)
+                            .lineLimit(1)
                     }
                     HStack(spacing: 3) {
                         Image(systemName: "clock")

@@ -172,18 +172,19 @@ struct TrackingConsentView: View {
             VStack(spacing: 18) {
                 Spacer().frame(height: 60)
                 Text("""
-Help us keep OpenRed free and see ads relevant to your interests by allowing us to use your online activity and share it with partners.
+Help us keep OpenRed free by allowing us to use your online activity and share it with partners.
 """)
                 .font(.system(size: 30) .bold())
                 .frame(maxWidth: .infinity, alignment: .topLeading)
-                Text("""
-Choose 'allow tracking' to see ads that are more interesting and relevant to you. This does not affect the number of ads presented to you and can be changed at any time in your system settings. App tracking data does not include information about your identity.
-""")
+                Text(.init("""
+**Choose 'Allow'** to see ads that are more interesting and relevant to you. This does not affect the number of ads presented to you and helps us to provide the app for free. App tracking data does not include information about your identity and your choices can be changed at any time in your system settings.
+"""))
                 .font(.system(size: 18))
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
                 Text("Continue")
-                    .font(.system(size: 22))
+                    .font(.system(size: 18))
+                    .fontWeight(.semibold)
                     .padding(EdgeInsets(top: 10, leading: 70, bottom: 10, trailing: 70))
                     .foregroundColor(.white)
                     .background(Color.openRed)

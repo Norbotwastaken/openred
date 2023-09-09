@@ -140,7 +140,7 @@ struct BuyPremiumView: View {
                 PremiumFeatureView(iconName: "faceid",
                                    color: Color(UIColor.systemBlue),
                                    title: "FaceID & Passcode",
-                                   dedscription: "For added security, require passcode or FaceID scan to unlock OpenRed.")
+                                   dedscription: "For added security, require passcode or FaceID scan to unlock the app.")
                 PremiumFeatureView(iconName: "app.gift",
                                    color: Color(UIColor.systemGray2),
                                    title: "Custom App Icons",
@@ -409,7 +409,7 @@ struct AboutSettingsView: View {
                                 .keyboardShortcut(.defaultAction)
                         } message: {
                             Text("""
-All personal data used by OpenRed is stored on your device only and is never synced to a cloud service or remote server. OpenRed does not store your passwords for any of your reddit accounts. The app does not collect your browsing activity or any other metadata for advertising or other purposes. The app may send crash reports to help improve your user experience. Data in crash reports are anonymized and are only sent with your explicit permission. OpenRed uses reddit.com to serve content. Policies and rules maintained by reddit also apply within the OpenRed app and are available at https://www.redditinc.com/policies/all.
+All personal data used by OpenRed is stored on your device only and is never synced to a cloud service or remote server. OpenRed does not store your passwords for any of your reddit accounts. The app may only collect data about your browsing activity with your explicit permission. Such data is anonymous and may be used for advertising purposes. To opt in or out of personalized advertising you can update your preferences in the Settings app on your device ('Allow Tracking' under OpenRed tab). Ads may be served using Google's advertising technologies, the details of which can be found at https://policies.google.com/technologies/ads. The app may send crash reports to help improve your user experience. Data in crash reports are anonymized and are only sent with your permission. OpenRed uses reddit.com to serve content. Policies and rules maintained by reddit also apply within the OpenRed app and are available at https://www.redditinc.com/policies/all.
 """)
                         }
                 }, footer: {

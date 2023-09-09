@@ -115,13 +115,13 @@ struct PostsView: View {
                                     nativeAdViewModel.ads[item.adUnit ?? 1] != nil {
                                     NativeAdView(nativeAdViewModel: nativeAdViewModel, adUnit: item.adUnit ?? 1)
                                         .frame(height: 350)
-                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
                                         .listRowSeparator(.hidden)
                                     Rectangle()
                                         .fill(Color(UIColor.systemGray5)
                                             .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
                                         .frame(maxWidth: .infinity, maxHeight: 5)
-                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 }
                             }
                         }
