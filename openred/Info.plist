@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>GADNativeAdValidatorEnabled</key>
-	<true/>
+	<false/>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>OpenRed would like permission to track you across apps and websites. This ensures the app stays free and the you will see ads relevant to your interests.</string>
 	<key>CFBundleShortVersionString</key>
