@@ -114,7 +114,7 @@ struct PostsView: View {
 //                                    !settingsModel.hasPremium && !model.hasRedditPremium &&
                                     nativeAdViewModel.ads[item.adUnit ?? 1] != nil {
                                     NativeAdView(nativeAdViewModel: nativeAdViewModel, adUnit: item.adUnit ?? 1)
-                                        .frame(height: 310)
+                                        .frame(height: 350)
                                         .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                                         .listRowSeparator(.hidden)
                                     Rectangle()

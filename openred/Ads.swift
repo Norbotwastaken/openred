@@ -17,6 +17,7 @@ struct NativeAdView: UIViewRepresentable {
     func makeUIView(context: Context) -> GADNativeAdView {
         return Bundle.main.loadNibNamed(
             "NativeAdView",
+//            "GADTMediumTemplateView",
             owner: nil,
             options: nil)?.first as! GADNativeAdView
     }
