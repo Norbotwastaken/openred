@@ -139,7 +139,7 @@ class JSONAbout: Codable {
             try? attributedText = container.decode(AttributedString?.self, forKey: .description)
             if attributedText != nil {
                 text = String(attributedText!.characters[...])
-                self.description = ContentFormatter().format(text: text)
+                self.description = ContentFormatter().formatAndConvert(text: text)
             }
         }
         do {
@@ -148,7 +148,7 @@ class JSONAbout: Codable {
             try? attributedText = container.decode(AttributedString?.self, forKey: .submit_text)
             if attributedText != nil {
                 text = String(attributedText!.characters[...])
-                self.submit_text = ContentFormatter().format(text: text)
+                self.submit_text = ContentFormatter().formatAndConvert(text: text)
             }
         }
         do { try self.community_icon = String(htmlEncodedString: container.decode( String?.self, forKey: .community_icon)!) } catch {}
@@ -219,12 +219,12 @@ class JSONRule: Codable {
         do {
             var text: String = ""
             try text = String(container.decode(AttributedString?.self, forKey: .description)!.characters[...])
-            self.description = ContentFormatter().format(text: text)
+            self.description = ContentFormatter().formatAndConvert(text: text)
         } catch {}
         do {
             var text: String = ""
             try text = String(container.decode(AttributedString?.self, forKey: .short_name)!.characters[...])
-            self.short_name = ContentFormatter().format(text: text)
+            self.short_name = ContentFormatter().formatAndConvert(text: text)
         } catch {}
         
         try self.kind = container.decode(String.self, forKey: .kind)

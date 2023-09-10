@@ -173,7 +173,7 @@ class JSONPost: Codable {
         do {
             var text: String = ""
             try text = String(container.decode(AttributedString?.self, forKey: .selftext)!.characters[...])
-            self.selftext = ContentFormatter().format(text: text)
+            self.selftext = ContentFormatter().formatAndConvert(text: text)
         } catch {}
         
         do { try self.author_fullname = container.decode(String?.self, forKey: .author_fullname) } catch {}

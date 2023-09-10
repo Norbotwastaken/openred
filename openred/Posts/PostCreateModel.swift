@@ -72,11 +72,11 @@ class PostCreateModel: ObservableObject {
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            var js = "document.getElementById(\"title-field\").getElementsByTagName(\"textarea\")[0].value = \"" + title + "\"; "
+            var js = "document.getElementById(\"title-field\").getElementsByTagName(\"textarea\")[0].value = \"" + String.formatForJS(title) + "\"; "
             if isLink {
-                js = js + "document.getElementById(\"url-field\").getElementsByTagName(\"input\")[0].value = \"" + link! + "\"; "
+                js = js + "document.getElementById(\"url-field\").getElementsByTagName(\"input\")[0].value = \"" + String.formatForJS(link!) + "\"; "
             } else {
-                js = js + "document.getElementById(\"text-field\").getElementsByTagName(\"textarea\")[0].value = \"" + text! + "\"; "
+                js = js + "document.getElementById(\"text-field\").getElementsByTagName(\"textarea\")[0].value = \"" + String.formatForJS(text!) + "\"; "
             }
             if sendReplies {
                 js = js + "document.getElementById(\"sendreplies\").checked = true; "

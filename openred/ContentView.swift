@@ -377,6 +377,11 @@ extension String {
         }
         self.init(attributedString.string)
     }
+    
+    static func formatForJS(_ content: String) -> String {
+        content.replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+    }
 }
 
 extension Date {

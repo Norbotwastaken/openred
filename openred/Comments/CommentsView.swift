@@ -19,6 +19,7 @@ struct CommentsView: View {
     @Binding var restorePostsScroll: Bool
 //    @Binding var postsTarget: CommunityOrUser
     var link: String
+    @State var commentToEdit: Comment?
     @State var isEditorShowing: Bool = false
     @State var editorParentComment: Comment?
     @State var scrollTarget: String?
@@ -221,7 +222,7 @@ struct CommentsView: View {
                         ForEach(commentsModel.pages[link]!.flatCommentsList) { comment in
                             if !commentsModel.pages[link]!.anyParentsCollapsed(comment: comment) {
                                 CommentView(comment: comment, postLink: link, editorParentComment: $editorParentComment,
-                                            isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget)
+                                            commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget)
                                 //                            .onAppear {
                                 //                                commentInView = comment.id
                                 //                            }
@@ -313,7 +314,7 @@ struct CommentsView: View {
                     //                })
                 }
                 if isEditorShowing {
-                    CommentEditor(isShowing: $isEditorShowing, parentComment: $editorParentComment, postLink: link)
+                    CommentEditor(commentToEdit: $commentToEdit, isShowing: $isEditorShowing, parentComment: $editorParentComment, postLink: link)
                 }
             }
         }
@@ -331,6 +332,7 @@ struct CommentView: View {
     @ObservedObject var comment: Comment
     var postLink: String
     @Binding var editorParentComment: Comment?
+    @Binding var commentToEdit: Comment?
     @Binding var isEditorShowing: Bool
     @Binding var scrollTarget: String?
     @State var showSafari: Bool = false
@@ -400,7 +402,7 @@ struct CommentView: View {
                                 .font(.system(size: 12))
                         }
                         Menu {
-                            CommentActions(comment: comment, editorParentComment: $editorParentComment,
+                            CommentActions(comment: comment, editorParentComment: $editorParentComment, commentToEdit: $commentToEdit,
                                            isEditorShowing: $isEditorShowing, showingDeleteAlert: $showingDeleteAlert, postLink: postLink)
                         } label: {
                             ZStack {
@@ -486,7 +488,7 @@ struct CommentView: View {
                 commentsModel.collapseComment(link: postLink, comment: comment)
                 scrollTarget = comment.id
             }
-            .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment,
+            .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment, commentToEdit: $commentToEdit,
                                          isEditorShowing: $isEditorShowing, showingDeleteAlert: $showingDeleteAlert, postLink: postLink) }
             .swipeActions(edge: commentsModel.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
                 Button { commentsModel.toggleUpvoteComment(link: postLink, comment: comment) } label: {
@@ -601,6 +603,7 @@ struct CommentActions: View {
     @EnvironmentObject var overlayModel: MessageOverlayModel
     @ObservedObject var comment: Comment
     @Binding var editorParentComment: Comment?
+    @Binding var commentToEdit: Comment?
     @Binding var isEditorShowing: Bool
     @Binding var showingDeleteAlert: Bool
     var postLink: String
@@ -627,6 +630,7 @@ struct CommentActions: View {
             }
             Button(action: {
                 editorParentComment = comment
+                commentToEdit = nil
                 isEditorShowing = true
             }) {
                 Label("Reply", systemImage: "arrow.uturn.left")
@@ -645,6 +649,13 @@ struct CommentActions: View {
                 Label("Copy text", systemImage: "list.clipboard")
             }
             if comment.user?.lowercased() == model.userName?.lowercased() {
+                Button(action: {
+                    editorParentComment = nil
+                    commentToEdit = comment
+                    isEditorShowing = true
+                }) {
+                    Label("Edit comment", systemImage: "pencil.line")
+                }
                 Button(role: .destructive, action: { showingDeleteAlert = true }, label: {
                     Label("Delete comment", systemImage: "trash")
                 })
@@ -692,6 +703,7 @@ struct CommentSortMenu: View {
 
 struct CommentEditor: View {
     @EnvironmentObject var commentsModel: CommentsModel
+    @Binding var commentToEdit: Comment?
     @Binding var isShowing: Bool
     @Binding var parentComment: Comment?
     var postLink: String
@@ -727,7 +739,11 @@ struct CommentEditor: View {
                         .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
                         .onTapGesture {
                             if content != "" {
-                                commentsModel.sendReply(link: postLink, parent: parentComment, content: content)
+                                if commentToEdit != nil {
+                                    commentsModel.editComment(link: postLink, comment: commentToEdit!, content: content)
+                                } else {
+                                    commentsModel.sendReply(link: postLink, parent: parentComment, content: content)
+                                }
                                 loading = true
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                                     isShowing = false
@@ -775,6 +791,11 @@ struct CommentEditor: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .task {
+            if commentToEdit != nil {
+                content = commentToEdit!.rawContent ?? ""
+            }
+        }
     }
 }
 

@@ -65,7 +65,7 @@ class JSONMessage: Codable {
         do {
             var text: String = ""
             try text = String(container.decode(AttributedString?.self, forKey: .body)!.characters[...])
-            self.body = ContentFormatter().format(text: text)
+            self.body = ContentFormatter().formatAndConvert(text: text)
         } catch {}
         
         try self.id = container.decode(String.self, forKey: .id)

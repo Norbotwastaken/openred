@@ -168,8 +168,7 @@ class CommentsModel: ObservableObject {
         if page == nil {
             return false
         }
-        // TODO: format content string for JS. Newlines.
-        let formattedContent = formatCommentForJS(content)
+        let formattedContent = String.formatForJS(content)
         page!.browser.currentContent { (obj, err) -> Void in
             page!.document = obj
             if parent != nil {
@@ -180,7 +179,7 @@ class CommentsModel: ObservableObject {
                             page!.document = obj
                             let stub = "document.getElementById(\"commentreply_t1_" + parent!.id +
                             "\").getElementsByClassName(\"usertext-edit\")[0].getElementsByTagName(\"textarea\")[0].value"
-                            let js = stub + " = \"" + formattedContent + "\"; " + "var resultErik = " + stub + ";"
+                            let js = stub + " = \"" + formattedContent + "\"; "// + "var resultErik = " + stub + ";"
                             page!.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
                                 page!.browser.currentContent { (obj2, err2) -> Void in
                                     page!.document = obj2
@@ -189,7 +188,7 @@ class CommentsModel: ObservableObject {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                         page!.browser.currentContent { (obj3, err3) -> Void in
                                             page!.document = obj3
-                                            var newCommentTimeTag = page!.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(parent!.id)\"] .child" +
+                                            let newCommentTimeTag = page!.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(parent!.id)\"] .child" +
                                                                                                     " .thing.comment .tagline time").first
                                             if newCommentTimeTag != nil && newCommentTimeTag!.text == "just now" {
                                                 let newCommentElement = page!.document!
@@ -243,6 +242,44 @@ class CommentsModel: ObservableObject {
             }
         }
         return true
+    }
+    
+    func editComment(link: String, comment: Comment, content: String) {
+        if userSessionManager.userName == nil {
+            return
+        }
+        let page = pages[link]
+        if page == nil {
+            return
+        }
+        page!.browser.currentContent { (obj, err) -> Void in
+            page!.document = obj
+            if let editButton = page!.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_" + comment.id + "\"]>.entry .buttons a.edit-usertext").first {
+                editButton.click()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    page!.browser.currentContent { (obj, err) -> Void in
+                        page!.document = obj
+                        let stub = "document.getElementById(\"thing_t1_" + comment.id +
+                        "\").getElementsByClassName(\"usertext-edit\")[0].getElementsByTagName(\"textarea\")[0].value"
+                        let js = stub + " = \"" + String.formatForJS(content) + "\"; "// + "var resultErik = " + stub + ";"
+                        page!.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
+                            page!.browser.currentContent { (obj2, err2) -> Void in
+                                page!.document = obj2
+                                page!.document!.querySelectorAll(".sitetable div.thing[id=\"thing_t1_\(comment.id)\"] .bottom-area .usertext-buttons button.save")
+                                    .first!.click()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    page!.browser.currentContent { (obj3, err3) -> Void in
+                                        page!.document = obj3
+                                        page!.comments.filter{ $0.id == comment.id }.first?.content = ContentFormatter().formatAndConvert(text: content)
+                                        self.objectWillChange.send()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func deleteComment(link: String, comment: Comment) {
@@ -353,10 +390,6 @@ class CommentsModel: ObservableObject {
     
     var commentTheme: String {
         userSessionManager.commentTheme
-    }
-    
-    private func formatCommentForJS(_ content: String) -> String {
-        content.replacingOccurrences(of: "\n", with: "\\n")
     }
 }
 

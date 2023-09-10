@@ -64,8 +64,8 @@ class MessageCreateModel: ObservableObject {
         self.submissionState = .undecided
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            var js = "document.getElementById(\"compose-message\").getElementsByTagName(\"input\")[2].value = \"\(subject)\"; "
-            js = js + "document.getElementsByClassName(\"message_field\")[0].getElementsByTagName(\"textarea\")[0].value = \"\(message)\";"
+            var js = "document.getElementById(\"compose-message\").getElementsByTagName(\"input\")[2].value = \"\(String.formatForJS(subject))\"; "
+            js = js + "document.getElementsByClassName(\"message_field\")[0].getElementsByTagName(\"textarea\")[0].value = \"\(String.formatForJS(message))\";"
             
             self.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
                 self.browser.currentContent { (o2, e2) -> Void in

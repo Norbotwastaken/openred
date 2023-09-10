@@ -63,6 +63,7 @@ class JSONCommentData: Codable {
     var all_awardings: [JSONPostAwarding]
     var collapsed: Bool
     var body: AttributedString? // the content
+    var rawContent: String?
 //    var edited: Bool // or maybe double
 //    var top_awarded_type: String?
 //    var author_flair_css_class: String?
@@ -129,7 +130,7 @@ class JSONCommentData: Codable {
 
         var text: String = ""
         try text = String(container.decode(AttributedString?.self, forKey: .body)!.characters[...])
-        self.body = ContentFormatter().format(text: text)
+        self.body = ContentFormatter().formatAndConvert(text: text)
         
         try self.is_submitter = container.decode(Bool.self, forKey: .is_submitter)
         try self.stickied = container.decode(Bool.self, forKey: .stickied)
@@ -148,6 +149,9 @@ class JSONCommentData: Codable {
         
         self.replies = nil
         try? self.replies = container.decode(JSONEntityWrapper?.self, forKey: .replies)
+        if is_submitter {
+            self.rawContent = ContentFormatter().format(text: text)
+        }
     }
 }
 
@@ -157,6 +161,7 @@ class Comment: Identifiable, ObservableObject {
     var depth: Int
     var score: Int
     var content: AttributedString?
+    var rawContent: String?
     var media_metadata: DecodedMediaMetaDataArray?
     var user: String?
     var age: String?
@@ -187,6 +192,7 @@ class Comment: Identifiable, ObservableObject {
         self.depth = jsonComment.depth
         self.score = jsonComment.score
         self.content = jsonComment.body
+        self.rawContent = jsonComment.rawContent
         self.media_metadata = jsonComment.media_metadata
         self.user = jsonComment.author
         self.isUpvoted = jsonComment.likes != nil ? jsonComment.likes! : false

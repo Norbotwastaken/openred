@@ -80,7 +80,7 @@ class MessageModel: ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.browser.currentContent { (obj, err) -> Void in
                         self.document = obj
-                        let js = "document.getElementById(\"commentreply_\(message.type)_\(message.id)\").getElementsByTagName(\"textarea\")[0].value = \"\(content)\""
+                        let js = "document.getElementById(\"commentreply_\(message.type)_\(message.id)\").getElementsByTagName(\"textarea\")[0].value = \"\(String.formatForJS(content))\""
                         self.browser.evaluate(javaScript: js) { (jsObj, jsErr) -> Void in
                             self.browser.currentContent { (obj2, err2) -> Void in
                                 self.document = obj2
