@@ -63,6 +63,7 @@ class Post: Identifiable, ObservableObject {
     var externalLink: String?
     var externalLinkDomain: String?
     var text: AttributedString?
+    var rawText: String?
     var gallery: Gallery?
     var crosspost: Post?
     var stickied: Bool
@@ -95,6 +96,7 @@ class Post: Identifiable, ObservableObject {
         self.linkToThread = jsonPost.permalink
         self.score = String(jsonPost.score)
         self.text = jsonPost.selftext ?? ""
+        self.rawText = jsonPost.raw_selftext ?? ""
         self.upvoteRatio = jsonPost.upvote_ratio ?? 0
         
         for award in jsonPost.all_awardings {

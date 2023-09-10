@@ -270,8 +270,8 @@ class CommentsModel: ObservableObject {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                     page!.browser.currentContent { (obj3, err3) -> Void in
                                         page!.document = obj3
-                                        page!.comments.filter{ $0.id == comment.id }.first?.content = ContentFormatter().formatAndConvert(text: content)
                                         self.objectWillChange.send()
+                                        page!.comments.filter{ $0.id == comment.id }.first?.content = ContentFormatter().formatAndConvert(text: content)
                                     }
                                 }
                             }

@@ -791,7 +791,7 @@ struct CommentEditor: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .task {
+        .onAppear() {
             if commentToEdit != nil {
                 content = commentToEdit!.rawContent ?? ""
             }

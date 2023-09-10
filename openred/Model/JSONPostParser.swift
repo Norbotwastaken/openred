@@ -43,6 +43,7 @@ class JSONPost: Codable {
     //    var approved_at_utc: String?
     var subreddit: String?
     var selftext: AttributedString?
+    var raw_selftext: String?
     var author_fullname: String?
     var saved: Bool //
     //    var mod_reason_title: String?
@@ -174,6 +175,7 @@ class JSONPost: Codable {
             var text: String = ""
             try text = String(container.decode(AttributedString?.self, forKey: .selftext)!.characters[...])
             self.selftext = ContentFormatter().formatAndConvert(text: text)
+            self.raw_selftext = ContentFormatter().format(text: text)
         } catch {}
         
         do { try self.author_fullname = container.decode(String?.self, forKey: .author_fullname) } catch {}

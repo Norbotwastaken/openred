@@ -131,6 +131,7 @@ class JSONCommentData: Codable {
         var text: String = ""
         try text = String(container.decode(AttributedString?.self, forKey: .body)!.characters[...])
         self.body = ContentFormatter().formatAndConvert(text: text)
+        self.rawContent = ContentFormatter().format(text: text)
         
         try self.is_submitter = container.decode(Bool.self, forKey: .is_submitter)
         try self.stickied = container.decode(Bool.self, forKey: .stickied)
@@ -149,9 +150,6 @@ class JSONCommentData: Codable {
         
         self.replies = nil
         try? self.replies = container.decode(JSONEntityWrapper?.self, forKey: .replies)
-        if is_submitter {
-            self.rawContent = ContentFormatter().format(text: text)
-        }
     }
 }
 
