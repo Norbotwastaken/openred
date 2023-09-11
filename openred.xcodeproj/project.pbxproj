@@ -52,7 +52,6 @@
 		AEC4BB712A8E8031005149B3 /* Ads.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC4BB702A8E8031005149B3 /* Ads.swift */; };
 		AED069DC2AA22A9400B5D9A8 /* subscription.storekit in Resources */ = {isa = PBXBuildFile; fileRef = AEB87A582A90B45C00BB9051 /* subscription.storekit */; };
 		AED069E42AABD61B00B5D9A8 /* NativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AED069E32AABD61B00B5D9A8 /* NativeAdView.xib */; };
-		AED069E62AAC695700B5D9A8 /* GADTMediumTemplateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AED069E52AAC695600B5D9A8 /* GADTMediumTemplateView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,7 +120,6 @@
 		AEC4BB6B2A8CD382005149B3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		AEC4BB702A8E8031005149B3 /* Ads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ads.swift; sourceTree = "<group>"; };
 		AED069E32AABD61B00B5D9A8 /* NativeAdView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NativeAdView.xib; sourceTree = "<group>"; };
-		AED069E52AAC695600B5D9A8 /* GADTMediumTemplateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GADTMediumTemplateView.xib; path = "../../../Downloads/googleads-mobile-ios-native-templates-main/nativetemplates/GADTMediumTemplateView.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,7 +245,6 @@
 		AE89D4C22A2CCB3300889B3E /* openred */ = {
 			isa = PBXGroup;
 			children = (
-				AED069E52AAC695600B5D9A8 /* GADTMediumTemplateView.xib */,
 				AED069E32AABD61B00B5D9A8 /* NativeAdView.xib */,
 				AEC4BB6A2A8B865B005149B3 /* Info.plist */,
 				AE4A96782A3F4AA100BA96CF /* Comments */,
@@ -415,7 +412,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE89D4CB2A2CCB3600889B3E /* Preview Assets.xcassets in Resources */,
-				AED069E62AAC695700B5D9A8 /* GADTMediumTemplateView.xib in Resources */,
 				AEB87A5B2A990D1700BB9051 /* LaunchScreen.storyboard in Resources */,
 				AED069E42AABD61B00B5D9A8 /* NativeAdView.xib in Resources */,
 				AED069DC2AA22A9400B5D9A8 /* subscription.storekit in Resources */,

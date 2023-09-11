@@ -121,6 +121,7 @@ struct CommunitiesStack: View {
 
 struct CommunityRow: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var commentsModel: CommentsModel
     var community: Community
     var isFavoritable: Bool = true
     @Binding var showPosts: Bool
@@ -131,6 +132,7 @@ struct CommunityRow: View {
         Button(action: {
             loadPosts = true
             target = CommunityOrUser(community: community)
+            commentsModel.resetPages()
             model.resetPagesTo(target: target)
 //            model.loadCommunity(community: CommunityOrUser(community: community))
             showPosts = true
@@ -181,6 +183,7 @@ struct CommunityRow: View {
 
 struct UserSection: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var messageModel: MessageModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
@@ -197,6 +200,7 @@ struct UserSection: View {
                     loadPosts = true
                     target = CommunityOrUser(user: User(model.userName!))
                     model.resetPagesTo(target: target)
+                    commentsModel.resetPages()
                     showPosts = true
 //                    model.loadCommunity(community: target)
                 }) {

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SearchView: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var searchModel: SearchModel
     @Binding var tabSelection: Int
     @Binding var showPosts: Bool
@@ -28,6 +29,7 @@ struct SearchView: View {
                     let community = CommunityOrUser(community: Community(communityName, isMultiCommunity: ["all", "popular", "saved", "mod", ""]
                         .contains(communityName.lowercased())))
                     model.resetPagesTo(target: community)
+                    commentsModel.resetPages()
                     model.loadCommunity(community: community)
                     target = community
                     communityName = ""
@@ -81,6 +83,7 @@ struct SearchView: View {
                         .onTapGesture {
                             let community = CommunityOrUser(user: User(communityName))
                             model.resetPagesTo(target: community)
+                            commentsModel.resetPages()
                             model.loadCommunity(community: community)
                             target = community
                             tabSelection = 1

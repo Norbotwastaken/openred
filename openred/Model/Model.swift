@@ -78,7 +78,7 @@ class Model: ObservableObject {
     
     func switchAccountTo(userName: String) {
         userSessionManager.switchToAccount(userName: userName)
-        pages = [:]
+        pages.removeAll()
         loadCommunitiesData()
         hasRedditPremium = false
         loadCurrentUserData()
@@ -377,10 +377,9 @@ class Model: ObservableObject {
         resetPagesToCommunity = target.getCode()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let keysToDelete: [String] = self.pages.keys.filter{ $0 != self.resetPagesToCommunity! }
-            let community = self.pages[self.resetPagesToCommunity!]
-            var newPages: [String:Page] = [:]
-            newPages[self.resetPagesToCommunity!] = community
-            self.pages = newPages
+            for key in keysToDelete {
+                self.pages.removeValue(forKey: key)
+            }
             self.userSessionManager.removeWebViews(keys: keysToDelete)
         }
     }

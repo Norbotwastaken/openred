@@ -89,19 +89,19 @@ class NativeAdViewModel: NSObject, ObservableObject, GADNativeAdLoaderDelegate {
 //    @Published var nativeAd: GADNativeAd?
     @Published var ads: [Int:GADNativeAd?] = [:]
     private var adLoader: GADAdLoader!
-//    private let adUnits: [String] = [
-//        // main
-//        "ca-app-pub-1887657859018428/7047598079",
-//        // main-2
-//        "ca-app-pub-1887657859018428/1645797810",
-//        // main-3
-//        "ca-app-pub-1887657859018428/6448614077"
-//    ]
-    
     private let adUnits: [String] = [
-        "ca-app-pub-3940256099942544/3986624511",
-        "ca-app-pub-3940256099942544/2521693316"
+        // main
+        "ca-app-pub-1887657859018428/7047598079",
+        // main-2
+        "ca-app-pub-1887657859018428/1645797810",
+        // main-3
+        "ca-app-pub-1887657859018428/6448614077"
     ]
+    
+//    private let adUnits: [String] = [
+//        "ca-app-pub-3940256099942544/3986624511",
+//        "ca-app-pub-3940256099942544/2521693316"
+//    ]
     
     func refreshAd(adPosition: Int = 0) {
         if adPosition > adUnits.count - 1 {

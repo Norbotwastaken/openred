@@ -43,9 +43,9 @@ struct PostsView: View {
                     if loadPosts {
                         model.loadCommunity(community: target)
                         loadPosts = false
-//                        if !settingsModel.hasPremium && !model.hasRedditPremium {
+                        if !settingsModel.hasPremium && !model.hasRedditPremium {
                             nativeAdViewModel.refreshAd()
-//                        }
+                        }
                     }
                 }
             if model.pages[target.getCode()] != nil {
@@ -111,7 +111,7 @@ struct PostsView: View {
                                         )
                                 }
                                 if item.isAdMarker && target.isAdFriendly &&
-//                                    !settingsModel.hasPremium && !model.hasRedditPremium &&
+                                    !settingsModel.hasPremium && !model.hasRedditPremium &&
                                     nativeAdViewModel.ads[item.adUnit ?? 1] != nil {
                                     NativeAdView(nativeAdViewModel: nativeAdViewModel, adUnit: item.adUnit ?? 1)
                                         .frame(height: 350)

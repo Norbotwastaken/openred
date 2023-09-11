@@ -70,6 +70,13 @@ class CommentsModel: ObservableObject {
         }
     }
     
+    func resetPages() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.userSessionManager.removeWebViews(keys: Array(self.pages.keys))
+            self.pages.removeAll()
+        }
+    }
+    
     func toggleUpvoteComment(link: String, comment: Comment) -> Bool {
         if userSessionManager.userName == nil {
             return false
