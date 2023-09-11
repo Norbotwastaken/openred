@@ -60,17 +60,6 @@ struct ContentView: View {
             if popupViewModel.isShowing {
                 MediaPopupContent()
                     .ignoresSafeArea()
-                    .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
-                        .onEnded { value in
-                            switch(value.translation.width, value.translation.height) {
-                            case (...0, -30...30): print("left swipe")
-                            case (0..., -30...30): print("right swipe")
-                            case (-100...100, ...0): dismissPopup() // up swipe
-                            case (-100...100, 0...): dismissPopup() // down swipe
-                            default: print("no clue")
-                            }
-                        }
-                    )
             }
             if loginPopupShowing {
                 LoginPopup(loginPopupShowing: $loginPopupShowing)
@@ -100,11 +89,6 @@ struct ContentView: View {
         }
         .preferredColorScheme(settingsModel.theme == "dark" ? .dark :
             settingsModel.theme == "light" ? .light : .none)
-    }
-    
-    private func dismissPopup() {
-        popupViewModel.player.pause()
-        popupViewModel.isShowing = false
     }
 }
 

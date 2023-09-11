@@ -2,12 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleVersion</key>
+	<string>1.1</string>
 	<key>GADNativeAdValidatorEnabled</key>
 	<false/>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>OpenRed would like permission to track you across apps and websites. This ensures the app stays free and the you will see ads relevant to your interests.</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
 	<key>bugsnag</key>

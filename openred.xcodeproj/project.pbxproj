@@ -721,7 +721,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openredinc.openred;
 				PRODUCT_NAME = OpenRed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -759,7 +759,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openredinc.openred;
 				PRODUCT_NAME = OpenRed;
 				PROVISIONING_PROFILE_SPECIFIER = "";

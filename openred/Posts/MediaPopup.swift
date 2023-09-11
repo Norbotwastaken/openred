@@ -25,6 +25,8 @@ struct MediaPopupContent: View {
     @State private var showingSaveDialog = false
     @State private var currentImageLink: String?
     @State private var activeGalleryTab: Int = 0
+    @State private var offset = CGSize.zero
+    @State private var showProgressView = true
     
     @State var player = AVPlayer()
     var body: some View {
@@ -33,8 +35,16 @@ struct MediaPopupContent: View {
                 ZStack {
                     Rectangle()
                         .fill(Color.black)
+                        .opacity(Double(1) - (abs(offset.height) / Double(250)))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    ProgressView()
+                    if showProgressView {
+                        ProgressView()
+                            .onAppear{
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    showProgressView = false
+                                }
+                            }
+                    }
                     VideoPlayer(url: URL(string: popupViewModel.videoLink ?? "")!, play: $play, time: $time)
                         .contentMode(.scaleAspectFit)
                         .autoReplay(autoReplay)
@@ -54,6 +64,20 @@ struct MediaPopupContent: View {
                         }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .onDisappear { self.play = false }
+                    .offset(x: offset.width, y: offset.height)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { gesture in
+                                offset = gesture.translation
+                            }
+                            .onEnded { _ in
+                                if abs(offset.height) > 130 {
+                                    dismissPopup()
+                                } else {
+                                    withAnimation{offset = .zero}
+                                }
+                            }
+                    )
                     Text("\(getTimeRemainingString())")
                         .foregroundColor(Color(red: 242, green: 242, blue: 247))
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
@@ -158,6 +182,7 @@ struct MediaPopupContent: View {
                 ZStack {
                     Rectangle()
                         .fill(Color.black)
+                        .opacity(Double(1) - (abs(offset.height) / Double(250)))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     AsyncImage(url: URL(string: popupViewModel.fullImageLink! )) { image in
                         GeometryReader { proxy in
@@ -171,6 +196,20 @@ struct MediaPopupContent: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .offset(x: offset.width, y: offset.height)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { gesture in
+                                offset = gesture.translation
+                            }
+                            .onEnded { _ in
+                                if abs(offset.height) > 130 {
+                                    dismissPopup()
+                                } else {
+                                    withAnimation{offset = .zero}
+                                }
+                            }
+                    )
                 }
                 if toolbarVisible {
                     ZStack {
@@ -216,6 +255,7 @@ struct MediaPopupContent: View {
                 ZStack {
                     Rectangle()
                         .fill(Color.black)
+                        .opacity(Double(1) - (abs(offset.height) / Double(250)))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     TabView(selection: $activeGalleryTab) {
                         ForEach(popupViewModel.gallery!.items.indices) { i in
@@ -228,6 +268,20 @@ struct MediaPopupContent: View {
                                             .frame(width: proxy.size.width, height: proxy.size.height)
                                             .clipShape(Rectangle())
                                             .modifier(ImageModifier(contentSize: CGSize(width: proxy.size.width, height: proxy.size.height)))
+                                            .offset(x: offset.width, y: offset.height)
+                                            .gesture(
+                                                DragGesture()
+                                                    .onChanged { gesture in
+                                                        offset = gesture.translation
+                                                    }
+                                                    .onEnded { _ in
+                                                        if abs(offset.height) > 130 {
+                                                            dismissPopup()
+                                                        } else {
+                                                            withAnimation{offset = .zero}
+                                                        }
+                                                    }
+                                            )
                                     }
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 }
@@ -291,10 +345,25 @@ struct MediaPopupContent: View {
                 ZStack {
                     Rectangle()
                         .fill(Color.black)
+                        .opacity(Double(1) - (abs(offset.height) / Double(250)))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     if popupViewModel.videoLink != nil {
                         GIFView(url: URL(string: popupViewModel.videoLink!)!)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .offset(x: offset.width, y: offset.height)
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { gesture in
+                                        offset = gesture.translation
+                                    }
+                                    .onEnded { _ in
+                                        if abs(offset.height) > 130 {
+                                            dismissPopup()
+                                        } else {
+                                            withAnimation{offset = .zero}
+                                        }
+                                    }
+                            )
                     }
                 }
                 if toolbarVisible {
@@ -337,5 +406,10 @@ struct MediaPopupContent: View {
         let m = Int(timeLeft / 60)
         let s = Int(timeLeft.truncatingRemainder(dividingBy: 60))
         return String(format: "-%d:%02d", arguments: [m, s])
+    }
+    
+    private func dismissPopup() {
+        popupViewModel.player.pause()
+        popupViewModel.isShowing = false
     }
 }
