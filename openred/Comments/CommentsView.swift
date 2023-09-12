@@ -31,7 +31,7 @@ struct CommentsView: View {
     @State var showingDeleteDialog = false
     @State var showingNsfwDialog = false
     @State var showingSpoilerDialog = false
-    @State var crosspostRestorePostsPlaceholder: Bool = false
+    @State var restorePostsPlaceholder: Bool = false
     
     @State var destinationLink: URL?
     @State var isInternalPresented: Bool = false
@@ -259,10 +259,10 @@ struct CommentsView: View {
                     }
                     .navigationDestination(isPresented: $isInternalPresented) {
                         if !internalIsPost { // internal is community
-                            PostsView(itemInView: $internalItemInView, restoreScroll: .constant(true),
+                            PostsView(itemInView: $internalItemInView, restoreScroll: $restorePostsPlaceholder,
                                       target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
                         } else {
-                            CommentsView(restorePostsScroll: .constant(true), link: destinationLink!.path)
+                            CommentsView(restorePostsScroll: $restorePostsPlaceholder, link: destinationLink!.path)
                         }
                     }
                     //                .onAppear(perform: {
