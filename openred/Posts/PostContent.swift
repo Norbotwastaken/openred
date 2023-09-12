@@ -61,7 +61,7 @@ struct PostRowContent: View {
                                         .fontWeight(.semibold)
                                         .opacity(0.8)
                                         .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-                                        .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
+                                        .background(Color.nsfwPink.opacity(0.6))
                                         .cornerRadius(5)
                                     Text("Sensitive content")
                                         .foregroundColor(.white)
@@ -105,7 +105,7 @@ struct PostRowContent: View {
                                 .fontWeight(.semibold)
                                 .opacity(0.8)
                                 .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-                                .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
+                                .background(Color.nsfwPink.opacity(0.6))
                                 .cornerRadius(5)
                             Text("Sensitive content")
                                 .foregroundColor(.white)
@@ -173,7 +173,7 @@ struct PostRowContent: View {
                                 .fontWeight(.semibold)
                                 .opacity(0.8)
                                 .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-                                .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
+                                .background(Color.nsfwPink.opacity(0.6))
                                 .cornerRadius(5)
                             Text("Tap to open content")
                                 .opacity(0.7)
@@ -227,7 +227,7 @@ struct PostRowContent: View {
                                         .fontWeight(.semibold)
                                         .opacity(0.8)
                                         .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-                                        .background(Color(red: 1, green: 0, blue: 93 / 255).opacity(0.6))
+                                        .background(Color.nsfwPink.opacity(0.6))
                                         .cornerRadius(5)
                                     Text("Sensitive content")
                                         .foregroundColor(.white)
@@ -310,7 +310,7 @@ struct PostRowContent: View {
                         if enableCrosspostLink {
                             NavigationLink(destination: CommentsView(
                                 restorePostsScroll: $restorePostsPlaceholder, link: crosspost.linkToThread
-                            ), label: { EmptyView() })
+                            ), label: { EmptyView() }).id(crosspost.linkToThread)
                             .opacity(0)
                         }
                     }
@@ -399,6 +399,7 @@ struct PostRowTextContent: View {
                     })
             }
             Text(post.text!)
+                .tint(Color(UIColor.systemBlue))
                 .font(.system(size: 15 + CGFloat(model.textSizeInrease)))
                 .padding(EdgeInsets(top: 0, leading: isPostOpen && post.contentType == .text ? 0 : 10, bottom: 0,
                                     trailing: isPostOpen && post.contentType == .text ? 0 : 10))
@@ -433,6 +434,7 @@ struct PostRowTextContent: View {
                                   target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
                     } else {
                         CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
+                            .id(safariLink!.path)
                     }
                 }
         }
@@ -448,12 +450,12 @@ struct CustomHTMLWebView: View {
         VStack {
             ZStack {
                 Rectangle()
-                    .fill(Color.black)
+                    .fill(Color(UIColor.systemBackground))
                     .frame(maxWidth: .infinity, maxHeight: 40, alignment: .top)
                 Text("Done")
                     .font(.system(size: 18))
                     .frame(maxWidth: .infinity, alignment: .topLeading)
-                    .foregroundColor(Color(UIColor.systemBlue))
+                    .foregroundColor(Color.themeColor)
                     .padding(EdgeInsets(top: 50, leading: 22, bottom: 0, trailing: 0))
                     .onTapGesture {
                         isPresented = false

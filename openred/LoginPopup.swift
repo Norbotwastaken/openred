@@ -103,7 +103,7 @@ struct LoginPopup: View {
                     }) {
                         ZStack {
                             Rectangle()
-                                .fill(Color(UIColor.systemBlue))
+                                .fill(Color.themeColor)
                                 .cornerRadius(10)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                             if waitingLoginResponse {

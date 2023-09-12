@@ -12,12 +12,8 @@ struct CommentsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
-    @Environment(\.dismiss) var dismiss
-//    @EnvironmentObject var popupViewModel: PopupViewModel
-//    @ObservedObject var post: Post
-//    @Binding var commentInView: String
+    
     @Binding var restorePostsScroll: Bool
-//    @Binding var postsTarget: CommunityOrUser
     var link: String
     @State var commentToEdit: Comment?
     @State var isEditorShowing: Bool = false
@@ -36,6 +32,13 @@ struct CommentsView: View {
     @State var showingNsfwDialog = false
     @State var showingSpoilerDialog = false
     @State var crosspostRestorePostsPlaceholder: Bool = false
+    
+    @State var destinationLink: URL?
+    @State var isInternalPresented: Bool = false
+    @State var internalIsPost: Bool = false
+    @State var internalCommunityTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
+    @State var internalLoadPosts: Bool = true
+    @State var internalItemInView: String = ""
     
     var body: some View {
         ZStack {
@@ -170,7 +173,7 @@ struct CommentsView: View {
                             Divider()
                             HStack {
                                 Image(systemName: "arrow.up")
-                                    .foregroundColor(commentsModel.pages[link]!.post!.isUpvoted ? .upvoteOrange : Color(UIColor.systemBlue))
+                                    .foregroundColor(commentsModel.pages[link]!.post!.isUpvoted ? .upvoteOrange : Color.secondary)
                                     .fontWeight(commentsModel.pages[link]!.post!.isUpvoted ? .semibold : .regular)
                                     .onTapGesture {
                                         if commentsModel.toggleUpvotePost(link: link, post: commentsModel.pages[link]!.post!) == false {
@@ -180,7 +183,7 @@ struct CommentsView: View {
                                     .frame(maxWidth: .infinity, alignment: .center)
                                 Image(systemName: "arrow.down")
                                     .fontWeight(commentsModel.pages[link]!.post!.isDownvoted ? .semibold : .regular)
-                                    .foregroundColor(commentsModel.pages[link]!.post!.isDownvoted ? .downvoteBlue : Color(UIColor.systemBlue))
+                                    .foregroundColor(commentsModel.pages[link]!.post!.isDownvoted ? .downvoteBlue : Color.secondary)
                                     .onTapGesture {
                                         if commentsModel.toggleDownvotePost(link: link, post: commentsModel.pages[link]!.post!) == false {
                                             // show login popup
@@ -199,7 +202,6 @@ struct CommentsView: View {
                                     }
                                     .frame(maxWidth: .infinity, alignment: .center)
                                 Image(systemName: "arrow.uturn.left")
-                                //                                .foregroundColor(.secondary)
                                     .onTapGesture {
                                         if model.userName != nil {
                                             editorParentComment = nil
@@ -211,8 +213,7 @@ struct CommentsView: View {
                             .frame(maxWidth: .infinity, alignment: .center)
                             .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
                             .font(.system(size: 28))
-                            .foregroundColor(Color(UIColor.systemBlue))
-                            //                        .listRowSeparator(.hidden)
+                            .foregroundColor(Color.secondary)
                             Divider()
                         }
                         .listRowSeparator(.hidden)
@@ -222,7 +223,10 @@ struct CommentsView: View {
                         ForEach(commentsModel.pages[link]!.flatCommentsList) { comment in
                             if !commentsModel.pages[link]!.anyParentsCollapsed(comment: comment) {
                                 CommentView(comment: comment, postLink: link, editorParentComment: $editorParentComment,
-                                            commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget)
+                                            commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget,
+                                            destinationLink: $destinationLink, isInternalPresented: $isInternalPresented, internalIsPost: $internalIsPost,
+                                            internalCommunityTarget: $internalCommunityTarget,
+                                            internalLoadPosts: $internalLoadPosts, internalItemInView: $internalItemInView)
                                 //                            .onAppear {
                                 //                                commentInView = comment.id
                                 //                            }
@@ -237,64 +241,8 @@ struct CommentsView: View {
                     .navigationBarHidden(isEditorShowing)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            HStack {
-                                CommentSortMenu(selectedSort: $selectedSort, postLink: link)
-                                CommentActionsMenu(showingSaveDialog: $showingSaveDialog,
-                                                   showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
-                                                   showingSpoilerDialog: $showingSpoilerDialog, link: link)
-                            }
-                            .alert("Save image to library?", isPresented: $showingSaveDialog) {
-                                if commentsModel.pages[link]!.post!.contentType == .image {
-                                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.imageLink)
-                                } else if commentsModel.pages[link]!.post!.contentType == .gallery {
-                                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.gallery!.items[0].fullLink,
-                                                   links: commentsModel.pages[link]!.post!.gallery!.items.map{ $0.fullLink })
-                                }
-                            }
-                            .alert("Delete post?", isPresented: $showingDeleteDialog) {
-                                Button("Cancel", role: .cancel) { showingDeleteDialog = false }
-                                Button("Delete", role: .destructive) {
-                                    if commentsModel.deletePost(link: link) {
-                                        overlayModel.show("Post successfully deleted")
-                                    }
-                                    showingDeleteDialog = false
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
-                                    }
-                                }
-                            } message: {
-                                Text("Are you sure you want to delete your post?")
-                            }
-                            .alert(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark" : "Mark post as NSFW", isPresented: $showingNsfwDialog) {
-                                Button("Cancel", role: .cancel) { showingNsfwDialog = false }
-                                Button("Continue") {
-                                    if commentsModel.togglePostNsfw(link: link) {
-                                        overlayModel.show("Post updated")
-                                    }
-                                    showingNsfwDialog = false
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
-                                    }
-                                }.keyboardShortcut(.defaultAction)
-                            } message: {
-                                Text(commentsModel.pages[link]!.post!.nsfw ? "Are you sure you want to mark your post as safe for work?"
-                                     : "Are you sure you want to mark your post as NSFW?")
-                            }
-                            .alert(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark" : "Mark post as spoiler", isPresented: $showingSpoilerDialog) {
-                                Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
-                                Button("Continue") {
-                                    if commentsModel.togglePostSpoiler(link: link) {
-                                        overlayModel.show("Post updated")
-                                    }
-                                    showingSpoilerDialog = false
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
-                                    }
-                                }.keyboardShortcut(.defaultAction)
-                            } message: {
-                                Text(commentsModel.pages[link]!.post!.spoiler ? "Are you sure you want to mark your post as spoiler free?"
-                                     : "Are you sure you want to mark your post for spoilers?")
-                            }
+                            CommentsToolbarView(link: link, selectedSort: $selectedSort, showingSaveDialog: $showingSaveDialog, showingDeleteDialog: $showingDeleteDialog,
+                                                showingNsfwDialog: $showingNsfwDialog, showingSpoilerDialog: $showingSpoilerDialog)
                         }
                     }
                     .onChange(of: scrollTarget) { target in
@@ -308,6 +256,14 @@ struct CommentsView: View {
                     }
                     .refreshable {
                         commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                    }
+                    .navigationDestination(isPresented: $isInternalPresented) {
+                        if !internalIsPost { // internal is community
+                            PostsView(itemInView: $internalItemInView, restoreScroll: .constant(true),
+                                      target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
+                        } else {
+                            CommentsView(restorePostsScroll: .constant(true), link: destinationLink!.path)
+                        }
                     }
                     //                .onAppear(perform: {
                     //                    proxy.scrollTo(commentInView)
@@ -335,16 +291,15 @@ struct CommentView: View {
     @Binding var commentToEdit: Comment?
     @Binding var isEditorShowing: Bool
     @Binding var scrollTarget: String?
-    @State var showSafari: Bool = false
-    @State var safariLink: URL?
-    @State var isInternalPresented: Bool = false
-    @State var internalIsPost: Bool = false
-//    @State var internalPostTarget:
     
-    @State var internalRestoreScrollPlaceholder: Bool = true
-    @State var internalCommunityTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
-    @State var internalLoadPosts: Bool = true
-    @State var internalItemInView: String = ""
+    @Binding var destinationLink: URL?
+    @Binding var isInternalPresented: Bool
+    @Binding var internalIsPost: Bool
+    @Binding var internalCommunityTarget: CommunityOrUser
+    @Binding var internalLoadPosts: Bool
+    @Binding var internalItemInView: String
+    
+    @State var showSafari: Bool = false
     @State private var showingDeleteAlert = false
     
     var body: some View {
@@ -431,11 +386,12 @@ struct CommentView: View {
                             if showSafari {
                                 Spacer()
                                     .fullScreenCover(isPresented: $showSafari, content: {
-                                        SFSafariViewWrapper(url: safariLink!)
+                                        SFSafariViewWrapper(url: destinationLink!)
                                     })
                             }
                             VStack {
                                 Text(comment.content ?? "")
+                                    .tint(Color(UIColor.systemBlue))
                                     .fixedSize(horizontal: false, vertical: true)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.system(size: 15 + CGFloat(commentsModel.textSizeInrease)))
@@ -450,36 +406,26 @@ struct CommentView: View {
                                             popupViewModel.isShowing = true
                                         } else if url.isPost {
                                             internalIsPost = true
-                                            safariLink = url
+                                            destinationLink = url
                                             isInternalPresented = true
                                         } else if url.isCommunity {
                                             internalCommunityTarget = CommunityOrUser(explicitURL: url)
                                             internalIsPost = false
                                             isInternalPresented = true
                                         } else {
-                                            safariLink = url
+                                            destinationLink = url
                                             showSafari = true
                                         }
                                         return .handled
                                     })
-                                    .navigationDestination(isPresented: $isInternalPresented) {
-                                        if !internalIsPost { // internal is community
-                                            PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
-                                                      target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
-                                        } else {
-                                            CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
-                                        }
-                                    }
                                 if comment.media_metadata != nil {
                                     CommentGifView(comment: comment)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                             }
                         }
-//                            .padding(EdgeInsets(top: 6, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
-//                .padding(EdgeInsets(top: 0, leading: comment.isCollapsed ? 5 * (CGFloat(integerLiteral: comment.depth) + 1) : 0, bottom: 0, trailing: 0))
             }
             .background(Color(UIColor.systemBackground))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -722,7 +668,7 @@ struct CommentEditor: View {
                 HStack {
                     Image(systemName: "xmark")
                         .font(.system(size: 25))
-                        .foregroundColor(Color(UIColor.systemBlue))
+                        .foregroundColor(Color.themeColor)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                         .padding(EdgeInsets(top: 5, leading: 15, bottom: 0, trailing: 0))
                         .onTapGesture {
@@ -733,7 +679,7 @@ struct CommentEditor: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .top)
                     Image(systemName: "paperplane.fill")
-                        .foregroundColor(Color(UIColor.systemBlue))
+                        .foregroundColor(Color.themeColor)
                         .font(.system(size: 25))
                         .frame(maxWidth: .infinity, alignment: .topTrailing)
                         .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
@@ -754,8 +700,6 @@ struct CommentEditor: View {
                 .frame(maxWidth: .infinity)
                 VStack {
                     if parentComment != nil {
-//                        var content = parentComment!.content!.count > 350 ?
-//                        String(parentComment!.content!.prefix(350)) + "..." : parentComment!.content!
                         ScrollView {
                             Group {
                                 Text(parentComment!.user!).bold() +
@@ -856,6 +800,78 @@ struct CommentActionsMenu: View {
             }
         } label: {
             Label("Actions", systemImage: "ellipsis")
+        }
+    }
+}
+
+struct CommentsToolbarView: View {
+    @EnvironmentObject var commentsModel: CommentsModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
+    var link: String
+    @Binding var selectedSort: String?
+    @Binding var showingSaveDialog: Bool
+    @Binding var showingDeleteDialog: Bool
+    @Binding var showingNsfwDialog: Bool
+    @Binding var showingSpoilerDialog: Bool
+    
+    var body: some View {
+        HStack {
+            CommentSortMenu(selectedSort: $selectedSort, postLink: link)
+            CommentActionsMenu(showingSaveDialog: $showingSaveDialog,
+                               showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
+                               showingSpoilerDialog: $showingSpoilerDialog, link: link)
+        }
+        .alert("Save image to library?", isPresented: $showingSaveDialog) {
+            if commentsModel.pages[link]!.post!.contentType == .image {
+                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.imageLink)
+            } else if commentsModel.pages[link]!.post!.contentType == .gallery {
+                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.gallery!.items[0].fullLink,
+                               links: commentsModel.pages[link]!.post!.gallery!.items.map{ $0.fullLink })
+            }
+        }
+        .alert("Delete post?", isPresented: $showingDeleteDialog) {
+            Button("Cancel", role: .cancel) { showingDeleteDialog = false }
+            Button("Delete", role: .destructive) {
+                if commentsModel.deletePost(link: link) {
+                    overlayModel.show("Post successfully deleted")
+                }
+                showingDeleteDialog = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                }
+            }
+        } message: {
+            Text("Are you sure you want to delete your post?")
+        }
+        .alert(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark" : "Mark post as NSFW", isPresented: $showingNsfwDialog) {
+            Button("Cancel", role: .cancel) { showingNsfwDialog = false }
+            Button("Continue") {
+                if commentsModel.togglePostNsfw(link: link) {
+                    overlayModel.show("Post updated")
+                }
+                showingNsfwDialog = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                }
+            }.keyboardShortcut(.defaultAction)
+        } message: {
+            Text(commentsModel.pages[link]!.post!.nsfw ? "Are you sure you want to mark your post as safe for work?"
+                 : "Are you sure you want to mark your post as NSFW?")
+        }
+        .alert(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark" : "Mark post as spoiler", isPresented: $showingSpoilerDialog) {
+            Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
+            Button("Continue") {
+                if commentsModel.togglePostSpoiler(link: link) {
+                    overlayModel.show("Post updated")
+                }
+                showingSpoilerDialog = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                }
+            }.keyboardShortcut(.defaultAction)
+        } message: {
+            Text(commentsModel.pages[link]!.post!.spoiler ? "Are you sure you want to mark your post as spoiler free?"
+                 : "Are you sure you want to mark your post for spoilers?")
         }
     }
 }

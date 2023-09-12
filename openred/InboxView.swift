@@ -36,7 +36,7 @@ struct InboxView: View {
                             }) {
                                 ZStack {
                                     Rectangle()
-                                        .fill(Color(UIColor.systemBlue))
+                                        .fill(Color.themeColor)
                                         .cornerRadius(10)
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     
@@ -92,7 +92,7 @@ struct InboxView: View {
                                     .frame(maxWidth: 80)
                             }
                         }
-                        .foregroundColor(Color(UIColor.systemBlue))
+                        .foregroundColor(Color.themeColor)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(EdgeInsets(top: 10, leading: 45, bottom: 10, trailing: 45))
                         .listRowSeparator(.hidden)
@@ -195,6 +195,7 @@ struct MessageView: View {
                             })
                     }
                     Text(message.body)
+                        .tint(Color(UIColor.systemBlue))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .environment(\.openURL, OpenURLAction { url in
                             if url.isImage {
@@ -225,6 +226,7 @@ struct MessageView: View {
                                           target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
                             } else {
                                 CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
+                                    .id(safariLink!.path)
                             }
                         }
                 }
@@ -334,7 +336,7 @@ struct MessageEditor: View {
                 HStack {
                     Image(systemName: "xmark")
                         .font(.system(size: 25))
-                        .foregroundColor(Color(UIColor.systemBlue))
+                        .foregroundColor(Color.themeColor)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                         .padding(EdgeInsets(top: 5, leading: 15, bottom: 0, trailing: 0))
                         .onTapGesture {
@@ -345,7 +347,7 @@ struct MessageEditor: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .top)
                     Image(systemName: "paperplane.fill")
-                        .foregroundColor(Color(UIColor.systemBlue))
+                        .foregroundColor(Color.themeColor)
                         .font(.system(size: 25))
                         .frame(maxWidth: .infinity, alignment: .topTrailing)
                         .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))

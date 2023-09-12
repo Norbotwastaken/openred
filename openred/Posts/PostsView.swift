@@ -87,8 +87,8 @@ struct PostsView: View {
                                         .listRowSeparator(.hidden)
                                         .overlay(
                                             NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScroll,
-                                                                                     link: item.post!.linkToThread),
-                                                           label: { EmptyView() })
+                                                                                     link: item.post!.linkToThread).id(item.post!.linkToThread),
+                                                           label: { EmptyView() }).id(item.post!.linkToThread)
                                             .opacity(0)
                                         )
                                         
@@ -106,7 +106,7 @@ struct PostsView: View {
                                         .overlay(
                                             NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScroll,
                                                                                      link: item.comment!.postLink!),
-                                                           label: { EmptyView() })
+                                                           label: { EmptyView() }).id(item.comment!.postLink!)
                                             .opacity(0)
                                         )
                                 }
@@ -172,7 +172,7 @@ struct PostsView: View {
                                 }) {
                                     Text("No thank you")
                                         .padding()
-                                        .background(Color(UIColor.systemBlue))
+                                        .background(Color.themeColor)
                                         .foregroundColor(.primary)
                                         .clipShape(Capsule())
                                 }
@@ -191,7 +191,7 @@ struct PostsView: View {
                             }) {
                                 Text("Go back")
                                     .padding()
-                                    .background(Color(UIColor.systemBlue))
+                                    .background(Color.themeColor)
                                     .foregroundColor(.primary)
                                     .clipShape(Capsule())
                             }
@@ -379,7 +379,7 @@ struct CreatePostForm: View {
                 HStack {
                     Image(systemName: "xmark")
                         .font(.system(size: 25))
-                        .foregroundColor(Color(UIColor.systemBlue))
+                        .foregroundColor(Color.themeColor)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                         .padding(EdgeInsets(top: 5, leading: 15, bottom: 0, trailing: 0))
                         .alert("Unsaved changes", isPresented: $showingExitAlert) {
@@ -400,7 +400,7 @@ struct CreatePostForm: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .top)
                     Image(systemName: "paperplane.fill")
-                        .foregroundColor(Color(UIColor.systemBlue))
+                        .foregroundColor(Color.themeColor)
                         .font(.system(size: 25))
                         .frame(maxWidth: .infinity, alignment: .topTrailing)
                         .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
@@ -461,7 +461,7 @@ struct CreatePostForm: View {
                             .frame(maxHeight: 150, alignment: .topLeading)
                     }
                     Toggle("Send replies to my inbox", isOn: $enableReplies)
-                        .tint(Color(UIColor.systemBlue))
+                        .tint(Color.themeColor)
                         .padding(EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0))
                         .frame(alignment: .bottom)
                 }

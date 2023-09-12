@@ -176,7 +176,7 @@ struct BuyPremiumView: View {
                         } label: {
                             Text("Upgrade to premium")
                                 .padding()
-                                .background(Color(UIColor.systemBlue))
+                                .background(Color.themeColor)
                                 .cornerRadius(20)
                                 .foregroundColor(.white)
                                 .font(.system(size: 18))

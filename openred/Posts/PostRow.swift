@@ -132,7 +132,7 @@ struct PostCommentRow: View {
                         .font(.system(size: 14))
                         .fontWeight(.semibold)
                         .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-                        .background(Color(red: 1, green: 0, blue: 93 / 255))
+                        .background(Color.nsfwPink)
                         .cornerRadius(5)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -158,6 +158,7 @@ struct PostCommentRow: View {
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(comment.content ?? "")
+                    .tint(Color(UIColor.systemBlue))
                     .font(.system(size: 15))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 if comment.media_metadata != nil {

@@ -345,6 +345,7 @@ extension Color {
     public static let downvoteBlue: Color = Color(red: 102 / 255, green: 102 / 255, blue: 1)
     public static let nsfwPink: Color = Color(red: 1, green: 0, blue: 93 / 255)
     public static let openRed: Color = Color(red: 239 / 255, green: 56 / 255, blue: 56 / 255)
+    public static let themeColor: Color = Color.openRed
 }
 
 extension String {

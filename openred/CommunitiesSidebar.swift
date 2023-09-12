@@ -70,7 +70,7 @@ struct CommunitiesStack: View {
                     if !model.pages.isEmpty {
                         ZStack {
                             Circle()
-                                .fill(Color.blue)
+                                .fill(Color.themeColor)
                                 .frame(width: 65, height: 65, alignment: .bottomTrailing)
                                 .onTapGesture {
                                     restoreScroll = true
