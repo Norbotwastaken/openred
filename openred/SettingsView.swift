@@ -618,6 +618,7 @@ struct Themes {
 struct AppIcons {
     static let appIconsArray: [AppIcon] = [
         AppIcon(id: "default", iconName: nil, displayImageName: "appicon-thumb"),
+        AppIcon(id: "black", iconName: "AppIcon-Black", displayImageName: "appicon-black-thumb"),
         AppIcon(id: "floral", iconName: "AppIcon-Floral", displayImageName: "appicon-floral-thumb")
     ]
     
