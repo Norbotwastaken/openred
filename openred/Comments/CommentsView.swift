@@ -753,53 +753,55 @@ struct CommentActionsMenu: View {
     var link: String
     
     var body: some View {
-        Menu {
-            ShareLink(item: URL(string: "https://reddit.com\(link.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)")!) {
-                Label("Share post", systemImage: "square.and.arrow.up")
+        if commentsModel.pages[link]?.post != nil {
+            Menu {
+                ShareLink(item: URL(string: "https://reddit.com\(link.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)")!) {
+                    Label("Share post", systemImage: "square.and.arrow.up")
+                }
+                if commentsModel.pages[link]!.post!.contentType == .image {
+                    ShareLink(item: URL(string: commentsModel.pages[link]!.post!.imageLink!)!) {
+                        Label("Share image", systemImage: "square.and.arrow.up.circle")
+                    }
+                    Button(action: { showingSaveDialog = true }) {
+                        Label("Download image", systemImage: "arrow.down.square")
+                    }
+                } else if commentsModel.pages[link]!.post!.contentType == .text {
+                    Button(action: {
+                        UIPasteboard.general.string = String(commentsModel.pages[link]!.post!.text!.characters[...])
+                        overlayModel.show("Copied to clipboard")
+                    }) {
+                        Label("Copy text", systemImage: "list.clipboard")
+                    }
+                } else if commentsModel.pages[link]!.post!.contentType == .gallery {
+                    Button(action: { showingSaveDialog = true }) {
+                        Label("Download image", systemImage: "arrow.down.square")
+                    }
+                } else if commentsModel.pages[link]!.post!.contentType == .link
+                            && commentsModel.pages[link]!.post!.externalLink != "" {
+                    ShareLink(item: URL(string: commentsModel.pages[link]!.post!.externalLink!)!) {
+                        Label("Share link", systemImage: "square.and.arrow.up.circle")
+                    }
+                    Button(action: {
+                        UIPasteboard.general.string = commentsModel.pages[link]!.post!.externalLink!
+                        overlayModel.show("Copied to clipboard")
+                    }) {
+                        Label("Copy link", systemImage: "list.clipboard")
+                    }
+                }
+                if commentsModel.pages[link]!.post!.userName == commentsModel.userSessionManager.userName {
+                    Button(action: { showingNsfwDialog = true }) {
+                        Label(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark" : "Mark as NSFW", systemImage: "18.circle")
+                    }
+                    Button(action: { showingSpoilerDialog = true }) {
+                        Label(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark" : "Mark as spoiler", systemImage: "car.side.rear.open")
+                    }
+                    Button(role: .destructive, action: { showingDeleteDialog = true }, label: {
+                        Label("Delete post", systemImage: "trash")
+                    })
+                }
+            } label: {
+                Label("Actions", systemImage: "ellipsis")
             }
-            if commentsModel.pages[link]!.post!.contentType == .image {
-                ShareLink(item: URL(string: commentsModel.pages[link]!.post!.imageLink!)!) {
-                    Label("Share image", systemImage: "square.and.arrow.up.circle")
-                }
-                Button(action: { showingSaveDialog = true }) {
-                    Label("Download image", systemImage: "arrow.down.square")
-                }
-            } else if commentsModel.pages[link]!.post!.contentType == .text {
-                Button(action: {
-                    UIPasteboard.general.string = String(commentsModel.pages[link]!.post!.text!.characters[...])
-                    overlayModel.show("Copied to clipboard")
-                }) {
-                    Label("Copy text", systemImage: "list.clipboard")
-                }
-            } else if commentsModel.pages[link]!.post!.contentType == .gallery {
-                Button(action: { showingSaveDialog = true }) {
-                    Label("Download image", systemImage: "arrow.down.square")
-                }
-            } else if commentsModel.pages[link]!.post!.contentType == .link
-                        && commentsModel.pages[link]!.post!.externalLink != "" {
-                ShareLink(item: URL(string: commentsModel.pages[link]!.post!.externalLink!)!) {
-                    Label("Share link", systemImage: "square.and.arrow.up.circle")
-                }
-                Button(action: {
-                    UIPasteboard.general.string = commentsModel.pages[link]!.post!.externalLink!
-                    overlayModel.show("Copied to clipboard")
-                }) {
-                    Label("Copy link", systemImage: "list.clipboard")
-                }
-            }
-            if commentsModel.pages[link]!.post!.userName == commentsModel.userSessionManager.userName {
-                Button(action: { showingNsfwDialog = true }) {
-                    Label(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark" : "Mark as NSFW", systemImage: "18.circle")
-                }
-                Button(action: { showingSpoilerDialog = true }) {
-                    Label(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark" : "Mark as spoiler", systemImage: "car.side.rear.open")
-                }
-                Button(role: .destructive, action: { showingDeleteDialog = true }, label: {
-                    Label("Delete post", systemImage: "trash")
-                })
-            }
-        } label: {
-            Label("Actions", systemImage: "ellipsis")
         }
     }
 }
@@ -815,63 +817,65 @@ struct CommentsToolbarView: View {
     @Binding var showingSpoilerDialog: Bool
     
     var body: some View {
-        HStack {
-            CommentSortMenu(selectedSort: $selectedSort, postLink: link)
-            CommentActionsMenu(showingSaveDialog: $showingSaveDialog,
-                               showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
-                               showingSpoilerDialog: $showingSpoilerDialog, link: link)
-        }
-        .alert("Save image to library?", isPresented: $showingSaveDialog) {
-            if commentsModel.pages[link]!.post!.contentType == .image {
-                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.imageLink)
-            } else if commentsModel.pages[link]!.post!.contentType == .gallery {
-                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.gallery!.items[0].fullLink,
-                               links: commentsModel.pages[link]!.post!.gallery!.items.map{ $0.fullLink })
+        if commentsModel.pages[link]?.post != nil {
+            HStack {
+                CommentSortMenu(selectedSort: $selectedSort, postLink: link)
+                CommentActionsMenu(showingSaveDialog: $showingSaveDialog,
+                                   showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
+                                   showingSpoilerDialog: $showingSpoilerDialog, link: link)
             }
-        }
-        .alert("Delete post?", isPresented: $showingDeleteDialog) {
-            Button("Cancel", role: .cancel) { showingDeleteDialog = false }
-            Button("Delete", role: .destructive) {
-                if commentsModel.deletePost(link: link) {
-                    overlayModel.show("Post successfully deleted")
-                }
-                showingDeleteDialog = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+            .alert("Save image to library?", isPresented: $showingSaveDialog) {
+                if commentsModel.pages[link]!.post!.contentType == .image {
+                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.imageLink)
+                } else if commentsModel.pages[link]!.post!.contentType == .gallery {
+                    SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: commentsModel.pages[link]!.post!.gallery!.items[0].fullLink,
+                                   links: commentsModel.pages[link]!.post!.gallery!.items.map{ $0.fullLink })
                 }
             }
-        } message: {
-            Text("Are you sure you want to delete your post?")
-        }
-        .alert(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark" : "Mark post as NSFW", isPresented: $showingNsfwDialog) {
-            Button("Cancel", role: .cancel) { showingNsfwDialog = false }
-            Button("Continue") {
-                if commentsModel.togglePostNsfw(link: link) {
-                    overlayModel.show("Post updated")
+            .alert("Delete post?", isPresented: $showingDeleteDialog) {
+                Button("Cancel", role: .cancel) { showingDeleteDialog = false }
+                Button("Delete", role: .destructive) {
+                    if commentsModel.deletePost(link: link) {
+                        overlayModel.show("Post successfully deleted")
+                    }
+                    showingDeleteDialog = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                    }
                 }
-                showingNsfwDialog = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
-                }
-            }.keyboardShortcut(.defaultAction)
-        } message: {
-            Text(commentsModel.pages[link]!.post!.nsfw ? "Are you sure you want to mark your post as safe for work?"
-                 : "Are you sure you want to mark your post as NSFW?")
-        }
-        .alert(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark" : "Mark post as spoiler", isPresented: $showingSpoilerDialog) {
-            Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
-            Button("Continue") {
-                if commentsModel.togglePostSpoiler(link: link) {
-                    overlayModel.show("Post updated")
-                }
-                showingSpoilerDialog = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
-                }
-            }.keyboardShortcut(.defaultAction)
-        } message: {
-            Text(commentsModel.pages[link]!.post!.spoiler ? "Are you sure you want to mark your post as spoiler free?"
-                 : "Are you sure you want to mark your post for spoilers?")
+            } message: {
+                Text("Are you sure you want to delete your post?")
+            }
+            .alert(commentsModel.pages[link]!.post!.nsfw ? "Remove NSFW mark" : "Mark post as NSFW", isPresented: $showingNsfwDialog) {
+                Button("Cancel", role: .cancel) { showingNsfwDialog = false }
+                Button("Continue") {
+                    if commentsModel.togglePostNsfw(link: link) {
+                        overlayModel.show("Post updated")
+                    }
+                    showingNsfwDialog = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                    }
+                }.keyboardShortcut(.defaultAction)
+            } message: {
+                Text(commentsModel.pages[link]!.post!.nsfw ? "Are you sure you want to mark your post as safe for work?"
+                     : "Are you sure you want to mark your post as NSFW?")
+            }
+            .alert(commentsModel.pages[link]!.post!.spoiler ? "Remove spoiler mark" : "Mark post as spoiler", isPresented: $showingSpoilerDialog) {
+                Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
+                Button("Continue") {
+                    if commentsModel.togglePostSpoiler(link: link) {
+                        overlayModel.show("Post updated")
+                    }
+                    showingSpoilerDialog = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+                    }
+                }.keyboardShortcut(.defaultAction)
+            } message: {
+                Text(commentsModel.pages[link]!.post!.spoiler ? "Are you sure you want to mark your post as spoiler free?"
+                     : "Are you sure you want to mark your post for spoilers?")
+            }
         }
     }
 }

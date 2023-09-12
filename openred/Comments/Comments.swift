@@ -384,6 +384,9 @@ class CommentsModel: ObservableObject {
     }
     
     func selectedSortingIcon(link: String) -> String {
+        if pages[link] == nil {
+            return CommentsModelAttributes.sortModifierIcons[""]!
+        }
         return CommentsModelAttributes.sortModifierIcons[pages[link]!.selectedSorting]!
     }
     

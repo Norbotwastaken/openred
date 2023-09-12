@@ -12,6 +12,7 @@ struct InboxView: View {
     @EnvironmentObject var messageModel: MessageModel
     @EnvironmentObject var model: Model
     @Binding var loginPopupShowing: Bool
+    @Binding var isInternalPresented: Bool
     @State var isEditorShowing: Bool = false
     @State var replyToMessage: Message?
     @State var showingBlockAlert: Bool = false
@@ -23,6 +24,13 @@ struct InboxView: View {
     }
     @State private var type = "inbox"
     @State private var isLoggedIn: Bool = false
+    
+    @State var destinationLink: URL?
+    @State var internalIsPost: Bool = false
+    @State var internalRestoreScrollPlaceholder: Bool = true
+    @State var internalCommunityTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
+    @State var internalLoadPosts: Bool = true
+    @State var internalItemInView: String = ""
     
     var body: some View {
         NavigationStack() {
@@ -65,7 +73,10 @@ struct InboxView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                         ForEach(messageModel.messages) { message in
                             MessageView(message: message, isEditorShowing: $isEditorShowing,
-                                        replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert)
+                                        replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert,
+                                        destinationLink: $destinationLink, isInternalPresented: $isInternalPresented, internalIsPost: $internalIsPost,
+                                        internalCommunityTarget: $internalCommunityTarget,
+                                        internalLoadPosts: $internalLoadPosts, internalItemInView: $internalItemInView)
                             .listRowInsets(EdgeInsets(top: 8, leading: message.new ? 3 : 15, bottom: 8, trailing: 15))
                             .alert("Block user", isPresented: $showingBlockAlert) {
                                 Button("Cancel", role: .cancel) {}
@@ -104,6 +115,14 @@ struct InboxView: View {
                     .refreshable {
                         messageModel.openInbox(filter: type, forceLoad: true)
                     }
+                    .navigationDestination(isPresented: $isInternalPresented) {
+                        if !internalIsPost { // internal is community
+                            PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
+                                      target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
+                        } else {
+                            CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: destinationLink!.path)
+                        }
+                    }
                     if isEditorShowing {
                         MessageEditor(isShowing: $isEditorShowing, replyToMessage: $replyToMessage)
                     }
@@ -131,14 +150,13 @@ struct MessageView: View {
     @Binding var replyToMessage: Message?
     @Binding var showingBlockAlert: Bool
     
+    @Binding var destinationLink: URL?
+    @Binding var isInternalPresented: Bool
+    @Binding var internalIsPost: Bool
+    @Binding var internalCommunityTarget: CommunityOrUser
+    @Binding var internalLoadPosts: Bool
+    @Binding var internalItemInView: String
     @State var showSafari: Bool = false
-    @State var safariLink: URL?
-    @State var isInternalPresented: Bool = false
-    @State var internalIsPost: Bool = false
-    @State var internalRestoreScrollPlaceholder: Bool = true
-    @State var internalCommunityTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
-    @State var internalLoadPosts: Bool = true
-    @State var internalItemInView: String = ""
     
     var body: some View {
         HStack(spacing: 10) {
@@ -157,7 +175,7 @@ struct MessageView: View {
                     Menu {
                         MessageActions(message: message, isEditorShowing: $isEditorShowing,
                                        replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert,
-                                       isInternalPostPresented: $isInternalPresented, safariLink: $safariLink,
+                                       isInternalPostPresented: $isInternalPresented, safariLink: $destinationLink,
                                        internalIsPost: $internalIsPost)
                     } label: {
                         ZStack {
@@ -191,7 +209,7 @@ struct MessageView: View {
                     if showSafari {
                         Spacer()
                             .fullScreenCover(isPresented: $showSafari, content: {
-                                SFSafariViewWrapper(url: safariLink!)
+                                SFSafariViewWrapper(url: destinationLink!)
                             })
                     }
                     Text(message.body)
@@ -208,27 +226,19 @@ struct MessageView: View {
                                 popupViewModel.isShowing = true
                             } else if url.isPost {
                                 internalIsPost = true
-                                safariLink = url
+                                destinationLink = url
                                 isInternalPresented = true
                             } else if url.isCommunity {
                                 internalCommunityTarget = CommunityOrUser(explicitURL: url)
                                 internalIsPost = false
                                 isInternalPresented = true
                             } else {
-                                safariLink = url
+                                destinationLink = url
                                 showSafari = true
                             }
                             return .handled
                         })
-                        .navigationDestination(isPresented: $isInternalPresented) {
-                            if !internalIsPost { // internal is community
-                                PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
-                                          target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
-                            } else {
-                                CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
-                                    .id(safariLink!.path)
-                            }
-                        }
+                        
                 }
             }
             .font(.system(size: 14 + CGFloat(messageModel.textSizeInrease)))
@@ -236,7 +246,7 @@ struct MessageView: View {
         .contextMenu {
             MessageActions(message: message, isEditorShowing: $isEditorShowing,
                            replyToMessage: $replyToMessage, showingBlockAlert: $showingBlockAlert,
-                           isInternalPostPresented: $isInternalPresented, safariLink: $safariLink,
+                           isInternalPostPresented: $isInternalPresented, safariLink: $destinationLink,
                            internalIsPost: $internalIsPost)}
     }
 }

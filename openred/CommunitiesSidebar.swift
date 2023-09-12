@@ -13,6 +13,7 @@ struct CommunitiesStack: View {
     @Binding var loginPopupShowing: Bool
     @Binding var showPosts: Bool
     @Binding var target: CommunityOrUser
+    @Binding var isInboxInternalPresented: Bool
     @State var itemInView: String = ""
     @State private var searchText = ""
     @State var restoreScroll: Bool = true
@@ -26,16 +27,18 @@ struct CommunitiesStack: View {
                         List {
                             if searchText.isEmpty {
                                 UserSection(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts,
-                                            target: $target, loadPosts: $loadPosts)
+                                            target: $target, loadPosts: $loadPosts, isInboxInternalPresented: $isInboxInternalPresented)
                                 Section() {
                                     ForEach(model.mainPageCommunities) { community in
-                                        CommunityRow(community: community, isFavoritable: false, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
+                                        CommunityRow(community: community, isFavoritable: false, showPosts: $showPosts, target: $target, loadPosts: $loadPosts,
+                                                     isInboxInternalPresented: $isInboxInternalPresented)
                                     }
                                 }
                                 if model.userSessionManager.userName != nil {
                                     Section() {
                                         ForEach(model.userFunctionCommunities) { community in
-                                            CommunityRow(community: community, isFavoritable: false, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
+                                            CommunityRow(community: community, isFavoritable: false, showPosts: $showPosts, target: $target, loadPosts: $loadPosts,
+                                                         isInboxInternalPresented: $isInboxInternalPresented)
                                         }
                                     }
                                 }
@@ -43,7 +46,8 @@ struct CommunitiesStack: View {
                             if !model.favoriteCommunities.isEmpty {
                                 Section(header: Text("Favorites")) {
                                     ForEach(filteredFavoriteCommunities) { community in
-                                        CommunityRow(community: community, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
+                                        CommunityRow(community: community, showPosts: $showPosts, target: $target, loadPosts: $loadPosts,
+                                                     isInboxInternalPresented: $isInboxInternalPresented)
                                     }
                                 }
                                 .background(Color.clear)
@@ -51,7 +55,8 @@ struct CommunitiesStack: View {
                             if !model.communities.isEmpty {
                                 Section(header: Text("Subreddits")) {
                                     ForEach(filteredSubscribedCommunities) { community in
-                                        CommunityRow(community: community, showPosts: $showPosts, target: $target, loadPosts: $loadPosts)
+                                        CommunityRow(community: community, showPosts: $showPosts, target: $target, loadPosts: $loadPosts,
+                                                     isInboxInternalPresented: $isInboxInternalPresented)
                                     }
                                 }
                                 .background(Color.clear)
@@ -127,14 +132,15 @@ struct CommunityRow: View {
     @Binding var showPosts: Bool
     @Binding var target: CommunityOrUser
     @Binding var loadPosts: Bool
+    @Binding var isInboxInternalPresented: Bool
     
     var body: some View {
         Button(action: {
+            isInboxInternalPresented = false
             loadPosts = true
             target = CommunityOrUser(community: community)
             commentsModel.resetPages()
             model.resetPagesTo(target: target)
-//            model.loadCommunity(community: CommunityOrUser(community: community))
             showPosts = true
         }) {
             HStack {
@@ -191,12 +197,14 @@ struct UserSection: View {
     @Binding var showPosts: Bool
     @Binding var target: CommunityOrUser
     @Binding var loadPosts: Bool
+    @Binding var isInboxInternalPresented: Bool
     @State private var showingExitAlert = false
     
     var body: some View {
         if model.userSessionManager.userName != nil {
             Menu {
                 Button(action: {
+                    isInboxInternalPresented = false
                     loadPosts = true
                     target = CommunityOrUser(user: User(model.userName!))
                     model.resetPagesTo(target: target)

@@ -20,22 +20,25 @@ struct ContentView: View {
     @State var target: CommunityOrUser = CommunityOrUser(community: Community("all", isMultiCommunity: true))
     @State private var tabSelection: Int = 1
     @State private var firstUnlock: Bool = true
+    @State var isInboxInternalPresented: Bool = false
     
     var body: some View {
         ZStack {
             TabView(selection: $tabSelection) {
-                CommunitiesStack(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts, target: $target)
+                CommunitiesStack(loginPopupShowing: $loginPopupShowing, showPosts: $showPosts, target: $target,
+                                 isInboxInternalPresented: $isInboxInternalPresented)
                     .tabItem {
                         Label("Feed", systemImage: "newspaper")
                     }
                     .tag(1)
-                InboxView(loginPopupShowing: $loginPopupShowing)
+                InboxView(loginPopupShowing: $loginPopupShowing, isInternalPresented: $isInboxInternalPresented)
                     .tabItem {
                         Label("Inbox", systemImage: "envelope")
                     }
                     .badge(model.messageCount)
                     .tag(2)
-                SearchView(tabSelection: $tabSelection, showPosts: $showPosts, target: $target)
+                SearchView(tabSelection: $tabSelection, showPosts: $showPosts, target: $target,
+                           isInboxInternalPresented: $isInboxInternalPresented)
                     .tabItem {
                         Label("Search", systemImage: "magnifyingglass")
                     }

@@ -14,6 +14,7 @@ struct SearchView: View {
     @Binding var tabSelection: Int
     @Binding var showPosts: Bool
     @Binding var target: CommunityOrUser
+    @Binding var isInboxInternalPresented: Bool
     @State private var communityName: String = ""
     @FocusState private var isFieldFocused: Bool
     
@@ -28,13 +29,7 @@ struct SearchView: View {
                 .onSubmit {
                     let community = CommunityOrUser(community: Community(communityName, isMultiCommunity: ["all", "popular", "saved", "mod", ""]
                         .contains(communityName.lowercased())))
-                    model.resetPagesTo(target: community)
-                    commentsModel.resetPages()
-                    model.loadCommunity(community: community)
-                    target = community
-                    communityName = ""
-                    tabSelection = 1
-                    showPosts = true
+                    performNavigation(community)
                 }
                 .onChange(of: communityName) { value in
                     if communityName.count > 2 {
@@ -63,12 +58,7 @@ struct SearchView: View {
                         .onTapGesture {
                             let community = CommunityOrUser(community: Community(communityName, isMultiCommunity: ["all", "popular", "saved", "mod", ""]
                                 .contains(communityName.lowercased())))
-                            model.resetPagesTo(target: community)
-                            model.loadCommunity(community: community)
-                            target = community
-                            communityName = ""
-                            tabSelection = 1
-                            showPosts = true
+                            performNavigation(community)
                         }
                         Divider()
                         ZStack {
@@ -82,17 +72,13 @@ struct SearchView: View {
                         .frame(maxWidth: .infinity, maxHeight: 45, alignment: .top)
                         .onTapGesture {
                             let community = CommunityOrUser(user: User(communityName))
-                            model.resetPagesTo(target: community)
-                            commentsModel.resetPages()
-                            model.loadCommunity(community: community)
-                            target = community
-                            tabSelection = 1
-                            showPosts = true
+                            performNavigation(community)
                         }
                         Divider()
                         ForEach(searchModel.communities) { community in
                             SearchResultView(community: community, tabSelection: $tabSelection,
-                                             showPosts: $showPosts, target: $target, communityName: $communityName)
+                                             showPosts: $showPosts, target: $target, communityName: $communityName,
+                                             isInboxInternalPresented: $isInboxInternalPresented)
                         }
                     }
                 }
@@ -120,6 +106,7 @@ struct SearchView: View {
                             ForEach(searchModel.visitedCommunities) { community in
                                 SearchResultView(community: community, tabSelection: $tabSelection,
                                                  showPosts: $showPosts, target: $target, communityName: $communityName,
+                                                 isInboxInternalPresented: $isInboxInternalPresented,
                                                  color: Color(UIColor.systemBackground), iconName: "clock")
                             }
                         }
@@ -138,6 +125,7 @@ struct SearchView: View {
                             ForEach(searchModel.popularCommunities) { community in
                                 SearchResultView(community: community, tabSelection: $tabSelection,
                                                  showPosts: $showPosts, target: $target, communityName: $communityName,
+                                                 isInboxInternalPresented: $isInboxInternalPresented,
                                                  color: Color(UIColor.systemBackground), iconName: "chart.line.uptrend.xyaxis")
                             }
                         }
@@ -155,16 +143,29 @@ struct SearchView: View {
             isFieldFocused = false
         }
     }
+    
+    func performNavigation(_ community: CommunityOrUser) {
+        isInboxInternalPresented = false
+        model.resetPagesTo(target: community)
+        commentsModel.resetPages()
+        model.loadCommunity(community: community)
+        target = community
+        communityName = ""
+        tabSelection = 1
+        showPosts = true
+    }
 }
 
 struct SearchResultView: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var searchModel: SearchModel
     var community: Community
     @Binding var tabSelection: Int
     @Binding var showPosts: Bool
     @Binding var target: CommunityOrUser
     @Binding var communityName: String
+    @Binding var isInboxInternalPresented: Bool
     var color: Color = Color(UIColor.systemGray6)
     var iconName: String = "chevron.right.circle"
     
@@ -181,7 +182,9 @@ struct SearchResultView: View {
         .onTapGesture {
             searchModel.addVisitedCommunity(community: community)
             let targetCommunity = CommunityOrUser(community: community)
+            isInboxInternalPresented = false
             model.resetPagesTo(target: targetCommunity)
+            commentsModel.resetPages()
             model.loadCommunity(community: targetCommunity)
             target = targetCommunity
             communityName = ""
