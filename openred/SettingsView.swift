@@ -41,7 +41,7 @@ struct SettingsView: View {
                         .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
                     }
                     NavigationLink {
-                        AppearenceSettingsView()
+                        AppearanceSettingsView()
                     } label: {
                         HStack(spacing: 15) {
                             Image(systemName: "eye.square")
@@ -50,7 +50,7 @@ struct SettingsView: View {
                                 .background(Color(red: 55 / 255, green: 91 / 255, blue: 184 / 255))
                                 .cornerRadius(8)
                                 .font(.system(size: 26))
-                                Text("Appearence")
+                                Text("Appearance")
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             
                         }
@@ -439,7 +439,7 @@ All personal data used by OpenRed is stored on your device only and is never syn
     }
 }
 
-struct AppearenceSettingsView: View {
+struct AppearanceSettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     var themes = ["automatic", "light", "dark"]
     @State private var selectedTheme = "automatic"
@@ -511,7 +511,7 @@ struct AppearenceSettingsView: View {
             .disabled(!settingsModel.hasPremium)
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("Appearence")
+        .navigationTitle("Appearance")
         .task {
             selectedTheme = settingsModel.theme
             textSizeSliderValue = Float(settingsModel.textSize)
