@@ -2,23 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleVersion</key>
-	<string>1.1</string>
-	<key>GADNativeAdValidatorEnabled</key>
-	<false/>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>OpenRed would like permission to track you across apps and websites. This ensures the app stays free and the you will see ads relevant to your interests.</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.1</string>
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
-	<key>bugsnag</key>
-	<dict>
-		<key>apiKey</key>
-		<string>38b942031f61af3cb69037c819860cfb</string>
-	</dict>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-1887657859018428~5056392387</string>
+	<key>GADNativeAdValidatorEnabled</key>
+	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>SKAdNetworkItems</key>
@@ -220,5 +209,10 @@
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
 	</array>
+	<key>bugsnag</key>
+	<dict>
+		<key>apiKey</key>
+		<string>38b942031f61af3cb69037c819860cfb</string>
+	</dict>
 </dict>
 </plist>

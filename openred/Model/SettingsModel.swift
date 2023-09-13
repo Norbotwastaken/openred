@@ -203,7 +203,7 @@ class SettingsModel: ObservableObject {
     func resetPremiumFeatures() {
         setLockApp(false)
         setCommentTheme("default")
-        setAppIcon(AppIcons.appIcons["default"]!)
+//        setAppIcon(AppIcons.appIcons["default"]!)
     }
     
     var userNames: [String] {
