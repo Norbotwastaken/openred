@@ -10,20 +10,20 @@ import Foundation
 class JSONDataLoader {
     var content: [String:String] = [:]
     
-    func getData(url: String) {
-        if let URL = URL(string: url) {
-            URLSession.shared.dataTask(with: URL) { data, response, error in
-                if let data = data {
-                    do {
-                        let parsedData: [CommentRoot] = try JSONDecoder().decode([CommentRoot].self, from: data)
-                        self.mapCommentRoot(commentRoot: parsedData[1])
-                    } catch let error {
-                        print(error)
-                    }
-                }
-            }.resume()
-        }
-    }
+//    func getData(url: String) {
+//        if let URL = URL(string: url) {
+//            URLSession.shared.dataTask(with: URL) { data, response, error in
+//                if let data = data {
+//                    do {
+//                        let parsedData: [CommentRoot] = try JSONDecoder().decode([CommentRoot].self, from: data)
+//                        self.mapCommentRoot(commentRoot: parsedData[1])
+//                    } catch let error {
+//                        print(error)
+//                    }
+//                }
+//            }.resume()
+//        }
+//    }
     
 //    func loadPosts(url: URL, completion: @escaping ([JSONPost]?, String?, Error?) -> Void) {
 //        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -182,6 +182,27 @@ class JSONDataLoader {
                     let rules: [Trophy] = wrapper.data.trophies
                         .map{ Trophy(json: $0.data) }
                     completion(rules, error)
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+        urlSession.resume()
+    }
+    
+    func loadUpdates(url: URL, completion: @escaping ([Comment]?, Post?, Error?) -> Void) {
+        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            do {
+                if let data = data {
+                    let wrapper: [JSONEntityWrapper] = try JSONDecoder().decode([JSONEntityWrapper].self, from: data)
+                    let post: Post? = wrapper[0].data!.children[0].postData.map{ Post(jsonPost: $0) }
+                    let comments: [Comment] = wrapper[1].data!.children
+                        .filter{$0.commentData != nil}
+                        .map{ Comment(jsonComment: $0.commentData!) }
+                    if comments.count > 0 && comments[0].stickied && comments[0].isMod {
+                        comments[0].isCollapsed = true
+                    }
+                    completion(comments, post, error)
                 }
             } catch let error {
                 print(error)

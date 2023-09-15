@@ -9,7 +9,7 @@
   "settings" : {
     "_applicationInternalID" : "6462210178",
     "_developerTeamID" : "KUMFMTRJ3C",
-    "_lastSynchronizedDate" : 715514098.407058
+    "_lastSynchronizedDate" : 716473470.58371305
   },
   "subscriptionGroups" : [
     {
@@ -30,7 +30,12 @@
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "6462232548",
-          "introductoryOffer" : null,
+          "introductoryOffer" : {
+            "internalID" : "E7462705",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1M"
+          },
           "localizations" : [
             {
               "description" : "Unlock premium features and remove all ads",

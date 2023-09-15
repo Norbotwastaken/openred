@@ -17,6 +17,7 @@ class Model: ObservableObject {
     @Published var hasRedditPremium: Bool = false
     @Published var askReview: Bool = false
     var resetPagesToCommunity: String?
+    var nextCheckTime: Date?
     
     let userSessionManager: UserSessionManager
     private let jsonLoader: JSONDataLoader = JSONDataLoader()
@@ -30,7 +31,7 @@ class Model: ObservableObject {
         loadCommunity(community: pages["r/all"]!.selectedCommunity)
         loadCommunitiesData()
         loadCurrentUserData()
-//        countLaunch()
+        loadUpdatesData()
     }
     
     func login(username: String, password: String) {
@@ -497,6 +498,25 @@ class Model: ObservableObject {
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
     }
     
+    private func loadUpdatesData() {
+        if let nextCheckTime = UserDefaults.standard.object(forKey: "nextCheckTime") as? Date {
+            self.nextCheckTime = nextCheckTime
+        } else {
+            let nextCheckTime = Calendar.current.date(byAdding: DateComponents(day: 1), to: Date())
+            UserDefaults.standard.set(nextCheckTime, forKey: "nextCheckTime")
+            self.nextCheckTime = nextCheckTime
+        }
+    }
+    
+    private func updateIfNecessary() {
+        if nextCheckTime != nil && nextCheckTime! < Date() {
+            let updatedCheckTime = Calendar.current.date(byAdding: DateComponents(day: 1), to: Date())
+            UserDefaults.standard.set(updatedCheckTime, forKey: "nextCheckTime")
+            nextCheckTime = updatedCheckTime
+            
+        }
+    }
+    
     var mainPageCommunities: [Community] {
         var communities: [Community] = []
         communities.append(Community("", iconName: "house.fill", isMultiCommunity: true, displayName: "Home", path: ""))
@@ -573,5 +593,16 @@ class Page: ObservableObject {
         self.items = []
         self.webView = webView
         self.browser = Erik(webView: self.webView)
+    }
+    
+    var selectedSortingDisplayLabel: String {
+        if selectedSorting == "" {
+            return "Hot"
+        } else if selectedSorting == "top" || selectedSorting == "controversial" {
+            let selectedSortTimeDisplayLabel = selectedSortTime == "all" ? "All Time" : (selectedSortTime?.capitalized ?? "")
+            return selectedSorting.capitalized + " " + selectedSortTimeDisplayLabel
+        } else {
+            return selectedSorting.capitalized
+        }
     }
 }

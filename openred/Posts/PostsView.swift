@@ -130,6 +130,18 @@ struct PostsView: View {
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationBarHidden(isPostCreatorShowing || isMessageEditorShowing)
                         .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                VStack {
+                                    Text(model.pages[target.getCode()]!.title)
+                                        .font(.headline)
+                                    if model.pages[target.getCode()]!.title != "" {
+                                        Text(model.pages[target.getCode()]!.selectedSortingDisplayLabel)
+                                            .font(.subheadline)
+                                            .font(.system(size: 10))
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                            }
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 HStack {
                                     SortMenu(target: $target, currentSortBy: $sortBy, currentSortTime: $sortTime)

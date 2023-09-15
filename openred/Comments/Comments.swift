@@ -468,4 +468,14 @@ class CommentPage: ObservableObject {
             return topLevelParent.id
         }
     }
+    
+    var selectedSortingDisplayLabel: String {
+        if selectedSorting == "" || selectedSorting == "confidence" {
+            return "Hot"
+        } else if selectedSorting == "qa" {
+            return "Q&A"
+        } else {
+            return selectedSorting.capitalized
+        }
+    }
 }

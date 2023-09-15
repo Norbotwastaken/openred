@@ -47,7 +47,7 @@ struct SettingsView: View {
                             Image(systemName: "eye.square")
                                 .foregroundColor(.white)
                                 .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
-                                .background(Color(red: 55 / 255, green: 91 / 255, blue: 184 / 255))
+                                .background(Color(red: 20 / 255, green: 27 / 255, blue: 44 / 255))
                                 .cornerRadius(8)
                                 .font(.system(size: 26))
                                 Text("Appearance")
@@ -63,11 +63,19 @@ struct SettingsView: View {
                             Image(systemName: "star.square")
                                 .foregroundColor(.white)
                                 .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
-                                .background(Color(UIColor.systemRed))
+                                .background(Color.openRed)
                                 .cornerRadius(8)
                                 .font(.system(size: 26))
-                            Text("OpenRed Premium")
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            VStack {
+                                Text("OpenRed Premium")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                if settingsModel.eligibleForTrial {
+                                    Text("Start Free Trial")
+                                        .foregroundColor(.secondary)
+                                        .font(.system(size: 14))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                            }
                             
                         }
                         .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
@@ -89,6 +97,7 @@ struct SettingsView: View {
                         }, footer: Text("If Face ID, Touch ID or system passcode " +
                                         "is set, you will be requested to unlock the app when opening.")) {
                         Toggle("Application lock", isOn: $lockApp)
+                            .tint(Color.themeColor)
                             .onChange(of: lockApp) { _ in
                                 settingsModel.setLockApp(lockApp)
                             }
@@ -130,78 +139,97 @@ struct BuyPremiumView: View {
         VStack {
             List {
                 PremiumFeatureView(iconName: "square.text.square",
-                                   color: Color(UIColor.systemRed),
+                                   color: Color(red: 41 / 255, green: 41 / 255, blue: 41 / 255),
                                    title: "Ad-free Experience",
-                                   dedscription: "Browse without interruptions from ads within the OpenRed app.")
+                                   description: "Browse without interruptions from ads within the OpenRed app.")
                 PremiumFeatureView(iconName: "person.2",
-                                   color: Color(UIColor.systemGreen),
+                                   color: Color(red: 41 / 255, green: 41 / 255, blue: 41 / 255),
                                    title: "Multiple Accounts",
-                                   dedscription: "Add multiple accounts to browse and comment from.")
+                                   description: "Add multiple accounts to browse and comment from.")
                 PremiumFeatureView(iconName: "faceid",
-                                   color: Color(UIColor.systemBlue),
+                                   color: Color(red: 41 / 255, green: 41 / 255, blue: 41 / 255),
                                    title: "FaceID & Passcode",
-                                   dedscription: "For added security, require passcode or FaceID scan to unlock the app.")
+                                   description: "For added security, require passcode or FaceID scan to unlock the app.")
                 PremiumFeatureView(iconName: "app.gift",
-                                   color: Color(UIColor.systemGray2),
+                                   color: Color(red: 41 / 255, green: 41 / 255, blue: 41 / 255),
                                    title: "Custom App Icons",
-                                   dedscription: "Choose one of our custom artwork designs to personalise" +
+                                   description: "Choose one of our custom artwork designs to personalise" +
                                    " the app icon on your home screen.")
                 PremiumFeatureView(iconName: "paintbrush.fill",
-                                   color: Color(UIColor.systemPurple),
+                                   color: Color(red: 41 / 255, green: 41 / 255, blue: 41 / 255),
                                    title: "Color Themes",
-                                   dedscription: "Customize the colors of the comments section.")
+                                   description: "Customize the colors of the comments section.")
             }
             if settingsModel.hasPremium {
-                HStack {
-                    Text(.init("**Renews on** " + Apphud.subscription()!.expiresDate
-                        .formatted(date: .abbreviated, time: .omitted)))
+                VStack {
+                    Divider()
+                    HStack {
+                        Text(.init("**Renews on** " + Apphud.subscription()!.expiresDate
+                            .formatted(date: .abbreviated, time: .omitted)))
                         .lineLimit(1)
                         .padding()
                         .frame(maxWidth: .infinity)
-                    if Apphud.subscription()!.canceledAt != nil {
-                        Text("Cancelled")
-                            .foregroundColor(.secondary)
-                            .frame(alignment: .trailing)
+                        .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
+                        if Apphud.subscription()!.canceledAt != nil {
+                            Text("Cancelled")
+                                .foregroundColor(.secondary)
+                                .frame(alignment: .trailing)
+                                .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
+                        }
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: 120, alignment: .top)
+                .background(Color(UIColor.systemBackground))
+                .frame(maxWidth: .infinity, maxHeight: 80, alignment: .bottom)
             } else {
-                ZStack {
-                    VStack {
-                        Divider()
-                        Text(settingsModel.premiumPrice + " / month")
-                            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                        Button {
-                            showSubscriptionAlert = true
-                        } label: {
-                            Text("Upgrade to premium")
-                                .padding()
-                                .background(Color.themeColor)
-                                .cornerRadius(20)
-                                .foregroundColor(.white)
-                                .font(.system(size: 18))
-                                .fontWeight(.semibold)
-                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
-                        }
-                        .alert("OpenRed Premium", isPresented: $showSubscriptionAlert) {
-                            Button("Cancel", role: .cancel) { showSubscriptionAlert = false }
-                            Button("Subcribe") {
-                                showSubscriptionAlert = false
-                                purchasePremium()
-                            }.keyboardShortcut(.defaultAction)
-                        } message: {
-                            Text("""
+                VStack {
+                    Divider()
+//                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    Text(settingsModel.premiumPrice + " / month")
+                        .font(.system(size: 14))
+                        .fontWeight(.semibold)
+                        .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+                    Button {
+                        showSubscriptionAlert = true
+                    } label: {
+                        Text(settingsModel.eligibleForTrial ? "Start Free Trial" : "Upgrade to Premium")
+                            .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+                            .background(Color.themeColor)
+                            .cornerRadius(8)
+                            .foregroundColor(.white)
+                            .font(.system(size: 18))
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
+                    }
+                    .alert("OpenRed Premium", isPresented: $showSubscriptionAlert) {
+                        Button("Cancel", role: .cancel) { showSubscriptionAlert = false }
+                        Button("Subcribe") {
+                            showSubscriptionAlert = false
+                            purchasePremium()
+                        }.keyboardShortcut(.defaultAction)
+                    } message: {
+                        Text("""
                             OpenRed Premium Subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period (and charged to your iTunes account). You can turn off auto-renew/manage subscriptions in your iTunes Account Settings after purchase. Price of subscription is \(settingsModel.premiumPrice) monthly.\nTerms of Use can be found at https://www.apple.com/legal/internet-services/itunes/dev/stdeula/ and Privacy Policy can be found at https://www.openredinc.com/privacy-policy.html
                             """)
-                        }
                     }
-                    .background(Color(UIColor.systemBackground))
-                    .frame(maxWidth: .infinity, maxHeight: 120, alignment: .top)
                 }
-                .frame(maxWidth: .infinity, maxHeight: 120, alignment: .bottom)
+                .background(Color(UIColor.systemBackground))
+                .frame(maxWidth: .infinity, maxHeight: 80, alignment: .bottom)
             }
         }
-        .navigationTitle("OpenRed Premium")
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                VStack {
+                    Text("OpenRed Premium")
+                        .font(.headline)
+                    if settingsModel.eligibleForTrial {
+                        Text("Free for the first month")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+        }
+//        .navigationTitle("OpenRed Premium")
     }
     
     func purchasePremium() {
@@ -223,7 +251,7 @@ struct PremiumFeatureView: View {
     var iconName: String
     var color: Color
     var title: String
-    var dedscription: String
+    var description: String
     
     var body: some View {
         HStack(spacing: 20) {
@@ -241,7 +269,7 @@ struct PremiumFeatureView: View {
                     .fontWeight(.bold)
                     .font(.system(size: 18))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text(dedscription)
+                Text(description)
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -263,12 +291,12 @@ struct UserSettingsView: View {
     @State private var showingExitAlert = false
     
     var body: some View {
-        VStack() {
-            Text(userName)
-                .font(.title)
-                .fontWeight(.semibold)
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
+//        VStack() {
+//            Text(userName)
+//                .font(.title)
+//                .fontWeight(.semibold)
+//                .padding()
+//                .frame(maxWidth: .infinity, alignment: .leading)
             List {
                 Section(content: {
                     Button(action: {
@@ -337,7 +365,8 @@ struct UserSettingsView: View {
                          "OpenRed does not store your login credentials.")
                 })
             }
-        }
+            .navigationTitle(Text(userName))
+//        }
     }
 }
 
@@ -351,6 +380,7 @@ struct GeneralSettingsView: View {
         List {
             Section(content: {
                 Toggle("Upvote items on save", isOn: $upvoteOnSave)
+                    .tint(Color.themeColor)
                     .onChange(of: upvoteOnSave) { _ in
                         settingsModel.setUpvoteOnSave(upvoteOnSave)
                     }} , footer: {
@@ -358,6 +388,7 @@ struct GeneralSettingsView: View {
                     })
             Section(content: {
                 Toggle("Unmute videos", isOn: $unmuteVideos)
+                    .tint(Color.themeColor)
                     .onChange(of: unmuteVideos) { _ in
                         settingsModel.setUnmuteVideos(unmuteVideos)
                     }} , footer: {
@@ -365,6 +396,7 @@ struct GeneralSettingsView: View {
                     })
             Section(content: {
                 Toggle("Invert swipe actions", isOn: $reverseSwipeControls)
+                    .tint(Color.themeColor)
                     .onChange(of: reverseSwipeControls) { _ in
                         settingsModel.setReverseSwipeControls(reverseSwipeControls)
                     }} , footer: {
@@ -420,6 +452,7 @@ All personal data used by OpenRed is stored on your device only and is never syn
                 }
                 Section(content: {
                     Toggle("Send crash logs", isOn: $sendCrashLogs)
+                        .tint(Color.themeColor)
                         .onChange(of: sendCrashLogs) { _ in
                             settingsModel.setSendCrashReports(sendCrashLogs)
                         }} , footer: {

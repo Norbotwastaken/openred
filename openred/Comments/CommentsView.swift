@@ -236,10 +236,20 @@ struct CommentsView: View {
                         }
                     }
                     .listStyle(PlainListStyle())
-                    .navigationTitle(commentsModel.pages[link]!.post!.commentCount + " comments")
+//                    .navigationTitle(commentsModel.pages[link]!.post!.commentCount + " comments")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationBarHidden(isEditorShowing)
                     .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            VStack {
+                                Text(commentsModel.pages[link]!.post!.commentCount + " comments")
+                                    .font(.headline)
+                                Text(commentsModel.pages[link]!.selectedSortingDisplayLabel)
+                                    .font(.subheadline)
+                                    .font(.system(size: 10))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             CommentsToolbarView(link: link, selectedSort: $selectedSort, showingSaveDialog: $showingSaveDialog, showingDeleteDialog: $showingDeleteDialog,
                                                 showingNsfwDialog: $showingNsfwDialog, showingSpoilerDialog: $showingSpoilerDialog)

@@ -19,6 +19,7 @@ class SettingsModel: ObservableObject {
     var products: [Product] = []
     @Published var premiumProduct: Product?
     @Published var hasPremium: Bool = false
+    @Published var eligibleForTrial: Bool = false
     @Published var appVersion: String
     private var userSessionManager: UserSessionManager
     var askTrackingConsent: Bool = false
@@ -33,9 +34,15 @@ class SettingsModel: ObservableObject {
                                                name: UIApplication.willEnterForegroundNotification, object: nil)
         Task { @MainActor in
             products = try await Apphud.fetchProducts()
+            let skProducts = await Apphud.fetchSKProducts()
 //            products = try await Product.products(for: ["Premium"])
             if !products.isEmpty {
                 premiumProduct = products[0]
+                if !skProducts.isEmpty {
+                    Apphud.checkEligibilityForIntroductoryOffer(product: skProducts[0]) { isEligible in
+                        self.eligibleForTrial = isEligible
+                    }
+                }
             }
         }
         if Apphud.hasActiveSubscription() {
