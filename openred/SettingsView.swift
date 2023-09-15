@@ -131,7 +131,6 @@ struct BuyPremiumView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
-//    @Environment(\.dismiss) var dismiss
     @State var isPurchasing = false
     @State private var showSubscriptionAlert = false
     
@@ -183,8 +182,7 @@ struct BuyPremiumView: View {
             } else {
                 VStack {
                     Divider()
-//                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    Text(settingsModel.premiumPrice + " / month")
+                    Text(settingsModel.premiumPrice + "/month")
                         .font(.system(size: 14))
                         .fontWeight(.semibold)
                         .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
@@ -229,7 +227,6 @@ struct BuyPremiumView: View {
                 }
             }
         }
-//        .navigationTitle("OpenRed Premium")
     }
     
     func purchasePremium() {
@@ -238,9 +235,7 @@ struct BuyPremiumView: View {
                 let result = await Apphud
                     .purchase(settingsModel.premiumProduct!,isPurchasing: $isPurchasing)
                 if result.success {
-                    print("successful purchase.")
                     settingsModel.hasPremium = true
-//                    dismiss()
                 }
             }
         }

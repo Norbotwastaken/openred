@@ -23,6 +23,8 @@ class SettingsModel: ObservableObject {
     @Published var appVersion: String
     private var userSessionManager: UserSessionManager
     var askTrackingConsent: Bool = false
+//    private var launchCount: Int = 1
+//    private var premiumPromotionAttempts: Int = 0
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
@@ -32,19 +34,7 @@ class SettingsModel: ObservableObject {
                                                name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.unlock(notification:)),
                                                name: UIApplication.willEnterForegroundNotification, object: nil)
-        Task { @MainActor in
-            products = try await Apphud.fetchProducts()
-            let skProducts = await Apphud.fetchSKProducts()
-//            products = try await Product.products(for: ["Premium"])
-            if !products.isEmpty {
-                premiumProduct = products[0]
-                if !skProducts.isEmpty {
-                    Apphud.checkEligibilityForIntroductoryOffer(product: skProducts[0]) { isEligible in
-                        self.eligibleForTrial = isEligible
-                    }
-                }
-            }
-        }
+        loadProduct()
         if Apphud.hasActiveSubscription() {
             hasPremium = true
         } else {
@@ -55,7 +45,40 @@ class SettingsModel: ObservableObject {
         }
     }
     
+    func loadProduct() {
+        Task { @MainActor in
+//            products = try await Apphud.fetchProducts()
+            let skProducts = await Apphud.fetchSKProducts()
+            products = try await Product.products(for: ["Premium"])
+            if !products.isEmpty {
+                premiumProduct = products[0]
+                if !skProducts.isEmpty {
+                    Apphud.checkEligibilityForIntroductoryOffer(product: skProducts[0]) { isEligible in
+                        self.eligibleForTrial = isEligible
+//                        if isEligible {
+//                            if (self.launchCount > 1 && self.premiumPromotionAttempts < 1) ||
+//                                (self.launchCount > 10 && self.premiumPromotionAttempts < 2) ||
+//                                (self.launchCount > 25 && self.premiumPromotionAttempts < 3) {
+//                                userSessionManager.promotePremium = true
+//                            }
+//                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func loadDefaults() {
+//        if let launchCounter = UserDefaults.standard.object(forKey: "launchCounter") as? Int {
+//            if launchCounter > 100 {
+//                return
+//            }
+//            launchCount = launchCounter + 1
+//            UserDefaults.standard.set(launchCounter + 1, forKey: "launchCounter")
+//        } else {
+//            UserDefaults.standard.set(1, forKey: "launchCounter")
+//        }
+        
         if let savedTheme = UserDefaults.standard.object(forKey: "theme") as? String {
             theme = savedTheme
         } else {
@@ -116,6 +139,12 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(true, forKey: "askTrackingConsent")
             self.askTrackingConsent = true
         }
+        
+//        if let premiumPromotionAttempts = UserDefaults.standard.object(forKey: "premiumPromotionAttempts") as? Int {
+//            self.premiumPromotionAttempts = premiumPromotionAttempts
+//        } else {
+//            UserDefaults.standard.set(0, forKey: "premiumPromotionAttempts")
+//        }
     }
     
     func setTheme(_ newTheme: String) {

@@ -470,20 +470,6 @@ class Model: ObservableObject {
         }
     }
     
-//    private func countLaunch() {
-//        if let launchCounter = UserDefaults.standard.object(forKey: "launchCounter") as? Int {
-//            if launchCounter > 100 {
-//                return
-//            }
-//            if launchCounter == 20 || launchCounter == 50 || launchCounter == 100 {
-//                askReview = true
-//            }
-//            UserDefaults.standard.set(launchCounter + 1, forKey: "launchCounter")
-//        } else {
-//            UserDefaults.standard.set(1, forKey: "launchCounter")
-//        }
-//    }
-    
     private func loadCommunitiesDataFromDoc(doc: Document) {
         var unsortedCommunities: [Community] = []
         let communityElements = doc.querySelectorAll(".sr-list .flat-list.sr-bar:nth-of-type(n+2) li a")
