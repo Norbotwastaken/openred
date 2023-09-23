@@ -192,7 +192,7 @@ struct PostRowContent: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear(perform: {
-                    if !post.nsfw && !settingsModel.showNSFW {
+                    if !(post.nsfw && !settingsModel.showNSFW) {
                         startLoadingGif = true
                     }
                 })
