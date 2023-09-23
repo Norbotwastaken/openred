@@ -370,6 +370,7 @@ struct GeneralSettingsView: View {
     @State private var upvoteOnSave = false
     @State private var reverseSwipeControls = false
     @State private var unmuteVideos = false
+    @State private var showNSFW = false
     
     var body: some View {
         List {
@@ -398,6 +399,14 @@ struct GeneralSettingsView: View {
                         Text("Invert left and right swipe actions when " +
                              "interacting with comments and posts.")
                     })
+            Section(content: {
+                Toggle("Show NSFW content", isOn: $showNSFW)
+                    .tint(Color.themeColor)
+                    .onChange(of: showNSFW) { _ in
+                        settingsModel.setShowNSFW(showNSFW)
+                    }} , footer: {
+                        Text("Display NSFW media without blur.")
+                    })
         }
         .listStyle(.insetGrouped)
         .navigationTitle("General")
@@ -405,6 +414,7 @@ struct GeneralSettingsView: View {
             upvoteOnSave = settingsModel.upvoteOnSave
             reverseSwipeControls = settingsModel.reverseSwipeControls
             unmuteVideos = settingsModel.unmuteVideos
+            showNSFW = settingsModel.showNSFW
         }
     }
 }

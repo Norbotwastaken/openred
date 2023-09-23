@@ -133,6 +133,12 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(userSessionManager.sendCrashReports, forKey: "sendCrashReports")
         }
         
+        if let savedShowNSFW = UserDefaults.standard.object(forKey: "showNSFW") as? Bool {
+            userSessionManager.showNSFW = savedShowNSFW
+        } else {
+            UserDefaults.standard.set(userSessionManager.showNSFW, forKey: "showNSFW")
+        }
+        
         if let askTrackingConsent = UserDefaults.standard.object(forKey: "askTrackingConsent") as? Bool {
             self.askTrackingConsent = askTrackingConsent
         } else {
@@ -185,6 +191,11 @@ class SettingsModel: ObservableObject {
     func setSendCrashReports(_ newValue: Bool) {
         userSessionManager.sendCrashReports = newValue
         UserDefaults.standard.set(newValue, forKey: "sendCrashReports")
+    }
+    
+    func setShowNSFW(_ newValue: Bool) {
+        userSessionManager.showNSFW = newValue
+        UserDefaults.standard.set(newValue, forKey: "showNSFW")
     }
     
     func setAppIcon(_ newAppIcon: AppIcons.AppIcon) {
@@ -276,6 +287,10 @@ class SettingsModel: ObservableObject {
     
     var sendCrashReports: Bool {
         self.userSessionManager.sendCrashReports
+    }
+    
+    var showNSFW: Bool {
+        self.userSessionManager.showNSFW
     }
     
     var premiumPrice: String {

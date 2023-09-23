@@ -13,6 +13,7 @@ import WebKit
 
 struct PostRowContent: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var popupViewModel: PopupViewModel
     @State var startLoadingGif: Bool = false
     @State var restorePostsPlaceholder: Bool = false
@@ -46,14 +47,14 @@ struct PostRowContent: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxWidth: .infinity, maxHeight: 650)
-                                .blur(radius: post.nsfw ? 30 : 0, opaque: true)
+                                .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
                                 .onTapGesture {
                                     popupViewModel.fullImageLink = post.imageLink
                                     popupViewModel.contentType = post.contentType
                                     popupViewModel.isShowing = true
                                 }
                                 .saveSize(in: $imageContainerSize)
-                            if post.nsfw {
+                            if post.nsfw && !settingsModel.showNSFW {
                                 VStack {
                                     Text("NSFW")
                                         .font(.system(size: 24))
@@ -90,14 +91,14 @@ struct PostRowContent: View {
             }
         }
         else if post.contentType == .video {
-            AsyncImage(url: URL(string: post.nsfw ? post.imageLink ?? "" : post.imagePreviewLink ?? "")) { image in
+            AsyncImage(url: URL(string: post.nsfw && !settingsModel.showNSFW ? post.imageLink ?? "" : post.imagePreviewLink ?? "")) { image in
                 ZStack {
                     image
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: .infinity, maxHeight: 650)
-                        .blur(radius: post.nsfw ? 30 : 0, opaque: true)
-                    if post.nsfw {
+                        .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
+                    if post.nsfw && !settingsModel.showNSFW {
                         VStack {
                             Text("NSFW")
                                 .font(.system(size: 24))
@@ -165,7 +166,7 @@ struct PostRowContent: View {
                         .onTapGesture {
                             startLoadingGif = true
                         }
-                    if post.nsfw && !startLoadingGif {
+                    if post.nsfw && !settingsModel.showNSFW && !startLoadingGif {
                         VStack {
                             Text("NSFW")
                                 .font(.system(size: 24))
@@ -191,7 +192,7 @@ struct PostRowContent: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear(perform: {
-                    if !post.nsfw {
+                    if !post.nsfw && !settingsModel.showNSFW {
                         startLoadingGif = true
                     }
                 })
@@ -211,7 +212,7 @@ struct PostRowContent: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxWidth: .infinity, maxHeight: 650)
-                                .blur(radius: post.nsfw ? 30 : 0, opaque: true)
+                                .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
                                 .onTapGesture {
                                     popupViewModel.image = image
                                     popupViewModel.contentType = post.contentType
@@ -219,7 +220,7 @@ struct PostRowContent: View {
                                     popupViewModel.isShowing = true
                                 }
                                 .saveSize(in: $imageContainerSize)
-                            if post.nsfw {
+                            if post.nsfw && !settingsModel.showNSFW {
                                 VStack {
                                     Text("NSFW")
                                         .font(.system(size: 24))
@@ -329,7 +330,7 @@ struct PostRowContent: View {
                             .scaledToFill()
 //                            .roundedCorner(10, corners: [.topLeft, .bottomLeft])
                             .frame(maxWidth: 140, maxHeight: 140, alignment: .leading)
-                            .blur(radius: post.nsfw ? 20 : 0, opaque: true)
+                            .blur(radius: post.nsfw && !settingsModel.showNSFW ? 20 : 0, opaque: true)
                             .roundedCorner(10, corners: [.topLeft, .bottomLeft])
                             .clipped()
                     } placeholder: {

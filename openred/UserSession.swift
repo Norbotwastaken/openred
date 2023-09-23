@@ -23,6 +23,7 @@ class UserSessionManager: ObservableObject {
     var unmuteVideos: Bool = false
     var appIcon: String = "default"
     var sendCrashReports: Bool = true
+    var showNSFW: Bool = false
     var promotePremium: Bool = false
     
     func createWebViewFor(viewName: String) {
