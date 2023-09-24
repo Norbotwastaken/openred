@@ -299,7 +299,7 @@ class JSONPostImageData: Codable {
     
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
-        try url = String(htmlEncodedString: container.decode(String.self, forKey: .url))!
+        try url = String(htmlEncodedString: container.decode(String.self, forKey: .url)) ?? ""
         try width = container.decode(Int.self, forKey: .width)
         try height = container.decode(Int.self, forKey: .height)
     }
