@@ -35,8 +35,11 @@ class Model: ObservableObject {
     }
     
     func login(username: String, password: String) {
-        // TODO: app breaks here sometimes
         let page = pages.first!.value
+        if page.document == nil {
+            self.loginAttempt = .failed
+            return
+        }
         if let form = page.document!.querySelector("#login_login-main") as? Form {
             if let usernameInput = form.querySelector("input[name=\"user\"]") {
                 usernameInput["value"] = username
