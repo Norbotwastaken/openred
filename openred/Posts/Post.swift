@@ -80,7 +80,7 @@ class Post: Identifiable, ObservableObject {
     
     init(jsonPost: JSONPost) {
         self.id = jsonPost.id
-        self.title = jsonPost.title!
+        self.title = jsonPost.title ?? ""
         self.thumbnailLink = jsonPost.thumbnail
         self.externalLink = jsonPost.url
         
