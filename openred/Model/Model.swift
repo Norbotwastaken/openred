@@ -34,7 +34,7 @@ class Model: ObservableObject {
         loadUpdatesData()
     }
     
-    func login(username: String, password: String) {
+    func login(userName: String, password: String) {
         if pages.first != nil && pages.first!.value.document == nil {
             self.loginAttempt = .failed
             return
@@ -42,22 +42,58 @@ class Model: ObservableObject {
         let page = pages.first!.value
         if let form = page.document!.querySelector("#login_login-main") as? Form {
             if let usernameInput = form.querySelector("input[name=\"user\"]") {
-                usernameInput["value"] = username
+                usernameInput["value"] = userName
             }
             if let passwordInput = form.querySelector("input[name=\"passwd\"]") {
                 passwordInput["value"] = password
             }
             page.document?.querySelector("#login_login-main .btn")?.click() { object, error in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     page.browser.currentContent { (obj, err) -> Void in
                         if let document = obj {
-                            if document.querySelector("#login_login-main .error") != nil {
-                                self.loginAttempt = .failed
+                            if document.querySelector(".modal-body form #otpfield") != nil {
+                                self.loginAttempt = .authCodeRequired
+                            } else {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    page.browser.currentContent { (obj, err) -> Void in
+                                        if let document = obj {
+                                            if document.querySelector("#login_login-main .error") != nil {
+                                                self.loginAttempt = .failed
+                                            } else {
+                                                self.loginAttempt = .successful
+                                                page.document = document
+                                                self.userSessionManager.saveUserSession(webViewKey: page.selectedCommunity.getCode(), userName: userName)
+                                                self.loadCommunitiesData()
+                                                self.loadCurrentUserData()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func enterAuthCode(authCode: String, userName: String) {
+        let page = pages.first!.value
+        page.browser.currentContent { (obj, err) -> Void in
+            if let form = obj?.querySelector("#login_otp") as? Form {
+                if let codeInput = form.querySelector("#otpfield") {
+                    codeInput["value"] = authCode
+                }
+                form.submit()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                    page.browser.currentContent { (obj, err) -> Void in
+                        if let document = obj {
+                            if document.querySelector("#login_otp") != nil {
+                                self.loginAttempt = .authCodeFailed
                             } else {
                                 self.loginAttempt = .successful
                                 page.document = document
-                                self.userSessionManager.saveUserSession(webViewKey: page.selectedCommunity.getCode(), userName: username)
-//                                self.loadCommunitiesDataFromDoc(doc: document)
+                                self.userSessionManager.saveUserSession(webViewKey: page.selectedCommunity.getCode(), userName: userName)
                                 self.loadCommunitiesData()
                                 self.loadCurrentUserData()
                             }
@@ -552,6 +588,8 @@ enum LoginAttempt: Codable {
     case undecided
     case successful
     case failed
+    case authCodeRequired
+    case authCodeFailed
 }
 
 struct ViewModelAttributes {

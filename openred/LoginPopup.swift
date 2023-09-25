@@ -16,9 +16,11 @@ struct LoginPopup: View {
     @EnvironmentObject var messageModel: MessageModel
     @State private var username: String = ""
     @State private var password: String = ""
+    @State private var authCode: String = ""
     @State private var waitingLoginResponse: Bool = false
     @State private var failedAttemptIndicatorShowing: Bool = false
     @State private var privacyPromptShowing: Bool = false
+    @State private var authCodeRequired: Bool = false
     @Binding var loginPopupShowing: Bool
     @FocusState private var isFieldFocused: Bool
     
@@ -44,11 +46,49 @@ struct LoginPopup: View {
                         }
                     }
                 VStack {
-                    Text("Log in to reddit")
-                        .font(.system(size: 34) .bold())
-                        .opacity(0.9)
-                        .padding(EdgeInsets(top: 55, leading: 30, bottom: 0, trailing: 30))
-                        .frame(alignment: .top)
+                    if authCodeRequired {
+                        Text("Authentiaction Code Required")
+                            .font(.system(size: 34) .bold())
+                            .opacity(0.9)
+                            .padding(EdgeInsets(top: 55, leading: 30, bottom: 0, trailing: 30))
+                            .frame(alignment: .topLeading)
+                        TextField("Authentication Code", text: $authCode)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(.roundedBorder)
+                            .focused($isFieldFocused)
+                            .border(failedAttemptIndicatorShowing ? Color.red : Color.black)
+                            .frame(alignment: .top)
+                            .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
+                            .onTapGesture {}
+                            .onSubmit {
+                                submitAuthCode()
+                            }
+                        Button( action: {
+                            submitAuthCode()
+                        }) {
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color.themeColor)
+                                    .cornerRadius(10)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                if waitingLoginResponse {
+                                    ProgressView()
+                                } else {
+                                    Text("Submit")
+                                        .font(.system(size: 18) .bold())
+                                }
+                            }
+                        }
+                        .disabled(waitingLoginResponse)
+                        .foregroundColor(.white)
+                        .frame(width: 150, height: 40, alignment: .top)
+                        .padding(EdgeInsets(top: 20, leading: 45, bottom: 0, trailing: 45))
+                    } else {
+                        Text("Log in to reddit")
+                            .font(.system(size: 34) .bold())
+                            .opacity(0.9)
+                            .padding(EdgeInsets(top: 55, leading: 30, bottom: 0, trailing: 30))
+                            .frame(alignment: .top)
                         TextField("Username", text: $username)
                             .textFieldStyle(.roundedBorder)
                             .focused($isFieldFocused)
@@ -68,38 +108,37 @@ struct LoginPopup: View {
                             .frame(alignment: .top)
                             .padding(EdgeInsets(top: 10, leading: 45, bottom: 0, trailing: 45))
                             .onTapGesture {} // override other onTap
-//                    }
-                    .onSubmit {
-                        submitForm()
-                    }
-                    Button( action: {
-                        submitForm()
-                    }) {
-                        ZStack {
-                            Rectangle()
-                                .fill(Color.themeColor)
-                                .cornerRadius(10)
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            if waitingLoginResponse {
-                                ProgressView()
-                            } else {
-                                Text("Log In")
-                                    .font(.system(size: 18) .bold())
+                            .onSubmit {
+                                submitForm()
+                            }
+                        Button( action: {
+                            submitForm()
+                        }) {
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color.themeColor)
+                                    .cornerRadius(10)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                if waitingLoginResponse {
+                                    ProgressView()
+                                } else {
+                                    Text("Log In")
+                                        .font(.system(size: 18) .bold())
+                                }
                             }
                         }
+                        .disabled(waitingLoginResponse)
+                        .foregroundColor(.white)
+                        .frame(width: 150, height: 40, alignment: .top)
+                        .padding(EdgeInsets(top: 20, leading: 45, bottom: 0, trailing: 45))
+                        Button("Cancel") {
+                            loginPopupShowing = false
+                        }
+                        .disabled(waitingLoginResponse)
+                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
                     }
-                    .disabled(waitingLoginResponse)
-                    .foregroundColor(.white)
-                    .frame(width: 150, height: 40, alignment: .top)
-                    .padding(EdgeInsets(top: 20, leading: 45, bottom: 0, trailing: 45))
-                    Button("Cancel") {
-                        loginPopupShowing = false
-                    }
-                    .disabled(waitingLoginResponse)
-                    .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                
             }
             .onTapGesture {
                 isFieldFocused = false
@@ -113,24 +152,53 @@ struct LoginPopup: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
     }
+    
     private func submitForm() {
         guard username.isEmpty == false && password.isEmpty == false else { return }
         isFieldFocused = false
         waitingLoginResponse = true
-        model.login(username: username, password: password)
+        model.login(userName: username, password: password)
         settingsModel.loadProduct()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            if model.loginAttempt == .authCodeRequired {
+                waitingLoginResponse = false
+                authCodeRequired = true
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    if model.loginAttempt == .successful {
+                        if settingsModel.askTrackingConsent {
+                            privacyPromptShowing = true
+                        } else {
+                            loginPopupShowing = false
+                            waitingLoginResponse = false
+                            messageModel.openInbox(filter: "inbox", forceLoad: true)
+                        }
+                    } else if model.loginAttempt == .failed {
+                        failedAttemptIndicatorShowing = true
+                        waitingLoginResponse = false
+                        isFieldFocused = true
+                    }
+                }
+            }
+        }
+    }
+    
+    private func submitAuthCode() {
+        guard authCode.isEmpty == false else { return }
+        isFieldFocused = false
+        waitingLoginResponse = true
+        model.enterAuthCode(authCode: authCode, userName: username)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            waitingLoginResponse = false
             if model.loginAttempt == .successful {
                 if settingsModel.askTrackingConsent {
                     privacyPromptShowing = true
                 } else {
                     loginPopupShowing = false
-                    waitingLoginResponse = false
                     messageModel.openInbox(filter: "inbox", forceLoad: true)
                 }
-            } else if model.loginAttempt == .failed {
+            } else if model.loginAttempt == .authCodeFailed {
                 failedAttemptIndicatorShowing = true
-                waitingLoginResponse = false
                 isFieldFocused = true
             }
         }
