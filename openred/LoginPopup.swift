@@ -140,6 +140,7 @@ struct LoginPopup: View {
 struct TrackingConsentView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @EnvironmentObject var messageModel: MessageModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
     @Binding var loginPopupShowing: Bool
     @Binding var waitingLoginResponse: Bool
     @State var promotePremiumView: Bool = false
@@ -205,7 +206,7 @@ Help us keep OpenRed free by allowing us to use your online activity and share i
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     Text(.init("""
-**Choose 'Allow'** to see ads that are more interesting and relevant to you. This does not affect the number of ads presented to you and helps us provide the app for free. App tracking data does not include information about your identity and your choices can be changed at any time in your system settings.
+On the next screen **Choose 'Allow'** to see ads that are more interesting and relevant to you. This does not affect the number of ads presented to you and helps us provide the app for free. App tracking data does not include information about your identity and your choices can be changed at any time in your system settings under the OpenRed tab.
 """))
                     .font(.system(size: 18))
                     .foregroundColor(.secondary)
@@ -225,8 +226,10 @@ Help us keep OpenRed free by allowing us to use your online activity and share i
                                 case .authorized:
                                     print("enable tracking")
                                 case .denied:
+                                    overlayModel.show("Tracking disabled")
                                     print("disable tracking")
                                 default:
+                                    overlayModel.show("Tracking disabled")
                                     print("disable tracking")
                                 }
                                 settingsModel.disableUserConsent()

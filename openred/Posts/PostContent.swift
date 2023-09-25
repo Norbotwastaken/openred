@@ -367,7 +367,9 @@ struct PostRowContent: View {
             }
             .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
             .onTapGesture {
-                showSafari.toggle()
+                if ["http", "https"].contains(URL(string: post.externalLink!)?.scheme?.lowercased() ?? "") {
+                    showSafari.toggle()
+                }
             }
             .fullScreenCover(isPresented: $showSafari) {
                 SFSafariViewWrapper(url: URL(string: post.externalLink!)!)
@@ -425,7 +427,9 @@ struct PostRowTextContent: View {
                         isInternalPresented = true
                     } else {
                         safariLink = url
-                        showSafari = true
+                        if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+                            showSafari = true
+                        }
                     }
                     return .handled
                 })

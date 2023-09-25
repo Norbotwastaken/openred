@@ -71,16 +71,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A80B0197-282A-47AC-9278-5920C07DEBB2"
+            uuid = "96AE7496-58C9-49BB-8B42-B58374720576"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "openred/Model/Model.swift"
+            filePath = "openred/Model/JSONAboutParser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
-            landmarkName = "login(username:password:)"
+            startingLineNumber = "381"
+            endingLineNumber = "381"
+            landmarkName = "init(json:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

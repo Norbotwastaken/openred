@@ -35,11 +35,11 @@ class Model: ObservableObject {
     }
     
     func login(username: String, password: String) {
-        let page = pages.first!.value
-        if page.document == nil {
+        if pages.first != nil && pages.first!.value.document == nil {
             self.loginAttempt = .failed
             return
         }
+        let page = pages.first!.value
         if let form = page.document!.querySelector("#login_login-main") as? Form {
             if let usernameInput = form.querySelector("input[name=\"user\"]") {
                 usernameInput["value"] = username
@@ -222,6 +222,7 @@ class Model: ObservableObject {
             DispatchQueue.main.async {
                 if let about = about {
                     self.hasRedditPremium = about.hasPremium
+                    self.objectWillChange.send()
                 }
             }
         }

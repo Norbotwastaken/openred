@@ -424,7 +424,9 @@ struct CommentView: View {
                                             isInternalPresented = true
                                         } else {
                                             destinationLink = url
-                                            showSafari = true
+                                            if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+                                                showSafari = true
+                                            }
                                         }
                                         return .handled
                                     })
