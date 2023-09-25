@@ -161,9 +161,11 @@ struct SaveImageAlert: View {
         Button("Cancel", role: .cancel) { showingSaveDialog = false }
         Button("Save") {
             DispatchQueue.global().async {
-                if let data = try? Data(contentsOf: URL(string: link!)!) {
-                    DispatchQueue.main.async {
-                        ImageSaver().writeToPhotoAlbum(image: UIImage(data: data)!)
+                if let url = URL(string: link!) {
+                    if let data = try? Data(contentsOf: url) {
+                        DispatchQueue.main.async {
+                            ImageSaver().writeToPhotoAlbum(image: UIImage(data: data)!)
+                        }
                     }
                 }
             }
