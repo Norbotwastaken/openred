@@ -43,6 +43,7 @@ class openredApp: App {
                 .environmentObject(searchModel)
                 .environmentObject(settingsModel)
                 .environmentObject(messageCreateModel)
+                .tint(settingsModel.accentColor == "blue" ? Color(UIColor.systemBlue) : Color.openRed)
         }
     }
 }

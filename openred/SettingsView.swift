@@ -233,7 +233,7 @@ struct BuyPremiumView: View {
         if settingsModel.premiumProduct != nil {
             Task { @MainActor in
                 let result = await Apphud
-                    .purchase(settingsModel.premiumProduct!,isPurchasing: $isPurchasing)
+                    .purchase(settingsModel.premiumProduct!, isPurchasing: $isPurchasing)
                 if result.success {
                     settingsModel.hasPremium = true
                 }
@@ -480,7 +480,9 @@ All personal data used by OpenRed is stored on your device only and is never syn
 struct AppearanceSettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     var themes = ["automatic", "light", "dark"]
+    var accentColors = ["red", "blue"]
     @State private var selectedTheme = "automatic"
+    @State private var selectedAccentColor = "red"
     @State private var selectedCommentTheme = "default"
     @State private var selectedAppIcon = "deafult"
     @State private var textSizeSliderValue : Float = 0.0
@@ -508,6 +510,15 @@ struct AppearanceSettingsView: View {
                     settingsModel.setTextSize(textSizeSliderValue)
                 }
             }
+            Picker("Accent color", selection: $selectedAccentColor) {
+                ForEach(accentColors, id: \.self) {
+                    Text($0.capitalized)
+                }
+            }.onChange(of: selectedAccentColor) { _ in
+                settingsModel.setAccentColor(selectedAccentColor)
+            }
+            .pickerStyle(.inline)
+            .disabled(!settingsModel.hasPremium)
             Picker("Comment color theme", selection: $selectedCommentTheme) {
                 ForEach(Themes.themesArray) { theme in
                     HStack {
@@ -555,6 +566,7 @@ struct AppearanceSettingsView: View {
             textSizeSliderValue = Float(settingsModel.textSize)
             selectedCommentTheme = settingsModel.commentTheme
             selectedAppIcon = settingsModel.appIcon
+            selectedAccentColor = settingsModel.accentColor
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 initialized = true
             }

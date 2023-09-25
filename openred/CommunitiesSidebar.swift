@@ -61,14 +61,6 @@ struct CommunitiesStack: View {
                                 }
                                 .background(Color.clear)
                             }
-//                            if !filteredCommunities.isEmpty {
-//                                Section(header: Text("More Subreddits")) {
-//                                    ForEach(filteredCommunities) { community in
-//                                        CommunityRow(community: community, showPosts: $showPosts)
-//                                    }
-//                                }
-//                                .background(Color.clear)
-//                            }
                         }
                         .listStyle(PlainListStyle())
                     }
@@ -147,16 +139,15 @@ struct CommunityRow: View {
                 if community.iconName != nil {
                     Text(Image(systemName: community.iconName!))
                 } else if let icon = community.iconURL {
-                    ZStack {
+                    AsyncImage(url: URL(string: icon)) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: 30, maxHeight: 30)
+                            .clipShape(Circle())
+                    } placeholder: {
                         Text(Image(systemName: "r.circle.fill"))
                             .frame(maxWidth: 30, maxHeight: 30)
-                        AsyncImage(url: URL(string: icon)) { image in
-                            image.image?
-                                .resizable()
-                                .scaledToFill()
-                                .frame(maxWidth: 30, maxHeight: 30)
-                                .clipShape(Circle())
-                        }
                     }
                 }
                 Text(community.displayName ?? community.name.prefix(1).capitalized + community.name.dropFirst())

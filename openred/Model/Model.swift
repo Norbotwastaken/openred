@@ -436,7 +436,7 @@ class Model: ObservableObject {
             components.path = "/subreddits/default.json"
             components.queryItems!.append(URLQueryItem(name: "limit", value: "50"))
         } else {
-            components.queryItems!.append(URLQueryItem(name: "limit", value: "200"))
+            components.queryItems!.append(URLQueryItem(name: "limit", value: "500"))
         }
         jsonLoader.loadAboutCommunities(url: components.url!) { (abouts, error) in
             DispatchQueue.main.async {

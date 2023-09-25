@@ -139,6 +139,12 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(userSessionManager.showNSFW, forKey: "showNSFW")
         }
         
+        if let savedAccentColor = UserDefaults.standard.object(forKey: "accentColor") as? String {
+            userSessionManager.accentColor = savedAccentColor
+        } else {
+            UserDefaults.standard.set(userSessionManager.accentColor, forKey: "accentColor")
+        }
+        
         if let askTrackingConsent = UserDefaults.standard.object(forKey: "askTrackingConsent") as? Bool {
             self.askTrackingConsent = askTrackingConsent
         } else {
@@ -209,6 +215,11 @@ class SettingsModel: ObservableObject {
         objectWillChange.send()
     }
     
+    func setAccentColor(_ newValue: String) {
+        userSessionManager.accentColor = newValue
+        UserDefaults.standard.set(newValue, forKey: "accentColor")
+    }
+    
     func disableUserConsent() {
         UserDefaults.standard.set(false, forKey: "askTrackingConsent")
         self.askTrackingConsent = false
@@ -250,6 +261,7 @@ class SettingsModel: ObservableObject {
     func resetPremiumFeatures() {
         setLockApp(false)
         setCommentTheme("default")
+        setAccentColor("red")
 //        setAppIcon(AppIcons.appIcons["default"]!)
     }
     
@@ -293,8 +305,12 @@ class SettingsModel: ObservableObject {
         self.userSessionManager.showNSFW
     }
     
+    var accentColor: String {
+        self.userSessionManager.accentColor
+    }
+    
     var premiumPrice: String {
-        self.premiumProduct?.displayPrice ?? "$4.99"
+        self.premiumProduct?.displayPrice ?? "$1.99"
     }
 }
 
