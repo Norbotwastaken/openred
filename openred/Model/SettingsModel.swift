@@ -34,22 +34,24 @@ class SettingsModel: ObservableObject {
                                                name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.unlock(notification:)),
                                                name: UIApplication.willEnterForegroundNotification, object: nil)
-        loadProduct()
-        if Apphud.hasActiveSubscription() {
-            hasPremium = true
-        } else {
-            resetPremiumFeatures()
-        }
         if !sendCrashReports {
             Bugsnag.pauseSession()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.loadProduct()
+            if Apphud.hasActiveSubscription() {
+                self.hasPremium = true
+            } else {
+                self.resetPremiumFeatures()
+            }
         }
     }
     
     func loadProduct() {
         Task { @MainActor in
-//            products = try await Apphud.fetchProducts()
+            products = try await Apphud.fetchProducts()
             let skProducts = await Apphud.fetchSKProducts()
-            products = try await Product.products(for: ["Premium"])
+//            products = try await Product.products(for: ["Premium"])
             if !products.isEmpty {
                 premiumProduct = products[0]
                 if !skProducts.isEmpty {
