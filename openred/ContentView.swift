@@ -43,7 +43,7 @@ struct ContentView: View {
                         Label("Search", systemImage: "magnifyingglass")
                     }
                     .tag(3)
-                SettingsView(tabSelection: $tabSelection, showPosts: $showPosts)
+                SettingsView(tabSelection: $tabSelection, showPosts: $showPosts, loginPopupShowing: $loginPopupShowing)
                     .tabItem {
                         Label("Settings", systemImage: "gear")
                     }

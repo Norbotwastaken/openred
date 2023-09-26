@@ -13,6 +13,7 @@ struct SettingsView: View {
     @EnvironmentObject var popupViewModel: PopupViewModel
     @Binding var tabSelection: Int
     @Binding var showPosts: Bool
+    @Binding var loginPopupShowing: Bool
     @State private var lockApp = false
     
     var body: some View {
@@ -104,6 +105,17 @@ struct SettingsView: View {
                             .disabled(!settingsModel.hasPremium)
                     }
                     Section(header: Label("Accounts".uppercased(), systemImage: "person.2")) {
+                        if settingsModel.userNames.isEmpty {
+                            Section(content: {
+                                Button(action: {
+                                    loginPopupShowing = true
+                                }) {
+                                    Text("Log In")
+                                        .foregroundColor(.primary)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                            })
+                        }
                         ForEach(settingsModel.userNames, id: \.self) { userName in
                             NavigationLink {
                                 UserSettingsView(userName: userName, tabSelection: $tabSelection, showPosts: $showPosts)
