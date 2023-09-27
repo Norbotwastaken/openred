@@ -63,6 +63,9 @@ struct CommunitiesStack: View {
                             }
                         }
                         .listStyle(PlainListStyle())
+                        .refreshable {
+                            model.loadCommunitiesData()
+                        }
                     }
                     if !model.pages.isEmpty {
                         ZStack {

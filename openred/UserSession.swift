@@ -27,6 +27,8 @@ class UserSessionManager: ObservableObject {
     var accentColor: String = "red"
     var homePage: String = "r/all"
     var promotePremium: Bool = false
+    var homePageCommunity: CommunityOrUser =
+    CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true))
     
     func createWebViewFor(viewName: String) {
         let webView = WKWebView()
@@ -174,5 +176,26 @@ class UserSessionManager: ObservableObject {
     func setFavoriteCommunities(_ communities: [String]) {
         favoriteCommunities = communities
         UserDefaults.standard.set(favoriteCommunities, forKey: "favorites_" + userName!)
+    }
+    
+    private func loadHomePage() -> String {
+        if let savedHomePage = UserDefaults.standard.object(forKey: "homePage") as? String {
+            homePage = savedHomePage
+        }
+        return homePage
+    }
+    
+    func getHomePageCommunity() -> CommunityOrUser {
+        var homePage = loadHomePage()
+        var isMultiCommunity = false
+        if ["r/all", "", "r/popular"].contains(homePage) {
+            isMultiCommunity = true
+        }
+        homePage = homePage.hasPrefix("r/") ? String(homePage.dropFirst(2)) : homePage
+        homePageCommunity = CommunityOrUser(community: Community(homePage, iconName: nil, isMultiCommunity: isMultiCommunity))
+        if homePage == "" {
+            homePageCommunity = CommunityOrUser(community: Community(homePage, iconName: nil, isMultiCommunity: true, path: ""))
+        }
+        return homePageCommunity
     }
 }

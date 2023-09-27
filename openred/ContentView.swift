@@ -14,13 +14,19 @@ struct ContentView: View {
     @EnvironmentObject var popupViewModel: PopupViewModel
     @EnvironmentObject var model: Model
     @EnvironmentObject var settingsModel: SettingsModel
+    var userSessionManager: UserSessionManager
+    @State var target: CommunityOrUser
     @State var communitiesSidebarVisible = true
     @State var loginPopupShowing = false
     @State var showPosts = true
-    @State var target: CommunityOrUser = CommunityOrUser(community: Community("all", isMultiCommunity: true))
     @State private var tabSelection: Int = 1
     @State private var firstUnlock: Bool = true
     @State var isInboxInternalPresented: Bool = false
+    
+    init(userSessionManager: UserSessionManager) {
+        self.userSessionManager = userSessionManager
+        _target = State(initialValue: userSessionManager.getHomePageCommunity())
+    }
     
     var body: some View {
         ZStack {

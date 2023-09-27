@@ -49,9 +49,9 @@ class SettingsModel: ObservableObject {
     
     func loadProduct() {
         Task { @MainActor in
+//            products = try await Product.products(for: ["Premium"])
             products = try await Apphud.fetchProducts()
             let skProducts = await Apphud.fetchSKProducts()
-//            products = try await Product.products(for: ["Premium"])
             if !products.isEmpty {
                 premiumProduct = products[0]
                 if !skProducts.isEmpty {

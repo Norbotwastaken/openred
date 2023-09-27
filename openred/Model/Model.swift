@@ -21,17 +21,24 @@ class Model: ObservableObject {
     
     let userSessionManager: UserSessionManager
     private let jsonLoader: JSONDataLoader = JSONDataLoader()
-    private let starterCommunity = CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true))
+//    var starterCommunity: CommunityOrUser
+//    private var homePage: String
     
     init(userSessionManager: UserSessionManager) {
         self.userSessionManager = userSessionManager
-        userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
-        pages["r/all"] = Page(target: starterCommunity, webView: userSessionManager
-            .getWebViewFor(viewName: starterCommunity.getCode())!)
-        loadCommunity(community: pages["r/all"]!.selectedCommunity)
-        loadCommunitiesData()
-        loadCurrentUserData()
-        loadUpdatesData()
+//        homePage = userSessionManager.loadHomePage()
+//        var communityName = homePage.hasPrefix("r/") ? String(homePage.dropFirst(2)) : homePage
+//        communityName = communityName == "" ? "home" : communityName
+//        starterCommunity = CommunityOrUser(community: Community(String(communityName), iconName: nil, isMultiCommunity: true))
+//        userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
+//        pages[homePage] = Page(target: starterCommunity, webView: userSessionManager
+//            .getWebViewFor(viewName: starterCommunity.getCode())!)
+//        loadCommunity(community: pages[homePage]!.selectedCommunity)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.loadCommunitiesData()
+            self.loadCurrentUserData()
+            self.loadUpdatesData()
+        }
     }
     
     func login(userName: String, password: String) {
@@ -106,11 +113,11 @@ class Model: ObservableObject {
     
     func logOut() {
         userSessionManager.logOut()
-        userSessionManager.createWebViewFor(viewName: starterCommunity.getCode())
-        pages["r/all"] = Page(target: starterCommunity, webView: userSessionManager
-            .getWebViewFor(viewName: starterCommunity.getCode())!)
-        loadCommunity(community: pages["r/all"]!.selectedCommunity)
-        resetPagesTo(target: pages["r/all"]!.selectedCommunity)
+        userSessionManager.createWebViewFor(viewName: userSessionManager.homePageCommunity.getCode())
+        pages[userSessionManager.homePage] = Page(target: userSessionManager.homePageCommunity, webView: userSessionManager
+            .getWebViewFor(viewName: userSessionManager.homePageCommunity.getCode())!)
+        loadCommunity(community: pages[userSessionManager.homePage]!.selectedCommunity)
+        resetPagesTo(target: pages[userSessionManager.homePage]!.selectedCommunity)
         communities = []
         favoriteCommunities = []
         loadCommunitiesData()

@@ -384,14 +384,14 @@ struct GeneralSettingsView: View {
     @State private var reverseSwipeControls = false
     @State private var unmuteVideos = false
     @State private var showNSFW = false
-    @State private var homePage = ""
+    @State private var homePage = "*"
     @State private var customHomePage = ""
     
     private var communities: [String:String] = [
         "r/all":"All",
-        "/":"Home",
+        "":"Home",
         "r/popular":"Popular",
-        "":"Custom"
+        "*":"Custom"
     ]
     
     var body: some View {
@@ -399,10 +399,10 @@ struct GeneralSettingsView: View {
             Section(content: {
                 Picker("Home Page", selection: $homePage) {
                     ForEach(communities.sorted(by: >), id: \.key) { key, value in
-                        if key == "" && customHomePage != "" {
+                        if key == "*" && customHomePage != "" {
                             Text(customHomePage)
                                 .lineLimit(1)
-                        } else if key == "" {
+                        } else if key == "*" {
                             Text(value)
                         } else {
                             Text(value)
@@ -411,7 +411,7 @@ struct GeneralSettingsView: View {
                 }
                 .pickerStyle(.menu)
                 .onChange(of: homePage) { _ in
-                    if homePage == "" {
+                    if homePage == "*" {
                         showHomePageAlert = true
                     } else {
                         settingsModel.setHomePage(homePage)
@@ -471,11 +471,13 @@ struct GeneralSettingsView: View {
             reverseSwipeControls = settingsModel.reverseSwipeControls
             unmuteVideos = settingsModel.unmuteVideos
             showNSFW = settingsModel.showNSFW
-            if communities[settingsModel.homePage] != nil {
-                homePage = settingsModel.homePage
+            if settingsModel.homePage == "" {
+                homePage = ""
+            } else if ["all", "popular"].contains(settingsModel.homePage.lowercased()) {
+                homePage = "r/" + settingsModel.homePage.lowercased()
             } else {
                 customHomePage = settingsModel.homePage
-                homePage = ""
+                homePage = "*"
             }
         }
     }
