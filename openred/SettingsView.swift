@@ -379,13 +379,57 @@ struct UserSettingsView: View {
 
 struct GeneralSettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
+    @State private var showHomePageAlert = false
     @State private var upvoteOnSave = false
     @State private var reverseSwipeControls = false
     @State private var unmuteVideos = false
     @State private var showNSFW = false
+    @State private var homePage = ""
+    @State private var customHomePage = ""
+    
+    private var communities: [String:String] = [
+        "r/all":"All",
+        "/":"Home",
+        "r/popular":"Popular",
+        "":"Custom"
+    ]
     
     var body: some View {
         List {
+            Section(content: {
+                Picker("Home Page", selection: $homePage) {
+                    ForEach(communities.sorted(by: >), id: \.key) { key, value in
+                        if key == "" && customHomePage != "" {
+                            Text(customHomePage)
+                                .lineLimit(1)
+                        } else if key == "" {
+                            Text(value)
+                        } else {
+                            Text(value)
+                        }
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: homePage) { _ in
+                    if homePage == "" {
+                        showHomePageAlert = true
+                    } else {
+                        settingsModel.setHomePage(homePage)
+                        customHomePage = ""
+                    }
+                }
+                .alert("Home Page", isPresented: $showHomePageAlert) {
+                    TextField("Community name", text: $customHomePage)
+                    Button("Done", action: {
+                        settingsModel.setHomePage(customHomePage)
+                        showHomePageAlert = false
+                    })
+                } message: {
+                    Text("Enter the name of the subreddit to set as home page.")
+                }
+            }, footer: {
+                Text("Select a community to load on app startup.")
+            })
             Section(content: {
                 Toggle("Upvote items on save", isOn: $upvoteOnSave)
                     .tint(Color.themeColor)
@@ -427,6 +471,12 @@ struct GeneralSettingsView: View {
             reverseSwipeControls = settingsModel.reverseSwipeControls
             unmuteVideos = settingsModel.unmuteVideos
             showNSFW = settingsModel.showNSFW
+            if communities[settingsModel.homePage] != nil {
+                homePage = settingsModel.homePage
+            } else {
+                customHomePage = settingsModel.homePage
+                homePage = ""
+            }
         }
     }
 }

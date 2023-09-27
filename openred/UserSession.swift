@@ -25,6 +25,7 @@ class UserSessionManager: ObservableObject {
     var sendCrashReports: Bool = true
     var showNSFW: Bool = false
     var accentColor: String = "red"
+    var homePage: String = "r/all"
     var promotePremium: Bool = false
     
     func createWebViewFor(viewName: String) {

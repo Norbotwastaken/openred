@@ -218,13 +218,21 @@ class JSONRule: Codable {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
         do {
             var text: String = ""
-            try text = String(container.decode(AttributedString?.self, forKey: .description)!.characters[...])
-            self.description = ContentFormatter().formatAndConvert(text: text)
+            var desc: AttributedString?
+            try desc = container.decode(AttributedString?.self, forKey: .description)
+            if desc != nil {
+                text = String(desc!.characters[...])
+                self.description = ContentFormatter().formatAndConvert(text: text)
+            }
         } catch {}
         do {
             var text: String = ""
-            try text = String(container.decode(AttributedString?.self, forKey: .short_name)!.characters[...])
-            self.short_name = ContentFormatter().formatAndConvert(text: text)
+            var sname: AttributedString?
+            try sname = container.decode(AttributedString?.self, forKey: .short_name)
+            if sname != nil {
+                text = String(sname!.characters[...])
+                self.short_name = ContentFormatter().formatAndConvert(text: text)
+            }
         } catch {}
         
         try self.kind = container.decode(String.self, forKey: .kind)

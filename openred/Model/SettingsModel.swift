@@ -147,6 +147,12 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(userSessionManager.accentColor, forKey: "accentColor")
         }
         
+        if let savedHomePage = UserDefaults.standard.object(forKey: "homePage") as? String {
+            userSessionManager.homePage = savedHomePage
+        } else {
+            UserDefaults.standard.set(userSessionManager.homePage, forKey: "homePage")
+        }
+        
         if let askTrackingConsent = UserDefaults.standard.object(forKey: "askTrackingConsent") as? Bool {
             self.askTrackingConsent = askTrackingConsent
         } else {
@@ -220,6 +226,11 @@ class SettingsModel: ObservableObject {
     func setAccentColor(_ newValue: String) {
         userSessionManager.accentColor = newValue
         UserDefaults.standard.set(newValue, forKey: "accentColor")
+    }
+    
+    func setHomePage(_ newValue: String) {
+        userSessionManager.homePage = newValue.hasPrefix("r/") ? newValue : "r/" + newValue
+        UserDefaults.standard.set(userSessionManager.homePage, forKey: "homePage")
     }
     
     func disableUserConsent() {
@@ -309,6 +320,14 @@ class SettingsModel: ObservableObject {
     
     var accentColor: String {
         self.userSessionManager.accentColor
+    }
+    
+    var homePage: String {
+        var homePage = self.userSessionManager.homePage
+        if homePage.hasPrefix("r/") {
+            return String(homePage.dropFirst(2))
+        }
+        return homePage
     }
     
     var premiumPrice: String {
