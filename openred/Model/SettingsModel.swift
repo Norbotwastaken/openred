@@ -37,14 +37,14 @@ class SettingsModel: ObservableObject {
         if !sendCrashReports {
             Bugsnag.pauseSession()
         }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.loadProduct()
             if Apphud.hasActiveSubscription() {
                 self.hasPremium = true
             } else {
                 self.resetPremiumFeatures()
             }
-//        }
+        }
     }
     
     func loadProduct() {
