@@ -16,7 +16,7 @@ struct MediaPopupContent: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @Environment(\.dismiss) var dismiss
     @State var toolbarVisible = false
-    @State private var play: Bool = true
+    @State private var play: Bool = false
     @State private var time: CMTime = .zero
     @State private var autoReplay: Bool = true
     @State private var mute: Bool = false
@@ -63,6 +63,11 @@ struct MediaPopupContent: View {
                             }
                         }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                            self.play = true
+                        })
+                    }
                     .onDisappear { self.play = false }
                     .offset(x: offset.width, y: offset.height)
                     .gesture(
