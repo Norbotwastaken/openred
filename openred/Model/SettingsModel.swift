@@ -17,7 +17,7 @@ class SettingsModel: ObservableObject {
     @Published var isUnlocked: Bool = false
     @Published var theme: String = "automatic"
     var products: [Product] = []
-    @Published var premiumProduct: Product?
+    @Published var premiumProduct: SKProduct?
     @Published var hasPremium: Bool = false
     @Published var eligibleForTrial: Bool = false
     @Published var appVersion: String
@@ -37,26 +37,32 @@ class SettingsModel: ObservableObject {
         if !sendCrashReports {
             Bugsnag.pauseSession()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.loadProduct()
             if Apphud.hasActiveSubscription() {
                 self.hasPremium = true
             } else {
                 self.resetPremiumFeatures()
             }
-        }
+//        }
     }
     
     func loadProduct() {
         Task { @MainActor in
 //            products = try await Product.products(for: ["Premium"])
-            products = try await Apphud.fetchProducts()
+//            products = try await Apphud.fetchProducts()
             let skProducts = await Apphud.fetchSKProducts()
-            if !products.isEmpty {
-                premiumProduct = products[0]
-                if !skProducts.isEmpty {
-                    Apphud.checkEligibilityForIntroductoryOffer(product: skProducts[0]) { isEligible in
-                        self.eligibleForTrial = isEligible
+            if !skProducts.isEmpty {
+                premiumProduct = skProducts[0]
+                Apphud.checkEligibilityForIntroductoryOffer(product: skProducts[0]) { isEligible in
+                    self.eligibleForTrial = isEligible
+                }
+            }
+//            if !products.isEmpty {
+//                premiumProduct = products[0]
+//                if !skProducts.isEmpty {
+//                    Apphud.checkEligibilityForIntroductoryOffer(product: skProducts[0]) { isEligible in
+//                        self.eligibleForTrial = isEligible
 //                        if isEligible {
 //                            if (self.launchCount > 1 && self.premiumPromotionAttempts < 1) ||
 //                                (self.launchCount > 10 && self.premiumPromotionAttempts < 2) ||
@@ -64,9 +70,9 @@ class SettingsModel: ObservableObject {
 //                                userSessionManager.promotePremium = true
 //                            }
 //                        }
-                    }
-                }
-            }
+//                    }
+//                }
+//            }
         }
     }
     
@@ -331,7 +337,10 @@ class SettingsModel: ObservableObject {
     }
     
     var premiumPrice: String {
-        self.premiumProduct?.displayPrice ?? "$1.99"
+        if premiumProduct != nil && premiumProduct!.priceLocale.currencySymbol != nil {
+            return premiumProduct!.priceLocale.currencySymbol! + " " + premiumProduct!.price.stringValue
+        }
+        return "$1.99"
     }
 }
 

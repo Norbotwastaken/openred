@@ -323,11 +323,14 @@ On the next screen **Choose 'Allow'** to see ads that are more interesting and r
     func purchasePremium() {
         if settingsModel.premiumProduct != nil {
             Task { @MainActor in
-                let result = await Apphud
-                    .purchase(settingsModel.premiumProduct!)
-                if result.success {
-                    loginPopupShowing = false
-                    settingsModel.hasPremium = true
+                let products = try await Apphud.fetchProducts()
+                if !products.isEmpty {
+                    let result = await Apphud
+                        .purchase(products[0])
+                    if result.success {
+                        loginPopupShowing = false
+                        settingsModel.hasPremium = true
+                    }
                 }
             }
         }

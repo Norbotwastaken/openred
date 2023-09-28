@@ -244,10 +244,13 @@ struct BuyPremiumView: View {
     func purchasePremium() {
         if settingsModel.premiumProduct != nil {
             Task { @MainActor in
-                let result = await Apphud
-                    .purchase(settingsModel.premiumProduct!, isPurchasing: $isPurchasing)
-                if result.success {
-                    settingsModel.hasPremium = true
+                let products = try await Apphud.fetchProducts()
+                if !products.isEmpty {
+                    let result = await Apphud
+                        .purchase(products[0], isPurchasing: $isPurchasing)
+                    if result.success {
+                        settingsModel.hasPremium = true
+                    }
                 }
             }
         }

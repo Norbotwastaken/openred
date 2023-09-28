@@ -113,7 +113,7 @@
             startingLineNumber = "90"
             endingLineNumber = "90"
             landmarkName = "enterAuthCode(authCode:userName:)"
-            landmarkType = "9">
+            landmarkType = "7">
             <Locations>
                <Location
                   uuid = "6DD80E03-E167-4DB6-B4E9-5AF6CD2575C4 - a537011697dd3f3d"
@@ -287,7 +287,7 @@
             startingLineNumber = "140"
             endingLineNumber = "140"
             landmarkName = "loadCommunity(community:filter:sortBy:sortTime:loadAfter:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -303,7 +303,7 @@
             startingLineNumber = "182"
             endingLineNumber = "182"
             landmarkName = "loadCommunity(community:filter:sortBy:sortTime:loadAfter:)"
-            landmarkType = "9">
+            landmarkType = "7">
             <Locations>
                <Location
                   uuid = "873FBF29-E5F3-4013-B4D0-3C8DB0D7B8AE - cdaa9e8738f5a497"
@@ -426,8 +426,8 @@
             filePath = "openred/Model/SettingsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
             landmarkName = "loadProduct()"
             landmarkType = "7">
             <Locations>
@@ -460,6 +460,54 @@
                   startingLineNumber = "55"
                   endingLineNumber = "55"
                   offsetFromSymbolStart = "114">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9EC9A7B3-6B0A-4BC9-B86B-84F2CDC6EE54"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "openred/Model/SettingsModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "loadProduct()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9EC9A7B3-6B0A-4BC9-B86B-84F2CDC6EE54 - e33f24907661950e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable () async -&gt; () in OpenRed.SettingsModel.loadProduct() -&gt; ()"
+                  moduleName = "OpenRed"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/SettingsModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "56"
+                  endingLineNumber = "56"
+                  offsetFromSymbolStart = "92">
+               </Location>
+               <Location
+                  uuid = "9EC9A7B3-6B0A-4BC9-B86B-84F2CDC6EE54 - e33f24907661950e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable () async -&gt; () in OpenRed.SettingsModel.loadProduct() -&gt; ()"
+                  moduleName = "OpenRed"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norbert/Documents/openred/openred/Model/SettingsModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "56"
+                  endingLineNumber = "56"
+                  offsetFromSymbolStart = "132">
                </Location>
             </Locations>
          </BreakpointContent>
