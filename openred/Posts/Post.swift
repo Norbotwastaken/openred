@@ -82,8 +82,10 @@ class Post: Identifiable, ObservableObject {
         self.id = jsonPost.id
         self.title = jsonPost.title ?? ""
         self.thumbnailLink = jsonPost.thumbnail
+        if self.thumbnailLink?.count ?? 0 < 8 {
+            self.thumbnailLink = ""
+        }
         self.externalLink = jsonPost.url
-        
         self.stickied = jsonPost.stickied
         self.isUpvoted = jsonPost.likes != nil ? jsonPost.likes! : false
         self.isDownvoted = jsonPost.likes != nil ? !jsonPost.likes! : false

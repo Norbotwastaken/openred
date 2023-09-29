@@ -386,6 +386,7 @@ struct GeneralSettingsView: View {
     @State private var showNSFW = false
     @State private var homePage = "*"
     @State private var customHomePage = ""
+    @State private var compactMode = false
     
     private var communities: [String:String] = [
         "r/all":"All",
@@ -431,6 +432,14 @@ struct GeneralSettingsView: View {
                 Text("Select a community to load on app startup.")
             })
             Section(content: {
+                Toggle("Compact mode", isOn: $compactMode)
+                    .tint(Color.themeColor)
+                    .onChange(of: compactMode) { _ in
+                        settingsModel.setCompactMode(compactMode)
+                    }} , footer: {
+                        Text("View posts in a compact format.")
+                    })
+            Section(content: {
                 Toggle("Upvote items on save", isOn: $upvoteOnSave)
                     .tint(Color.themeColor)
                     .onChange(of: upvoteOnSave) { _ in
@@ -471,6 +480,7 @@ struct GeneralSettingsView: View {
             reverseSwipeControls = settingsModel.reverseSwipeControls
             unmuteVideos = settingsModel.unmuteVideos
             showNSFW = settingsModel.showNSFW
+            compactMode = settingsModel.compactMode
             if settingsModel.homePage == "" {
                 homePage = ""
             } else if ["all", "popular"].contains(settingsModel.homePage.lowercased()) {

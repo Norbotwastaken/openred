@@ -12,6 +12,7 @@ struct PostRow: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var popupViewModel: PopupViewModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
+    @EnvironmentObject var settingsModel: SettingsModel
     var post: Post
     @Binding var target: CommunityOrUser
     @State var showingSaveDialog = false
@@ -22,45 +23,99 @@ struct PostRow: View {
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
-                Text(post.title)
-                    .font(.headline) +
-                Text(post.flair != nil ? LocalizedStringKey("  [" +  post.flair! + "]") : "")
-                    .foregroundColor(.secondary)
-                    .font(.system(size: 12))
                 HStack {
-                    if post.nsfw {
-                        Text("NSFW")
-                            .foregroundColor(.white)
-                            .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
-                            .fontWeight(.semibold)
-                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-                            .background(Color.nsfwPink)
-                            .cornerRadius(5)
-                            .frame(alignment: .leading)
+                    if settingsModel.compactMode && post.thumbnailLink != "" {
+                        AsyncImage(url: URL(string: post.thumbnailLink ?? "")) { image in
+                            ZStack {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth: 70, maxHeight: 70)
+                                    .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
+                                if post.nsfw && !settingsModel.showNSFW {
+                                    Text("NSFW")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.white)
+                                        .fontWeight(.semibold)
+                                        .opacity(0.8)
+                                        .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                        .background(Color.nsfwPink.opacity(0.6))
+                                        .cornerRadius(5)
+                                    
+                                }
+                            }
+                        } placeholder: {
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color(UIColor.systemGray5))
+                                    .frame(width: 70, height: 70)
+                                    .scaledToFill()
+                            }
+                            .frame(maxWidth: 70, maxHeight: 70)
+                        }
+                        .frame(maxHeight: .infinity, alignment: .topLeading)
                     }
-                    if post.spoiler {
-                        Text("Spoiler".uppercased())
-                            .foregroundColor(.white)
-                            .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
-                            .fontWeight(.semibold)
-                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-                            .background(Color(UIColor.systemGray))
-                            .cornerRadius(5)
-                            .frame(alignment: .leading)
+                    VStack {
+                        if settingsModel.compactMode {
+                            Text(post.title)
+//                                .font(.headline)
+                                .font(.system(size: 16 + CGFloat(model.textSizeInrease)))
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity, alignment: .topLeading)
+                            PostRowCompactFooter(post: post, target: $target)
+                        } else {
+                            Text(post.title)
+                                .font(.headline) +
+                            Text(post.flair != nil ? LocalizedStringKey("  [" +  post.flair! + "]") : "")
+                                .foregroundColor(.secondary)
+                                .font(.system(size: 12))
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    if !settingsModel.compactMode {
+                        HStack {
+                            if post.nsfw {
+                                Text("NSFW")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
+                                    .fontWeight(.semibold)
+                                    .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                    .background(Color.nsfwPink)
+                                    .cornerRadius(5)
+                                    .frame(alignment: .leading)
+                            }
+                            if post.spoiler {
+                                Text("Spoiler".uppercased())
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
+                                    .fontWeight(.semibold)
+                                    .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                                    .background(Color(UIColor.systemGray))
+                                    .cornerRadius(5)
+                                    .frame(alignment: .leading)
+                            }
+                        }
                     }
                 }
             }
-            .frame(alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
             .fixedSize(horizontal: false, vertical: true)
-            .padding(EdgeInsets(top: 8, leading: 10, bottom: 4, trailing: 10))
-            .disabled(true)
-            PostRowContent(post: post)
-                .frame(maxWidth: .infinity, maxHeight: 650, alignment: .leading)
-            PostRowFooter(post: post, target: $target)
-            Rectangle()
-                .fill(Color(UIColor.systemGray5)
-                    .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
-                .frame(maxWidth: .infinity, maxHeight: 5)
+            .padding(EdgeInsets(top: settingsModel.compactMode ? 0 : 8, leading: 10,
+                                bottom: settingsModel.compactMode ? 0 : 4, trailing: 10))
+            .disabled(!settingsModel.compactMode)
+            if !settingsModel.compactMode {
+                PostRowContent(post: post)
+                    .frame(maxWidth: .infinity, maxHeight: 650, alignment: .leading)
+                PostRowFooter(post: post, target: $target)
+            }
+            if !settingsModel.compactMode {
+                Rectangle()
+                    .fill(Color(UIColor.systemGray3)
+                        .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
+                    .frame(maxWidth: .infinity, maxHeight: 5)
+            } else {
+                Divider()
+            }
         }
         .contextMenu{ PostRowMenu(post: post, target: $target, showingSaveDialog: $showingSaveDialog,
                                   showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
@@ -259,63 +314,11 @@ struct PostRowFooter: View {
             .font(.system(size: 14))
             .frame(minWidth: 190, maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 12) {
-                Menu {
-                    PostRowMenu(post: post, target: $target, showingSaveDialog: $showingSaveDialog,
-                                showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
-                                showingSpoilerDialog: $showingSpoilerDialog)
-                } label: {
-                    ZStack {
-                        Spacer()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        Image(systemName: "ellipsis")
-                            .foregroundColor(.secondary)
-                    }
-                    .frame(width: 20, height: 20)
-                }
-                .alert("Save image to library?", isPresented: $showingSaveDialog) {
-                    if post.contentType == .image {
-                        SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.imageLink)
-                    } else if post.contentType == .gallery {
-                        SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.gallery!.items[0].fullLink,
-                                       links: post.gallery!.items.map{ $0.fullLink })
-                    }
-                }
-                .alert("Delete post?", isPresented: $showingDeleteDialog) {
-                    Button("Cancel", role: .cancel) { showingDeleteDialog = false }
-                    Button("Delete", role: .destructive) {
-                        if model.deletePost(target: target.getCode(), post: post) {
-                            overlayModel.show("Successfully deleted")
-                        }
-                        showingDeleteDialog = false
-                    }
-                } message: {
-                    Text("Are you sure you want to delete your post?")
-                }
-                .alert(post.nsfw ? "Remove NSFW mark" : "Mark as NSFW", isPresented: $showingNsfwDialog) {
-                    Button("Cancel", role: .cancel) { showingNsfwDialog = false }
-                    Button("Continue") {
-                        if model.togglePostNsfw(target: target.getCode(), post: post) {
-                            overlayModel.show("Post updated")
-                        }
-                        showingNsfwDialog = false
-                    }.keyboardShortcut(.defaultAction)
-                } message: {
-                    Text(post.nsfw ? "Are you sure you want to mark your post as safe for work?"
-                         : "Are you sure you want to mark your post as NSFW?")
-                }
-                .alert(post.spoiler ? "Remove spoiler mark" : "Mark as spoiler", isPresented: $showingSpoilerDialog) {
-                    Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
-                    Button("Continue") {
-                        if model.togglePostSpoiler(target: target.getCode(), post: post) {
-                            overlayModel.show("Post updated")
-                        }
-                        showingSpoilerDialog = false
-                    }.keyboardShortcut(.defaultAction)
-                } message: {
-                    Text(post.spoiler ? "Are you sure you want to mark your post as spoiler free?"
-                         : "Are you sure you want to mark your post for spoilers?")
-                }
+                PostRowMenuButton(post: post, target: $target, showingSaveDialog: $showingSaveDialog,
+                            showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
+                            showingSpoilerDialog: $showingSpoilerDialog)
                 Image(systemName: "arrow.up")
+                    .fontWeight(post.isUpvoted ? .semibold : .regular)
                     .foregroundColor(post.isUpvoted ? .upvoteOrange : .secondary)
                     .onTapGesture {
                         if model.toggleUpvotePost(target: target.getCode(), post: post) == false {
@@ -323,6 +326,7 @@ struct PostRowFooter: View {
                         }
                     }
                 Image(systemName: "arrow.down")
+                    .fontWeight(post.isDownvoted ? .semibold : .regular)
                     .foregroundColor(post.isDownvoted ? .downvoteBlue : .secondary)
                     .onTapGesture {
                         if model.toggleDownvotePost(target: target.getCode(), post: post) == false {
@@ -337,13 +341,74 @@ struct PostRowFooter: View {
         .frame(maxWidth: .infinity)
         .padding(EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 10))
     }
+}
+
+struct PostRowCompactFooter: View {
+    @EnvironmentObject var model: Model
+    @EnvironmentObject var overlayModel: MessageOverlayModel
+    @ObservedObject var post: Post
+    @Binding var target: CommunityOrUser
+    @State var isPresented: Bool = false
+    @State var restoreScrollPlaceholder: Bool = true
+    @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community("")) // placeholder value
+    @State var loadPosts: Bool = true
+    @State var itemInView: String = ""
+    @State private var showingSaveDialog = false
+    @State private var showingDeleteDialog = false
+    @State private var showingNsfwDialog = false
+    @State private var showingSpoilerDialog = false
     
-//    private func getFooterLabel(post: Post) -> String {
-//        if let community = post.community {
-//            return community
-//        }
-//        return post.userName != nil ? "u/" + post.userName! : ""
-//    }
+    var body: some View {
+        HStack {
+            HStack(spacing: 5) {
+                if post.stickied {
+                    Image(systemName: "megaphone.fill")
+                        .foregroundColor(Color(UIColor.systemGreen))
+                        .font(.system(size: 12))
+                }
+                Text(model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity ? post.community! :
+                        post.userName != nil ? "by " + post.userName! : "")
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .navigationDestination(isPresented: $isPresented) {
+                    PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                }
+                .onTapGesture {
+                    if model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity {
+                        newTarget = CommunityOrUser(community: Community(post.community!))
+                        isPresented = true
+                    }
+                }
+            }
+            HStack(spacing: 3) {
+                Image(systemName: "arrow.up")
+                Text(formatScore(score: post.score))
+            }
+            .fontWeight(post.isUpvoted || post.isDownvoted ? .semibold : .regular)
+            .foregroundColor(post.isUpvoted ? .upvoteOrange : post.isDownvoted ? .downvoteBlue : .secondary)
+            .onTapGesture {
+                model.toggleUpvotePost(target: target.getCode(), post: post)
+            }
+            HStack(spacing: 3) {
+                Image(systemName: "text.bubble")
+                Text(formatScore(score: post.commentCount))
+            }
+            HStack(spacing: 3) {
+                Image(systemName: "clock")
+                Text(post.displayAge)
+            }
+            PostRowMenuButton(post: post, target: $target, showingSaveDialog: $showingSaveDialog,
+                              showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
+                              showingSpoilerDialog: $showingSpoilerDialog)
+                .font(.system(size: 18))
+        }
+        .font(.system(size: 13))
+        .foregroundStyle(.secondary)
+        .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 5))
+        .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
+    }
 }
 
 func formatScore(score: String) -> String {
@@ -369,6 +434,80 @@ func formatScore(score: String) -> String {
     }
 }
 
+struct PostRowMenuButton: View {
+    @EnvironmentObject var model: Model
+    @EnvironmentObject var overlayModel: MessageOverlayModel
+    @StateObject var post: Post
+    @Binding var target: CommunityOrUser
+    @Binding var showingSaveDialog: Bool
+    @Binding var showingDeleteDialog: Bool
+    @Binding var showingNsfwDialog: Bool
+    @Binding var showingSpoilerDialog: Bool
+    @State var restoreScrollPlaceholder: Bool = true
+    @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
+    @State var loadPosts: Bool = true
+    @State var itemInView: String = ""
+    
+    var body: some View {
+        Menu {
+            PostRowMenu(post: post, target: $target, showingSaveDialog: $showingSaveDialog,
+                        showingDeleteDialog: $showingDeleteDialog, showingNsfwDialog: $showingNsfwDialog,
+                        showingSpoilerDialog: $showingSpoilerDialog)
+        } label: {
+            ZStack {
+                Spacer()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.secondary)
+            }
+            .frame(width: 20, height: 20)
+        }
+        .alert("Save image to library?", isPresented: $showingSaveDialog) {
+            if post.contentType == .image {
+                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.imageLink)
+            } else if post.contentType == .gallery {
+                SaveImageAlert(showingSaveDialog: $showingSaveDialog, link: post.gallery!.items[0].fullLink,
+                               links: post.gallery!.items.map{ $0.fullLink })
+            }
+        }
+        .alert("Delete post?", isPresented: $showingDeleteDialog) {
+            Button("Cancel", role: .cancel) { showingDeleteDialog = false }
+            Button("Delete", role: .destructive) {
+                if model.deletePost(target: target.getCode(), post: post) {
+                    overlayModel.show("Successfully deleted")
+                }
+                showingDeleteDialog = false
+            }
+        } message: {
+            Text("Are you sure you want to delete your post?")
+        }
+        .alert(post.nsfw ? "Remove NSFW mark" : "Mark as NSFW", isPresented: $showingNsfwDialog) {
+            Button("Cancel", role: .cancel) { showingNsfwDialog = false }
+            Button("Continue") {
+                if model.togglePostNsfw(target: target.getCode(), post: post) {
+                    overlayModel.show("Post updated")
+                }
+                showingNsfwDialog = false
+            }.keyboardShortcut(.defaultAction)
+        } message: {
+            Text(post.nsfw ? "Are you sure you want to mark your post as safe for work?"
+                 : "Are you sure you want to mark your post as NSFW?")
+        }
+        .alert(post.spoiler ? "Remove spoiler mark" : "Mark as spoiler", isPresented: $showingSpoilerDialog) {
+            Button("Cancel", role: .cancel) { showingSpoilerDialog = false }
+            Button("Continue") {
+                if model.togglePostSpoiler(target: target.getCode(), post: post) {
+                    overlayModel.show("Post updated")
+                }
+                showingSpoilerDialog = false
+            }.keyboardShortcut(.defaultAction)
+        } message: {
+            Text(post.spoiler ? "Are you sure you want to mark your post as spoiler free?"
+                 : "Are you sure you want to mark your post for spoilers?")
+        }
+    }
+}
+
 struct PostRowMenu: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var overlayModel: MessageOverlayModel
@@ -378,7 +517,6 @@ struct PostRowMenu: View {
     @Binding var showingDeleteDialog: Bool
     @Binding var showingNsfwDialog: Bool
     @Binding var showingSpoilerDialog: Bool
-//    @State var isPresented: Bool = false
     @State var restoreScrollPlaceholder: Bool = true
     @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
     @State var loadPosts: Bool = true

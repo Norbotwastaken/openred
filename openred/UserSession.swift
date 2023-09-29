@@ -26,6 +26,7 @@ class UserSessionManager: ObservableObject {
     var showNSFW: Bool = false
     var accentColor: String = "red"
     var homePage: String = "r/all"
+    var compactMode: Bool = false
     var promotePremium: Bool = false
     var homePageCommunity: CommunityOrUser =
     CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true))

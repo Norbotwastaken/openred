@@ -66,6 +66,7 @@ struct PostsView: View {
                             ForEach(model.pages[target.getCode()]!.items) { item in
                                 if !item.isComment {
                                     PostRow(post: item.post!, target: $target)
+                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                                         .swipeActions(edge: model.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
                                             Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
                                                 Image(systemName: "arrow.up")
@@ -83,7 +84,6 @@ struct PostsView: View {
                                                 model.loadNextPagePosts(target: target.getCode())
                                             }
                                         })
-                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                                         .listRowSeparator(.hidden)
                                         .overlay(
                                             NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScroll,

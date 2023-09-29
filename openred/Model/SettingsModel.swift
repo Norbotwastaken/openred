@@ -153,6 +153,12 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(userSessionManager.homePage, forKey: "homePage")
         }
         
+        if let savedCompactMode = UserDefaults.standard.object(forKey: "compactMode") as? Bool {
+            userSessionManager.compactMode = savedCompactMode
+        } else {
+            UserDefaults.standard.set(userSessionManager.compactMode, forKey: "compactMode")
+        }
+        
         if let askTrackingConsent = UserDefaults.standard.object(forKey: "askTrackingConsent") as? Bool {
             self.askTrackingConsent = askTrackingConsent
         } else {
@@ -231,6 +237,11 @@ class SettingsModel: ObservableObject {
     func setHomePage(_ newValue: String) {
         userSessionManager.homePage = newValue.hasPrefix("r/") ? newValue : "r/" + newValue
         UserDefaults.standard.set(userSessionManager.homePage, forKey: "homePage")
+    }
+    
+    func setCompactMode(_ newValue: Bool) {
+        userSessionManager.compactMode = newValue
+        UserDefaults.standard.set(newValue, forKey: "compactMode")
     }
     
     func disableUserConsent() {
@@ -328,6 +339,10 @@ class SettingsModel: ObservableObject {
             return String(homePage.dropFirst(2))
         }
         return homePage
+    }
+    
+    var compactMode: Bool {
+        self.userSessionManager.compactMode
     }
     
     var premiumPrice: String {
