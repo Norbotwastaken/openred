@@ -378,6 +378,92 @@ struct PostRowContent: View {
     }
 }
 
+struct PostRowCompactContent: View {
+    @EnvironmentObject var model: Model
+    @EnvironmentObject var settingsModel: SettingsModel
+    @EnvironmentObject var popupViewModel: PopupViewModel
+    @State var startLoadingGif: Bool = false
+    @State var showSafari: Bool = false
+    @State var safariLink: URL?
+    
+    var post: Post
+    
+    var body: some View {
+        AsyncImage(url: URL(string: post.thumbnailLink ?? "")) { image in
+            ZStack {
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 70, maxHeight: 70)
+                    .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
+                if post.contentType == .video || post.contentType == .gif {
+                    Image(systemName: "play.fill")
+                        .font(.system(size: 30))
+                        .foregroundColor(Color.white)
+                        .opacity(0.8)
+                }
+                if post.nsfw && !settingsModel.showNSFW {
+                    Text("NSFW")
+                        .font(.system(size: 14))
+                        .foregroundColor(.white)
+                        .fontWeight(.semibold)
+                        .opacity(0.8)
+                        .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                        .background(Color.nsfwPink.opacity(0.6))
+                        .cornerRadius(5)
+                }
+            }
+        } placeholder: {
+            ZStack {
+                Rectangle()
+                    .fill(Color(UIColor.systemGray5))
+                    .frame(width: 70, height: 70)
+                    .scaledToFill()
+                Image(systemName: "link")
+                    .font(.system(size: 20))
+                    .foregroundColor(Color.white)
+                    .opacity(0.8)
+            }
+            .frame(maxWidth: 70, maxHeight: 70)
+        }
+        .frame(maxHeight: .infinity, alignment: .topLeading)
+        .onTapGesture {
+            if post.contentType == .video {
+                if post.embeddedMediaHtml == nil {
+                    popupViewModel.videoLink = post.videoLink!
+                    popupViewModel.contentType = post.contentType
+                    popupViewModel.isShowing = true
+                } else {
+                    showSafari.toggle()
+                }
+            } else if post.contentType == .image {
+                popupViewModel.fullImageLink = post.imageLink
+                popupViewModel.contentType = post.contentType
+                popupViewModel.isShowing = true
+            } else if post.contentType == .gallery {
+                popupViewModel.contentType = post.contentType
+                popupViewModel.gallery = post.gallery
+                popupViewModel.isShowing = true
+            } else if post.contentType == .gif {
+                popupViewModel.videoLink = post.videoLink!
+                popupViewModel.contentType = .gif
+                popupViewModel.isShowing = true
+            } else if post.contentType == .link {
+                if ["http", "https"].contains(URL(string: post.externalLink!)?.scheme?.lowercased() ?? "") {
+                    showSafari.toggle()
+                }
+            }
+        }
+        .fullScreenCover(isPresented: $showSafari) {
+            if post.contentType == .video {
+                CustomHTMLWebView(htmlContent: post.embeddedMediaHtml!, isPresented: $showSafari)
+            } else if post.contentType == .link {
+                SFSafariViewWrapper(url: URL(string: post.externalLink!)!)
+            }
+        }
+    }
+}
+
 struct PostRowTextContent: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var popupViewModel: PopupViewModel
