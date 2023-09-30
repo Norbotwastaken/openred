@@ -295,6 +295,7 @@ struct CommentView: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var popupViewModel: PopupViewModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
+    @EnvironmentObject var settingsModel: SettingsModel
     @ObservedObject var comment: Comment
     var postLink: String
     @Binding var editorParentComment: Comment?
@@ -448,23 +449,17 @@ struct CommentView: View {
             }
             .contextMenu{ CommentActions(comment: comment, editorParentComment: $editorParentComment, commentToEdit: $commentToEdit,
                                          isEditorShowing: $isEditorShowing, showingDeleteAlert: $showingDeleteAlert, postLink: postLink) }
-            .swipeActions(edge: commentsModel.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
-                Button { commentsModel.toggleUpvoteComment(link: postLink, comment: comment) } label: {
-                    Image(systemName: "arrow.up")
-                }
-                .tint(.upvoteOrange)
-                Button { commentsModel.toggleDownvoteComment(link: postLink, comment: comment) } label: {
-                    Image(systemName: "arrow.down")
-                }
-                .tint(.downvoteBlue)
+            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                CommentSwipeAction(swipeAction: settingsModel.commentLeftPrimary, comment: comment, postLink: postLink, scrollTarget: $scrollTarget,
+                                   editorParentComment: $editorParentComment, commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing)
+                CommentSwipeAction(swipeAction: settingsModel.commentLeftSecondary, comment: comment, postLink: postLink, scrollTarget: $scrollTarget,
+                                   editorParentComment: $editorParentComment, commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing)
             }
-            .swipeActions(edge: commentsModel.reverseSwipeControls ? .leading : .trailing, allowsFullSwipe: true) {
-                Button {
-                    scrollTarget = commentsModel.collapseCommentThread(link: postLink, comment: comment)
-                } label: {
-                    Image(systemName: "arrow.up.to.line")
-                }
-                .tint(Color(UIColor.systemBlue))
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                CommentSwipeAction(swipeAction: settingsModel.commentRightPrimary, comment: comment, postLink: postLink, scrollTarget: $scrollTarget,
+                                   editorParentComment: $editorParentComment, commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing)
+                CommentSwipeAction(swipeAction: settingsModel.commentRightSecondary, comment: comment, postLink: postLink, scrollTarget: $scrollTarget,
+                                   editorParentComment: $editorParentComment, commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing)
             }
         }
         .alert("Delete comment", isPresented: $showingDeleteAlert) {
@@ -485,6 +480,55 @@ struct CommentView: View {
             indent = indent + 8.5
         }
         return indent
+    }
+}
+
+struct CommentSwipeAction: View {
+    @EnvironmentObject var commentsModel: CommentsModel
+    var swipeAction: SwipeAction
+    var comment: Comment
+    var postLink: String
+    @Binding var scrollTarget: String?
+    @Binding var editorParentComment: Comment?
+    @Binding var commentToEdit: Comment?
+    @Binding var isEditorShowing: Bool
+    
+    var body: some View {
+        switch swipeAction {
+        case .upvote:
+            Button { commentsModel.toggleUpvoteComment(link: postLink, comment: comment) } label: {
+                Image(systemName: "arrow.up")
+            }
+            .tint(.upvoteOrange)
+        case .downvote:
+            Button { commentsModel.toggleDownvoteComment(link: postLink, comment: comment) } label: {
+                Image(systemName: "arrow.down")
+            }
+            .tint(.downvoteBlue)
+        case .save:
+            Button { commentsModel.toggleSaveComment(link: postLink, comment: comment) } label: {
+                Image(systemName: comment.isSaved ? "bookmark.slash" : "bookmark")
+            }
+            .tint(Color(red: 214/255, green: 28/255, blue: 124/255))
+        case .reply:
+            Button {
+                editorParentComment = comment
+                commentToEdit = nil
+                isEditorShowing = true
+            } label: {
+                Image(systemName: "arrow.uturn.left")
+            }
+            .tint(Color(red: 12/255, green: 154/255, blue: 242/255))
+        case .collapse:
+            Button {
+                scrollTarget = commentsModel.collapseCommentThread(link: postLink, comment: comment)
+            } label: {
+                Image(systemName: "arrow.up.to.line")
+            }
+            .tint(Color(UIColor.systemBlue))
+        case .noAction: EmptyView()
+        default: EmptyView()
+        }
     }
 }
 

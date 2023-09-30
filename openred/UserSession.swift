@@ -16,7 +16,6 @@ class UserSessionManager: ObservableObject {
     var favoriteCommunities: [String] = []
     
     var upvoteOnSave: Bool = false
-    var reverseSwipeControls: Bool = false
     var textSize: Int = 0
     var lockApp: Bool = false
     var commentTheme: String = "default"
@@ -30,6 +29,14 @@ class UserSessionManager: ObservableObject {
     var promotePremium: Bool = false
     var homePageCommunity: CommunityOrUser =
     CommunityOrUser(community: Community("all", iconName: nil, isMultiCommunity: true))
+    var commentLeftPrimary: SwipeAction = .upvote
+    var commentLeftSecondary: SwipeAction = .downvote
+    var commentRightPrimary: SwipeAction = .collapse
+    var commentRightSecondary: SwipeAction = .reply
+    var postLeftPrimary: SwipeAction = .upvote
+    var postLeftSecondary: SwipeAction = .downvote
+    var postRightPrimary: SwipeAction = .noAction
+    var postRightSecondary: SwipeAction = .noAction
     
     func createWebViewFor(viewName: String) {
         let webView = WKWebView()

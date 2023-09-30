@@ -93,12 +93,6 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(userSessionManager.upvoteOnSave, forKey: "upvoteOnSave")
         }
         
-        if let savedReverseSwipeControls = UserDefaults.standard.object(forKey: "reverseSwipeControls") as? Bool {
-            userSessionManager.reverseSwipeControls = savedReverseSwipeControls
-        } else {
-            UserDefaults.standard.set(userSessionManager.reverseSwipeControls, forKey: "reverseSwipeControls")
-        }
-        
         if let savedTextSize = UserDefaults.standard.object(forKey: "textSize") as? Int {
             userSessionManager.textSize = savedTextSize
         } else {
@@ -166,6 +160,56 @@ class SettingsModel: ObservableObject {
             self.askTrackingConsent = true
         }
         
+        /// Comment Swipe Actions
+        if let savedCommentLeftPrimary = UserDefaults.standard.object(forKey: "commentLeftPrimary") as? String {
+            userSessionManager.commentLeftPrimary = SwipeAction(rawValue: savedCommentLeftPrimary) ?? .upvote
+        } else {
+            UserDefaults.standard.set(userSessionManager.commentLeftPrimary.rawValue, forKey: "commentLeftPrimary")
+        }
+        
+        if let savedCommentLeftSecondary = UserDefaults.standard.object(forKey: "commentLeftSecondary") as? String {
+            userSessionManager.commentLeftSecondary = SwipeAction(rawValue: savedCommentLeftSecondary) ?? .downvote
+        } else {
+            UserDefaults.standard.set(userSessionManager.commentLeftSecondary.rawValue, forKey: "commentLeftSecondary")
+        }
+        
+        if let savedCommentRightPrimary = UserDefaults.standard.object(forKey: "commentRightPrimary") as? String {
+            userSessionManager.commentRightPrimary = SwipeAction(rawValue: savedCommentRightPrimary) ?? .collapse
+        } else {
+            UserDefaults.standard.set(userSessionManager.commentRightPrimary.rawValue, forKey: "commentRightPrimary")
+        }
+        
+        if let savedCommentRightSecondary = UserDefaults.standard.object(forKey: "commentRightSecondary") as? String {
+            userSessionManager.commentRightSecondary = SwipeAction(rawValue: savedCommentRightSecondary) ?? .reply
+        } else {
+            UserDefaults.standard.set(userSessionManager.commentRightSecondary.rawValue, forKey: "commentRightSecondary")
+        }
+        
+        /// Post Swipe Actions
+        if let savedPostLeftPrimary = UserDefaults.standard.object(forKey: "postLeftPrimary") as? String {
+            userSessionManager.postLeftPrimary = SwipeAction(rawValue: savedPostLeftPrimary) ?? .upvote
+        } else {
+            UserDefaults.standard.set(userSessionManager.postLeftPrimary.rawValue, forKey: "postLeftPrimary")
+        }
+        
+        if let savedPostLeftSecondary = UserDefaults.standard.object(forKey: "postLeftSecondary") as? String {
+            userSessionManager.postLeftSecondary = SwipeAction(rawValue: savedPostLeftSecondary) ?? .downvote
+        } else {
+            UserDefaults.standard.set(userSessionManager.postLeftSecondary.rawValue, forKey: "postLeftSecondary")
+        }
+        
+        if let savedPostRightPrimary = UserDefaults.standard.object(forKey: "postRightPrimary") as? String {
+            userSessionManager.postRightPrimary = SwipeAction(rawValue: savedPostRightPrimary) ?? .noAction
+        } else {
+            UserDefaults.standard.set(userSessionManager.postRightPrimary.rawValue, forKey: "postRightPrimary")
+        }
+        
+        if let savedPostRightSecondary = UserDefaults.standard.object(forKey: "postRightSecondary") as? String {
+            userSessionManager.postRightSecondary = SwipeAction(rawValue: savedPostRightSecondary) ?? .noAction
+        } else {
+            UserDefaults.standard.set(userSessionManager.postRightSecondary.rawValue, forKey: "postRightSecondary")
+        }
+        
 //        if let premiumPromotionAttempts = UserDefaults.standard.object(forKey: "premiumPromotionAttempts") as? Int {
 //            self.premiumPromotionAttempts = premiumPromotionAttempts
 //        } else {
@@ -181,11 +225,6 @@ class SettingsModel: ObservableObject {
     func setUpvoteOnSave(_ newValue: Bool) {
         userSessionManager.upvoteOnSave = newValue
         UserDefaults.standard.set(newValue, forKey: "upvoteOnSave")
-    }
-    
-    func setReverseSwipeControls(_ newValue: Bool) {
-        userSessionManager.reverseSwipeControls = newValue
-        UserDefaults.standard.set(newValue, forKey: "reverseSwipeControls")
     }
     
     func setTextSize(_ newValue: Float) {
@@ -244,6 +283,48 @@ class SettingsModel: ObservableObject {
         UserDefaults.standard.set(newValue, forKey: "compactMode")
     }
     
+    /// Comment Swipe Actions
+    func setCommentLeftPrimary(_ newValue: SwipeAction) {
+        userSessionManager.commentLeftPrimary = newValue
+        UserDefaults.standard.set(newValue.rawValue, forKey: "commentLeftPrimary")
+    }
+    
+    func setCommentLeftSecondary(_ newValue: SwipeAction) {
+        userSessionManager.commentLeftSecondary = newValue
+        UserDefaults.standard.set(newValue.rawValue, forKey: "commentLeftSecondary")
+    }
+    
+    func setCommentRightPrimary(_ newValue: SwipeAction) {
+        userSessionManager.commentRightPrimary = newValue
+        UserDefaults.standard.set(newValue.rawValue, forKey: "commentRightPrimary")
+    }
+    
+    func setCommentRightSecondary(_ newValue: SwipeAction) {
+        userSessionManager.commentRightSecondary = newValue
+        UserDefaults.standard.set(newValue.rawValue, forKey: "commentRightSecondary")
+    }
+    
+    /// Post Swipe Actions
+    func setPostLeftPrimary(_ newValue: SwipeAction) {
+        userSessionManager.postLeftPrimary = newValue
+        UserDefaults.standard.set(newValue.rawValue, forKey: "postLeftPrimary")
+    }
+    
+    func setPostLeftSecondary(_ newValue: SwipeAction) {
+        userSessionManager.postLeftSecondary = newValue
+        UserDefaults.standard.set(newValue.rawValue, forKey: "postLeftSecondary")
+    }
+    
+    func setPostRightPrimary(_ newValue: SwipeAction) {
+        userSessionManager.postRightPrimary = newValue
+        UserDefaults.standard.set(newValue.rawValue, forKey: "postRightPrimary")
+    }
+    
+    func setPostRightSecondary(_ newValue: SwipeAction) {
+        userSessionManager.postRightSecondary = newValue
+        UserDefaults.standard.set(newValue.rawValue, forKey: "postRightSecondary")
+    }
+    
     func disableUserConsent() {
         UserDefaults.standard.set(false, forKey: "askTrackingConsent")
         self.askTrackingConsent = false
@@ -297,10 +378,6 @@ class SettingsModel: ObservableObject {
         self.userSessionManager.upvoteOnSave
     }
     
-    var reverseSwipeControls: Bool {
-        self.userSessionManager.reverseSwipeControls
-    }
-    
     var textSize: Int {
         self.userSessionManager.textSize + 1
     }
@@ -343,6 +420,38 @@ class SettingsModel: ObservableObject {
     
     var compactMode: Bool {
         self.userSessionManager.compactMode
+    }
+    
+    var commentLeftPrimary: SwipeAction {
+        self.userSessionManager.commentLeftPrimary
+    }
+    
+    var commentLeftSecondary: SwipeAction {
+        self.userSessionManager.commentLeftSecondary
+    }
+    
+    var commentRightPrimary: SwipeAction {
+        self.userSessionManager.commentRightPrimary
+    }
+    
+    var commentRightSecondary: SwipeAction {
+        self.userSessionManager.commentRightSecondary
+    }
+    
+    var postLeftPrimary: SwipeAction {
+        self.userSessionManager.postLeftPrimary
+    }
+    
+    var postLeftSecondary: SwipeAction {
+        self.userSessionManager.postLeftSecondary
+    }
+    
+    var postRightPrimary: SwipeAction {
+        self.userSessionManager.postRightPrimary
+    }
+    
+    var postRightSecondary: SwipeAction {
+        self.userSessionManager.postRightSecondary
     }
     
     var premiumPrice: String {

@@ -67,15 +67,13 @@ struct PostsView: View {
                                 if !item.isComment {
                                     PostRow(post: item.post!, target: $target)
                                         .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-                                        .swipeActions(edge: model.reverseSwipeControls ? .trailing : .leading, allowsFullSwipe: true) {
-                                            Button { model.toggleUpvotePost(target: target.getCode(), post: item.post!) } label: {
-                                                Image(systemName: "arrow.up")
-                                            }
-                                            .tint(.upvoteOrange)
-                                            Button { model.toggleDownvotePost(target: target.getCode(), post: item.post!) } label: {
-                                                Image(systemName: "arrow.down")
-                                            }
-                                            .tint(.downvoteBlue)
+                                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                            PostSwipeAction(swipeAction: settingsModel.postLeftPrimary, post: item.post!, targetCode: target.getCode())
+                                            PostSwipeAction(swipeAction: settingsModel.postLeftSecondary, post: item.post!, targetCode: target.getCode())
+                                        }
+                                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                            PostSwipeAction(swipeAction: settingsModel.postRightPrimary, post: item.post!, targetCode: target.getCode())
+                                            PostSwipeAction(swipeAction: settingsModel.postRightSecondary, post: item.post!, targetCode: target.getCode())
                                         }
                                         .onAppear(perform: {
                                             itemInView = item.id
@@ -217,6 +215,40 @@ struct PostsView: View {
                     .padding(EdgeInsets(top: 80, leading: 0, bottom: 0, trailing: 0))
                     .frame(maxHeight: .infinity, alignment: .top)
             }
+        }
+    }
+}
+
+struct PostSwipeAction: View {
+    @EnvironmentObject var model: Model
+    @EnvironmentObject var overlayModel: MessageOverlayModel
+    var swipeAction: SwipeAction
+    var post: Post
+    var targetCode: String
+    
+    var body: some View {
+        switch swipeAction {
+        case .upvote:
+            Button { model.toggleUpvotePost(target: targetCode, post: post) } label: {
+                Image(systemName: "arrow.up")
+            }
+            .tint(.upvoteOrange)
+        case .downvote:
+            Button { model.toggleDownvotePost(target: targetCode, post: post) } label: {
+                Image(systemName: "arrow.down")
+            }
+            .tint(.downvoteBlue)
+        case .save:
+            Button {
+                if model.toggleSavePost(target: targetCode, post: post) {
+                    overlayModel.show(post.isSaved ? "Post saved" : "Removed from saved")
+                }
+            } label: {
+                Image(systemName: post.isSaved ? "bookmark.slash" : "bookmark")
+            }
+            .tint(Color(red: 214/255, green: 28/255, blue: 124/255))
+        case .noAction: EmptyView()
+        default: EmptyView()
         }
     }
 }

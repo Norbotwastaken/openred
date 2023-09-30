@@ -390,10 +390,6 @@ class CommentsModel: ObservableObject {
         return CommentsModelAttributes.sortModifierIcons[pages[link]!.selectedSorting]!
     }
     
-    var reverseSwipeControls: Bool {
-        userSessionManager.reverseSwipeControls
-    }
-    
     var textSizeInrease: Int {
         userSessionManager.textSize * 2
     }

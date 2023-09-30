@@ -582,10 +582,6 @@ class Model: ObservableObject {
             .sorted { $0.lowercased() < $1.lowercased() }
     }
     
-    var reverseSwipeControls: Bool {
-        userSessionManager.reverseSwipeControls
-    }
-    
     var textSizeInrease: Int {
         userSessionManager.textSize * 2
     }

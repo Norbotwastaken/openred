@@ -58,6 +58,22 @@ struct SettingsView: View {
                         .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
                     }
                     NavigationLink {
+                        GesturesSettingsView()
+                    } label: {
+                        HStack(spacing: 15) {
+                            Image(systemName: "hand.draw")
+                                .foregroundColor(.white)
+                                .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                                .background(Color(red: 25 / 255, green: 49 / 255, blue: 110 / 255))
+                                .cornerRadius(8)
+                                .font(.system(size: 26))
+                                Text("Swipe Actions")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                        }
+                        .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
+                    }
+                    NavigationLink {
                         BuyPremiumView()
                     } label: {
                         HStack(spacing: 15) {
@@ -381,7 +397,6 @@ struct GeneralSettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @State private var showHomePageAlert = false
     @State private var upvoteOnSave = false
-    @State private var reverseSwipeControls = false
     @State private var unmuteVideos = false
     @State private var showNSFW = false
     @State private var homePage = "*"
@@ -447,15 +462,6 @@ struct GeneralSettingsView: View {
                         Text("Play videos with the sound on by default.")
                     })
             Section(content: {
-                Toggle("Invert swipe actions", isOn: $reverseSwipeControls)
-                    .tint(Color.themeColor)
-                    .onChange(of: reverseSwipeControls) { _ in
-                        settingsModel.setReverseSwipeControls(reverseSwipeControls)
-                    }} , footer: {
-                        Text("Invert left and right swipe actions when " +
-                             "interacting with comments and posts.")
-                    })
-            Section(content: {
                 Toggle("Show NSFW content", isOn: $showNSFW)
                     .tint(Color.themeColor)
                     .onChange(of: showNSFW) { _ in
@@ -468,7 +474,6 @@ struct GeneralSettingsView: View {
         .navigationTitle("General")
         .task {
             upvoteOnSave = settingsModel.upvoteOnSave
-            reverseSwipeControls = settingsModel.reverseSwipeControls
             unmuteVideos = settingsModel.unmuteVideos
             showNSFW = settingsModel.showNSFW
             if settingsModel.homePage == "" {
@@ -648,6 +653,131 @@ struct AppearanceSettingsView: View {
     }
 }
 
+struct GesturesSettingsView: View {
+    @EnvironmentObject var settingsModel: SettingsModel
+    @State private var commentLeftPrimary = "upvote"
+    @State private var commentLeftSecondary = "downvote"
+    @State private var commentRightPrimary = "collapse"
+    @State private var commentRightSecondary = "reply"
+    @State private var postLeftPrimary = "upvote"
+    @State private var postLeftSecondary = "downvote"
+    @State private var postRightPrimary = "noAction"
+    @State private var postRightSecondary = "noAction"
+    
+    var body: some View {
+        List {
+            Section(content: {
+                Picker("Left Primary Action", selection: $commentLeftPrimary) {
+                    ForEach(SwipeAction.commentActions, id: \.self) { item in
+                        Text(item == "noAction" ? "Do Nothing" : item.capitalized)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: commentLeftPrimary) { _ in
+                    settingsModel.setCommentLeftPrimary(SwipeAction(rawValue: commentLeftPrimary)
+                                                        ?? SwipeAction.upvote)
+                }
+                Picker("Left Secondary Action", selection: $commentLeftSecondary) {
+                    ForEach(SwipeAction.commentActions, id: \.self) { item in
+                        Text(item == "noAction" ? "Do Nothing" : item.capitalized)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: commentLeftSecondary) { _ in
+                    settingsModel.setCommentLeftSecondary(SwipeAction(rawValue: commentLeftSecondary)
+                                                        ?? SwipeAction.downvote)
+                }
+                Picker("Right Primary Action", selection: $commentRightPrimary) {
+                    ForEach(SwipeAction.commentActions, id: \.self) { item in
+                        Text(item == "noAction" ? "Do Nothing" : item.capitalized)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: commentRightPrimary) { _ in
+                    settingsModel.setCommentRightPrimary(SwipeAction(rawValue: commentRightPrimary)
+                                                        ?? SwipeAction.collapse)
+                }
+                Picker("Right Secondary Action", selection: $commentRightSecondary) {
+                    ForEach(SwipeAction.commentActions, id: \.self) { item in
+                        Text(item == "noAction" ? "Do Nothing" : item.capitalized)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: commentRightSecondary) { _ in
+                    settingsModel.setCommentRightSecondary(SwipeAction(rawValue: commentRightSecondary)
+                                                        ?? SwipeAction.reply)
+                }
+            },
+            header: {
+                Text("Comment Swipe Actions")
+            },
+            footer: {
+                Text("Actions to perform when swiping left or right on a comment.")
+            })
+            Section(content: {
+                Picker("Left Primary Action", selection: $postLeftPrimary) {
+                    ForEach(SwipeAction.postActions, id: \.self) { item in
+                        Text(item == "noAction" ? "Do Nothing" : item.capitalized)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: postLeftPrimary) { _ in
+                    settingsModel.setPostLeftPrimary(SwipeAction(rawValue: postLeftPrimary)
+                                                        ?? SwipeAction.upvote)
+                }
+                Picker("Left Secondary Action", selection: $postLeftSecondary) {
+                    ForEach(SwipeAction.postActions, id: \.self) { item in
+                        Text(item == "noAction" ? "Do Nothing" : item.capitalized)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: postLeftSecondary) { _ in
+                    settingsModel.setPostLeftSecondary(SwipeAction(rawValue: postLeftSecondary)
+                                                        ?? SwipeAction.downvote)
+                }
+                Picker("Right Primary Action", selection: $postRightPrimary) {
+                    ForEach(SwipeAction.postActions, id: \.self) { item in
+                        Text(item == "noAction" ? "Do Nothing" : item.capitalized)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: postRightPrimary) { _ in
+                    settingsModel.setPostRightPrimary(SwipeAction(rawValue: postRightPrimary)
+                                                        ?? SwipeAction.noAction)
+                }
+                Picker("Right Secondary Action", selection: $postRightSecondary) {
+                    ForEach(SwipeAction.postActions, id: \.self) { item in
+                        Text(item == "noAction" ? "Do Nothing" : item.capitalized)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: postRightSecondary) { _ in
+                    settingsModel.setPostRightSecondary(SwipeAction(rawValue: postRightSecondary)
+                                                        ?? SwipeAction.noAction)
+                }
+            },
+            header: {
+                Text("Post Swipe Actions")
+            },
+            footer: {
+                Text("Actions to perform when swiping left or right on a post.")
+            })
+        }
+        .listStyle(.insetGrouped)
+        .navigationTitle("Swipe Actions")
+        .task {
+            commentLeftPrimary = settingsModel.commentLeftPrimary.rawValue
+            commentLeftSecondary = settingsModel.commentLeftSecondary.rawValue
+            commentRightPrimary = settingsModel.commentRightPrimary.rawValue
+            commentRightSecondary = settingsModel.commentRightSecondary.rawValue
+            postLeftPrimary = settingsModel.postLeftPrimary.rawValue
+            postLeftSecondary = settingsModel.postLeftSecondary.rawValue
+            postRightPrimary = settingsModel.postRightPrimary.rawValue
+            postRightSecondary = settingsModel.postRightSecondary.rawValue
+        }
+    }
+}
+
 struct Themes {
     static let themesArray: [Theme] = [
         Theme(id: "default", name: "Default", colors: [
@@ -764,4 +894,19 @@ struct AppIcons {
             return UIImage(named: displayImageName ?? iconName ?? "AppIcon") ?? UIImage()
         }
     }
+}
+
+enum SwipeAction: String, Identifiable {
+    case upvote = "upvote"
+    case downvote = "downvote"
+    case save = "save"
+    case reply = "reply"
+    case collapse = "collapse"
+    case noAction = "noAction"
+    
+    static let commentActions = ["upvote", "downvote", "save",
+    "reply", "collapse", "noAction"]
+    static let postActions = ["upvote", "downvote", "save", "noAction"]
+    
+    var id: String { return self.rawValue }
 }
