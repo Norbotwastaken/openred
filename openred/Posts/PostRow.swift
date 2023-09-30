@@ -26,40 +26,10 @@ struct PostRow: View {
                 HStack {
                     if settingsModel.compactMode && (post.thumbnailLink != "" || post.contentType == .link) {
                         PostRowCompactContent(post: post)
-//                        AsyncImage(url: URL(string: post.thumbnailLink ?? "")) { image in
-//                            ZStack {
-//                                image
-//                                    .resizable()
-//                                    .scaledToFit()
-//                                    .frame(maxWidth: 70, maxHeight: 70)
-//                                    .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
-//                                if post.nsfw && !settingsModel.showNSFW {
-//                                    Text("NSFW")
-//                                        .font(.system(size: 14))
-//                                        .foregroundColor(.white)
-//                                        .fontWeight(.semibold)
-//                                        .opacity(0.8)
-//                                        .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-//                                        .background(Color.nsfwPink.opacity(0.6))
-//                                        .cornerRadius(5)
-//                                    
-//                                }
-//                            }
-//                        } placeholder: {
-//                            ZStack {
-//                                Rectangle()
-//                                    .fill(Color(UIColor.systemGray5))
-//                                    .frame(width: 70, height: 70)
-//                                    .scaledToFill()
-//                            }
-//                            .frame(maxWidth: 70, maxHeight: 70)
-//                        }
-//                        .frame(maxHeight: .infinity, alignment: .topLeading)
                     }
                     VStack {
                         if settingsModel.compactMode {
                             Text(post.title)
-//                                .font(.headline)
                                 .font(.system(size: 16 + CGFloat(model.textSizeInrease)))
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity, alignment: .topLeading)

@@ -395,6 +395,7 @@ struct PostRowCompactContent: View {
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: 70, maxHeight: 70)
+                    .cornerRadius(8)
                     .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
                 if post.contentType == .video || post.contentType == .gif {
                     Image(systemName: "play.fill")
