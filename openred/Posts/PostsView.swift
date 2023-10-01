@@ -246,7 +246,7 @@ struct PostSwipeAction: View {
             } label: {
                 Image(systemName: post.isSaved ? "bookmark.slash" : "bookmark")
             }
-            .tint(Color(red: 214/255, green: 28/255, blue: 124/255))
+            .tint(.openRed)
         case .noAction: EmptyView()
         default: EmptyView()
         }

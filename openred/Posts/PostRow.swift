@@ -139,6 +139,7 @@ struct PostRow: View {
 
 struct PostCommentRow: View {
     @EnvironmentObject var model: Model
+    @EnvironmentObject var settingsModel: SettingsModel
     var comment: Comment
     @State var newTarget: CommunityOrUser = CommunityOrUser(community: Community(""))
     @State var isPresented: Bool = false
@@ -150,42 +151,54 @@ struct PostCommentRow: View {
         VStack(alignment: .leading, spacing: 15) {
             VStack(spacing: 8) {
                 Text(comment.linkTitle ?? "")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                if comment.nsfw {
-                    Text("NSFW")
-                        .foregroundColor(.white)
-                        .font(.system(size: 14))
-                        .fontWeight(.semibold)
-                        .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
-                        .background(Color.nsfwPink)
-                        .cornerRadius(5)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                Text("r/" + comment.communityName)
+                    .font(.system(size: settingsModel.compactMode ? 16 + CGFloat(model.textSizeInrease) : 17))
                     .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                    .font(.system(size: 14))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .navigationDestination(isPresented: $isPresented) {
-                        PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                HStack {
+                    Text("r/" + comment.communityName)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+                        .font(.system(size: settingsModel.compactMode ? 13 : 14))
+                        .lineLimit(1)
+                        .frame(alignment: .leading)
+                        .navigationDestination(isPresented: $isPresented) {
+                            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                        }
+                        .onTapGesture {
+                            newTarget = CommunityOrUser(community: Community(comment.communityName))
+                            isPresented = true
+                        }
+                    Text("by")
+                        .foregroundStyle(.secondary)
+                        .font(.system(size: settingsModel.compactMode ? 13 : 14))
+                        .lineLimit(1)
+                        .frame(alignment: .leading)
+                    Text(comment.user ?? "")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+                        .font(.system(size: settingsModel.compactMode ? 13 : 14))
+                        .lineLimit(1)
+                        .frame(alignment: .leading)
+                    if comment.nsfw {
+                        Text("NSFW")
+                            .lineLimit(1)
+                            .foregroundColor(.white)
+                            .font(.system(size: settingsModel.compactMode ? 12 : 14))
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                            .background(Color.nsfwPink)
+                            .cornerRadius(5)
+                            .frame(alignment: .leading)
                     }
-                    .onTapGesture {
-                        newTarget = CommunityOrUser(community: Community(comment.communityName))
-                        isPresented = true
-                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .fixedSize(horizontal: false, vertical: true)
             VStack(spacing: 8) {
-                Text(comment.user ?? "")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                    .font(.system(size: 14))
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 Text(comment.content ?? "")
                     .tint(Color(UIColor.systemBlue))
-                    .font(.system(size: 15))
+                    .font(.system(size: settingsModel.compactMode ? 14 : 15))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 if comment.media_metadata != nil {
                     CommentGifView(comment: comment)

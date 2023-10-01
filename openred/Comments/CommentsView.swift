@@ -509,7 +509,7 @@ struct CommentSwipeAction: View {
             Button { commentsModel.toggleSaveComment(link: postLink, comment: comment) } label: {
                 Image(systemName: comment.isSaved ? "bookmark.slash" : "bookmark")
             }
-            .tint(Color(red: 214/255, green: 28/255, blue: 124/255))
+            .tint(.openRed)
         case .reply:
             Button {
                 editorParentComment = comment
