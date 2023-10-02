@@ -13,6 +13,7 @@ class JSONAboutCommunitiesWrapper: Codable {
 }
 
 class JSONAboutListWrapper: Codable {
+    var after: String?
     var children: [JSONAboutWrapper]
 }
 

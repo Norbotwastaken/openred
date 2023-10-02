@@ -143,14 +143,15 @@ class JSONDataLoader {
         urlSession.resume()
     }
     
-    func loadAboutCommunities(url: URL, completion: @escaping ([AboutCommunity]?, Error?) -> Void) {
+    func loadAboutCommunities(url: URL, completion: @escaping ([AboutCommunity]?, String?, Error?) -> Void) {
         let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             do {
                 if let data = data {
                     let wrapper: JSONAboutCommunitiesWrapper = try JSONDecoder().decode(JSONAboutCommunitiesWrapper.self, from: data)
                     let about: [AboutCommunity] = wrapper.data.children
                         .map{ AboutCommunity(json: $0.data) }
-                    completion(about, error)
+                    let after: String? = wrapper.data.after
+                    completion(about, after, error)
                 }
             } catch let error {
                 print(error)

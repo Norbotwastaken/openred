@@ -30,7 +30,7 @@ class SearchModel: ObservableObject {
         components.path = "/subreddits/search/.json"
         components.queryItems!.append(URLQueryItem(name: "q", value: searchQuery))
         components.queryItems!.append(URLQueryItem(name: "limit", value: "20"))
-        jsonLoader.loadAboutCommunities(url: components.url!) { (abouts, error) in
+        jsonLoader.loadAboutCommunities(url: components.url!) { (abouts, after, error) in
             DispatchQueue.main.async {
                 if let abouts = abouts {
                     self.communities = abouts
@@ -49,7 +49,7 @@ class SearchModel: ObservableObject {
         components.queryItems = []
         components.path = "/subreddits/.json"
         components.queryItems!.append(URLQueryItem(name: "limit", value: "100"))
-        jsonLoader.loadAboutCommunities(url: components.url!) { (abouts, error) in
+        jsonLoader.loadAboutCommunities(url: components.url!) { (abouts, after, error) in
             DispatchQueue.main.async {
                 if let abouts = abouts {
                     self.popularCommunities = []

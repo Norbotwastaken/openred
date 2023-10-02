@@ -433,7 +433,7 @@ class Model: ObservableObject {
         }
     }
     
-    func loadCommunitiesData() {
+    func loadCommunitiesData(append: Bool = false, after: String? = nil) {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "old.reddit.com"
@@ -443,20 +443,36 @@ class Model: ObservableObject {
             components.path = "/subreddits/default.json"
             components.queryItems!.append(URLQueryItem(name: "limit", value: "50"))
         } else {
-            components.queryItems!.append(URLQueryItem(name: "limit", value: "300"))
+            components.queryItems!.append(URLQueryItem(name: "limit", value: "100"))
         }
-        jsonLoader.loadAboutCommunities(url: components.url!) { (abouts, error) in
+        if after != nil {
+            components.queryItems!.append(URLQueryItem(name: "count", value: "100"))
+            components.queryItems!.append(URLQueryItem(name: "after", value: after))
+        }
+        jsonLoader.loadAboutCommunities(url: components.url!) { (aboutsResponse, afterResponse, error) in
             DispatchQueue.main.async {
-                if let abouts = abouts {
-                    self.communities = abouts
-                        .map{ Community($0.displayName, iconURL: $0.communityIcon!, isMultiCommunity: false) }
+                if aboutsResponse != nil {
+                    let abouts = aboutsResponse!.map{ Community($0.displayName, iconURL: $0.communityIcon!, isMultiCommunity: false) }
                         .sorted { $0.name.lowercased() < $1.name.lowercased() }
-                    self.objectWillChange.send()
-                    self.favoriteCommunities = []
+                    if !append {
+                        self.favoriteCommunities = []
+                        self.communities = []
+                    }
+                    self.communities.append(contentsOf: abouts)
+                    self.communities = self.communities.sorted { $0.name.lowercased() < $1.name.lowercased() }
+                    
+//                    self.objectWillChange.send()
+//                    self.favoriteCommunities = []
                     for name in self.userSessionManager.favoriteCommunities {
                         let c = self.communities.filter{ $0.name.lowercased() == name.lowercased() }.first
                         c?.isFavorite = true
-                        if c != nil {self.favoriteCommunities.append(c!)}
+                        if (c != nil && self.favoriteCommunities
+                            .filter{ $0.name.lowercased() == c!.name.lowercased() }.first == nil) {
+                            self.favoriteCommunities.append(c!)
+                        }
+                    }
+                    if afterResponse != nil {
+                        self.loadCommunitiesData(append: true, after: afterResponse)
                     }
                 }
             }
