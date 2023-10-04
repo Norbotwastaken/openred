@@ -14,6 +14,7 @@ class UserSessionManager: ObservableObject {
     private var webViews: [String:WKWebView] = [:]
     @Published var userNames: [String] = []
     var favoriteCommunities: [String] = []
+    var communityCollections: [String:[String]] = [:]
     
     var upvoteOnSave: Bool = false
     var textSize: Int = 0
@@ -96,6 +97,11 @@ class UserSessionManager: ObservableObject {
                 } else {
                     UserDefaults.standard.set([String](), forKey: "favorites_" + userName)
                 }
+                if let collections = UserDefaults.standard.object(forKey: "collections_" + userName) as? [String:[String]] {
+                    communityCollections = collections
+                } else {
+                    UserDefaults.standard.set([String](), forKey: "collections_" + userName)
+                }
                 if let cookieDictionary = UserDefaults.standard.dictionary(forKey: "cookies_" + userName) {
                     self.currentCookies = cookieDictionary
                     
@@ -122,6 +128,11 @@ class UserSessionManager: ObservableObject {
                 favoriteCommunities = favorites
             } else {
                 UserDefaults.standard.set([String](), forKey: "favorites_" + userName)
+            }
+            if let collections = UserDefaults.standard.object(forKey: "collections_" + userName) as? [String:[String]] {
+                communityCollections = collections
+            } else {
+                UserDefaults.standard.set([String](), forKey: "collections_" + userName)
             }
             
             for (_, cookieProperties) in self.currentCookies {
@@ -157,6 +168,7 @@ class UserSessionManager: ObservableObject {
 //        }
         self.userName = nil
         self.favoriteCommunities = []
+        self.communityCollections = [:]
     }
     
     func removeAccount(_ userName: String) {
@@ -186,6 +198,11 @@ class UserSessionManager: ObservableObject {
         UserDefaults.standard.set(favoriteCommunities, forKey: "favorites_" + userName!)
     }
     
+    func setCommunityCollections(_ communityCollections: [String:[String]]) {
+        self.communityCollections = communityCollections
+        UserDefaults.standard.set(communityCollections, forKey: "collections_" + userName!)
+    }
+    
     private func loadHomePage() -> String {
         if let savedHomePage = UserDefaults.standard.object(forKey: "homePage") as? String {
             homePage = savedHomePage
@@ -205,5 +222,64 @@ class UserSessionManager: ObservableObject {
             homePageCommunity = CommunityOrUser(community: Community(homePage, iconName: nil, isMultiCommunity: true, path: ""))
         }
         return homePageCommunity
+    }
+    
+    func createCommunityCollection(collectionName: String, communityName: String? = nil) -> Bool {
+        if collectionName.count > 45 {
+            return false
+        }
+        if communityCollections[collectionName] == nil {
+            communityCollections[collectionName] = communityName == nil ? [] : [communityName!]
+            UserDefaults.standard.set(communityCollections, forKey: "collections_" + userName!)
+            return true
+        }
+        return false
+    }
+    
+    func deleteCommunityCollection(collectionName: String) -> Bool {
+        if communityCollections[collectionName] != nil {
+            communityCollections.removeValue(forKey: collectionName)
+            UserDefaults.standard.set(communityCollections, forKey: "collections_" + userName!)
+            return true
+        }
+        return false
+    }
+    
+    func addToCommunityCollection(collectionName: String, communityName: String) -> Bool {
+        if let collection = communityCollections[collectionName] {
+            if collection.contains(communityName) {
+                return false
+            }
+            var newContents = [communityName]
+            newContents.append(contentsOf: communityCollections[collectionName] ?? [])
+            communityCollections[collectionName] = newContents
+            UserDefaults.standard.set(communityCollections, forKey: "collections_" + userName!)
+            objectWillChange.send()
+            return true
+        }
+        return false
+    }
+    
+    func removeFromCommunityCollection(collectionName: String, communityName: String) -> Bool {
+        if let collection = communityCollections[collectionName] {
+            var newContents = communityCollections[collectionName]!
+                .filter{ $0.lowercased() != communityName.lowercased() }
+            communityCollections[collectionName] = newContents
+            UserDefaults.standard.set(communityCollections, forKey: "collections_" + userName!)
+            objectWillChange.send()
+            return true
+        }
+        return false
+    }
+}
+
+struct CollectionListItem: Identifiable {
+    var id = UUID()
+    var name: String
+    var parentCollection: String?
+    var communities: [CollectionListItem]?
+    
+    func containtsCommunity(_ community: String) -> Bool {
+        communities?.filter{ $0.name.lowercased() == community.lowercased() }.count != 0
     }
 }

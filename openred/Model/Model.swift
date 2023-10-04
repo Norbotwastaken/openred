@@ -461,8 +461,6 @@ class Model: ObservableObject {
                     self.communities.append(contentsOf: abouts)
                     self.communities = self.communities.sorted { $0.name.lowercased() < $1.name.lowercased() }
                     
-//                    self.objectWillChange.send()
-//                    self.favoriteCommunities = []
                     for name in self.userSessionManager.favoriteCommunities {
                         let c = self.communities.filter{ $0.name.lowercased() == name.lowercased() }.first
                         c?.isFavorite = true
@@ -600,6 +598,13 @@ class Model: ObservableObject {
     
     var textSizeInrease: Int {
         userSessionManager.textSize * 2
+    }
+    
+    var communityCollections: [CollectionListItem] {
+        userSessionManager.communityCollections
+            .map{ collection in CollectionListItem(name: collection.key, communities: collection
+                .value.map{ CollectionListItem(name: $0, parentCollection: collection.key) }) }
+            .sorted{ $0.name < $1.name }
     }
 }
 

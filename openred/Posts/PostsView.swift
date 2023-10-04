@@ -21,6 +21,7 @@ struct PostsView: View {
     @State var isMessageEditorShowing: Bool = false
     @State var sortBy: String?
     @State var sortTime: String?
+    @State var communityCollectionsShowing: Bool = false
     var filters: KeyValuePairs<String, String> {
         if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
@@ -143,9 +144,9 @@ struct PostsView: View {
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 HStack {
                                     SortMenu(target: $target, currentSortBy: $sortBy, currentSortTime: $sortTime)
-                                    if target.isUser || !target.isMultiCommunity {
-                                        ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing,
-                                                    isMessageEditorShowing: $isMessageEditorShowing, target: $target)
+                                    if (target.isUser || !target.isMultiCommunity) && model.userName != nil {
+                                        ActionsMenu(isPostCreatorShowing: $isPostCreatorShowing, isMessageEditorShowing: $isMessageEditorShowing,
+                                                    communityCollectionsShowing: $communityCollectionsShowing, target: $target)
                                     }
                                 }
                             }
@@ -158,6 +159,9 @@ struct PostsView: View {
                         .toolbarBackground(.visible, for: .navigationBar)
                         .refreshable {
                             model.loadCommunity(community: target, sortBy: sortBy, sortTime: sortTime)
+                        }
+                        .popover(isPresented: $communityCollectionsShowing) {
+                            CommunityCollectionView(target: target, communityCollectionsShowing: $communityCollectionsShowing)
                         }
                     }
                     if isPostCreatorShowing {
@@ -219,6 +223,156 @@ struct PostsView: View {
     }
 }
 
+struct CommunityCollectionView: View {
+    @EnvironmentObject var model: Model
+    @EnvironmentObject var overlayModel: MessageOverlayModel
+    var target: CommunityOrUser? = nil
+    @Binding var communityCollectionsShowing: Bool
+    @State var newCollectionAlertShowing: Bool = false
+    @State var deleteCollectionAlertShowing: Bool = false
+    @State var removeFromCollectionAlertShowing: Bool = false
+    @State var newCollectionName: String = ""
+    @State var currentCollection: String = ""
+    @State var currentCommunity: String = ""
+    
+    var body: some View {
+        VStack(spacing: 5) {
+            HStack {
+                Image(systemName: "xmark")
+                    .font(.system(size: 25))
+                    .foregroundColor(Color.themeColor)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .padding(EdgeInsets(top: 5, leading: 15, bottom: 0, trailing: 0))
+                    .onTapGesture {
+                        communityCollectionsShowing = false
+                    }
+                Text("Collections")
+                    .font(.system(size: 20))
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity, alignment: .top)
+                Spacer()
+                    .frame(maxWidth: .infinity, alignment: .topTrailing)
+//                Image(systemName: "paperplane.fill")
+//                    .foregroundColor(Color.themeColor)
+//                    .font(.system(size: 25))
+//                    .frame(maxWidth: .infinity, alignment: .topTrailing)
+//                    .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
+//                    .onTapGesture {
+//
+//                    }
+            }
+            .padding(EdgeInsets(top: 10, leading: 5, bottom: 0, trailing: 5))
+            .frame(maxWidth: .infinity)
+            VStack {
+                if model.communityCollections.isEmpty {
+                    VStack {
+                        Text("Create collections to browse multiple communities in a single page.")
+                            .foregroundColor(.secondary)
+                            .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+                        Text("Add New Collection")
+                            .font(.system(size: 18))
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+                            .foregroundColor(.white)
+                            .background(Color.openRed)
+                            .cornerRadius(8)
+                            .padding()
+                            .onTapGesture { newCollectionAlertShowing = true }
+                    }
+                    .frame(maxHeight: .infinity, alignment: .center)
+                } else {
+                    List(model.communityCollections, children: \.communities) { collection in
+                        HStack {
+                            Text(collection.name)
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            if collection.parentCollection == nil && target != nil && !collection.containtsCommunity(target!.community!.name) {
+                                Text("Add \(target!.community!.name)")
+                                    .font(.system(size: 13))
+                                    .fontWeight(.semibold)
+                                    .lineLimit(1)
+                                    .padding(EdgeInsets(top: 3, leading: 8, bottom: 3, trailing: 8))
+                                    .foregroundColor(.white)
+                                    .background(Color.openRed)
+                                    .cornerRadius(4)
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .onTapGesture {
+                                        model.userSessionManager.addToCommunityCollection(collectionName: collection.name,
+                                                                                          communityName: target!.community!.name)
+                                        overlayModel.show("Added to \(collection.name)")
+                                    }
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button {
+                                if collection.communities != nil {
+                                    currentCollection = collection.name
+                                    deleteCollectionAlertShowing = true
+                                } else {
+                                    currentCollection = collection.parentCollection ?? ""
+                                    currentCommunity = collection.name
+                                    removeFromCollectionAlertShowing = true
+                                }
+                            } label: {
+                                Image(systemName: "xmark")
+                            }
+                            .tint(Color(UIColor.systemRed))
+                        }
+                    }
+                    Text("Add New Collection")
+                        .font(.system(size: 18))
+                        .fontWeight(.semibold)
+                        .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+                        .foregroundColor(.white)
+                        .background(Color.openRed)
+                        .cornerRadius(8)
+                        .padding()
+                        .onTapGesture { newCollectionAlertShowing = true }
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+            .alert("New Collection", isPresented: $newCollectionAlertShowing) {
+                TextField("Collection name", text: $newCollectionName)
+                Button("Cancel", role: .cancel) {
+                    newCollectionAlertShowing = false
+                }
+                Button("Done", action: {
+                    model.userSessionManager.createCommunityCollection(collectionName: newCollectionName)
+                    newCollectionAlertShowing = false
+                }).keyboardShortcut(.defaultAction)
+            } message: {
+                Text("Enter the name of your collection.")
+            }
+            .alert("Delete Collection", isPresented: $deleteCollectionAlertShowing) {
+                Button("Cancel", role: .cancel) {
+                    deleteCollectionAlertShowing = false
+                }
+                Button("Delete", role: .destructive) {
+                    model.userSessionManager.deleteCommunityCollection(collectionName: currentCollection)
+                    deleteCollectionAlertShowing = false
+                }
+            } message: {
+                Text("Are you sure you want to delete \(currentCollection)?")
+            }
+            .alert("Remove from collection", isPresented: $removeFromCollectionAlertShowing) {
+                Button("Cancel", role: .cancel) {
+                    removeFromCollectionAlertShowing = false
+                }
+                Button("Delete", role: .destructive) {
+                    model.userSessionManager.removeFromCommunityCollection(collectionName: currentCollection,
+                                                                           communityName: currentCommunity)
+                    removeFromCollectionAlertShowing = false
+                }
+            } message: {
+                Text("Are you sure you want to remove \(currentCommunity) from \(currentCollection)?")
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+}
+
 struct PostSwipeAction: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var overlayModel: MessageOverlayModel
@@ -259,6 +413,7 @@ struct ActionsMenu: View {
     @EnvironmentObject var messageCreateModel: MessageCreateModel
     @Binding var isPostCreatorShowing: Bool
     @Binding var isMessageEditorShowing: Bool
+    @Binding var communityCollectionsShowing: Bool
     @Binding var target: CommunityOrUser
     
     var body: some View {
@@ -283,6 +438,9 @@ struct ActionsMenu: View {
                     } else {
                         Label("Subscribe", systemImage: "heart")
                     }
+                }
+                Button(action: { communityCollectionsShowing = true }) {
+                    Label("Add to Collection", systemImage: "list.dash")
                 }
             } else if target.isUser {
                 NavigationLink(destination: UserAboutView(user: model.pages[target.getCode()]!.selectedCommunity.user!)) {

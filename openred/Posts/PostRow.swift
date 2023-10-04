@@ -366,6 +366,24 @@ struct PostRowCompactFooter: View {
                     }
                 }
             }
+            if post.nsfw && post.thumbnailLink == "" {
+                Text("NSFW")
+                    .font(.system(size: 12))
+                    .foregroundColor(.white)
+                    .fontWeight(.semibold)
+                    .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                    .background(Color.nsfwPink.opacity(0.8))
+                    .cornerRadius(5)
+            }
+            if post.spoiler && post.thumbnailLink == "" {
+                Text("Spoiler".uppercased())
+                    .font(.system(size: 12))
+                    .foregroundColor(.white)
+                    .fontWeight(.semibold)
+                    .padding(EdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4))
+                    .background(Color(UIColor.systemGray))
+                    .cornerRadius(5)
+            }
             HStack(spacing: 3) {
                 Image(systemName: "arrow.up")
                 Text(formatScore(score: post.score))
