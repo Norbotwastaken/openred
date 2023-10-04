@@ -42,6 +42,10 @@ class Model: ObservableObject {
     }
     
     func login(userName: String, password: String) {
+        if pages.first == nil {
+            self.loginAttempt = .failed
+            return
+        }
         if pages.first != nil && pages.first!.value.document == nil {
             self.loginAttempt = .failed
             return
