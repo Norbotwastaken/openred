@@ -161,9 +161,6 @@ struct PostCommentRow: View {
                         .font(.system(size: settingsModel.compactMode ? 13 : 14))
                         .lineLimit(1)
                         .frame(alignment: .leading)
-                        .navigationDestination(isPresented: $isPresented) {
-                            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
-                        }
                         .onTapGesture {
                             newTarget = CommunityOrUser(community: Community(comment.communityName))
                             isPresented = true
@@ -215,8 +212,10 @@ struct PostCommentRow: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .padding(EdgeInsets(top: settingsModel.compactMode ? 0 : 8, leading: 10,
-                            bottom: 0, trailing: 10))
+        .padding(EdgeInsets(top: settingsModel.compactMode ? 0 : 8, leading: 10, bottom: 0, trailing: 10))
+        .navigationDestination(isPresented: $isPresented) {
+            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+        }
     }
 }
 
@@ -251,9 +250,6 @@ struct PostRowFooter: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .navigationDestination(isPresented: $isPresented) {
-                        PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
-                    }
                     .onTapGesture {
                         if model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity {
                             newTarget = CommunityOrUser(community: Community(post.community!))
@@ -329,6 +325,9 @@ struct PostRowFooter: View {
         }
         .frame(maxWidth: .infinity)
         .padding(EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 10))
+        .navigationDestination(isPresented: $isPresented) {
+            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+        }
     }
 }
 
@@ -361,9 +360,6 @@ struct PostRowCompactFooter: View {
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .navigationDestination(isPresented: $isPresented) {
-                    PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
-                }
                 .onTapGesture {
                     if model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity {
                         newTarget = CommunityOrUser(community: Community(post.community!))
@@ -415,6 +411,9 @@ struct PostRowCompactFooter: View {
         .foregroundStyle(.secondary)
         .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 5))
         .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
+        .navigationDestination(isPresented: $isPresented) {
+            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+        }
     }
 }
 
