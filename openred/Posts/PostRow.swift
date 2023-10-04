@@ -205,13 +205,18 @@ struct PostCommentRow: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
-            Rectangle()
-                .fill(Color(UIColor.systemGray5)
-                    .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
-                .frame(maxWidth: .infinity, maxHeight: 5)
+            if !settingsModel.compactMode {
+                Rectangle()
+                    .fill(Color(UIColor.systemGray3)
+                        .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
+                    .frame(maxWidth: .infinity, maxHeight: 5)
+            } else {
+                Divider()
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
+        .padding(EdgeInsets(top: settingsModel.compactMode ? 0 : 8, leading: 10,
+                            bottom: 0, trailing: 10))
     }
 }
 

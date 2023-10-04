@@ -37,6 +37,9 @@ class SettingsModel: ObservableObject {
         if !sendCrashReports {
             Bugsnag.pauseSession()
         }
+        Task { @MainActor in
+            products = try await Apphud.fetchProducts()
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.loadProduct()
             if Apphud.hasActiveSubscription() {
@@ -50,7 +53,7 @@ class SettingsModel: ObservableObject {
     func loadProduct() {
         Task { @MainActor in
 //            products = try await Product.products(for: ["Premium"])
-            products = try await Apphud.fetchProducts()
+//            products = try await Apphud.fetchProducts()
             let skProducts = await Apphud.fetchSKProducts()
             if !products.isEmpty {
                 premiumProduct = products[0]
