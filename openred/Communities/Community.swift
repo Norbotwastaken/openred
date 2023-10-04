@@ -76,6 +76,18 @@ class Community: Identifiable, ObservableObject {
         self.path = path
     }
     
+    init(collection: CollectionListItem) {
+        self.id = collection.id.uuidString
+        self.name = collection.name
+        self.isMultiCommunity = true
+        self.path = "r/"
+        if collection.communities != nil {
+            for item in collection.communities! {
+                self.path = self.path! + item.name + "+"
+            }
+        }
+    }
+    
     var isAdFriendly: Bool {
         about != nil && about!.isAdFriendly
     }

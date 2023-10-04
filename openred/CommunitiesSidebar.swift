@@ -52,6 +52,15 @@ struct CommunitiesStack: View {
                                 }
                                 .background(Color.clear)
                             }
+                            if !model.communityCollections.isEmpty {
+                                Section(header: Text("Collections")) {
+                                    ForEach(filteredCollections) { collection in
+                                        CollectionRow(collection: collection, showPosts: $showPosts, target: $target, loadPosts: $loadPosts,
+                                                      isInboxInternalPresented: $isInboxInternalPresented)
+                                    }
+                                }
+                                .background(Color.clear)
+                            }
                             if !model.communities.isEmpty {
                                 Section(header: Text("Subreddits")) {
                                     ForEach(filteredSubscribedCommunities) { community in
@@ -107,6 +116,16 @@ struct CommunitiesStack: View {
         }
     }
     
+    var filteredCollections: [CollectionListItem] {
+        if searchText.isEmpty {
+            return model.communityCollections
+        } else {
+            return model.communityCollections.filter {
+                $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+    
     var filteredFavoriteCommunities: [Community] {
         if searchText.isEmpty {
             return model.favoriteCommunities
@@ -155,7 +174,6 @@ struct CommunityRow: View {
                 }
                 Text(community.displayName ?? community.name.prefix(1).capitalized + community.name.dropFirst())
                     .lineLimit(1)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
                 if isFavoritable && model.userName != nil {
                     Spacer()
                     if community.isFavorite {
@@ -180,6 +198,39 @@ struct CommunityRow: View {
         .listRowBackground(Color.clear)
     }
 }
+
+struct CollectionRow: View {
+    @EnvironmentObject var model: Model
+    @EnvironmentObject var commentsModel: CommentsModel
+    var collection: CollectionListItem
+    var isFavoritable: Bool = true
+    @Binding var showPosts: Bool
+    @Binding var target: CommunityOrUser
+    @Binding var loadPosts: Bool
+    @Binding var isInboxInternalPresented: Bool
+    
+    var body: some View {
+        Button(action: {
+            isInboxInternalPresented = false
+            loadPosts = true
+            target = CommunityOrUser(community: Community(collection: collection))
+            commentsModel.resetPages()
+            model.resetPagesTo(target: target)
+            showPosts = true
+        }) {
+            HStack {
+                Text(Image(systemName: "circle.hexagongrid.fill"))
+                    .frame(maxWidth: 30, maxHeight: 30)
+                Text(collection.name)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .listRowBackground(Color.clear)
+    }
+}
+
 
 struct UserSection: View {
     @EnvironmentObject var model: Model

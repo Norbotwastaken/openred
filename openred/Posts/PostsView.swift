@@ -287,7 +287,7 @@ struct CommunityCollectionView: View {
                                 .lineLimit(1)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             if collection.parentCollection == nil && target != nil && !collection.containtsCommunity(target!.community!.name) {
-                                Text("Add \(target!.community!.name)")
+                                Text("+ Add \(target!.community!.name)")
                                     .font(.system(size: 13))
                                     .fontWeight(.semibold)
                                     .lineLimit(1)
@@ -320,15 +320,23 @@ struct CommunityCollectionView: View {
                             .tint(Color(UIColor.systemRed))
                         }
                     }
-                    Text("Add New Collection")
-                        .font(.system(size: 18))
-                        .fontWeight(.semibold)
-                        .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
-                        .foregroundColor(.white)
-                        .background(Color.openRed)
-                        .cornerRadius(8)
-                        .padding()
-                        .onTapGesture { newCollectionAlertShowing = true }
+                    VStack {
+                        if target == nil {
+                            Label("Swipe to remove items from the list.", systemImage: "hand.draw")
+                                .font(.system(size: 14))
+                                .foregroundColor(.secondary)
+                                .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
+                        }
+                        Text("Add New Collection")
+                            .font(.system(size: 18))
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+                            .foregroundColor(.white)
+                            .background(Color.openRed)
+                            .cornerRadius(8)
+                            .padding()
+                            .onTapGesture { newCollectionAlertShowing = true }
+                    }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

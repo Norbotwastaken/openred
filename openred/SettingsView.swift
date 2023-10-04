@@ -401,6 +401,7 @@ struct GeneralSettingsView: View {
     @State private var showNSFW = false
     @State private var homePage = "*"
     @State private var customHomePage = ""
+    @State var communityCollectionsShowing: Bool = false
     
     private var communities: [String:String] = [
         "r/all":"All",
@@ -446,11 +447,21 @@ struct GeneralSettingsView: View {
                 Text("Select a community to load on app startup.")
             })
             Section(content: {
+                Text("Manage Community Collections")
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .onTapGesture {
+                        communityCollectionsShowing = true
+                    }
+                }, footer: {
+                    Text("Create and manage collections of communities (or multireddits).")
+                })
+            Section(content: {
                 Toggle("Upvote items on save", isOn: $upvoteOnSave)
                     .tint(Color.themeColor)
                     .onChange(of: upvoteOnSave) { _ in
                         settingsModel.setUpvoteOnSave(upvoteOnSave)
-                    }} , footer: {
+                    }}, footer: {
                         Text("Automatically upvote posts and comments when saving them.")
                     })
             Section(content: {
@@ -458,7 +469,7 @@ struct GeneralSettingsView: View {
                     .tint(Color.themeColor)
                     .onChange(of: unmuteVideos) { _ in
                         settingsModel.setUnmuteVideos(unmuteVideos)
-                    }} , footer: {
+                    }}, footer: {
                         Text("Play videos with the sound on by default.")
                     })
             Section(content: {
@@ -466,7 +477,7 @@ struct GeneralSettingsView: View {
                     .tint(Color.themeColor)
                     .onChange(of: showNSFW) { _ in
                         settingsModel.setShowNSFW(showNSFW)
-                    }} , footer: {
+                    }}, footer: {
                         Text("Display NSFW media without blur.")
                     })
         }
@@ -484,6 +495,9 @@ struct GeneralSettingsView: View {
                 customHomePage = settingsModel.homePage
                 homePage = "*"
             }
+        }
+        .popover(isPresented: $communityCollectionsShowing) {
+            CommunityCollectionView(target: nil, communityCollectionsShowing: $communityCollectionsShowing)
         }
     }
 }
