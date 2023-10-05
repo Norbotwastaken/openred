@@ -47,7 +47,7 @@ struct LoginPopup: View {
                     }
                 VStack {
                     if authCodeRequired {
-                        Text("Authentiaction Code Required")
+                        Text("Authentication Code Required")
                             .font(.system(size: 34) .bold())
                             .opacity(0.9)
                             .padding(EdgeInsets(top: 55, leading: 30, bottom: 0, trailing: 30))

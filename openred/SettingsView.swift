@@ -228,7 +228,7 @@ struct BuyPremiumView: View {
                     }
                     .alert("OpenRed Premium", isPresented: $showSubscriptionAlert) {
                         Button("Cancel", role: .cancel) { showSubscriptionAlert = false }
-                        Button("Subcribe") {
+                        Button("Subscribe") {
                             showSubscriptionAlert = false
                             purchasePremium()
                         }.keyboardShortcut(.defaultAction)
