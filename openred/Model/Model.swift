@@ -46,7 +46,7 @@ class Model: ObservableObject {
             self.loginAttempt = .failed
             return
         }
-        if pages.first != nil && pages.first!.value.document == nil {
+        if pages.first!.value.document == nil {
             self.loginAttempt = .failed
             return
         }

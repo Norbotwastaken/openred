@@ -45,7 +45,7 @@ struct GalleryItem: Identifiable, Codable {
         if self.type == "AnimatedImage" {
             self.fullLink = galleryItem.s!.mp4!
         } else {
-            self.fullLink = galleryItem.s!.u!
+            self.fullLink = galleryItem.s!.u ?? ""
         }
         self.caption = galleryData.caption
         self.url = galleryData.outbound_url
