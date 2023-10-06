@@ -569,7 +569,7 @@ struct PostRowMenu: View {
                 }) {
                     Label("Copy text", systemImage: "list.clipboard")
                 }
-            } else if post.contentType == .link {
+            } else if post.contentType == .link && URL(string: post.externalLink!) != nil {
                 ShareLink(item: URL(string: post.externalLink!)!) {
                     Label("Share link", systemImage: "square.and.arrow.up.circle")
                 }
