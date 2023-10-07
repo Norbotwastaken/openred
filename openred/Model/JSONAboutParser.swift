@@ -186,7 +186,7 @@ class AboutCommunity: ObservableObject {
         self.subscribers = json.subscribers
         self.advertiserCategory = json.advertiser_category
         self.publicDescription = json.public_description
-        self.communityIcon = json.community_icon
+        self.communityIcon = json.community_icon ?? ""
         self.bannerBackgroundImage = json.banner_background_image
         self.submitText = json.submit_text
         self.over18 = json.over18

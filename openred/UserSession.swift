@@ -225,7 +225,7 @@ class UserSessionManager: ObservableObject {
     }
     
     func createCommunityCollection(collectionName: String, communityName: String? = nil) -> Bool {
-        if collectionName.count > 45 {
+        if collectionName.count > 45 || userName == nil {
             return false
         }
         if communityCollections[collectionName] == nil {
@@ -237,7 +237,7 @@ class UserSessionManager: ObservableObject {
     }
     
     func deleteCommunityCollection(collectionName: String) -> Bool {
-        if communityCollections[collectionName] != nil {
+        if communityCollections[collectionName] != nil && userName != nil {
             communityCollections.removeValue(forKey: collectionName)
             UserDefaults.standard.set(communityCollections, forKey: "collections_" + userName!)
             return true

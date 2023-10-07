@@ -21,7 +21,7 @@ class SettingsModel: ObservableObject {
     @Published var hasPremium: Bool = false
     @Published var eligibleForTrial: Bool = false
     @Published var appVersion: String
-    private var userSessionManager: UserSessionManager
+    var userSessionManager: UserSessionManager
     var askTrackingConsent: Bool = false
 //    private var launchCount: Int = 1
 //    private var premiumPromotionAttempts: Int = 0

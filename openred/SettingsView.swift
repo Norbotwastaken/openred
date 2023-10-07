@@ -446,16 +446,18 @@ struct GeneralSettingsView: View {
             }, footer: {
                 Text("Select a community to load on app startup.")
             })
-            Section(content: {
-                Text("Manage Community Collections")
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onTapGesture {
-                        communityCollectionsShowing = true
-                    }
+            if settingsModel.userSessionManager.userName != nil {
+                Section(content: {
+                    Text("Manage Community Collections")
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture {
+                            communityCollectionsShowing = true
+                        }
                 }, footer: {
                     Text("Create and manage collections of communities (or multireddits).")
                 })
+            }
             Section(content: {
                 Toggle("Upvote items on save", isOn: $upvoteOnSave)
                     .tint(Color.themeColor)
