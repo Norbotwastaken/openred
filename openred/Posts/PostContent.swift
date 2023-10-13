@@ -32,8 +32,8 @@ struct PostRowContent: View {
     var enableCrosspostLink: Bool = false
     
     var body: some View {
-        if post.contentType == .text {
-            PostRowTextContent(post: post, isPostOpen: isPostOpen)
+        if post.contentType == .text && !(post.spoiler && !isPostOpen) {
+            PostRowTextContent(post: post, isPostOpen: isPostOpen, spoilerBlurActive: post.spoiler)
         }
         if post.contentType == .image {
             VStack {
@@ -47,7 +47,7 @@ struct PostRowContent: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxWidth: .infinity, maxHeight: 650)
-                                .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
+                                .blur(radius: post.spoiler || (post.nsfw && !settingsModel.showNSFW) ? 30 : 0, opaque: true)
                                 .onTapGesture {
                                     popupViewModel.fullImageLink = post.imageLink
                                     popupViewModel.contentType = post.contentType
@@ -97,7 +97,7 @@ struct PostRowContent: View {
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: .infinity, maxHeight: 650)
-                        .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
+                        .blur(radius: post.spoiler || (post.nsfw && !settingsModel.showNSFW) ? 30 : 0, opaque: true)
                     if post.nsfw && !settingsModel.showNSFW {
                         VStack {
                             Text("NSFW")
@@ -212,7 +212,7 @@ struct PostRowContent: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxWidth: .infinity, maxHeight: 650)
-                                .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
+                                .blur(radius: post.spoiler || (post.nsfw && !settingsModel.showNSFW) ? 30 : 0, opaque: true)
                                 .onTapGesture {
                                     popupViewModel.image = image
                                     popupViewModel.contentType = post.contentType
@@ -330,7 +330,7 @@ struct PostRowContent: View {
                             .scaledToFill()
 //                            .roundedCorner(10, corners: [.topLeft, .bottomLeft])
                             .frame(maxWidth: 140, maxHeight: 140, alignment: .leading)
-                            .blur(radius: post.nsfw && !settingsModel.showNSFW ? 20 : 0, opaque: true)
+                            .blur(radius: post.spoiler || (post.nsfw && !settingsModel.showNSFW) ? 20 : 0, opaque: true)
                             .roundedCorner(10, corners: [.topLeft, .bottomLeft])
                             .clipped()
                     } placeholder: {
@@ -396,7 +396,7 @@ struct PostRowCompactContent: View {
                     .scaledToFit()
                     .frame(maxWidth: 70, maxHeight: 70)
                     .cornerRadius(8)
-                    .blur(radius: post.nsfw && !settingsModel.showNSFW ? 30 : 0, opaque: true)
+                    .blur(radius: post.spoiler || (post.nsfw && !settingsModel.showNSFW) ? 30 : 0, opaque: true)
                 if post.contentType == .video || post.contentType == .gif {
                     Image(systemName: "play.fill")
                         .font(.system(size: 30))
@@ -479,6 +479,7 @@ struct PostRowTextContent: View {
     
     var post: Post
     var isPostOpen: Bool = false
+    @State var spoilerBlurActive: Bool = false
     
     var body: some View {
         ZStack {
@@ -495,6 +496,7 @@ struct PostRowTextContent: View {
                                     trailing: isPostOpen && post.contentType == .text ? 0 : 10))
                 .frame(maxWidth: .infinity, maxHeight: isPostOpen ? nil : 60, alignment: .leading)
                 .opacity(0.9)
+                .blur(radius: spoilerBlurActive ? 8 : 0)
                 .environment(\.openURL, OpenURLAction { url in
                     if url.isImage {
                         popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
@@ -529,6 +531,19 @@ struct PostRowTextContent: View {
                             .id(safariLink!.path)
                     }
                 }
+            if spoilerBlurActive {
+                Text("SHOW SPOILER")
+                    .font(.system(size: 14))
+                    .foregroundColor(.white)
+                    .fontWeight(.semibold)
+                    .opacity(0.8)
+                    .padding(EdgeInsets(top: 7, leading: 9, bottom: 7, trailing: 9))
+                    .background(Color(UIColor.systemGray).opacity(0.8))
+                    .cornerRadius(5)
+                    .onTapGesture {
+                        spoilerBlurActive = false
+                    }
+            }
         }
     }
 }

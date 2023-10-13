@@ -573,6 +573,7 @@ struct AppearanceSettingsView: View {
     @State private var textSizeSliderValue : Float = 0.0
     @State private var initialized: Bool = false
     @State private var compactMode = false
+    @State private var compactModeReverse = false
     
     var body: some View {
         List {
@@ -581,9 +582,17 @@ struct AppearanceSettingsView: View {
                     .tint(Color.themeColor)
                     .onChange(of: compactMode) { _ in
                         settingsModel.setCompactMode(compactMode)
-                    }} , footer: {
-                        Text("View posts in your feed in a compact format.")
-                    })
+                    }
+                if compactMode {
+                    Toggle("Reverse layout", isOn: $compactModeReverse)
+                        .tint(Color.themeColor)
+                        .onChange(of: compactModeReverse) { _ in
+                            settingsModel.setCompactModeReverse(compactModeReverse)
+                        }
+                }
+            }, footer: {
+                Text("View posts in your feed in a compact format.")
+            })
             Picker("Theme", selection: $selectedTheme) {
                 ForEach(themes, id: \.self) {
                     Text($0.capitalized)
@@ -662,6 +671,7 @@ struct AppearanceSettingsView: View {
             selectedAppIcon = settingsModel.appIcon
             selectedAccentColor = settingsModel.accentColor
             compactMode = settingsModel.compactMode
+            compactModeReverse = settingsModel.compactModeReverse
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 initialized = true
             }

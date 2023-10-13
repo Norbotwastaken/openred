@@ -101,7 +101,7 @@ struct PostsView: View {
                                         )
                                         
                                 } else {
-                                    PostCommentRow(comment: item.comment!)
+                                    PostCommentRow(comment: item.comment!, spoilerBlurActive: item.comment!.spoiler)
                                         .onAppear(perform: {
                                             itemInView = item.id
                                             if (item.isActiveLoadMarker) {

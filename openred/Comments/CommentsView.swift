@@ -226,7 +226,7 @@ struct CommentsView: View {
                                             commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget,
                                             destinationLink: $destinationLink, isInternalPresented: $isInternalPresented, internalIsPost: $internalIsPost,
                                             internalCommunityTarget: $internalCommunityTarget,
-                                            internalLoadPosts: $internalLoadPosts, internalItemInView: $internalItemInView)
+                                            internalLoadPosts: $internalLoadPosts, internalItemInView: $internalItemInView, spoilerBlurActive: comment.spoiler)
                                 //                            .onAppear {
                                 //                                commentInView = comment.id
                                 //                            }
@@ -312,6 +312,7 @@ struct CommentView: View {
     
     @State var showSafari: Bool = false
     @State private var showingDeleteAlert = false
+    @State var spoilerBlurActive: Bool = false
     
     var body: some View {
         VStack {
@@ -400,40 +401,56 @@ struct CommentView: View {
                                         SFSafariViewWrapper(url: destinationLink!)
                                     })
                             }
-                            VStack {
-                                Text(comment.content ?? "")
-                                    .tint(Color(UIColor.systemBlue))
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size: 15 + CGFloat(commentsModel.textSizeInrease)))
-                                    .environment(\.openURL, OpenURLAction { url in
-                                        if url.isImage {
-                                            popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
-                                            popupViewModel.contentType = .image
-                                            popupViewModel.isShowing = true
-                                        } else if url.isGif {
-                                            popupViewModel.videoLink = String(htmlEncodedString: url.absoluteString)
-                                            popupViewModel.contentType = .gif
-                                            popupViewModel.isShowing = true
-                                        } else if url.isPost {
-                                            internalIsPost = true
-                                            destinationLink = url
-                                            isInternalPresented = true
-                                        } else if url.isCommunity {
-                                            internalCommunityTarget = CommunityOrUser(explicitURL: url)
-                                            internalIsPost = false
-                                            isInternalPresented = true
-                                        } else {
-                                            destinationLink = url
-                                            if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
-                                                showSafari = true
-                                            }
-                                        }
-                                        return .handled
-                                    })
-                                if comment.media_metadata != nil {
-                                    CommentGifView(comment: comment)
+                            ZStack {
+                                VStack {
+                                    Text(comment.content ?? "")
+                                        .tint(Color(UIColor.systemBlue))
+                                        .fixedSize(horizontal: false, vertical: true)
                                         .frame(maxWidth: .infinity, alignment: .leading)
+                                        .font(.system(size: 15 + CGFloat(commentsModel.textSizeInrease)))
+                                        .environment(\.openURL, OpenURLAction { url in
+                                            if url.isImage {
+                                                popupViewModel.fullImageLink = String(htmlEncodedString: url.absoluteString)
+                                                popupViewModel.contentType = .image
+                                                popupViewModel.isShowing = true
+                                            } else if url.isGif {
+                                                popupViewModel.videoLink = String(htmlEncodedString: url.absoluteString)
+                                                popupViewModel.contentType = .gif
+                                                popupViewModel.isShowing = true
+                                            } else if url.isPost {
+                                                internalIsPost = true
+                                                destinationLink = url
+                                                isInternalPresented = true
+                                            } else if url.isCommunity {
+                                                internalCommunityTarget = CommunityOrUser(explicitURL: url)
+                                                internalIsPost = false
+                                                isInternalPresented = true
+                                            } else {
+                                                destinationLink = url
+                                                if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+                                                    showSafari = true
+                                                }
+                                            }
+                                            return .handled
+                                        })
+                                    if comment.media_metadata != nil {
+                                        CommentGifView(comment: comment)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                }
+                                .blur(radius: spoilerBlurActive ? 8 : 0)
+                                if spoilerBlurActive {
+                                    Text("SHOW SPOILER")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.white)
+                                        .fontWeight(.semibold)
+                                        .opacity(0.8)
+                                        .padding(EdgeInsets(top: 7, leading: 9, bottom: 7, trailing: 9))
+                                        .background(Color(UIColor.systemGray).opacity(0.8))
+                                        .cornerRadius(5)
+                                        .onTapGesture {
+                                            spoilerBlurActive = false
+                                        }
                                 }
                             }
                         }

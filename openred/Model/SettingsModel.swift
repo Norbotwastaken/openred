@@ -157,6 +157,12 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(userSessionManager.compactMode, forKey: "compactMode")
         }
         
+        if let savedCompactModeReverse = UserDefaults.standard.object(forKey: "compactModeReverse") as? Bool {
+            userSessionManager.compactModeReverse = savedCompactModeReverse
+        } else {
+            UserDefaults.standard.set(userSessionManager.compactModeReverse, forKey: "compactModeReverse")
+        }
+        
         if let askTrackingConsent = UserDefaults.standard.object(forKey: "askTrackingConsent") as? Bool {
             self.askTrackingConsent = askTrackingConsent
         } else {
@@ -293,6 +299,11 @@ class SettingsModel: ObservableObject {
         UserDefaults.standard.set(newValue, forKey: "compactMode")
     }
     
+    func setCompactModeReverse(_ newValue: Bool) {
+        userSessionManager.compactModeReverse = newValue
+        UserDefaults.standard.set(newValue, forKey: "compactModeReverse")
+    }
+    
     /// Comment Swipe Actions
     func setCommentLeftPrimary(_ newValue: SwipeAction) {
         userSessionManager.commentLeftPrimary = newValue
@@ -411,8 +422,6 @@ class SettingsModel: ObservableObject {
             
             return lastTimes[1] < Calendar.current.date(byAdding: .hour, value: -1, to: Date())!
              && lastTimes[0] < Calendar.current.date(byAdding: .minute, value: -8, to: Date())!
-//            return lastTimes[1] < Calendar.current.date(byAdding: .minute, value: -4, to: Date())!
-//             && lastTimes[0] < Calendar.current.date(byAdding: .minute, value: -1, to: Date())!
         } else {
             return true
         }
@@ -468,6 +477,10 @@ class SettingsModel: ObservableObject {
     
     var compactMode: Bool {
         self.userSessionManager.compactMode
+    }
+    
+    var compactModeReverse: Bool {
+        self.userSessionManager.compactModeReverse
     }
     
     var commentLeftPrimary: SwipeAction {

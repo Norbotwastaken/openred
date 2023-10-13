@@ -105,6 +105,7 @@ class JSONCommentData: Codable {
     var link_title: String?
     var link_permalink: String?
     var media_metadata: DecodedMediaMetaDataArray?
+    var spoiler: Bool = false
     
     required init(from decoder: Decoder) throws {
         let container =  try decoder.container(keyedBy: CodingKeys.self)
@@ -132,6 +133,7 @@ class JSONCommentData: Codable {
         try text = String(container.decode(AttributedString?.self, forKey: .body)!.characters[...])
         self.body = ContentFormatter().formatAndConvert(text: text)
         self.rawContent = ContentFormatter().format(text: text)
+        self.spoiler = rawContent?.contains("&gt;!") == true && rawContent?.contains("!&lt;") == true
         
         try self.is_submitter = container.decode(Bool.self, forKey: .is_submitter)
         try self.stickied = container.decode(Bool.self, forKey: .stickied)
@@ -184,6 +186,7 @@ class Comment: Identifiable, ObservableObject {
     
     @Published var isCollapsed: Bool
     var allParents: [String] = []
+    var spoiler: Bool = false
     
     init(jsonComment: JSONCommentData) {
         self.id = jsonComment.id
@@ -220,6 +223,7 @@ class Comment: Identifiable, ObservableObject {
                 .addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)!.path
         }
         
+        self.spoiler = jsonComment.spoiler
         self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }
     
@@ -241,6 +245,7 @@ class Comment: Identifiable, ObservableObject {
         self.communityName = ""
         self.isMod = false
         self.nsfw = false
+        self.spoiler = false
 //        self.age = displayAge(Date(timeIntervalSince1970: TimeInterval(jsonComment.created)).timeAgoDisplay())
     }
     

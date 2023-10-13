@@ -24,7 +24,8 @@ struct PostRow: View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 HStack {
-                    if settingsModel.compactMode && (post.thumbnailLink != "" || post.contentType == .link) {
+                    if settingsModel.compactMode && (post.thumbnailLink != "" || post.contentType == .link)
+                        && !settingsModel.compactModeReverse {
                         PostRowCompactContent(post: post)
                     }
                     VStack {
@@ -43,6 +44,11 @@ struct PostRow: View {
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .topLeading)
+                    if settingsModel.compactMode && (post.thumbnailLink != "" || post.contentType == .link)
+                        && settingsModel.compactModeReverse {
+                        // Duplicate of previous block, positions thumbnails on the other side.
+                        PostRowCompactContent(post: post)
+                    }
                     if !settingsModel.compactMode {
                         HStack {
                             if post.nsfw {
@@ -146,6 +152,7 @@ struct PostCommentRow: View {
     @State var restoreScrollPlaceholder: Bool = true
     @State var loadPosts: Bool = true
     @State var itemInView: String = ""
+    @State var spoilerBlurActive = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -192,14 +199,30 @@ struct PostCommentRow: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .fixedSize(horizontal: false, vertical: true)
-            VStack(spacing: 8) {
-                Text(comment.content ?? "")
-                    .tint(Color(UIColor.systemBlue))
-                    .font(.system(size: settingsModel.compactMode ? 14 : 15))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                if comment.media_metadata != nil {
-                    CommentGifView(comment: comment)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+            ZStack {
+                VStack(spacing: 8) {
+                    Text(comment.content ?? "")
+                        .tint(Color(UIColor.systemBlue))
+                        .font(.system(size: settingsModel.compactMode ? 14 : 15))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                    if comment.media_metadata != nil {
+                        CommentGifView(comment: comment)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                .blur(radius: spoilerBlurActive ? 8 : 0)
+                if spoilerBlurActive {
+                    Text("SHOW SPOILER")
+                        .font(.system(size: 14))
+                        .foregroundColor(.white)
+                        .fontWeight(.semibold)
+                        .opacity(0.8)
+                        .padding(EdgeInsets(top: 7, leading: 9, bottom: 7, trailing: 9))
+                        .background(Color(UIColor.systemGray).opacity(0.8))
+                        .cornerRadius(5)
+                        .onTapGesture {
+                            spoilerBlurActive = false
+                        }
                 }
             }
             if !settingsModel.compactMode {
