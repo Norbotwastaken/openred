@@ -14,7 +14,6 @@ class Model: ObservableObject {
     @Published var favoriteCommunities: [Community] = []
     @Published var loginAttempt: LoginAttempt = .undecided
     @Published var messageCount: Int = 0
-    @Published var hasRedditPremium: Bool = false
     @Published var askReview: Bool = false
     var resetPagesToCommunity: String?
     var nextCheckTime: Date?
@@ -125,14 +124,14 @@ class Model: ObservableObject {
         communities = []
         favoriteCommunities = []
         loadCommunitiesData()
-        hasRedditPremium = false
+        userSessionManager.hasRedditPremium = false
     }
     
     func switchAccountTo(userName: String) {
         userSessionManager.switchToAccount(userName: userName)
         pages.removeAll()
         loadCommunitiesData()
-        hasRedditPremium = false
+        userSessionManager.hasRedditPremium = false
         loadCurrentUserData()
     }
     
@@ -268,7 +267,7 @@ class Model: ObservableObject {
         jsonLoader.loadAboutUser(url: components.url!) { (about, error) in
             DispatchQueue.main.async {
                 if let about = about {
-                    self.hasRedditPremium = about.hasPremium
+                    self.userSessionManager.hasRedditPremium = about.hasPremium
                     self.objectWillChange.send()
                 }
             }
@@ -602,6 +601,10 @@ class Model: ObservableObject {
     
     var textSizeInrease: Int {
         userSessionManager.textSize * 2
+    }
+    
+    var hasRedditPremium: Bool {
+        self.userSessionManager.hasRedditPremium
     }
     
     var communityCollections: [CollectionListItem] {

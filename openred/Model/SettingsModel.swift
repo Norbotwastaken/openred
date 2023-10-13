@@ -48,6 +48,7 @@ class SettingsModel: ObservableObject {
                 self.resetPremiumFeatures()
             }
         }
+//        clearCache()
     }
     
     func loadProduct() {
@@ -213,6 +214,12 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(userSessionManager.postRightSecondary.rawValue, forKey: "postRightSecondary")
         }
         
+        if let savedAdLastPresented = UserDefaults.standard.object(forKey: "adLastPresented") as? [Date] {
+            userSessionManager.adLastPresented = savedAdLastPresented
+        } else {
+            UserDefaults.standard.set(userSessionManager.adLastPresented, forKey: "adLastPresented")
+        }
+        
 //        if let premiumPromotionAttempts = UserDefaults.standard.object(forKey: "premiumPromotionAttempts") as? Int {
 //            self.premiumPromotionAttempts = premiumPromotionAttempts
 //        } else {
@@ -373,6 +380,44 @@ class SettingsModel: ObservableObject {
 //        setAppIcon(AppIcons.appIcons["default"]!)
     }
     
+    func clearCache() {
+        let cacheURL =  FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let fileManager = FileManager.default
+        do {
+            // Get the directory contents urls (including subfolders urls)
+            let directoryContents = try FileManager.default
+                .contentsOfDirectory( at: cacheURL, includingPropertiesForKeys: nil, options: [])
+            for file in directoryContents {
+                do {
+                    try fileManager.removeItem(at: file)
+                }
+                catch let error as NSError {
+                    debugPrint("Ooops! Something went wrong: \(error)")
+                }
+
+            }
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func shouldPresentAd() -> Bool {
+//        if hasPremium || userSessionManager.hasRedditPremium {
+//            return false
+//        }
+        if userSessionManager.adLastPresented.count >= 2 {
+            let lastTimes = userSessionManager.adLastPresented
+                .sorted(by: { $0.compare($1) == .orderedDescending})
+            
+            return lastTimes[1] < Calendar.current.date(byAdding: .hour, value: -1, to: Date())!
+             && lastTimes[0] < Calendar.current.date(byAdding: .minute, value: -8, to: Date())!
+//            return lastTimes[1] < Calendar.current.date(byAdding: .minute, value: -4, to: Date())!
+//             && lastTimes[0] < Calendar.current.date(byAdding: .minute, value: -1, to: Date())!
+        } else {
+            return true
+        }
+    }
+    
     var userNames: [String] {
         self.userSessionManager.userNames
     }
@@ -463,7 +508,8 @@ class SettingsModel: ObservableObject {
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions
+                     launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         Bugsnag.start()
         Apphud.start(apiKey: "app_NPZii7qKMuWaBpkuhtixcSqYNL4rND")
         if Apphud.hasActiveSubscription() {

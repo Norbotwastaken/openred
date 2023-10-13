@@ -10,58 +10,24 @@ import Foundation
 class JSONDataLoader {
     var content: [String:String] = [:]
     
-//    func getData(url: String) {
-//        if let URL = URL(string: url) {
-//            URLSession.shared.dataTask(with: URL) { data, response, error in
-//                if let data = data {
-//                    do {
-//                        let parsedData: [CommentRoot] = try JSONDecoder().decode([CommentRoot].self, from: data)
-//                        self.mapCommentRoot(commentRoot: parsedData[1])
-//                    } catch let error {
-//                        print(error)
-//                    }
-//                }
-//            }.resume()
-//        }
-//    }
-    
-//    func loadPosts(url: URL, completion: @escaping ([JSONPost]?, String?, Error?) -> Void) {
-//        let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
-//            do {
-//                if let data = data {
-//                    let postsWrapper: JSONPostsWrapper = try JSONDecoder().decode(JSONPostsWrapper.self, from: data)
-//                    let posts: [JSONPost] = postsWrapper.data.children.map { wrapper in
-//                        return wrapper.data
-//                    }
-//                    completion(posts, postsWrapper.data.after, error)
-//                }
-//            } catch let error {
-//                print(error)
-//            }
-//        }
-//        urlSession.resume()
-//    }
-    
     func loadItems(url: URL, markForAds: Bool = false, completion: @escaping ([PostOrComment]?, String?, Error?) -> Void) {
         let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             do {
                 if let data = data {
                     let postsWrapper: JSONPostsWrapper = try JSONDecoder().decode(JSONPostsWrapper.self, from: data)
                     var items: [PostOrComment] = []
-                    var adUnit: Int = 0
+//                    var adUnit: Int = 0
                     for i in postsWrapper.data.children.indices {
                         let wrapper = postsWrapper.data.children[i]
-                        let isAdMarker = (i == 5) || (i == 12) || (i == 24)
-                        if isAdMarker {
-                            adUnit = adUnit + 1
-                        }
+//                        let isAdMarker = (i == 5) || (i == 12) || (i == 24)
+//                        if isAdMarker {
+//                            adUnit = adUnit + 1
+//                        }
                         let isActiveLoadMarker = (i == postsWrapper.data.children.count - 7)
                         if wrapper.data != nil {
-                            items.append(PostOrComment(post: Post(jsonPost: wrapper.data!), isActiveLoadMarker: isActiveLoadMarker,
-                                                       isAdMarker: markForAds && isAdMarker, adUnit: isAdMarker ? adUnit : nil))
+                            items.append(PostOrComment(post: Post(jsonPost: wrapper.data!), isActiveLoadMarker: isActiveLoadMarker))
                         } else if wrapper.commentData != nil {
-                            items.append(PostOrComment(comment: Comment(jsonComment: wrapper.commentData!), isActiveLoadMarker: isActiveLoadMarker,
-                                                       isAdMarker: markForAds && isAdMarker, adUnit: isAdMarker ? adUnit : nil))
+                            items.append(PostOrComment(comment: Comment(jsonComment: wrapper.commentData!), isActiveLoadMarker: isActiveLoadMarker))
                         }
                         
                     }

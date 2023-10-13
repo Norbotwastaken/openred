@@ -15,6 +15,8 @@ class UserSessionManager: ObservableObject {
     @Published var userNames: [String] = []
     var favoriteCommunities: [String] = []
     var communityCollections: [String:[String]] = [:]
+    var adLastPresented: [Date] = []
+    private var adHistoryLength: Int = 2
     
     var upvoteOnSave: Bool = false
     var textSize: Int = 0
@@ -38,6 +40,7 @@ class UserSessionManager: ObservableObject {
     var postLeftSecondary: SwipeAction = .downvote
     var postRightPrimary: SwipeAction = .noAction
     var postRightSecondary: SwipeAction = .noAction
+    var hasRedditPremium: Bool = false
     
     func createWebViewFor(viewName: String) {
         let webView = WKWebView()
@@ -270,6 +273,18 @@ class UserSessionManager: ObservableObject {
             return true
         }
         return false
+    }
+    
+    func markAdPresented() {
+        let now = Date()
+        if adLastPresented.count < adHistoryLength {
+            adLastPresented.append(now)
+        } else {
+            var sortedDates = adLastPresented.sorted(by: { $0.compare($1) == .orderedAscending})
+            sortedDates[0] = now
+            adLastPresented = sortedDates
+        }
+        UserDefaults.standard.set(adLastPresented, forKey: "adLastPresented")
     }
 }
 

@@ -16,7 +16,6 @@ struct PostsView: View {
     @Binding var restoreScroll: Bool
     @Binding var target: CommunityOrUser
     @Binding var loadPosts: Bool
-    @StateObject private var nativeAdViewModel = NativeAdViewModel()
     @State var isPostCreatorShowing: Bool = false
     @State var isMessageEditorShowing: Bool = false
     @State var sortBy: String?
@@ -35,17 +34,27 @@ struct PostsView: View {
     }
     @State private var filter = ""
     
+    let coordinator = InterstitialAdCoordinator()
+    let adViewControllerRepresentable = AdViewControllerRepresentable()
+    var adViewControllerRepresentableView: some View {
+      adViewControllerRepresentable
+        .frame(width: .zero, height: .zero)
+    }
+    
     var body: some View {
         ZStack {
             Spacer()
                 .padding()
                 .frame(maxHeight: .infinity, alignment: .top)
                 .task {
+                    if coordinator.userSessionManager == nil {
+                        coordinator.userSessionManager = self.settingsModel.userSessionManager
+                    }
                     if loadPosts {
                         model.loadCommunity(community: target)
                         loadPosts = false
-                        if !settingsModel.hasPremium && !model.hasRedditPremium {
-                            nativeAdViewModel.refreshAd()
+                        if settingsModel.shouldPresentAd() && target.isAdFriendly {
+                            coordinator.loadAd(show: true, from: adViewControllerRepresentable.viewController)
                         }
                     }
                 }
@@ -108,19 +117,6 @@ struct PostsView: View {
                                                            label: { EmptyView() }).id(item.comment!.postLink!)
                                             .opacity(0)
                                         )
-                                }
-                                if item.isAdMarker && target.isAdFriendly &&
-                                    !settingsModel.hasPremium && !model.hasRedditPremium &&
-                                    nativeAdViewModel.ads[item.adUnit ?? 1] != nil {
-                                    NativeAdView(nativeAdViewModel: nativeAdViewModel, adUnit: item.adUnit ?? 1)
-                                        .frame(height: 350)
-                                        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
-                                        .listRowSeparator(.hidden)
-                                    Rectangle()
-                                        .fill(Color(UIColor.systemGray5)
-                                            .shadow(.inner(radius: 2, y: 1)).opacity(0.5))
-                                        .frame(maxWidth: .infinity, maxHeight: 5)
-                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 }
                             }
                         }
@@ -220,6 +216,7 @@ struct PostsView: View {
                     .frame(maxHeight: .infinity, alignment: .top)
             }
         }
+        .background(adViewControllerRepresentableView)
     }
 }
 
