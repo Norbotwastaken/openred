@@ -14,7 +14,7 @@ class Model: ObservableObject {
     @Published var favoriteCommunities: [Community] = []
     @Published var loginAttempt: LoginAttempt = .undecided
     @Published var messageCount: Int = 0
-    @Published var askReview: Bool = false
+//    @Published var askReview: Bool = false
     var resetPagesToCommunity: String?
     var nextCheckTime: Date?
     

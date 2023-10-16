@@ -12,6 +12,7 @@ struct PostsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var settingsModel: SettingsModel
     @Environment(\.presentationMode) var presentation
+    @Environment(\.requestReview) var requestReview
     @Binding var itemInView: String
     @Binding var restoreScroll: Bool
     @Binding var target: CommunityOrUser
@@ -21,6 +22,7 @@ struct PostsView: View {
     @State var sortBy: String?
     @State var sortTime: String?
     @State var communityCollectionsShowing: Bool = false
+    @State var askReviewShowing: Bool = false
     var filters: KeyValuePairs<String, String> {
         if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
@@ -50,12 +52,16 @@ struct PostsView: View {
                     if coordinator.userSessionManager == nil {
                         coordinator.userSessionManager = self.settingsModel.userSessionManager
                     }
+                    if settingsModel.firstLoad && [2, 10, 20].contains(settingsModel.launchCount) {
+                        requestReview()
+                    }
                     if loadPosts {
                         model.loadCommunity(community: target)
                         loadPosts = false
-                        if settingsModel.shouldPresentAd() && target.isAdFriendly {
+                        if settingsModel.shouldPresentAd() && !target.isMultiCommunity && !target.isUser {
                             coordinator.loadAd(show: true, from: adViewControllerRepresentable.viewController)
                         }
+                        settingsModel.firstLoad = false
                     }
                 }
             if model.pages[target.getCode()] != nil {
@@ -217,6 +223,15 @@ struct PostsView: View {
             }
         }
         .background(adViewControllerRepresentableView)
+//        .alert("Enjoying OpenRed?", isPresented: $askReviewShowing) {
+//            Button("Not Now", role: .cancel) { askReviewShowing = false }
+//            Button("Continue", action: {
+//                requestReview()
+//                askReviewShowing = false
+//            }).keyboardShortcut(.defaultAction)
+//        } message: {
+//            Text("If you are enjoying OpenRed please take a moment and leave a review on the App Store.")
+//        }
     }
 }
 

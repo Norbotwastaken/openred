@@ -21,9 +21,10 @@ class SettingsModel: ObservableObject {
     @Published var hasPremium: Bool = false
     @Published var eligibleForTrial: Bool = false
     @Published var appVersion: String
+    @Published var firstLoad: Bool = true
+    @Published var launchCount: Int = 1
     var userSessionManager: UserSessionManager
     var askTrackingConsent: Bool = false
-//    private var launchCount: Int = 1
 //    private var premiumPromotionAttempts: Int = 0
     
     init(userSessionManager: UserSessionManager) {
@@ -48,7 +49,6 @@ class SettingsModel: ObservableObject {
                 self.resetPremiumFeatures()
             }
         }
-//        clearCache()
     }
     
     func loadProduct() {
@@ -75,15 +75,15 @@ class SettingsModel: ObservableObject {
     }
     
     func loadDefaults() {
-//        if let launchCounter = UserDefaults.standard.object(forKey: "launchCounter") as? Int {
-//            if launchCounter > 100 {
-//                return
-//            }
-//            launchCount = launchCounter + 1
-//            UserDefaults.standard.set(launchCounter + 1, forKey: "launchCounter")
-//        } else {
-//            UserDefaults.standard.set(1, forKey: "launchCounter")
-//        }
+        if let launchCounter = UserDefaults.standard.object(forKey: "launchCounter") as? Int {
+            if launchCounter > 100 {
+                return
+            }
+            launchCount = launchCounter + 1
+            UserDefaults.standard.set(launchCounter + 1, forKey: "launchCounter")
+        } else {
+            UserDefaults.standard.set(1, forKey: "launchCounter")
+        }
         
         if let savedTheme = UserDefaults.standard.object(forKey: "theme") as? String {
             theme = savedTheme
@@ -413,7 +413,10 @@ class SettingsModel: ObservableObject {
     }
     
     func shouldPresentAd() -> Bool {
-//        if hasPremium || userSessionManager.hasRedditPremium {
+        if hasPremium || userSessionManager.hasRedditPremium || firstLoad || launchCount < 3 {
+            return false
+        }
+//        if firstLoad {
 //            return false
 //        }
         if userSessionManager.adLastPresented.count >= 2 {

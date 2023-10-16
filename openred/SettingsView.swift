@@ -508,6 +508,7 @@ struct AboutSettingsView: View {
     @EnvironmentObject var settingsModel: SettingsModel
     @State private var sendCrashLogs = false
     @State private var showPrivacyPolicyAlert = false
+    @State private var showCacheClearAlert = false
     @State var showSafari: Bool = false
     
     var body: some View {
@@ -548,6 +549,21 @@ All personal data used by OpenRed is stored on your device only and is never syn
                         }} , footer: {
                             Text("Help improve OpenRed by sending anonymous error logs.")
                         })
+                Section(content: {
+                    Text("Clear Caches")
+                        .font(.system(size: 18))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture {
+                            settingsModel.clearCache()
+                            showCacheClearAlert = true
+                        }
+                        .alert("Cached data removed", isPresented: $showCacheClearAlert) {
+                            Button("Done") { showCacheClearAlert = false }
+                                .keyboardShortcut(.defaultAction)
+                        }
+                }, footer: {
+                    Text("Remove cached data to reduce the on disk size of the app.")
+                })
             }
             .listStyle(.insetGrouped)
             .navigationTitle("About")
