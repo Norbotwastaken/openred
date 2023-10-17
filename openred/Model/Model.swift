@@ -427,7 +427,7 @@ class Model: ObservableObject {
     
     func resetPagesTo(target: CommunityOrUser) {
         resetPagesToCommunity = target.getCode()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             let keysToDelete: [String] = self.pages.keys.filter{ $0 != self.resetPagesToCommunity! }
             for key in keysToDelete {
                 self.pages.removeValue(forKey: key)
@@ -586,7 +586,11 @@ class Model: ObservableObject {
     }
     
     func selectedSortingIcon(target: String) -> String {
-        return ViewModelAttributes.sortModifierIcons[pages[target]!.selectedSorting]!
+        if let targetPage = pages[target] {
+            return ViewModelAttributes.sortModifierIcons[targetPage.selectedSorting]!
+        } else {
+            return ViewModelAttributes.sortModifierIcons[""]!
+        }
     }
     
     var userName: String? {

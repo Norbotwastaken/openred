@@ -49,6 +49,11 @@ class SettingsModel: ObservableObject {
                 self.resetPremiumFeatures()
             }
         }
+        if firstLoad && [2, 10, 20].contains(launchCount) {
+            if let scene = UIApplication.shared.connectedScenes.first(where: {$0.activationState == .foregroundActive}) as? UIWindowScene {
+                SKStoreReviewController.requestReview(in: scene)
+            }
+        }
     }
     
     func loadProduct() {
@@ -161,6 +166,12 @@ class SettingsModel: ObservableObject {
             userSessionManager.compactModeReverse = savedCompactModeReverse
         } else {
             UserDefaults.standard.set(userSessionManager.compactModeReverse, forKey: "compactModeReverse")
+        }
+        
+        if let savedSwipeBack = UserDefaults.standard.object(forKey: "swipeBack") as? Bool {
+            userSessionManager.swipeBack = savedSwipeBack
+        } else {
+            UserDefaults.standard.set(userSessionManager.swipeBack, forKey: "swipeBack")
         }
         
         if let askTrackingConsent = UserDefaults.standard.object(forKey: "askTrackingConsent") as? Bool {
@@ -302,6 +313,11 @@ class SettingsModel: ObservableObject {
     func setCompactModeReverse(_ newValue: Bool) {
         userSessionManager.compactModeReverse = newValue
         UserDefaults.standard.set(newValue, forKey: "compactModeReverse")
+    }
+    
+    func setSwipeBack(_ newValue: Bool) {
+        userSessionManager.swipeBack = newValue
+        UserDefaults.standard.set(newValue, forKey: "swipeBack")
     }
     
     /// Comment Swipe Actions
@@ -484,6 +500,10 @@ class SettingsModel: ObservableObject {
     
     var compactModeReverse: Bool {
         self.userSessionManager.compactModeReverse
+    }
+    
+    var swipeBack: Bool {
+        self.userSessionManager.swipeBack
     }
     
     var commentLeftPrimary: SwipeAction {

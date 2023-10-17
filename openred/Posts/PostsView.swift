@@ -12,7 +12,6 @@ struct PostsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var settingsModel: SettingsModel
     @Environment(\.presentationMode) var presentation
-    @Environment(\.requestReview) var requestReview
     @Binding var itemInView: String
     @Binding var restoreScroll: Bool
     @Binding var target: CommunityOrUser
@@ -22,7 +21,7 @@ struct PostsView: View {
     @State var sortBy: String?
     @State var sortTime: String?
     @State var communityCollectionsShowing: Bool = false
-    @State var askReviewShowing: Bool = false
+    @State var lazySwipeEnabled: Bool = false
     var filters: KeyValuePairs<String, String> {
         if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
@@ -49,11 +48,9 @@ struct PostsView: View {
                 .padding()
                 .frame(maxHeight: .infinity, alignment: .top)
                 .task {
+                    lazySwipeEnabled = settingsModel.swipeBack
                     if coordinator.userSessionManager == nil {
                         coordinator.userSessionManager = self.settingsModel.userSessionManager
-                    }
-                    if settingsModel.firstLoad && [2, 10, 20].contains(settingsModel.launchCount) {
-                        requestReview()
                     }
                     if loadPosts {
                         model.loadCommunity(community: target)
@@ -100,7 +97,7 @@ struct PostsView: View {
                                         })
                                         .listRowSeparator(.hidden)
                                         .overlay(
-                                            NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScroll,
+                                            NavigationLink(destination: CommentsViewEnclosure(restorePostsScroll: $restoreScroll,
                                                                                      link: item.post!.linkToThread).id(item.post!.linkToThread),
                                                            label: { EmptyView() }).id(item.post!.linkToThread)
                                             .opacity(0)
@@ -118,7 +115,7 @@ struct PostsView: View {
                                         .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                                         .listRowSeparator(.hidden)
                                         .overlay(
-                                            NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScroll,
+                                            NavigationLink(destination: CommentsViewEnclosure(restorePostsScroll: $restoreScroll,
                                                                                      link: item.comment!.postLink!),
                                                            label: { EmptyView() }).id(item.comment!.postLink!)
                                             .opacity(0)
@@ -223,15 +220,7 @@ struct PostsView: View {
             }
         }
         .background(adViewControllerRepresentableView)
-//        .alert("Enjoying OpenRed?", isPresented: $askReviewShowing) {
-//            Button("Not Now", role: .cancel) { askReviewShowing = false }
-//            Button("Continue", action: {
-//                requestReview()
-//                askReviewShowing = false
-//            }).keyboardShortcut(.defaultAction)
-//        } message: {
-//            Text("If you are enjoying OpenRed please take a moment and leave a review on the App Store.")
-//        }
+        .lazyPop(isEnabled: $lazySwipeEnabled)
     }
 }
 
@@ -438,63 +427,65 @@ struct ActionsMenu: View {
     
     var body: some View {
         Menu {
-            if !target.isUser && !target.isMultiCommunity {
-                Button(action: { isPostCreatorShowing = true }) {
-                    Label("Create Post", systemImage: "plus")
-                }
-                NavigationLink(destination: CommunityAboutView(community: model.pages[target.getCode()]!.selectedCommunity.community!)) {
-                    Button(action: { }) {
-                        Label("About this community", systemImage: "questionmark.circle")
+            if model.pages[target.getCode()] != nil {
+                if !target.isUser && !target.isMultiCommunity {
+                    Button(action: { isPostCreatorShowing = true }) {
+                        Label("Create Post", systemImage: "plus")
                     }
-                }
-                Button(action: {
-                    if model.toggleSubscribe(target: target) {
-                        overlayModel.show(model.communities.contains(where: { c in c.id.lowercased() == target.id.lowercased() })
-                                          ? "Subscribed to \(target.community!.name)" : "Removed \(target.community!.name) from subscriptions")
+                    NavigationLink(destination: CommunityAboutView(community: model.pages[target.getCode()]!.selectedCommunity.community!)) {
+                        Button(action: { }) {
+                            Label("About this community", systemImage: "questionmark.circle")
+                        }
                     }
-                }) {
-                    if model.communities.contains(where: { c in c.id.lowercased() == target.id.lowercased() }) {
-                        Label("Unsubscribe", systemImage: "heart.slash")
-                    } else {
-                        Label("Subscribe", systemImage: "heart")
-                    }
-                }
-                Button(action: { communityCollectionsShowing = true }) {
-                    Label("Add to Collection", systemImage: "list.dash")
-                }
-            } else if target.isUser {
-                NavigationLink(destination: UserAboutView(user: model.pages[target.getCode()]!.selectedCommunity.user!)) {
-                    Button(action: { }) {
-                        Label("About user", systemImage: "person")
-                    }
-                }
-                if model.userName != nil {
                     Button(action: {
-                        isMessageEditorShowing = true
-                    }) {
-                        Label("Private message", systemImage: "envelope")
-                    }
-                }
-                if model.pages[target.getCode()]!.selectedCommunity.user!.about != nil &&
-                    target.user!.name.lowercased() != model.userName {
-                    Button(action: {
-                        if model.toggleFriend(target: target) {
-                            overlayModel.show(model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_friend ? "Added as friend" : "Removed from friends")
+                        if model.toggleSubscribe(target: target) {
+                            overlayModel.show(model.communities.contains(where: { c in c.id.lowercased() == target.id.lowercased() })
+                                              ? "Subscribed to \(target.community!.name)" : "Removed \(target.community!.name) from subscriptions")
                         }
                     }) {
-                        if model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_friend {
-                            Label("Remove from friends", systemImage: "heart.slash")
+                        if model.communities.contains(where: { c in c.id.lowercased() == target.id.lowercased() }) {
+                            Label("Unsubscribe", systemImage: "heart.slash")
                         } else {
-                            Label("Add as friend", systemImage: "heart")
+                            Label("Subscribe", systemImage: "heart")
                         }
                     }
-                    if !model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_blocked {
+                    Button(action: { communityCollectionsShowing = true }) {
+                        Label("Add to Collection", systemImage: "list.dash")
+                    }
+                } else if target.isUser {
+                    NavigationLink(destination: UserAboutView(user: model.pages[target.getCode()]!.selectedCommunity.user!)) {
+                        Button(action: { }) {
+                            Label("About user", systemImage: "person")
+                        }
+                    }
+                    if model.userName != nil {
                         Button(action: {
-                            if model.blockUser(target: target) {
-                                overlayModel.show("User blocked")
+                            isMessageEditorShowing = true
+                        }) {
+                            Label("Private message", systemImage: "envelope")
+                        }
+                    }
+                    if model.pages[target.getCode()]!.selectedCommunity.user!.about != nil &&
+                        target.user!.name.lowercased() != model.userName {
+                        Button(action: {
+                            if model.toggleFriend(target: target) {
+                                overlayModel.show(model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_friend ? "Added as friend" : "Removed from friends")
                             }
                         }) {
-                            Label("Block user", systemImage: "xmark")
+                            if model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_friend {
+                                Label("Remove from friends", systemImage: "heart.slash")
+                            } else {
+                                Label("Add as friend", systemImage: "heart")
+                            }
+                        }
+                        if !model.pages[target.getCode()]!.selectedCommunity.user!.about!.is_blocked {
+                            Button(action: {
+                                if model.blockUser(target: target) {
+                                    overlayModel.show("User blocked")
+                                }
+                            }) {
+                                Label("Block user", systemImage: "xmark")
+                            }
                         }
                     }
                 }

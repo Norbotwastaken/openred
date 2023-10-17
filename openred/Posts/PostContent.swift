@@ -309,7 +309,7 @@ struct PostRowContent: View {
                 .overlay(
                     ZStack {
                         if enableCrosspostLink {
-                            NavigationLink(destination: CommentsView(
+                            NavigationLink(destination: CommentsViewEnclosure(
                                 restorePostsScroll: $restorePostsPlaceholder, link: crosspost.linkToThread
                             ), label: { EmptyView() }).id(crosspost.linkToThread)
                             .opacity(0)
@@ -527,7 +527,7 @@ struct PostRowTextContent: View {
                         PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
                                   target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
                     } else {
-                        CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
+                        CommentsViewEnclosure(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)
                             .id(safariLink!.path)
                     }
                 }

@@ -36,6 +36,8 @@
 		AE4A968D2A5DF5CE00BA96CF /* PostCreateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */; };
 		AE4A96932A604D2000BA96CF /* JSONMessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */; };
 		AE4A96952A60620300BA96CF /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4A96942A60620300BA96CF /* MessageModel.swift */; };
+		AE85B4C62ADDC20D0060641D /* SlideAnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE85B4C42ADDC20D0060641D /* SlideAnimatedTransitioning.swift */; };
+		AE85B4C72ADDC20D0060641D /* SwipeRightToPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE85B4C52ADDC20D0060641D /* SwipeRightToPopViewController.swift */; };
 		AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C32A2CCB3300889B3E /* openredApp.swift */; };
 		AE89D4C62A2CCB3300889B3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89D4C52A2CCB3300889B3E /* ContentView.swift */; };
 		AE89D4C82A2CCB3600889B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE89D4C72A2CCB3600889B3E /* Assets.xcassets */; };
@@ -100,6 +102,8 @@
 		AE4A968C2A5DF5CD00BA96CF /* PostCreateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateModel.swift; sourceTree = "<group>"; };
 		AE4A96922A604D2000BA96CF /* JSONMessageParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMessageParser.swift; sourceTree = "<group>"; };
 		AE4A96942A60620300BA96CF /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
+		AE85B4C42ADDC20D0060641D /* SlideAnimatedTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SlideAnimatedTransitioning.swift; path = "../../../Downloads/Lazy-Pop-SwiftUI-master/Lazy Pop SwiftUI/Lazy Pop/SlideAnimatedTransitioning.swift"; sourceTree = "<group>"; };
+		AE85B4C52ADDC20D0060641D /* SwipeRightToPopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwipeRightToPopViewController.swift; path = "../../../Downloads/Lazy-Pop-SwiftUI-master/Lazy Pop SwiftUI/Lazy Pop/SwipeRightToPopViewController.swift"; sourceTree = "<group>"; };
 		AE89D4C02A2CCB3300889B3E /* OpenRed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenRed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE89D4C32A2CCB3300889B3E /* openredApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openredApp.swift; sourceTree = "<group>"; };
 		AE89D4C52A2CCB3300889B3E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -245,6 +249,8 @@
 		AE89D4C22A2CCB3300889B3E /* openred */ = {
 			isa = PBXGroup;
 			children = (
+				AE85B4C42ADDC20D0060641D /* SlideAnimatedTransitioning.swift */,
+				AE85B4C52ADDC20D0060641D /* SwipeRightToPopViewController.swift */,
 				AED069E32AABD61B00B5D9A8 /* NativeAdView.xib */,
 				AEC4BB6A2A8B865B005149B3 /* Info.plist */,
 				AE4A96782A3F4AA100BA96CF /* Comments */,
@@ -530,6 +536,7 @@
 				AE4A966A2A387ECB00BA96CF /* LoginPopup.swift in Sources */,
 				AE4A96562A337B4000BA96CF /* CommunitiesSidebar.swift in Sources */,
 				AE89D4C42A2CCB3300889B3E /* openredApp.swift in Sources */,
+				AE85B4C72ADDC20D0060641D /* SwipeRightToPopViewController.swift in Sources */,
 				AEBA65B42A8A1AD000431529 /* SettingsView.swift in Sources */,
 				AE4A966C2A38F1B400BA96CF /* InboxView.swift in Sources */,
 				AE4A96832A422BBE00BA96CF /* JSONDataLoader.swift in Sources */,
@@ -540,6 +547,7 @@
 				AE4A967A2A3F4AC900BA96CF /* CommentsView.swift in Sources */,
 				AE4A968B2A49A02600BA96CF /* JSONDataCommentParser.swift in Sources */,
 				AE4A96932A604D2000BA96CF /* JSONMessageParser.swift in Sources */,
+				AE85B4C62ADDC20D0060641D /* SlideAnimatedTransitioning.swift in Sources */,
 				AE3FF7172A9B56250079A877 /* MessageCreateModel.swift in Sources */,
 				AEBA65B02A791BE900431529 /* JSONAboutParser.swift in Sources */,
 				AE4A962F2A2F96E400BA96CF /* PostsView.swift in Sources */,

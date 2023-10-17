@@ -8,6 +8,25 @@
 import SwiftUI
 import WebKit
 
+struct CommentsViewEnclosure: View {
+    @EnvironmentObject var settingsModel: SettingsModel
+    @Binding var restorePostsScroll: Bool
+    var link: String
+    
+    var body: some View {
+        if settingsModel.swipeBack {
+            ZStack {
+                CommentsView(restorePostsScroll: $restorePostsScroll, link: link)
+            }
+            .lazyPop()
+        } else {
+            ZStack {
+                CommentsView(restorePostsScroll: $restorePostsScroll, link: link)
+            }
+        }
+    }
+}
+
 struct CommentsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var commentsModel: CommentsModel

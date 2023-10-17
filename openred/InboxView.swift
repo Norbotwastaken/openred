@@ -120,7 +120,7 @@ struct InboxView: View {
                             PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
                                       target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
                         } else {
-                            CommentsView(restorePostsScroll: $internalRestoreScrollPlaceholder, link: destinationLink!.path)
+                            CommentsViewEnclosure(restorePostsScroll: $internalRestoreScrollPlaceholder, link: destinationLink!.path)
                         }
                     }
                     if isEditorShowing {
@@ -275,7 +275,7 @@ struct MessageActions: View {
                 }
             }
             if message.context != "" {
-//                NavigationLink(destination: CommentsView(restorePostsScroll: $restoreScrollPlaceholder, link: message.context!)) {
+//                NavigationLink(destination: CommentsViewEnclosure(restorePostsScroll: $restoreScrollPlaceholder, link: message.context!)) {
                     Button(action: {
 //                        safariLink
                         var link: String = "http://old.reddit.com"

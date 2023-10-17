@@ -705,9 +705,20 @@ struct GesturesSettingsView: View {
     @State private var postLeftSecondary = "downvote"
     @State private var postRightPrimary = "noAction"
     @State private var postRightSecondary = "noAction"
+    @State private var swipeBack: Bool = false
     
     var body: some View {
         List {
+            Section(content: {
+                Toggle("Swipe to navigate", isOn: $swipeBack)
+                    .tint(Color.themeColor)
+                    .onChange(of: swipeBack) { _ in
+                        settingsModel.setSwipeBack(swipeBack)
+                    }
+            }, footer: {
+                Text("Swipe from anywhere in the screen to navigate backwards. "
+                     + "This disables all other swipe actions.")
+            })
             Section(content: {
                 Picker("Left Primary Action", selection: $commentLeftPrimary) {
                     ForEach(SwipeAction.commentActions, id: \.self) { item in
@@ -756,6 +767,7 @@ struct GesturesSettingsView: View {
             footer: {
                 Text("Actions to perform when swiping left or right on a comment.")
             })
+            .disabled(swipeBack)
             Section(content: {
                 Picker("Left Primary Action", selection: $postLeftPrimary) {
                     ForEach(SwipeAction.postActions, id: \.self) { item in
@@ -804,6 +816,7 @@ struct GesturesSettingsView: View {
             footer: {
                 Text("Actions to perform when swiping left or right on a post.")
             })
+            .disabled(swipeBack)
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Swipe Actions")
@@ -816,6 +829,7 @@ struct GesturesSettingsView: View {
             postLeftSecondary = settingsModel.postLeftSecondary.rawValue
             postRightPrimary = settingsModel.postRightPrimary.rawValue
             postRightSecondary = settingsModel.postRightSecondary.rawValue
+            swipeBack = settingsModel.swipeBack
         }
     }
 }

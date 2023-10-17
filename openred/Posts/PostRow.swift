@@ -267,21 +267,23 @@ struct PostRowFooter: View {
                             .foregroundColor(Color(UIColor.systemGreen))
                             .font(.system(size: 12))
                     }
-                    Text(model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity ? "r/" + post.community! :
-                            post.userName != nil ? "by " + post.userName! : "")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onTapGesture {
-                        if model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity {
-                            newTarget = CommunityOrUser(community: Community(post.community!))
-                            isPresented = true
+                    if let targetPage = model.pages[target.getCode()] {
+                        Text(targetPage.selectedCommunity.isMultiCommunity ? "r/" + post.community! :
+                                post.userName != nil ? "by " + post.userName! : "")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture {
+                            if targetPage.selectedCommunity.isMultiCommunity {
+                                newTarget = CommunityOrUser(community: Community(post.community!))
+                                isPresented = true
+                            }
+                            // TODO: navigate to user turned off, inconsistent behavior
+                            //                        else if post.userName != "[deleted]" {
+                            //                            newTarget = CommunityOrUser(user: User(post.userName!))
+                            //                        }
                         }
-                        // TODO: navigate to user turned off, inconsistent behavior
-//                        else if post.userName != "[deleted]" {
-//                            newTarget = CommunityOrUser(user: User(post.userName!))
-//                        }
                     }
                 }
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
@@ -377,16 +379,18 @@ struct PostRowCompactFooter: View {
                         .foregroundColor(Color(UIColor.systemGreen))
                         .font(.system(size: 12))
                 }
-                Text(model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity ? post.community! :
-                        post.userName != nil ? "by " + post.userName! : "")
-                .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .onTapGesture {
-                    if model.pages[target.getCode()]!.selectedCommunity.isMultiCommunity {
-                        newTarget = CommunityOrUser(community: Community(post.community!))
-                        isPresented = true
+                if let targetPage = model.pages[target.getCode()] {
+                    Text(targetPage.selectedCommunity.isMultiCommunity ? post.community! :
+                            post.userName != nil ? "by " + post.userName! : "")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .onTapGesture {
+                        if targetPage.selectedCommunity.isMultiCommunity {
+                            newTarget = CommunityOrUser(community: Community(post.community!))
+                            isPresented = true
+                        }
                     }
                 }
             }
