@@ -8,6 +8,23 @@
 import SwiftUI
 import AVKit
 
+struct PostsViewEnclosure: View {
+    @EnvironmentObject var settingsModel: SettingsModel
+    @Binding var itemInView: String
+    @Binding var restoreScroll: Bool
+    @Binding var target: CommunityOrUser
+    @Binding var loadPosts: Bool
+    
+    var body: some View {
+//        if settingsModel.swipeBack {
+//            PostsView(itemInView: $itemInView, restoreScroll: $restoreScroll, target: $target, loadPosts: $loadPosts)
+//                .lazyPop()
+//        } else {
+            PostsView(itemInView: $itemInView, restoreScroll: $restoreScroll, target: $target, loadPosts: $loadPosts)
+//        }
+    }
+}
+
 struct PostsView: View {
     @EnvironmentObject var model: Model
     @EnvironmentObject var settingsModel: SettingsModel
@@ -21,7 +38,6 @@ struct PostsView: View {
     @State var sortBy: String?
     @State var sortTime: String?
     @State var communityCollectionsShowing: Bool = false
-    @State var lazySwipeEnabled: Bool = false
     var filters: KeyValuePairs<String, String> {
         if model.pages[target.getCode()]!.selectedCommunity.isUser && model.userName == model.pages[target.getCode()]!.selectedCommunity.user!.name {
             return [
@@ -48,7 +64,6 @@ struct PostsView: View {
                 .padding()
                 .frame(maxHeight: .infinity, alignment: .top)
                 .task {
-                    lazySwipeEnabled = settingsModel.swipeBack
                     if coordinator.userSessionManager == nil {
                         coordinator.userSessionManager = self.settingsModel.userSessionManager
                     }
@@ -220,7 +235,6 @@ struct PostsView: View {
             }
         }
         .background(adViewControllerRepresentableView)
-        .lazyPop(isEnabled: $lazySwipeEnabled)
     }
 }
 
@@ -410,6 +424,11 @@ struct PostSwipeAction: View {
                 Image(systemName: post.isSaved ? "bookmark.slash" : "bookmark")
             }
             .tint(.openRed)
+        case .hide:
+            Button { model.hidePost(target: targetCode, post: post) } label: {
+                Image(systemName: "eye.slash")
+            }
+            .tint(Color(red: 108/255, green: 67/255, blue: 191/255))
         case .noAction: EmptyView()
         default: EmptyView()
         }

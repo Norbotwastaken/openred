@@ -14,16 +14,12 @@ struct CommentsViewEnclosure: View {
     var link: String
     
     var body: some View {
-        if settingsModel.swipeBack {
-            ZStack {
-                CommentsView(restorePostsScroll: $restorePostsScroll, link: link)
-            }
-            .lazyPop()
-        } else {
-            ZStack {
-                CommentsView(restorePostsScroll: $restorePostsScroll, link: link)
-            }
-        }
+//        if settingsModel.swipeBack {
+//            CommentsView(restorePostsScroll: $restorePostsScroll, link: link)
+//                .lazyPop()
+//        } else {
+            CommentsView(restorePostsScroll: $restorePostsScroll, link: link)
+//        }
     }
 }
 
@@ -125,7 +121,7 @@ struct CommentsView: View {
                                         .lineLimit(1)
                                         .frame(alignment: .leading)
                                         .navigationDestination(isPresented: $isPresented) {
-                                            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                                            PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
                                         }
                                         .onTapGesture {
                                             newTarget = CommunityOrUser(community: Community(commentsModel.pages[link]!.post!.community!), user: nil)
@@ -140,7 +136,7 @@ struct CommentsView: View {
                                         .lineLimit(1)
                                         .frame(alignment: .leading)
                                         .navigationDestination(isPresented: $isUserPresented) {
-                                            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                                            PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
                                         }
                                         .onTapGesture {
                                             newTarget = CommunityOrUser(community: nil, user: User(commentsModel.pages[link]!.post!.userName!))
@@ -288,7 +284,7 @@ struct CommentsView: View {
                     }
                     .navigationDestination(isPresented: $isInternalPresented) {
                         if !internalIsPost { // internal is community
-                            PostsView(itemInView: $internalItemInView, restoreScroll: $restorePostsPlaceholder,
+                            PostsViewEnclosure(itemInView: $internalItemInView, restoreScroll: $restorePostsPlaceholder,
                                       target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
                         } else {
                             CommentsView(restorePostsScroll: $restorePostsPlaceholder, link: destinationLink!.path)
@@ -674,7 +670,7 @@ struct CommentActions: View {
                 Label("Reply", systemImage: "arrow.uturn.left")
             }
             if comment.user != nil {
-                NavigationLink(destination: PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {
+                NavigationLink(destination: PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {
                     Button(action: {}) {
                         Label("User Profile", systemImage: "person")
                     }

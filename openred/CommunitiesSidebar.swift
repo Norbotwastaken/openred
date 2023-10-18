@@ -100,7 +100,7 @@ struct CommunitiesStack: View {
                 .navigationTitle("Communities")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(isPresented: $showPosts) {
-                    PostsView(itemInView: $itemInView, restoreScroll: $restoreScroll, target: $target, loadPosts: $loadPosts)
+                    PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScroll, target: $target, loadPosts: $loadPosts)
                 }
             }
             .id(target.id)

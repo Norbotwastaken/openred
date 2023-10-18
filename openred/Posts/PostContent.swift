@@ -524,7 +524,7 @@ struct PostRowTextContent: View {
                 })
                 .navigationDestination(isPresented: $isInternalPresented) {
                     if !internalIsPost { // internal is community
-                        PostsView(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
+                        PostsViewEnclosure(itemInView: $internalItemInView, restoreScroll: $internalRestoreScrollPlaceholder,
                                   target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
                     } else {
                         CommentsViewEnclosure(restorePostsScroll: $internalRestoreScrollPlaceholder, link: safariLink!.path)

@@ -482,6 +482,7 @@
 				"${BUILT_PRODUCTS_DIR}/Kanna/Kanna.framework.dSYM/Contents/Resources/DWARF/Kanna",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework.dSYM/Contents/Resources/DWARF/FBLPromises",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework.dSYM/Contents/Resources/DWARF/nanopb",
+				"${BUILT_PRODUCTS_DIR}/SwipeTransition/SwipeTransition.framework.dSYM/Contents/Resources/DWARF/SwipeTransition",
 			);
 			name = "Upload Bugsnag dSYM";
 			outputFileListPaths = (
@@ -730,7 +731,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openredinc.openred;
 				PRODUCT_NAME = OpenRed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -769,7 +770,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openredinc.openred;
 				PRODUCT_NAME = OpenRed;
 				PROVISIONING_PROFILE_SPECIFIER = "";

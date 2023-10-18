@@ -32,7 +32,7 @@ struct PostRow: View {
                         if settingsModel.compactMode {
                             Text(post.title)
                                 .font(.system(size: 16 + CGFloat(model.textSizeInrease)))
-                                .fontWeight(.semibold)
+//                                .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity, alignment: .topLeading)
                             PostRowCompactFooter(post: post, target: $target)
                         } else {
@@ -237,7 +237,7 @@ struct PostCommentRow: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .padding(EdgeInsets(top: settingsModel.compactMode ? 0 : 8, leading: 10, bottom: 0, trailing: 10))
         .navigationDestination(isPresented: $isPresented) {
-            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+            PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
         }
     }
 }
@@ -351,7 +351,7 @@ struct PostRowFooter: View {
         .frame(maxWidth: .infinity)
         .padding(EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 10))
         .navigationDestination(isPresented: $isPresented) {
-            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+            PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
         }
     }
 }
@@ -439,7 +439,7 @@ struct PostRowCompactFooter: View {
         .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 5))
         .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
         .navigationDestination(isPresented: $isPresented) {
-            PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+            PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
         }
     }
 }
@@ -570,7 +570,10 @@ struct PostRowMenu: View {
             }) {
                 Label(post.isSaved ? "Undo Save" : "Save", systemImage: post.isSaved ? "bookmark.slash" : "bookmark")
             }
-            NavigationLink(destination: PostsView(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {
+            Button(action: { model.hidePost(target: target.getCode(), post: post) }) {
+                Label("Hide", systemImage: "eye.slash")
+            }
+            NavigationLink(destination: PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)) {
                 Button(action: {}) {
                     Label("User Profile", systemImage: "person")
                 }

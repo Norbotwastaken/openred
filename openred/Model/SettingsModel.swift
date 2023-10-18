@@ -81,11 +81,10 @@ class SettingsModel: ObservableObject {
     
     func loadDefaults() {
         if let launchCounter = UserDefaults.standard.object(forKey: "launchCounter") as? Int {
-            if launchCounter > 100 {
-                return
+            if launchCounter < 100 {
+                launchCount = launchCounter + 1
+                UserDefaults.standard.set(launchCounter + 1, forKey: "launchCounter")
             }
-            launchCount = launchCounter + 1
-            UserDefaults.standard.set(launchCounter + 1, forKey: "launchCounter")
         } else {
             UserDefaults.standard.set(1, forKey: "launchCounter")
         }
@@ -168,11 +167,11 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(userSessionManager.compactModeReverse, forKey: "compactModeReverse")
         }
         
-        if let savedSwipeBack = UserDefaults.standard.object(forKey: "swipeBack") as? Bool {
-            userSessionManager.swipeBack = savedSwipeBack
-        } else {
-            UserDefaults.standard.set(userSessionManager.swipeBack, forKey: "swipeBack")
-        }
+//        if let savedSwipeBack = UserDefaults.standard.object(forKey: "swipeBack") as? Bool {
+//            userSessionManager.swipeBack = savedSwipeBack
+//        } else {
+//            UserDefaults.standard.set(userSessionManager.swipeBack, forKey: "swipeBack")
+//        }
         
         if let askTrackingConsent = UserDefaults.standard.object(forKey: "askTrackingConsent") as? Bool {
             self.askTrackingConsent = askTrackingConsent
@@ -432,9 +431,6 @@ class SettingsModel: ObservableObject {
         if hasPremium || userSessionManager.hasRedditPremium || firstLoad || launchCount < 3 {
             return false
         }
-//        if firstLoad {
-//            return false
-//        }
         if userSessionManager.adLastPresented.count >= 2 {
             let lastTimes = userSessionManager.adLastPresented
                 .sorted(by: { $0.compare($1) == .orderedDescending})
