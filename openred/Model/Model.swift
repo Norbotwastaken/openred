@@ -33,7 +33,7 @@ class Model: ObservableObject {
 //        pages[homePage] = Page(target: starterCommunity, webView: userSessionManager
 //            .getWebViewFor(viewName: starterCommunity.getCode())!)
 //        loadCommunity(community: pages[homePage]!.selectedCommunity)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.loadCommunitiesData()
             self.loadCurrentUserData()
             self.loadUpdatesData()

@@ -83,10 +83,10 @@ struct CommunitiesStack: View {
                                 .frame(width: 65, height: 65, alignment: .bottomTrailing)
                                 .onTapGesture {
                                     restoreScroll = true
-                                    showPosts = false
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                                    showPosts = false
+//                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                         showPosts = true
-                                    }
+//                                    }
                                 }
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 30))

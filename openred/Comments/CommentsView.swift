@@ -10,16 +10,41 @@ import WebKit
 
 struct CommentsViewEnclosure: View {
     @EnvironmentObject var settingsModel: SettingsModel
+    @EnvironmentObject var commentsModel: CommentsModel
     @Binding var restorePostsScroll: Bool
     var link: String
+    @State var scrolledCommentID: String?
     
     var body: some View {
-//        if settingsModel.swipeBack {
-//            CommentsView(restorePostsScroll: $restorePostsScroll, link: link)
-//                .lazyPop()
-//        } else {
-            CommentsView(restorePostsScroll: $restorePostsScroll, link: link)
-//        }
+        //        if settingsModel.swipeBack {
+        //            CommentsView(restorePostsScroll: $restorePostsScroll, link: link)
+        //                .lazyPop()
+        //        } else {
+        ZStack {
+            if commentsModel.pages[link]?.post == nil {
+                ProgressView()
+                    .padding(EdgeInsets(top: 80, leading: 0, bottom: 0, trailing: 0))
+                    .frame(maxHeight: .infinity, alignment: .top)
+            }
+            if commentsModel.pages[link]?.post != nil {
+                if #available(iOS 17, *) {
+                    ScrollViewReader { proxy in
+                        CommentsView(link: link, proxy: proxy, restorePostsScroll: $restorePostsScroll,
+                                     scrolledCommentID: $scrolledCommentID)
+                    }
+                    .scrollPosition(id: $scrolledCommentID)
+                } else {
+                    ScrollViewReader { proxy in
+                        CommentsView(link: link, proxy: proxy, restorePostsScroll: $restorePostsScroll,
+                                     scrolledCommentID: $scrolledCommentID)
+                    }
+                }
+            }
+        }
+        .onAppear {
+            commentsModel.loadComments(linkToThread: link)
+            restorePostsScroll = false
+        }
     }
 }
 
@@ -28,8 +53,11 @@ struct CommentsView: View {
     @EnvironmentObject var commentsModel: CommentsModel
     @EnvironmentObject var overlayModel: MessageOverlayModel
     
-    @Binding var restorePostsScroll: Bool
     var link: String
+    var proxy: ScrollViewProxy
+    @Binding var restorePostsScroll: Bool
+    @Binding var scrolledCommentID: String?
+    
     @State var commentToEdit: Comment?
     @State var isEditorShowing: Bool = false
     @State var editorParentComment: Comment?
@@ -57,253 +85,260 @@ struct CommentsView: View {
     
     var body: some View {
         ZStack {
-            if commentsModel.pages[link]?.post == nil {
-                ProgressView()
-                    .padding(EdgeInsets(top: 80, leading: 0, bottom: 0, trailing: 0))
-                    .frame(maxHeight: .infinity, alignment: .top)
-            }
-            if commentsModel.pages[link]?.post != nil {
-                ScrollViewReader { proxy in
-                    List {
-                        VStack {
-                            VStack {
-                                HStack {
-                                    Text(commentsModel.pages[link]!.post!.title)
-                                        .font(.headline) +
-                                    Text(commentsModel.pages[link]!.post!.flair != nil ? "  [" + commentsModel.pages[link]!.post!.flair! + "]" : "")
-                                        .foregroundColor(.secondary)
-                                        .font(.system(size: 12))
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                HStack {
-                                    if commentsModel.pages[link]!.post!.nsfw {
-                                        Text("NSFW")
-                                            .foregroundColor(.white)
-                                            .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
-                                            .fontWeight(.semibold)
-                                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 0, trailing: 4))
-                                            .background(Color.nsfwPink)
-                                            .cornerRadius(5)
-                                            .frame(alignment: .leading)
-                                    }
-                                    if commentsModel.pages[link]!.post!.spoiler {
-                                        Text("Spoiler".uppercased())
-                                            .foregroundColor(.white)
-                                            .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
-                                            .fontWeight(.semibold)
-                                            .padding(EdgeInsets(top: 3, leading: 4, bottom: 0, trailing: 4))
-                                            .background(Color(UIColor.systemGray))
-                                            .cornerRadius(5)
-                                            .frame(alignment: .leading)
-                                    }
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
+            List {
+                VStack {
+                    VStack {
+                        HStack {
+                            Text(commentsModel.pages[link]!.post!.title)
+                                .font(.headline) +
+                            Text(commentsModel.pages[link]!.post!.flair != nil ? "  [" + commentsModel.pages[link]!.post!.flair! + "]" : "")
+                                .foregroundColor(.secondary)
+                                .font(.system(size: 12))
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack {
+                            if commentsModel.pages[link]!.post!.nsfw {
+                                Text("NSFW")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
+                                    .fontWeight(.semibold)
+                                    .padding(EdgeInsets(top: 3, leading: 4, bottom: 0, trailing: 4))
+                                    .background(Color.nsfwPink)
+                                    .cornerRadius(5)
+                                    .frame(alignment: .leading)
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(EdgeInsets(top: 8, leading: 10, bottom: 3, trailing: 10))
-                            PostRowContent(post: commentsModel.pages[link]!.post!, isPostOpen: true, enableCrosspostLink: true)
-                                .padding(EdgeInsets(top: 0, leading: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0, bottom: 0, trailing: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0))
-                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: commentsModel.pages[link]!.post!.contentType == .text ? .leading : .center)
-                            VStack(spacing: 6) {
-                                HStack(spacing: 3) {
-                                    if commentsModel.pages[link]!.post!.stickied {
-                                        Image(systemName: "megaphone.fill")
-                                            .foregroundColor(Color(UIColor.systemGreen))
-                                            .font(.system(size: 12))
-                                    }
-                                    Text("in")
-                                        .foregroundStyle(.secondary)
-                                        .frame(alignment: .leading)
-                                    Text(commentsModel.pages[link]!.post!.community!)
-                                        .fontWeight(.semibold)
-                                        .foregroundStyle(.secondary)
-                                        .lineLimit(1)
-                                        .frame(alignment: .leading)
-                                        .navigationDestination(isPresented: $isPresented) {
-                                            PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
-                                        }
-                                        .onTapGesture {
-                                            newTarget = CommunityOrUser(community: Community(commentsModel.pages[link]!.post!.community!), user: nil)
-                                            isPresented = true
-                                        }
-                                    Text("by")
-                                        .foregroundStyle(.secondary)
-                                        .frame(alignment: .leading)
-                                    Text(commentsModel.pages[link]!.post!.userName!)
-                                        .fontWeight(.semibold)
-                                        .foregroundStyle(.secondary)
-                                        .lineLimit(1)
-                                        .frame(alignment: .leading)
-                                        .navigationDestination(isPresented: $isUserPresented) {
-                                            PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
-                                        }
-                                        .onTapGesture {
-                                            newTarget = CommunityOrUser(community: nil, user: User(commentsModel.pages[link]!.post!.userName!))
-                                            isUserPresented = true
-                                        }
-                                    
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
-                                HStack {
-                                    HStack(spacing: 3) {
-                                        Image(systemName: "arrow.up")
-                                        Text(formatScore(score: commentsModel.pages[link]!.post!.score))
-                                    }
-                                    HStack(spacing: 3) {
-                                        Image(systemName: "face.smiling.inverse")
-                                        Text("\(Int(round(commentsModel.pages[link]!.post!.upvoteRatio * 100)))%")
-                                    }
-                                    HStack(spacing: 3) {
-                                        Image(systemName: "text.bubble")
-                                        Text(formatScore(score: commentsModel.pages[link]!.post!.commentCount))
-                                    }
-                                    HStack(spacing: 3) {
-                                        Image(systemName: "clock")
-                                        Text(commentsModel.pages[link]!.post!.displayAge)
-                                    }
-                                    HStack(spacing: 3) {
-                                        ForEach(commentsModel.pages[link]!.post!.awardLinks.indices) { i in
-                                            if i < 5 {
-                                                AsyncImage(url: URL(string: commentsModel.pages[link]!.post!.awardLinks[i])) { image in
-                                                    image.image?
-                                                        .resizable()
-                                                        .scaledToFill()
-                                                        .frame(maxWidth: 15, maxHeight: 15)
-                                                }
-                                            }
-                                        }
-                                        if commentsModel.pages[link]!.post!.awardCount > 1 {
-                                            Text(String(commentsModel.pages[link]!.post!.awardCount))
-                                        }
-                                    }
-                                }
+                            if commentsModel.pages[link]!.post!.spoiler {
+                                Text("Spoiler".uppercased())
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 14 + CGFloat(model.textSizeInrease)))
+                                    .fontWeight(.semibold)
+                                    .padding(EdgeInsets(top: 3, leading: 4, bottom: 0, trailing: 4))
+                                    .background(Color(UIColor.systemGray))
+                                    .cornerRadius(5)
+                                    .frame(alignment: .leading)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(EdgeInsets(top: 8, leading: 10, bottom: 3, trailing: 10))
+                    PostRowContent(post: commentsModel.pages[link]!.post!, isPostOpen: true, enableCrosspostLink: true)
+                        .padding(EdgeInsets(top: 0, leading: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0, bottom: 0, trailing: commentsModel.pages[link]!.post!.contentType == .text ? 10 : 0))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: commentsModel.pages[link]!.post!.contentType == .text ? .leading : .center)
+                    VStack(spacing: 6) {
+                        HStack(spacing: 3) {
+                            if commentsModel.pages[link]!.post!.stickied {
+                                Image(systemName: "megaphone.fill")
+                                    .foregroundColor(Color(UIColor.systemGreen))
+                                    .font(.system(size: 12))
+                            }
+                            Text("in")
                                 .foregroundStyle(.secondary)
-                                .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
-                                .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
-                            }
-                            .font(.system(size: 14))
-                            .padding(EdgeInsets(top: 8, leading: 0, bottom:  8, trailing: 0))
-                            Divider()
-                            HStack {
+                                .frame(alignment: .leading)
+                            Text(commentsModel.pages[link]!.post!.community!)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .frame(alignment: .leading)
+                                .navigationDestination(isPresented: $isPresented) {
+                                    PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                                }
+                                .onTapGesture {
+                                    newTarget = CommunityOrUser(community: Community(commentsModel.pages[link]!.post!.community!), user: nil)
+                                    isPresented = true
+                                }
+                            Text("by")
+                                .foregroundStyle(.secondary)
+                                .frame(alignment: .leading)
+                            Text(commentsModel.pages[link]!.post!.userName!)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .frame(alignment: .leading)
+                                .navigationDestination(isPresented: $isUserPresented) {
+                                    PostsViewEnclosure(itemInView: $itemInView, restoreScroll: $restoreScrollPlaceholder, target: $newTarget, loadPosts: $loadPosts)
+                                }
+                                .onTapGesture {
+                                    newTarget = CommunityOrUser(community: nil, user: User(commentsModel.pages[link]!.post!.userName!))
+                                    isUserPresented = true
+                                }
+                            
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
+                        HStack {
+                            HStack(spacing: 3) {
                                 Image(systemName: "arrow.up")
-                                    .foregroundColor(commentsModel.pages[link]!.post!.isUpvoted ? .upvoteOrange : Color.secondary)
-                                    .fontWeight(commentsModel.pages[link]!.post!.isUpvoted ? .semibold : .regular)
-                                    .onTapGesture {
-                                        if commentsModel.toggleUpvotePost(link: link, post: commentsModel.pages[link]!.post!) == false {
-                                            // show login popup
+                                Text(formatScore(score: commentsModel.pages[link]!.post!.score))
+                            }
+                            HStack(spacing: 3) {
+                                Image(systemName: "face.smiling.inverse")
+                                Text("\(Int(round(commentsModel.pages[link]!.post!.upvoteRatio * 100)))%")
+                            }
+                            HStack(spacing: 3) {
+                                Image(systemName: "text.bubble")
+                                Text(formatScore(score: commentsModel.pages[link]!.post!.commentCount))
+                            }
+                            HStack(spacing: 3) {
+                                Image(systemName: "clock")
+                                Text(commentsModel.pages[link]!.post!.displayAge)
+                            }
+                            HStack(spacing: 3) {
+                                ForEach(commentsModel.pages[link]!.post!.awardLinks.indices) { i in
+                                    if i < 5 {
+                                        AsyncImage(url: URL(string: commentsModel.pages[link]!.post!.awardLinks[i])) { image in
+                                            image.image?
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(maxWidth: 15, maxHeight: 15)
                                         }
                                     }
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                Image(systemName: "arrow.down")
-                                    .fontWeight(commentsModel.pages[link]!.post!.isDownvoted ? .semibold : .regular)
-                                    .foregroundColor(commentsModel.pages[link]!.post!.isDownvoted ? .downvoteBlue : Color.secondary)
-                                    .onTapGesture {
-                                        if commentsModel.toggleDownvotePost(link: link, post: commentsModel.pages[link]!.post!) == false {
-                                            // show login popup
-                                        }
-                                    }
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                Image(systemName: commentsModel.pages[link]!.post!.isSaved ? "bookmark.slash" : "bookmark")
-                                //                            Image(systemName: "bookmark")
-                                //                                .fontWeight(post.isSaved ? .semibold : .regular)
-                                //                                .foregroundColor(.secondary)
-                                    .onTapGesture {
-                                        if commentsModel.toggleSavePost(link: link, post: commentsModel.pages[link]!.post!) {
-                                            overlayModel.show(commentsModel.pages[link]!.post!.isSaved ? "Post saved" : "Removed from saved")
-                                            // show login popup
-                                        }
-                                    }
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                Image(systemName: "arrow.uturn.left")
-                                    .onTapGesture {
-                                        if model.userName != nil {
-                                            editorParentComment = nil
-                                            isEditorShowing = true
-                                        }
-                                    }
-                                    .frame(maxWidth: .infinity, alignment: .center)
+                                }
+                                if commentsModel.pages[link]!.post!.awardCount > 1 {
+                                    Text(String(commentsModel.pages[link]!.post!.awardCount))
+                                }
+                            }
+                        }
+                        .foregroundStyle(.secondary)
+                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5))
+                        .frame(maxWidth: .infinity, maxHeight: 15, alignment: .leading)
+                    }
+                    .font(.system(size: 14))
+                    .padding(EdgeInsets(top: 8, leading: 0, bottom:  8, trailing: 0))
+                    Divider()
+                    HStack {
+                        Image(systemName: "arrow.up")
+                            .foregroundColor(commentsModel.pages[link]!.post!.isUpvoted ? .upvoteOrange : Color.secondary)
+                            .fontWeight(commentsModel.pages[link]!.post!.isUpvoted ? .semibold : .regular)
+                            .onTapGesture {
+                                if commentsModel.toggleUpvotePost(link: link, post: commentsModel.pages[link]!.post!) == false {
+                                    // show login popup
+                                }
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
-                            .font(.system(size: 28))
-                            .foregroundColor(Color.secondary)
-                            Divider()
-                        }
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                        ForEach(commentsModel.pages[link]!.flatCommentsList) { comment in
-                            if !commentsModel.pages[link]!.anyParentsCollapsed(comment: comment) {
-                                CommentView(comment: comment, postLink: link, editorParentComment: $editorParentComment,
-                                            commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget,
-                                            destinationLink: $destinationLink, isInternalPresented: $isInternalPresented, internalIsPost: $internalIsPost,
-                                            internalCommunityTarget: $internalCommunityTarget,
-                                            internalLoadPosts: $internalLoadPosts, internalItemInView: $internalItemInView, spoilerBlurActive: comment.spoiler)
-                                //                            .onAppear {
-                                //                                commentInView = comment.id
-                                //                            }
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .padding(EdgeInsets(top: 8, leading: 0, bottom: 12, trailing: 0))
+                        Image(systemName: "arrow.down")
+                            .fontWeight(commentsModel.pages[link]!.post!.isDownvoted ? .semibold : .regular)
+                            .foregroundColor(commentsModel.pages[link]!.post!.isDownvoted ? .downvoteBlue : Color.secondary)
+                            .onTapGesture {
+                                if commentsModel.toggleDownvotePost(link: link, post: commentsModel.pages[link]!.post!) == false {
+                                    // show login popup
+                                }
                             }
-                        }
-                    }
-                    .listStyle(PlainListStyle())
-//                    .navigationTitle(commentsModel.pages[link]!.post!.commentCount + " comments")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationBarHidden(isEditorShowing)
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            VStack {
-                                Text(commentsModel.pages[link]!.post!.commentCount + " comments")
-                                    .font(.headline)
-                                Text(commentsModel.pages[link]!.selectedSortingDisplayLabel)
-                                    .font(.subheadline)
-                                    .font(.system(size: 10))
-                                    .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        Image(systemName: commentsModel.pages[link]!.post!.isSaved ? "bookmark.slash" : "bookmark")
+                        //                            Image(systemName: "bookmark")
+                        //                                .fontWeight(post.isSaved ? .semibold : .regular)
+                        //                                .foregroundColor(.secondary)
+                            .onTapGesture {
+                                if commentsModel.toggleSavePost(link: link, post: commentsModel.pages[link]!.post!) {
+                                    overlayModel.show(commentsModel.pages[link]!.post!.isSaved ? "Post saved" : "Removed from saved")
+                                    // show login popup
+                                }
                             }
-                        }
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            CommentsToolbarView(link: link, selectedSort: $selectedSort, showingSaveDialog: $showingSaveDialog, showingDeleteDialog: $showingDeleteDialog,
-                                                showingNsfwDialog: $showingNsfwDialog, showingSpoilerDialog: $showingSpoilerDialog)
-                        }
-                    }
-                    .onChange(of: scrollTarget) { target in
-                        if let target = target {
-                            scrollTarget = nil
-                            proxy.scrollTo(target, anchor: .top)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                proxy.scrollTo(target, anchor: .top)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        Image(systemName: "arrow.uturn.left")
+                            .onTapGesture {
+                                if model.userName != nil {
+                                    editorParentComment = nil
+                                    isEditorShowing = true
+                                }
                             }
-                        }
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .refreshable {
-                        commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
-                    }
-                    .navigationDestination(isPresented: $isInternalPresented) {
-                        if !internalIsPost { // internal is community
-                            PostsViewEnclosure(itemInView: $internalItemInView, restoreScroll: $restorePostsPlaceholder,
-                                      target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
-                        } else {
-                            CommentsView(restorePostsScroll: $restorePostsPlaceholder, link: destinationLink!.path)
-                        }
-                    }
-                    //                .onAppear(perform: {
-                    //                    proxy.scrollTo(commentInView)
-                    //                })
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+                    .font(.system(size: 28))
+                    .foregroundColor(Color.secondary)
+                    Divider()
                 }
-                if isEditorShowing {
-                    CommentEditor(commentToEdit: $commentToEdit, isShowing: $isEditorShowing, parentComment: $editorParentComment, postLink: link)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                ForEach(commentsModel.pages[link]!.flatCommentsList) { comment in
+                    if !commentsModel.pages[link]!.anyParentsCollapsed(comment: comment) {
+                        CommentView(comment: comment, postLink: link, editorParentComment: $editorParentComment,
+                                    commentToEdit: $commentToEdit, isEditorShowing: $isEditorShowing, scrollTarget: $scrollTarget,
+                                    destinationLink: $destinationLink, isInternalPresented: $isInternalPresented, internalIsPost: $internalIsPost,
+                                    internalCommunityTarget: $internalCommunityTarget,
+                                    internalLoadPosts: $internalLoadPosts, internalItemInView: $internalItemInView, spoilerBlurActive: comment.spoiler)
+                        //                            .onAppear {
+                        //                                commentInView = comment.id
+                        //                            }
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                        .padding(EdgeInsets(top: 8, leading: 0, bottom: 12, trailing: 0))
+                    }
                 }
             }
+            .listStyle(PlainListStyle())
+            //                    .navigationTitle(commentsModel.pages[link]!.post!.commentCount + " comments")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(isEditorShowing)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack {
+                        Text(commentsModel.pages[link]!.post!.commentCount + " comments")
+                            .font(.headline)
+                        Text(commentsModel.pages[link]!.selectedSortingDisplayLabel)
+                            .font(.subheadline)
+                            .font(.system(size: 10))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    CommentsToolbarView(link: link, selectedSort: $selectedSort, showingSaveDialog: $showingSaveDialog, showingDeleteDialog: $showingDeleteDialog,
+                                        showingNsfwDialog: $showingNsfwDialog, showingSpoilerDialog: $showingSpoilerDialog)
+                }
+            }
+            .onChange(of: scrollTarget) { target in
+                if let target = target {
+                    scrollTarget = nil
+                    proxy.scrollTo(target, anchor: .top)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        proxy.scrollTo(target, anchor: .top)
+                    }
+                }
+            }
+            .refreshable {
+                commentsModel.loadComments(linkToThread: link, sortBy: selectedSort, forceLoad: true)
+            }
+            .navigationDestination(isPresented: $isInternalPresented) {
+                if !internalIsPost { // internal is community
+                    PostsViewEnclosure(itemInView: $internalItemInView, restoreScroll: $restorePostsPlaceholder,
+                                       target: $internalCommunityTarget, loadPosts: $internalLoadPosts)
+                } else {
+                    CommentsViewEnclosure(restorePostsScroll: $restorePostsPlaceholder, link: destinationLink!.path)
+                }
+            }
+            //                .onAppear(perform: {
+            //                    proxy.scrollTo(commentInView)
+            //                })
+            if #available(iOS 17, *) {
+                ZStack {
+                    Circle()
+                        .fill(Color.themeColor)
+                        .frame(width: 40, height: 40, alignment: .bottomTrailing)
+                        .onTapGesture {
+                            if let index = (commentsModel.pages[link]!.comments.firstIndex(where: { $0.id == scrolledCommentID })) {
+                                if index + 1 < commentsModel.pages[link]!.comments.count {
+                                    scrolledCommentID = commentsModel.pages[link]!.comments[index + 1].id
+                                }
+                            }
+                        }
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 20))
+                        .foregroundColor(.white)
+                }
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 30))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+            }
         }
-        .onAppear {
-            commentsModel.loadComments(linkToThread: link)
-            restorePostsScroll = false
+        if isEditorShowing {
+            CommentEditor(commentToEdit: $commentToEdit, isShowing: $isEditorShowing, parentComment: $editorParentComment, postLink: link)
         }
     }
+    
 }
 
 struct CommentView: View {
