@@ -236,6 +236,12 @@ class SettingsModel: ObservableObject {
             UserDefaults.standard.set(userSessionManager.adLastPresented, forKey: "adLastPresented")
         }
         
+        if let savedBlockedCommunities = UserDefaults.standard.object(forKey: "blockedCommunities") as? [String] {
+            userSessionManager.blockedCommunities = savedBlockedCommunities
+        } else {
+            UserDefaults.standard.set([String](), forKey: "blockedCommunities")
+        }
+        
 //        if let premiumPromotionAttempts = UserDefaults.standard.object(forKey: "premiumPromotionAttempts") as? Int {
 //            self.premiumPromotionAttempts = premiumPromotionAttempts
 //        } else {
@@ -532,6 +538,10 @@ class SettingsModel: ObservableObject {
     
     var postRightSecondary: SwipeAction {
         self.userSessionManager.postRightSecondary
+    }
+    
+    var blockedCommunities: [String] {
+        self.userSessionManager.blockedCommunities
     }
     
     var premiumPrice: String {

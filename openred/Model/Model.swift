@@ -199,13 +199,26 @@ class Model: ObservableObject {
         }
         
         components.path = components.path + ".json"
-        jsonLoader.loadItems(url: components.url!, markForAds: markForAds) { (items, after, error) in
+        jsonLoader.loadPosts(url: components.url!, markForAds: markForAds) { (items, after, error) in
             DispatchQueue.main.async {
                 if let items = items {
-                    if loadAfter == nil {
-                        page.items = items
+                    var filteredPosts: [PostOrComment]
+                    if community.isMultiCommunity {
+                        filteredPosts = items.filter{ post in
+                            self.userSessionManager.blockedCommunities.filter{ blockedCommunity in
+                                blockedCommunity.lowercased() == post.community.lowercased()
+                            }.isEmpty
+                        }
                     } else {
-                        for item in items {
+                        filteredPosts = items
+                    }
+                    if filteredPosts.count > 7 {
+                        filteredPosts[filteredPosts.count - 7].isActiveLoadMarker = true
+                    }
+                    if loadAfter == nil {
+                        page.items = filteredPosts
+                    } else {
+                        for item in filteredPosts {
                             page.items.append(item)
                         }
                     }

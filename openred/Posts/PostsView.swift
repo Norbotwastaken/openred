@@ -267,14 +267,6 @@ struct CommunityCollectionView: View {
                     .frame(maxWidth: .infinity, alignment: .top)
                 Spacer()
                     .frame(maxWidth: .infinity, alignment: .topTrailing)
-//                Image(systemName: "paperplane.fill")
-//                    .foregroundColor(Color.themeColor)
-//                    .font(.system(size: 25))
-//                    .frame(maxWidth: .infinity, alignment: .topTrailing)
-//                    .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 15))
-//                    .onTapGesture {
-//
-//                    }
             }
             .padding(EdgeInsets(top: 10, leading: 5, bottom: 0, trailing: 5))
             .frame(maxWidth: .infinity)
@@ -466,6 +458,21 @@ struct ActionsMenu: View {
                             Label("Unsubscribe", systemImage: "heart.slash")
                         } else {
                             Label("Subscribe", systemImage: "heart")
+                        }
+                    }
+                    Button(action: {
+                        if (model.userSessionManager.blockedCommunities.filter{ $0.lowercased() == target.community!.name }.isEmpty) {
+                            model.userSessionManager.addToBlockedCommunities(communityName: target.community!.name)
+                            overlayModel.show("\(target.community!.name) blocked")
+                        } else {
+                            model.userSessionManager.removeFromBlockedCommunities(communityName: target.community!.name)
+                            overlayModel.show("\(target.community!.name) removed from blocked")
+                        }
+                    }) {
+                        if (model.userSessionManager.blockedCommunities.filter{ $0.lowercased() == target.community!.name }.isEmpty) {
+                            Label("Block", systemImage: "xmark")
+                        } else {
+                            Label("Unblock", systemImage: "checkmark")
                         }
                     }
                     Button(action: { communityCollectionsShowing = true }) {

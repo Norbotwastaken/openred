@@ -10,7 +10,7 @@ import Foundation
 class JSONDataLoader {
     var content: [String:String] = [:]
     
-    func loadItems(url: URL, markForAds: Bool = false, completion: @escaping ([PostOrComment]?, String?, Error?) -> Void) {
+    func loadPosts(url: URL, markForAds: Bool = false, completion: @escaping ([PostOrComment]?, String?, Error?) -> Void) {
         let urlSession: URLSessionDataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             do {
                 if let data = data {
@@ -23,11 +23,10 @@ class JSONDataLoader {
 //                        if isAdMarker {
 //                            adUnit = adUnit + 1
 //                        }
-                        let isActiveLoadMarker = (i == postsWrapper.data.children.count - 7)
                         if wrapper.data != nil {
-                            items.append(PostOrComment(post: Post(jsonPost: wrapper.data!), isActiveLoadMarker: isActiveLoadMarker))
+                            items.append(PostOrComment(post: Post(jsonPost: wrapper.data!)))
                         } else if wrapper.commentData != nil {
-                            items.append(PostOrComment(comment: Comment(jsonComment: wrapper.commentData!), isActiveLoadMarker: isActiveLoadMarker))
+                            items.append(PostOrComment(comment: Comment(jsonComment: wrapper.commentData!)))
                         }
                         
                     }

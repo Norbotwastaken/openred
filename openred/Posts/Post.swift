@@ -15,6 +15,7 @@ class PostOrComment: Identifiable, ObservableObject {
     var isActiveLoadMarker: Bool
     var isAdMarker: Bool
     var adUnit: Int? // 1,2,3
+    var community: String
     
     init(post: Post, isActiveLoadMarker: Bool = false,
          isAdMarker: Bool = false, adUnit: Int? = nil) {
@@ -24,6 +25,7 @@ class PostOrComment: Identifiable, ObservableObject {
         self.isActiveLoadMarker = isActiveLoadMarker
         self.isAdMarker = isAdMarker
         self.adUnit = adUnit
+        self.community = post.community ?? ""
     }
     init(comment: Comment, isActiveLoadMarker: Bool = false,
          isAdMarker: Bool = false, adUnit: Int? = nil) {
@@ -33,6 +35,7 @@ class PostOrComment: Identifiable, ObservableObject {
         self.isActiveLoadMarker = isActiveLoadMarker
         self.isAdMarker = isAdMarker
         self.adUnit = adUnit
+        self.community = comment.communityName
     }
     
     func deactivateLoadMarker() {

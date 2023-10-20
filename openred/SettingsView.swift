@@ -402,6 +402,7 @@ struct GeneralSettingsView: View {
     @State private var homePage = "*"
     @State private var customHomePage = ""
     @State var communityCollectionsShowing: Bool = false
+    @State var blockedCommunitiesShowing: Bool = false
     
     private var communities: [String:String] = [
         "r/all":"All",
@@ -448,7 +449,7 @@ struct GeneralSettingsView: View {
             })
             if settingsModel.userSessionManager.userName != nil {
                 Section(content: {
-                    Text("Manage Community Collections")
+                    Text("Manage community collections")
                         .lineLimit(1)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .onTapGesture {
@@ -458,6 +459,16 @@ struct GeneralSettingsView: View {
                     Text("Create and manage collections of communities (or multireddits).")
                 })
             }
+            Section(content: {
+                Text("Manage blocked communities")
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .onTapGesture {
+                        blockedCommunitiesShowing = true
+                    }
+            }, footer: {
+                Text("Block communities from showing up in your feed.")
+            })
             Section(content: {
                 Toggle("Upvote items on save", isOn: $upvoteOnSave)
                     .tint(Color.themeColor)
@@ -500,6 +511,9 @@ struct GeneralSettingsView: View {
         }
         .popover(isPresented: $communityCollectionsShowing) {
             CommunityCollectionView(target: nil, communityCollectionsShowing: $communityCollectionsShowing)
+        }
+        .popover(isPresented: $blockedCommunitiesShowing) {
+            BlockedCollectionsView(isShowing: $blockedCommunitiesShowing)
         }
     }
 }
@@ -966,4 +980,116 @@ enum SwipeAction: String, Identifiable {
     static let postActions = ["upvote", "downvote", "save", "hide", "noAction"]
     
     var id: String { return self.rawValue }
+}
+
+struct BlockedCollectionsView: View {
+    @EnvironmentObject var settingsModel: SettingsModel
+    @EnvironmentObject var overlayModel: MessageOverlayModel
+    @Binding var isShowing: Bool
+    @State var blockCommunityAlertShowing: Bool = false
+    @State var unblockCommunityAlertShowing: Bool = false
+    @State var communityName: String = ""
+    @State var selectedCommunityName: String = ""
+    
+    var body: some View {
+        VStack(spacing: 5) {
+            HStack {
+                Image(systemName: "xmark")
+                    .font(.system(size: 25))
+                    .foregroundColor(Color.themeColor)
+                    .frame(alignment: .topLeading)
+                    .padding(EdgeInsets(top: 5, leading: 15, bottom: 0, trailing: 0))
+                    .onTapGesture {
+                        isShowing = false
+                    }
+                Text("Blocked Collections")
+                    .font(.system(size: 20))
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity, alignment: .top)
+            }
+            .padding(EdgeInsets(top: 10, leading: 5, bottom: 0, trailing: 5))
+            .frame(maxWidth: .infinity)
+            VStack {
+                if settingsModel.blockedCommunities.isEmpty {
+                    VStack {
+                        Text("Block communities from showing up in your feed.")
+                            .foregroundColor(.secondary)
+                            .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+                        Text("Block Community")
+                            .font(.system(size: 18))
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+                            .foregroundColor(.white)
+                            .background(Color.themeColor)
+                            .cornerRadius(8)
+                            .padding()
+                            .onTapGesture { blockCommunityAlertShowing = true }
+                    }
+                    .frame(maxHeight: .infinity, alignment: .center)
+                } else {
+                    List {
+                        ForEach(settingsModel.blockedCommunities, id: \.self) { communityName in
+                            HStack {
+                                Text(communityName)
+                                    .lineLimit(1)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button {
+                                    selectedCommunityName = communityName
+                                    unblockCommunityAlertShowing = true
+//                                    settingsModel.userSessionManager.removeFromBlockedCommunities(communityName: communityName)
+                                } label: {
+                                    Image(systemName: "xmark")
+                                }
+                                .tint(Color(UIColor.systemRed))
+                            }
+                        }
+                    }
+                    VStack {
+                        Label("Swipe to remove items from the list.", systemImage: "hand.draw")
+                            .font(.system(size: 14))
+                            .foregroundColor(.secondary)
+                            .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
+                        Text("Block Community")
+                            .font(.system(size: 18))
+                            .fontWeight(.semibold)
+                            .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+                            .foregroundColor(.white)
+                            .background(Color.themeColor)
+                            .cornerRadius(8)
+                            .padding()
+                            .onTapGesture { blockCommunityAlertShowing = true }
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+            .alert("Block Community", isPresented: $blockCommunityAlertShowing) {
+                TextField("Community name", text: $communityName)
+                Button("Cancel", role: .cancel) {
+                    blockCommunityAlertShowing = false
+                }
+                Button("Done", action: {
+                    settingsModel.userSessionManager.addToBlockedCommunities(communityName: communityName)
+                    blockCommunityAlertShowing = false
+                }).keyboardShortcut(.defaultAction)
+            } message: {
+                Text("Enter the name of the community to block.")
+            }
+            .alert("Unblock \(selectedCommunityName)?", isPresented: $unblockCommunityAlertShowing) {
+                Button("Cancel", role: .cancel) {
+                    unblockCommunityAlertShowing = false
+                }
+                Button("Unblock") {
+                    settingsModel.userSessionManager.removeFromBlockedCommunities(communityName: selectedCommunityName)
+                    unblockCommunityAlertShowing = false
+                }.keyboardShortcut(.defaultAction)
+            } message: {
+                Text("Are you sure you want unblock \(selectedCommunityName)?")
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
 }

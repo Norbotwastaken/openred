@@ -26,6 +26,8 @@ struct MediaPopupContent: View {
     @State private var currentImageLink: String?
     @State private var activeGalleryTab: Int = 0
     @State private var offset = CGSize.zero
+    @State private var videoBarOffset: Double = 0
+    @State private var videoBarDetached: Bool = false
     @State private var showProgressView = true
     
     @State var player = AVPlayer()
@@ -95,65 +97,100 @@ struct MediaPopupContent: View {
                                 .background(.ultraThinMaterial)
                                 .background(VisualEffect(style: .systemUltraThinMaterial).opacity(0.6))
                                 .cornerRadius(8)
+                                .frame(width: 340, height: 120)
+                            VStack {
+                                ZStack(alignment: .leading) {
+                                    RoundedRectangle(cornerSize: CGSize(width: 8, height: 8))
+                                        .frame(width: 300, height: 10)
+                                        .background(.clear)
+                                        .foregroundColor(Color(UIColor.systemGray6))
+                                    RoundedRectangle(cornerSize: CGSize(width: 8, height: 8))
+                                        .frame(width: 10 + (videoBarDetached ? videoBarOffset :
+                                                                300 * (time.seconds / totalDuration)), height: 10, alignment: .leading)
+                                        .background(.clear)
+                                        .foregroundColor(Color.primary)
+                                    Circle()
+                                        .foregroundColor(Color.primary)
+                                        .opacity(1)
+                                        .frame(width: 20, height: 20, alignment: .leading)
+                                        .padding(EdgeInsets(top: 0, leading: videoBarDetached ? videoBarOffset :
+                                                                300 * (time.seconds / totalDuration), bottom: 0, trailing: 0))
+                                        .gesture(
+                                            DragGesture()
+                                                .onChanged { gesture in
+                                                    play = false
+                                                    videoBarDetached = true
+                                                    videoBarOffset = max(0, min(300, 300 * (time.seconds / totalDuration) + gesture.translation.width))
+                                                }
+                                                .onEnded { _ in
+                                                    self.time = CMTimeMakeWithSeconds(videoBarOffset * (totalDuration / 300), preferredTimescale: self.time.timescale)
+                                                    play = true
+                                                    videoBarDetached = false
+                                                }
+                                        )
+                                }
+                                .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                                .frame(maxWidth: .infinity, maxHeight: 20, alignment: .leading)
+                                HStack {
+                                    Button() {
+                                        self.autoReplay.toggle()
+                                    } label: {
+                                        self.autoReplay ? Image(systemName: "arrow.clockwise.circle.fill")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)) :
+                                        Image(systemName: "arrow.clockwise.circle")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+                                    }
+                                    Button() {
+                                        self.time = CMTimeMakeWithSeconds(max(0, self.time.seconds - 10), preferredTimescale: self.time.timescale)
+                                    } label: {
+                                        Image(systemName: "gobackward.10")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+                                    }
+                                    Button() {
+                                        self.play.toggle()
+                                    } label: {
+                                        self.play ? Image(systemName: "pause.fill")
+                                            .resizable()
+                                            .frame(width: 40, height: 40)
+                                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)) :
+                                        Image(systemName: "play.fill")
+                                            .resizable()
+                                            .frame(width: 40, height: 40)
+                                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+                                    }
+                                    Button() {
+                                        self.time = CMTimeMakeWithSeconds(min(self.totalDuration, self.time.seconds + 10), preferredTimescale: self.time.timescale)
+                                    } label: {
+                                        Image(systemName: "goforward.10")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+                                    }
+                                    Button() {
+                                        self.mute.toggle()
+                                    } label: {
+                                        self.mute ? Image(systemName: "speaker.slash.fill")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)) :
+                                        Image(systemName: "speaker.wave.2.fill")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+                                    }
+                                }
+                                .foregroundColor(Color(UIColor.systemGray6))
+//                                .opacity(0.8)
                                 .frame(width: 340, height: 80)
-
-                            HStack {
-                                Button() {
-                                    self.autoReplay.toggle()
-                                } label: {
-                                    self.autoReplay ? Image(systemName: "arrow.clockwise.circle.fill")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)) :
-                                    Image(systemName: "arrow.clockwise.circle")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                                }
-                                Button() {
-                                    self.time = CMTimeMakeWithSeconds(max(0, self.time.seconds - 10), preferredTimescale: self.time.timescale)
-                                } label: {
-                                    Image(systemName: "gobackward.10")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                                }
-                                Button() {
-                                    self.play.toggle()
-                                } label: {
-                                    self.play ? Image(systemName: "pause.fill")
-                                        .resizable()
-                                        .frame(width: 40, height: 40)
-                                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)) :
-                                    Image(systemName: "play.fill")
-                                        .resizable()
-                                        .frame(width: 40, height: 40)
-                                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                                }
-                                Button() {
-                                    self.time = CMTimeMakeWithSeconds(min(self.totalDuration, self.time.seconds + 10), preferredTimescale: self.time.timescale)
-                                } label: {
-                                    Image(systemName: "goforward.10")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                                }
-                                Button() {
-                                    self.mute.toggle()
-                                } label: {
-                                    self.mute ? Image(systemName: "speaker.slash.fill")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)) :
-                                    Image(systemName: "speaker.wave.2.fill")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                                }
                             }
                             .foregroundColor(.primary)
-                            .opacity(0.8)
-                            .frame(width: 340, height: 80)
+                            .frame(width: 340, height: 120)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 80, trailing: 0))

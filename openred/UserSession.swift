@@ -15,6 +15,7 @@ class UserSessionManager: ObservableObject {
     @Published var userNames: [String] = []
     var favoriteCommunities: [String] = []
     var communityCollections: [String:[String]] = [:]
+    @Published var blockedCommunities: [String] = []
     var adLastPresented: [Date] = []
     private var adHistoryLength: Int = 2
     
@@ -275,6 +276,23 @@ class UserSessionManager: ObservableObject {
             return true
         }
         return false
+    }
+    
+    func addToBlockedCommunities(communityName: String) -> Bool {
+        if (blockedCommunities.filter{ $0.lowercased() == communityName.lowercased() }.isEmpty) {
+            blockedCommunities.append(communityName)
+            UserDefaults.standard.set(blockedCommunities, forKey: "blockedCommunities")
+            objectWillChange.send()
+            return true
+        }
+        return false
+    }
+    
+    func removeFromBlockedCommunities(communityName: String) -> Bool {
+        blockedCommunities = blockedCommunities.filter{ $0.lowercased() != communityName.lowercased() }
+        UserDefaults.standard.set(blockedCommunities, forKey: "blockedCommunities")
+        objectWillChange.send()
+        return true
     }
     
     func markAdPresented() {
