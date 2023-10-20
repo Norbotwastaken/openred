@@ -185,8 +185,8 @@ struct MediaPopupContent: View {
                                             .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                                     }
                                 }
-                                .foregroundColor(Color(UIColor.systemGray6))
-//                                .opacity(0.8)
+                                .foregroundColor(.primary)
+                                .opacity(0.8)
                                 .frame(width: 340, height: 80)
                             }
                             .foregroundColor(.primary)

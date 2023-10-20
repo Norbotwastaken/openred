@@ -27,18 +27,18 @@ struct CommentsViewEnclosure: View {
                     .frame(maxHeight: .infinity, alignment: .top)
             }
             if commentsModel.pages[link]?.post != nil {
-                if #available(iOS 17, *) {
+//                if #available(iOS 17, *) {
+//                    ScrollViewReader { proxy in
+//                        CommentsView(link: link, proxy: proxy, restorePostsScroll: $restorePostsScroll,
+//                                     scrolledCommentID: $scrolledCommentID)
+//                    }
+//                    .scrollPosition(id: $scrolledCommentID)
+//                } else {
                     ScrollViewReader { proxy in
                         CommentsView(link: link, proxy: proxy, restorePostsScroll: $restorePostsScroll,
                                      scrolledCommentID: $scrolledCommentID)
                     }
-                    .scrollPosition(id: $scrolledCommentID)
-                } else {
-                    ScrollViewReader { proxy in
-                        CommentsView(link: link, proxy: proxy, restorePostsScroll: $restorePostsScroll,
-                                     scrolledCommentID: $scrolledCommentID)
-                    }
-                }
+//                }
             }
         }
         .onAppear {
@@ -314,25 +314,25 @@ struct CommentsView: View {
             //                .onAppear(perform: {
             //                    proxy.scrollTo(commentInView)
             //                })
-            if #available(iOS 17, *) {
-                ZStack {
-                    Circle()
-                        .fill(Color.themeColor)
-                        .frame(width: 40, height: 40, alignment: .bottomTrailing)
-                        .onTapGesture {
-                            if let index = (commentsModel.pages[link]!.comments.firstIndex(where: { $0.id == scrolledCommentID })) {
-                                if index + 1 < commentsModel.pages[link]!.comments.count {
-                                    scrolledCommentID = commentsModel.pages[link]!.comments[index + 1].id
-                                }
-                            }
-                        }
-                    Image(systemName: "chevron.down")
-                        .font(.system(size: 20))
-                        .foregroundColor(.white)
-                }
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 30))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-            }
+//            if #available(iOS 17, *) {
+//                ZStack {
+//                    Circle()
+//                        .fill(Color.themeColor)
+//                        .frame(width: 40, height: 40, alignment: .bottomTrailing)
+//                        .onTapGesture {
+//                            if let index = (commentsModel.pages[link]!.comments.firstIndex(where: { $0.id == scrolledCommentID })) {
+//                                if index + 1 < commentsModel.pages[link]!.comments.count {
+//                                    scrolledCommentID = commentsModel.pages[link]!.comments[index + 1].id
+//                                }
+//                            }
+//                        }
+//                    Image(systemName: "chevron.down")
+//                        .font(.system(size: 20))
+//                        .foregroundColor(.white)
+//                }
+//                .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 30))
+//                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+//            }
         }
         if isEditorShowing {
             CommentEditor(commentToEdit: $commentToEdit, isShowing: $isEditorShowing, parentComment: $editorParentComment, postLink: link)
